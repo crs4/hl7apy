@@ -1,0 +1,14 @@
+syntax: glob
+
+*.pyc
+*.db
+*.pid
+*.log
+*~
+*.orig
+*/_trial_temp*/*
+*.DS_Store
+
+syntax: regexp
+build/
+docs/_build
