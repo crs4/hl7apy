@@ -1,0 +1,462 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Library helper functions &mdash; HL7apy 1.0_rc1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0_rc1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="HL7apy 1.0_rc1 documentation" href="../index.html" />
+    <link rel="up" title="API Docs" href="index.html" />
+    <link rel="next" title="Examples" href="../examples/index.html" />
+    <link rel="prev" title="Validation module" href="validation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../examples/index.html" title="Examples"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="validation.html" title="Validation module"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">HL7apy 1.0_rc1 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">API Docs</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-hl7apy">
+<span id="library-helper-functions"></span><h1>Library helper functions<a class="headerlink" href="#module-hl7apy" title="Permalink to this headline">¶</a></h1>
+<p>HL7apy - helper functions</p>
+<dl class="function">
+<dt id="hl7apy.check_encoding_chars">
+<tt class="descclassname">hl7apy.</tt><tt class="descname">check_encoding_chars</tt><big>(</big><em>encoding_chars</em><big>)</big><a class="headerlink" href="#hl7apy.check_encoding_chars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate the given encoding chars</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; the encoding chars (see <a class="reference internal" href="#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_encoding_chars()</span></tt></a>)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.InvalidEncodingChars" title="hl7apy.exceptions.InvalidEncodingChars"><tt class="xref py py-exc docutils literal"><span class="pre">hl7apy.exceptions.InvalidEncodingChars</span></tt></a> if the given encoding chars are not valid</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="hl7apy.check_validation_level">
+<tt class="descclassname">hl7apy.</tt><tt class="descname">check_validation_level</tt><big>(</big><em>validation_level</em><big>)</big><a class="headerlink" href="#hl7apy.check_validation_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate the given validation level</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; validation level (see <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt></a>)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.UnknownValidationLevel" title="hl7apy.exceptions.UnknownValidationLevel"><tt class="xref py py-exc docutils literal"><span class="pre">hl7apy.exceptions.UnknownValidationLevel</span></tt></a> if the given validation level is unsupported</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="hl7apy.check_version">
+<tt class="descclassname">hl7apy.</tt><tt class="descname">check_version</tt><big>(</big><em>version</em><big>)</big><a class="headerlink" href="#hl7apy.check_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate the given version number</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the version to validate (e.g. <tt class="docutils literal"><span class="pre">2.6</span></tt>)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.UnsupportedVersion" title="hl7apy.exceptions.UnsupportedVersion"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.exceptions.UnsupportedVersion</span></tt></a> if the given version is unsupported</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="hl7apy.find_reference">
+<tt class="descclassname">hl7apy.</tt><tt class="descname">find_reference</tt><big>(</big><em>name</em>, <em>element_types</em>, <em>version</em><big>)</big><a class="headerlink" href="#hl7apy.find_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Look for an element of the given name and version into the given types and return its reference structure</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the element name to look for (e.g. &#8216;MSH&#8217;)</li>
+<li><strong>types</strong> (<tt class="docutils literal"><span class="pre">list</span></tt> or <tt class="docutils literal"><span class="pre">tuple</span></tt>) &#8211; the element classes where to look for the element (e.g. (Group, Segment))</li>
+<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the version of the library where to search the element (e.g. &#8216;2.6&#8217;)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><tt class="docutils literal"><span class="pre">dict</span></tt></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a dictionary describing the element structure</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raise :</th><td class="field-body"><p class="first last"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.ChildNotFound" title="hl7apy.exceptions.ChildNotFound"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.exceptions.ChildNotFound</span></tt></a> if the element has not been found</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="kn">import</span> <span class="n">Message</span><span class="p">,</span> <span class="n">Segment</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_reference</span><span class="p">(</span><span class="s">&#39;UNKNOWN&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">Segment</span><span class="p">,</span> <span class="p">),</span> <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">ChildNotFound</span>: <span class="n">No child named UNKNOWN</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_reference</span><span class="p">(</span><span class="s">&#39;ADT_A01&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">Segment</span><span class="p">,),</span>  <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">ChildNotFound</span>: <span class="n">No child named ADT_A01</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">find_reference</span><span class="p">(</span><span class="s">&#39;ADT_A01&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">Message</span><span class="p">,),</span>  <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">r</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s">&#39;cls&#39;</span><span class="p">]</span>
+<span class="go">ADT_A01 &lt;class &#39;hl7apy.core.Message&#39;&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="hl7apy.get_default_encoding_chars">
+<tt class="descclassname">hl7apy.</tt><tt class="descname">get_default_encoding_chars</tt><big>(</big><big>)</big><a class="headerlink" href="#hl7apy.get_default_encoding_chars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the default encoding chars</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">dict</span></tt></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the encoding chars (see <a class="reference internal" href="#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_encoding_chars()</span></tt></a>)</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">get_default_encoding_chars</span><span class="p">()[</span><span class="s">&#39;FIELD&#39;</span><span class="p">]</span>
+<span class="go">|</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="hl7apy.get_default_validation_level">
+<tt class="descclassname">hl7apy.</tt><tt class="descname">get_default_validation_level</tt><big>(</big><big>)</big><a class="headerlink" href="#hl7apy.get_default_validation_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the default validation level</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">basestring</span></tt></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the default validation level</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">get_default_validation_level</span><span class="p">()</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="hl7apy.get_default_version">
+<tt class="descclassname">hl7apy.</tt><tt class="descname">get_default_version</tt><big>(</big><big>)</big><a class="headerlink" href="#hl7apy.get_default_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the default version</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">basestring</span></tt></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the default version</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">get_default_version</span><span class="p">()</span>
+<span class="go">2.5</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="hl7apy.load_library">
+<tt class="descclassname">hl7apy.</tt><tt class="descname">load_library</tt><big>(</big><em>version</em><big>)</big><a class="headerlink" href="#hl7apy.load_library" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the correct module according to the version</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the version of the library to be loaded (e.g. &#8216;2.6&#8217;)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">module object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="hl7apy.load_reference">
+<tt class="descclassname">hl7apy.</tt><tt class="descname">load_reference</tt><big>(</big><em>name</em>, <em>element_type</em>, <em>version</em><big>)</big><a class="headerlink" href="#hl7apy.load_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Look for an element of the given type, name and version and return its reference structure</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>element_type</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the element type to look for (e.g. &#8216;Segment&#8217;)</li>
+<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the element name to look for (e.g. &#8216;MSH&#8217;)</li>
+<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the version of the library where to search the element (e.g. &#8216;2.6&#8217;)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><tt class="docutils literal"><span class="pre">dict</span></tt></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a dictionary describing the element structure</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raise :</th><td class="field-body"><p class="first last"><tt class="docutils literal"><span class="pre">KeyError</span></tt> if the element has not been found</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The returned dictionary will contain the following keys:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="24%" />
+<col width="76%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Key</th>
+<th class="head">Value</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>cls</td>
+<td>an <a class="reference internal" href="core.html#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a> subclass</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td>the Element name (e.g. PID)</td>
+</tr>
+<tr class="row-even"><td>ref</td>
+<td><p class="first">a tuple of one of the following format:</p>
+<p class="last">(&#8216;leaf&#8217;, &lt;datatype&gt;, &lt;longName&gt;, &lt;table&gt;)
+(&#8216;sequence&#8217;, (&lt;child&gt;, (&lt;min&gt;, &lt;max&gt;), ...))</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">load_reference</span><span class="p">(</span><span class="s">&#39;UNKNOWN&#39;</span><span class="p">,</span> <span class="s">&#39;Segment&#39;</span><span class="p">,</span> <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">KeyError</span>: <span class="n">&#39;UNKNOWN&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">load_reference</span><span class="p">(</span><span class="s">&#39;ADT_A01&#39;</span><span class="p">,</span> <span class="s">&#39;Message&#39;</span><span class="p">,</span> <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">sequence</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">load_reference</span><span class="p">(</span><span class="s">&#39;MSH_3&#39;</span><span class="p">,</span> <span class="s">&#39;Field&#39;</span><span class="p">,</span> <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">leaf</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="hl7apy.set_default_encoding_chars">
+<tt class="descclassname">hl7apy.</tt><tt class="descname">set_default_encoding_chars</tt><big>(</big><em>encoding_chars</em><big>)</big><a class="headerlink" href="#hl7apy.set_default_encoding_chars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the given encoding chars as default</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; the new encoding chars</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.InvalidEncodingChars" title="hl7apy.exceptions.InvalidEncodingChars"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.exceptions.InvalidEncodingChars</span></tt></a> if the given encoding chars are not valid</td>
+</tr>
+</tbody>
+</table>
+<p>The <em>encoding_chars</em> dictionary should contain the following keys:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="45%" />
+<col width="55%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Key</th>
+<th class="head">Default</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>GROUP</td>
+<td><tt class="docutils literal"><span class="pre">\r</span></tt></td>
+</tr>
+<tr class="row-odd"><td>SEGMENT</td>
+<td><tt class="docutils literal"><span class="pre">\r</span></tt></td>
+</tr>
+<tr class="row-even"><td>FIELD</td>
+<td><tt class="docutils literal"><span class="pre">|</span></tt></td>
+</tr>
+<tr class="row-odd"><td>COMPONENT</td>
+<td><tt class="docutils literal"><span class="pre">^</span></tt></td>
+</tr>
+<tr class="row-even"><td>SUBCOMPONENT</td>
+<td><tt class="docutils literal"><span class="pre">&amp;</span></tt></td>
+</tr>
+<tr class="row-odd"><td>REPETITION</td>
+<td><tt class="docutils literal"><span class="pre">~</span></tt></td>
+</tr>
+<tr class="row-even"><td>ESCAPE</td>
+<td><tt class="docutils literal"><span class="pre">\</span></tt></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_encoding_chars</span><span class="p">({</span><span class="s">&#39;FIELD&#39;</span><span class="p">:</span> <span class="s">&#39;!&#39;</span><span class="p">})</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">InvalidEncodingChars</span>: <span class="n">Invalid encoding chars</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_encoding_chars</span><span class="p">({</span><span class="s">&#39;FIELD&#39;</span><span class="p">:</span> <span class="s">&#39;!&#39;</span><span class="p">,</span> <span class="s">&#39;COMPONENT&#39;</span><span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="s">&#39;SUBCOMPONENT&#39;</span><span class="p">:</span> <span class="s">&#39;S&#39;</span><span class="p">,</span> <span class="s">&#39;REPETITION&#39;</span><span class="p">:</span> <span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="s">&#39;ESCAPE&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\\</span><span class="s">&#39;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">get_default_encoding_chars</span><span class="p">()[</span><span class="s">&#39;FIELD&#39;</span><span class="p">]</span>
+<span class="go">!</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="hl7apy.set_default_validation_level">
+<tt class="descclassname">hl7apy.</tt><tt class="descname">set_default_validation_level</tt><big>(</big><em>validation_level</em><big>)</big><a class="headerlink" href="#hl7apy.set_default_validation_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the given validation level as default</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; validation level (see <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt></a>)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.UnknownValidationLevel" title="hl7apy.exceptions.UnknownValidationLevel"><tt class="xref py py-exc docutils literal"><span class="pre">hl7apy.exceptions.UnknownValidationLevel</span></tt></a> if the given validation level is unsupported</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_validation_level</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">UnknownValidationLevel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_validation_level</span><span class="p">(</span><span class="n">VALIDATION_LEVEL</span><span class="o">.</span><span class="n">QUIET</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">get_default_validation_level</span><span class="p">()</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="hl7apy.set_default_version">
+<tt class="descclassname">hl7apy.</tt><tt class="descname">set_default_version</tt><big>(</big><em>version</em><big>)</big><a class="headerlink" href="#hl7apy.set_default_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the given version as default</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the new default version (e.g. <tt class="docutils literal"><span class="pre">2.6</span></tt>)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.UnsupportedVersion" title="hl7apy.exceptions.UnsupportedVersion"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.exceptions.UnsupportedVersion</span></tt></a> if the given version is unsupported</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_version</span><span class="p">(</span><span class="s">&#39;22&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">UnsupportedVersion</span>: <span class="n">The version 22 is not supported</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_version</span><span class="p">(</span><span class="s">&#39;2.3&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">get_default_version</span><span class="p">()</span>
+<span class="go">2.3</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Docs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="consts.html">Consts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parser.html">Parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base_datatypes.html">Base datatypes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="factories.html">Datatype factories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="validation.html">Validation module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Library helper functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="validation.html"
+                        title="previous chapter">Validation module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../examples/index.html"
+                        title="next chapter">Examples</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../examples/index.html" title="Examples"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="validation.html" title="Validation module"
+             >previous</a> |</li>
+        <li><a href="../index.html">HL7apy 1.0_rc1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >API Docs</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2013, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
