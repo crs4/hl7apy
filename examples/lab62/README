@@ -1,0 +1,16 @@
+This example implements an IHE LAB-62 transaction.
+A simple MLLP server accepts QPB_Q11 messages only, returning a NAK message otherwise.
+
+server.py: MLLP server and LIP implementation. The TCP server binds by default to localhost:6000.
+client.py: TCP client and LB implementation. It sends the QBP_Q11 message to localhost:6000.
+
+=== HOW TO USE ===
+
+Run the TCP server by executing:
+
+python server.py
+
+then execute the client:
+
+python client.py
+
