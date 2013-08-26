@@ -1,12 +1,8 @@
-.. HL7apy documentation master file, created by
-   sphinx-quickstart on Thu May  2 14:54:43 2013.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
 HL7apy's documentation
 ==================================
 
-HL7apy is a Python package to parse, create and handle `HL7 <http://www.hl7.org>`_ v2 messages.
+HL7apy is a Python library to parse, create and handle `HL7 <http://www.hl7.org>`_ v2 messages.
 
 Currently supported versions are: 2.2, 2.3, 2.3.1, 2.4, 2.5, 2.5.1, 2.6.
 
@@ -15,9 +11,9 @@ HL7apy is developed and maintained by `Healthcare Flows <http://www.crs4.it/heal
 Installation
 ============
 
-HL7apy is platform independent and supports Python 2.7
+HL7apy is platform independent and supports Python 2.7.
 
-To install it get the latest release from `here <https://github.com/crs4/hl7apy>`_, extract it and launch the following command from the extracted directory
+To install it get the latest release from `here <https://github.com/crs4/hl7apy>`_ and launch the following command:
 
 .. code-block:: bash
 
