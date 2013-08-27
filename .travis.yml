@@ -7,3 +7,7 @@ install:
 # command to run tests
 script: 
   - python tests/test_all.py
+#just build master branch
+branches:
+  only:
+    - master
