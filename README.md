@@ -1,6 +1,6 @@
 HL7apy is a Python library to parse, create and handle [HL7](http://www.hl7.org) v2 messages.
 
-Current version is 1.0 rc1
+Current version is __1.0 rc1__
 
 Currently supported HL7 versions are: 2.2, 2.3, 2.3.1, 2.4, 2.5, 2.5.1, 2.6.
 
@@ -18,6 +18,11 @@ To install it get the latest release from [here](https://github.com/crs4/hl7apy.
 ```bash
   python setup.py install
 ```
+
+Build status
+------------
+
+[![Build Status](https://travis-ci.org/crs4/hl7apy.png)](https://travis-ci.org/crs4/hl7apy)
 
 License
 -------
@@ -42,3 +47,4 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
