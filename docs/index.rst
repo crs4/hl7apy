@@ -1,10 +1,12 @@
 
-HL7apy's documentation
+HL7apy
 ==================================
 
 HL7apy is a Python library to parse, create and handle `HL7 <http://www.hl7.org>`_ v2 messages.
 
-Currently supported versions are: 2.2, 2.3, 2.3.1, 2.4, 2.5, 2.5.1, 2.6.
+Current version is 1.0 rc1
+
+Currently supported HL7 versions are: 2.2, 2.3, 2.3.1, 2.4, 2.5, 2.5.1, 2.6.
 
 HL7apy is developed and maintained by `Healthcare Flows <http://www.crs4.it/healthcare-flows>`_ researchers at `CRS4 <http://www.crs4.it>`_.
 
