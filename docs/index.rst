@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 HL7apy
-==================================
+======
 
 HL7apy is a Python package to parse, create and handle `HL7 <http://www.hl7.org>`_ v2 messages.
 
@@ -24,6 +24,12 @@ To install it get the latest release from `here <https://github.com/crs4/hl7apy>
 .. code-block:: bash
 
   python setup.py install
+
+Alernatively you can use pip to install it from `PyPI <https://pypi.python.org/pypi/hl7apy/>`_
+
+.. code-block:: bash
+
+  pip install hl7apy
 
 Contents
 ========

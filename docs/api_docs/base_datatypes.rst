@@ -3,7 +3,6 @@ Base datatypes
 ==============
 .. automodule:: hl7apy.base_datatypes
 
-.. module:: hl7apy.base_datatypes
 .. autoclass:: BaseDataType
     :members:
 
