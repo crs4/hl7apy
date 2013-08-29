@@ -19,7 +19,7 @@ To install it get the latest release from [here](https://github.com/crs4/hl7apy.
   python setup.py install
 ```
 
-Alernatively you can use pip to install it from `PyPI <https://pypi.python.org/pypi/hl7apy/>`_
+Alernatively you can use pip to install it from [PyPI](https://pypi.python.org/pypi/hl7apy/)
 
 ```bash
   pip install hl7apy
