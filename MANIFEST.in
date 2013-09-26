@@ -1,0 +1,7 @@
+include AUTHORS LICENSE VERSION
+
+recursive-include examples *.py
+recursive-include tests *.py
+
+include examples/lab62/README
+include tests/README

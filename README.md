@@ -6,6 +6,8 @@ Currently supported HL7 versions are: 2.2, 2.3, 2.3.1, 2.4, 2.5, 2.5.1, 2.6.
 
 HL7apy is developed and maintained by [Healthcare Flows](http://www.crs4.it/healthcare-flows) researchers at [CRS4](http://www.crs4.it/).
 
+This project is not affiliated with the HL7 organization: the library is just consistent with their specification.
+
 Documentation can be found [here](http://crs4.github.io/hl7apy).
 
 Installation
@@ -19,7 +21,7 @@ To install it get the latest release from [here](https://github.com/crs4/hl7apy.
   python setup.py install
 ```
 
-Alernatively you can use pip to install it from [PyPI](https://pypi.python.org/pypi/hl7apy/)
+Alternatively you can use pip to install it from [PyPI](https://pypi.python.org/pypi/hl7apy/)
 
 ```bash
   pip install hl7apy
