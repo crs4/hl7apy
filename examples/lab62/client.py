@@ -22,7 +22,7 @@
 import socket
 
 from actor import LB
-from server import MLLProtocol, SB, EB, CR
+from server import MLLProtocol
 
 def query(host, port, patient_id):
     """
@@ -38,7 +38,7 @@ def query(host, port, patient_id):
     try:
         sock.connect((host, port))
         # send the message
-        sock.sendall(SB + message + CR + EB + CR)
+        sock.sendall(message)
         # receive the answer
         received = sock.recv(1024*1024)
         message = MLLProtocol.get_message(received)

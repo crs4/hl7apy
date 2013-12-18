@@ -40,6 +40,12 @@ DEFAULT_ENCODING_CHARS = {
 #: default hl7 version
 DEFAULT_VERSION = "2.5"
 
+#: MLLP encoding chars
+class MLLP_ENCODING_CHARS:
+    SB = '\x0b'
+    EB = '\x1c'
+    CR = '\x0d'
+
 class VALIDATION_LEVEL:
     """
     Allowed validation levels

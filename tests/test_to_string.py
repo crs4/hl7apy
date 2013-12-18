@@ -24,6 +24,7 @@ from hl7apy.core import Message, Field, Component, SubComponent
 from hl7apy.parser import parse_segment, parse_message
 from hl7apy.base_datatypes import *
 from hl7apy.exceptions import InvalidHighlightRange
+from hl7apy.consts import MLLP_ENCODING_CHARS
 
 class ToStringTestCase(unittest.TestCase):
     """
@@ -155,6 +156,23 @@ class ToStringTestCase(unittest.TestCase):
         msg = parse_message(test_msg)
         self.assertEqual(msg.to_er7(trailing_children=True), test_msg_with_trailing)
         self.assertEqual(msg.to_er7(trailing_children=False), test_msg)
+
+    def test_to_mllp(self):
+        test_msg = self._get_test_msg()
+        mllp_msg = "{0}{1}{2}{3}{2}".format(MLLP_ENCODING_CHARS.SB, test_msg,
+                                            MLLP_ENCODING_CHARS.CR, MLLP_ENCODING_CHARS.EB)
+
+        msg = parse_message(test_msg)
+        self.assertEqual(msg.to_mllp(), mllp_msg)
+
+    def test_to_mllp_with_trailing(self):
+        test_msg = self._get_test_msg(trailing_children=True)
+        mllp_msg = "{0}{1}{2}{3}{2}".format(MLLP_ENCODING_CHARS.SB, test_msg,
+                                            MLLP_ENCODING_CHARS.CR, MLLP_ENCODING_CHARS.EB)
+
+        msg = parse_message(test_msg)
+        self.assertEqual(msg.to_mllp(trailing_children=True), mllp_msg)
+
 
 if __name__ == '__main__':
     unittest.main()

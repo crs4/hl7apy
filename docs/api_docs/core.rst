@@ -7,7 +7,7 @@ Core classes
 .. autoclass::  Element
 
 .. autoclass::  Message
-    :members: to_er7, validate, add_segment, add_group, add
+    :members: to_er7, to_mllp, validate, add_segment, add_group, add
 
 .. autoclass::  Group
     :members: to_er7, validate, add_segment, add_group, add

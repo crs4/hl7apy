@@ -38,6 +38,7 @@ from hl7apy.exceptions import ChildNotFound, ChildNotValid, \
                               InvalidName
 from hl7apy.factories import datatype_factory
 from hl7apy.base_datatypes import BaseDataType
+from hl7apy.consts import MLLP_ENCODING_CHARS
 
 def is_base_datatype(datatype, version=None):
     """
@@ -1582,6 +1583,26 @@ class Message(Group):
             raise OperationNotAllowed('Cannot assign a message with different encoding chars')
 
         super(Message, self).parse_children(text, find_groups, **kwargs)
+
+    def to_mllp(self, encoding_chars=None, trailing_children=False):
+        """
+        Returns the er7 representation of the message wrapped with mllp encoding characters
+
+        :type encoding_chars: ``dict``
+        :param encoding_chars: a dictionary containing the encoding chars or None to use the default (see :func:`hl7apy.set_default_encoding_chars`)
+
+        :type trailing_children: ``bool``
+        :param trailing_children: if True, trailing children will be added even if their value is None
+
+        :return: the ER7-encoded string wrapped with the mllp encoding characters
+        """
+        if encoding_chars is None:
+            encoding_chars = self.encoding_chars
+
+        return "{0}{1}{2}{3}{2}".format(MLLP_ENCODING_CHARS.SB,
+                                        self.to_er7(encoding_chars, trailing_children),
+                                        MLLP_ENCODING_CHARS.CR,
+                                        MLLP_ENCODING_CHARS.EB)
 
     def _get_encoding_chars(self):
         msh_2 = self.msh.msh_2.msh_2_1.children[0].value.value

@@ -40,7 +40,7 @@ class LB(object):
         m.QPD.query_tag = uuid.uuid4().hex
         m.QPD.QPD_3 = patient_id
         m.RCP = "RCP|I||R"
-        return m.to_er7()
+        return m.to_mllp()
 
     @staticmethod
     def receive(message):
@@ -131,4 +131,4 @@ class LIP(object):
                 response.add(obr)
             else:
                 response = LIP.nak(m)
-        return response.to_er7() # encode to ER7
+        return response.to_mllp() # encode to ER7
