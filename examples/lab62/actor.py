@@ -105,10 +105,10 @@ class LIP(object):
                 response.MSA.MSA_2 = m.MSH.MSH_10
                 # create a QAK segment
                 qak = Segment("QAK")
-                qak.qak_2 = m.QPD.QPD_2
-                qak.qak_3 = "OK"
-                qak.qak_4 = "Q22^Specimen Labeling Instructions^IHE_LABTF"
-                qak.qak_5 = "1"
+                qak.qak_1 = m.QPD.QPD_2
+                qak.qak_2 = "OK"
+                qak.qak_3 = "Q22^Specimen Labeling Instructions^IHE_LABTF"
+                qak.qak_4 = "1"
                 # add the QAK segment to the RSP_K11 message
                 response.add(qak)
                 # copy the QPD segment from the incoming message
