@@ -20,8 +20,8 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import unittest
-from hl7apy.core import Message, Segment, Field, Component, SubComponent
-from hl7apy.parser import parse_segment
+from hl7apy.core import Message, Field, Component, SubComponent
+from hl7apy.parser import parse_segment, parse_message
 from hl7apy.base_datatypes import *
 from hl7apy.exceptions import InvalidHighlightRange
 
@@ -52,6 +52,25 @@ class ToStringTestCase(unittest.TestCase):
                           'ESCAPE' : values[1][3]}
         msh = parse_segment('MSH{0}{1}'.format(encoding_chars['FIELD'], encoding_chars['FIELD'].join(values[1:])), encoding_chars=encoding_chars)
         return msh
+
+    def _get_test_msg(self, trailing_children=False):
+        if trailing_children is False:
+            return 'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
+                   'PID|1||566-554-3423^^^GHH^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r' \
+                   'PV1||O|||||||||||||||||1107080001^^^LIS\r' \
+                   'SPM|1|100187400201||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
+                   'ORC|NW|83428|83428|18740|SC||||20110708162817\r' \
+                   'TQ1|||||||||R\r' \
+                   'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN'
+        else:
+            return 'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN||\r' \
+                   'PID|1||566-554-3423^^^GHH^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M|||||||||||||||||||||||\r' \
+                   'PV1||O|||||||||||||||||1107080001^^^LIS|||||||||||||||||||||||||||||||||\r' \
+                   'SPM|1|100187400201||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC||\r' \
+                   'ORC|NW|83428|83428|18740|SC||||20110708162817|||||||||||||||||||||\r' \
+                   'TQ1|||||||||R|||||\r' \
+                   'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN|||||||||||||||||||||||||||||||||'
+
 
     def _create_test_message(self, msh_values):
         """
@@ -130,6 +149,12 @@ class ToStringTestCase(unittest.TestCase):
         self.assertRaises(IndexError, msh_1.to_er7)
         self.assertRaises(IndexError, msh_2.to_er7)
 
+    def test_trailing_children(self):
+        test_msg = self._get_test_msg(trailing_children=False)
+        test_msg_with_trailing = self._get_test_msg(trailing_children=True)
+        msg = parse_message(test_msg)
+        self.assertEqual(msg.to_er7(trailing_children=True), test_msg_with_trailing)
+        self.assertEqual(msg.to_er7(trailing_children=False), test_msg)
 
 if __name__ == '__main__':
     unittest.main()

@@ -166,7 +166,7 @@ class ElementList(collections.MutableSequence):
         """
         ordered_keys = self.element.structure_by_name.keys() if self.element.structure_by_name is not None else []
         children = [self.indexes.get(k, None) for k in ordered_keys]
-        return _remove_trailing(children)
+        return children
 
     def get_children(self):
         """
@@ -570,7 +570,7 @@ class Element(object):
         s = []
         for child in self._get_children(trailing_children):
             if child:
-                s.extend(repetition.to_er7(encoding_chars) for repetition in child)
+                s.extend(repetition.to_er7(encoding_chars, trailing_children) for repetition in child)
             else:
                 try:
                     s.append(self._handle_empty_children(encoding_chars))
@@ -879,7 +879,7 @@ class SubComponent(CanBeVaries):
     def add(self, obj):
         raise OperationNotAllowed("Cannot add children to a SubComponent")
 
-    def to_er7(self, encoding_chars=None, trailing_chars=None):
+    def to_er7(self, encoding_chars=None, trailing_children=False):
         """
         Return the ER7-encoded string
 
@@ -1194,7 +1194,7 @@ class Field(SupportComplexDataType):
                 return self.msh_2_1.children[0].value.value
             except IndexError:
                 return self.msh_2_1.children[0].value
-        return super(Field, self).to_er7(encoding_chars)
+        return super(Field, self).to_er7(encoding_chars, trailing_children)
 
     def _set_value(self, value):
         if self.name in ('MSH_1', 'MSH_2'):
@@ -1401,7 +1401,7 @@ class Segment(Element):
         s = [self.name]
         for child in self._get_children(trailing_children):
             if child is not None:
-                s.append(repetition.join(item.to_er7(encoding_chars) for item in child))
+                s.append(repetition.join(item.to_er7(encoding_chars, trailing_children) for item in child))
             else:
                 try:
                     s.append(self._handle_empty_children(encoding_chars))
