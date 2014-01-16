@@ -40,7 +40,7 @@ class LB(object):
         m.QPD.query_tag = uuid.uuid4().hex
         m.QPD.QPD_3 = patient_id
         m.RCP = "RCP|I||R"
-        return m.to_er7()
+        return m.to_mllp()
 
     @staticmethod
     def receive(message):
@@ -105,10 +105,10 @@ class LIP(object):
                 response.MSA.MSA_2 = m.MSH.MSH_10
                 # create a QAK segment
                 qak = Segment("QAK")
-                qak.qak_2 = m.QPD.QPD_2
-                qak.qak_3 = "OK"
-                qak.qak_4 = "Q22^Specimen Labeling Instructions^IHE_LABTF"
-                qak.qak_5 = "1"
+                qak.qak_1 = m.QPD.QPD_2
+                qak.qak_2 = "OK"
+                qak.qak_3 = "Q22^Specimen Labeling Instructions^IHE_LABTF"
+                qak.qak_4 = "1"
                 # add the QAK segment to the RSP_K11 message
                 response.add(qak)
                 # copy the QPD segment from the incoming message
@@ -131,4 +131,4 @@ class LIP(object):
                 response.add(obr)
             else:
                 response = LIP.nak(m)
-        return response.to_er7() # encode to ER7
+        return response.to_mllp() # encode to ER7

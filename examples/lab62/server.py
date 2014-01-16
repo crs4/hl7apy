@@ -68,7 +68,7 @@ class MLLPServer(SocketServer.StreamRequestHandler):
                 # delegate message response to the LIP actor
                 response = LIP.reply(message)
                 # encode the response
-                self.wfile.write(SB + response + CR + EB + CR)
+                self.wfile.write(response)
                 line = ''
 
 if __name__ == "__main__":

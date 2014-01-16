@@ -38,6 +38,7 @@ from hl7apy.exceptions import ChildNotFound, ChildNotValid, \
                               InvalidName
 from hl7apy.factories import datatype_factory
 from hl7apy.base_datatypes import BaseDataType
+from hl7apy.consts import MLLP_ENCODING_CHARS
 
 def is_base_datatype(datatype, version=None):
     """
@@ -166,7 +167,7 @@ class ElementList(collections.MutableSequence):
         """
         ordered_keys = self.element.structure_by_name.keys() if self.element.structure_by_name is not None else []
         children = [self.indexes.get(k, None) for k in ordered_keys]
-        return _remove_trailing(children)
+        return children
 
     def get_children(self):
         """
@@ -570,7 +571,7 @@ class Element(object):
         s = []
         for child in self._get_children(trailing_children):
             if child:
-                s.extend(repetition.to_er7(encoding_chars) for repetition in child)
+                s.extend(repetition.to_er7(encoding_chars, trailing_children) for repetition in child)
             else:
                 try:
                     s.append(self._handle_empty_children(encoding_chars))
@@ -879,7 +880,7 @@ class SubComponent(CanBeVaries):
     def add(self, obj):
         raise OperationNotAllowed("Cannot add children to a SubComponent")
 
-    def to_er7(self, encoding_chars=None, trailing_chars=None):
+    def to_er7(self, encoding_chars=None, trailing_children=False):
         """
         Return the ER7-encoded string
 
@@ -1194,7 +1195,7 @@ class Field(SupportComplexDataType):
                 return self.msh_2_1.children[0].value.value
             except IndexError:
                 return self.msh_2_1.children[0].value
-        return super(Field, self).to_er7(encoding_chars)
+        return super(Field, self).to_er7(encoding_chars, trailing_children)
 
     def _set_value(self, value):
         if self.name in ('MSH_1', 'MSH_2'):
@@ -1401,7 +1402,7 @@ class Segment(Element):
         s = [self.name]
         for child in self._get_children(trailing_children):
             if child is not None:
-                s.append(repetition.join(item.to_er7(encoding_chars) for item in child))
+                s.append(repetition.join(item.to_er7(encoding_chars, trailing_children) for item in child))
             else:
                 try:
                     s.append(self._handle_empty_children(encoding_chars))
@@ -1582,6 +1583,26 @@ class Message(Group):
             raise OperationNotAllowed('Cannot assign a message with different encoding chars')
 
         super(Message, self).parse_children(text, find_groups, **kwargs)
+
+    def to_mllp(self, encoding_chars=None, trailing_children=False):
+        """
+        Returns the er7 representation of the message wrapped with mllp encoding characters
+
+        :type encoding_chars: ``dict``
+        :param encoding_chars: a dictionary containing the encoding chars or None to use the default (see :func:`hl7apy.set_default_encoding_chars`)
+
+        :type trailing_children: ``bool``
+        :param trailing_children: if True, trailing children will be added even if their value is None
+
+        :return: the ER7-encoded string wrapped with the mllp encoding characters
+        """
+        if encoding_chars is None:
+            encoding_chars = self.encoding_chars
+
+        return "{0}{1}{2}{3}{2}".format(MLLP_ENCODING_CHARS.SB,
+                                        self.to_er7(encoding_chars, trailing_children),
+                                        MLLP_ENCODING_CHARS.CR,
+                                        MLLP_ENCODING_CHARS.EB)
 
     def _get_encoding_chars(self):
         msh_2 = self.msh.msh_2.msh_2_1.children[0].value.value
