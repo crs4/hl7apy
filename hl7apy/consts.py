@@ -40,11 +40,18 @@ DEFAULT_ENCODING_CHARS = {
 #: default hl7 version
 DEFAULT_VERSION = "2.5"
 
-#: MLLP encoding chars
+
 class MLLP_ENCODING_CHARS:
+    """
+    MLLP encoding chars
+    """
+    #: Start Block
     SB = '\x0b'
+    #: End Block
     EB = '\x1c'
+    #: Carriage return
     CR = '\x0d'
+
 
 class VALIDATION_LEVEL:
     """
