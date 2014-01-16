@@ -103,6 +103,27 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 </dd></dl>
 
 <dl class="method">
+<dt id="hl7apy.core.Message.to_mllp">
+<tt class="descname">to_mllp</tt><big>(</big><em>encoding_chars=None</em>, <em>trailing_children=False</em><big>)</big><a class="headerlink" href="#hl7apy.core.Message.to_mllp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the er7 representation of the message wrapped with mllp encoding characters</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_encoding_chars()</span></tt></a>)</li>
+<li><strong>trailing_children</strong> (<tt class="docutils literal"><span class="pre">bool</span></tt>) &#8211; if True, trailing children will be added even if their value is None</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the ER7-encoded string wrapped with the mllp encoding characters</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="hl7apy.core.Message.validate">
 <tt class="descname">validate</tt><big>(</big><big>)</big><a class="headerlink" href="#hl7apy.core.Message.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validate the HL7 element using the <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL.STRICT" title="hl7apy.consts.VALIDATION_LEVEL.STRICT"><tt class="xref py py-attr docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL.STRICT</span></tt></a> validation level</p>
@@ -663,7 +684,7 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 </table>
 <dl class="method">
 <dt id="hl7apy.core.SubComponent.to_er7">
-<tt class="descname">to_er7</tt><big>(</big><em>encoding_chars=None</em>, <em>trailing_chars=None</em><big>)</big><a class="headerlink" href="#hl7apy.core.SubComponent.to_er7" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">to_er7</tt><big>(</big><em>encoding_chars=None</em>, <em>trailing_children=False</em><big>)</big><a class="headerlink" href="#hl7apy.core.SubComponent.to_er7" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the ER7-encoded string</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -760,9 +781,25 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
           <li><a href="index.html" >API Docs</a> &raquo;</li> 
       </ul>
     </div>
+
     <div class="footer">
-        &copy; Copyright 2012-2013, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
+        &copy; Copyright 2012-2014, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9129954-3']);
+  _gaq.push(['_setDomainName', 'hl7apy.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
   </body>
 </html>
