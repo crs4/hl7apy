@@ -523,18 +523,14 @@ class TestField(unittest.TestCase):
 
 class TestComponent(unittest.TestCase):
 
-#Component test cases
-
-    def test_create_empty_component_strict(self):
-        c = Component(datatype="ST")
-        self.assertEqual(c.classname, 'Component')
-        c1 = Component(datatype="ST", validation_level=VALIDATION_LEVEL.STRICT)
+    #Component test cases
 
     def test_create_empty_component(self):
         c = Component()
         self.assertEqual(c.classname, 'Component')
-
-    def test_create_empty_component_strict(self):
+        c = Component(datatype='ST')
+        self.assertEqual(c.classname, 'Component')
+        Component(datatype='ST', validation_level=VALIDATION_LEVEL.STRICT)
         self.assertRaises(OperationNotAllowed, Component, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_create_unknown_component(self):
@@ -732,6 +728,10 @@ class TestSubComponent(unittest.TestCase):
         self.assertEqual(a.classname, 'SubComponent')
         b = SubComponent(datatype='ST')
         self.assertEqual(b.classname, 'SubComponent')
+
+    def test_create_unknown_subcomponent(self):
+        self.assertRaises(InvalidName, SubComponent, 'xxx_1')
+        self.assertRaises(InvalidName, SubComponent, 'CX')
 
     def test_create_invalid_subcomponent_empty(self):
         self.assertRaises(OperationNotAllowed, SubComponent)

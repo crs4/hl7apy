@@ -326,6 +326,8 @@ class TestID(unittest.TestCase):
         self.assertEqual(id.to_er7(), id_str)
 
 
+class TestIS(unittest.TestCase):
+
     #Test IS datatype
 
     def test_IS(self):

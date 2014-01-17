@@ -801,10 +801,13 @@ class CanBeVaries(Element):
                                             validation_level, traversal_parent)
             self.name = name.upper()
         else:
-            Element.__init__(self, name, None, reference, version,
-                                            validation_level, traversal_parent)
+            try:
+                Element.__init__(self, name, None, reference, version,
+                                 validation_level, traversal_parent)
+            except ChildNotFound:
+                raise InvalidName(self.classname, self.name)
 
-        # it means that the name was found in the references but it's not a valid reference (e.g. SubComponent('CX'))
+        # it means that the name was found in the references but it's not a valid reference (e.g. Component('CX'))
         if self.name and not self.name.startswith('VARIES') and self.datatype is None:
             raise InvalidName(self.classname, self.name)
 
