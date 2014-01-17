@@ -64,15 +64,15 @@ class TestParser(unittest.TestCase):
                 'ESCAPE' : '\\'}
 
     def test_parse_message_ignoring_groups(self):
-        msh = "MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.5||||AL\r"
-        evn = "EVN||20080115153000||AAA|AAA|20080114003000\r"
-        pid = "PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r"
-        nk1 = "NK1|1|WOMAN^WIFE|SPO|1111 SOMEWHERE STREET^^SOMEWHERE^^^USA\r"
-        pv1 = "PV1|1|I|PATIENT WARD|U||||^REFERRING^DOCTOR^^MD|^CONSULTING^DOCTOR|CAR||||2|A0|||||||||||||||||||||||||||||2013\r"
-        in1 = "IN1|1|INSURANCE PLAN ID^PLAN DESC|COMPANY ID|INSURANCE COMPANY, INC.|5555 INSURERS STREET^^SOMEWHERE^^^USA||||||||||||||||||||||||||||||||||||||||||||555-44-3333"
+        msh = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.5||||AL\r'
+        evn = 'EVN||20080115153000||AAA|AAA|20080114003000\r'
+        pid = 'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r'
+        nk1 = 'NK1|1|WOMAN^WIFE|SPO|1111 SOMEWHERE STREET^^SOMEWHERE^^^USA\r'
+        pv1 = 'PV1|1|I|PATIENT WARD|U||||^REFERRING^DOCTOR^^MD|^CONSULTING^DOCTOR|CAR||||2|A0|||||||||||||||||||||||||||||2013\r'
+        in1 = 'IN1|1|INSURANCE PLAN ID^PLAN DESC|COMPANY ID|INSURANCE COMPANY, INC.|5555 INSURERS STREET^^SOMEWHERE^^^USA||||||||||||||||||||||||||||||||||||||||||||555-44-3333'
 
         str_message = msh+evn+pid+nk1+pv1+in1
-        message = parse_message(str_message, find_groups = False)
+        message = parse_message(str_message, find_groups=False)
 
         self.assertEqual(message.children[0].name, 'MSH')
         self.assertEqual(message.children[1].name, 'EVN')
@@ -82,7 +82,7 @@ class TestParser(unittest.TestCase):
         self.assertEqual(message.children[5].name, 'IN1')
         self.assertEqual(message.pid.pid_5.pid_5_1.fn_1.to_er7(), 'SURNAME')
         self.assertEqual(message.evn.evn_5.xcn_1.to_er7(), message.evn.evn_5.evn_5_1.to_er7())
-        m_string= message.to_er7()
+        m_string = message.to_er7()
         self.assertEqual(m_string, str_message)
 
     def test_parse_message_create_groups(self):
@@ -96,7 +96,7 @@ class TestParser(unittest.TestCase):
         specimen_1 = message.children[2]
         self.assertEqual(specimen_1.children[0].name, 'SPM')
         self.assertEqual(specimen_1.children[1].name, 'OML_O33_ORDER')
-        #the second specimen has three different orders, and the second and third are inside the "ORDER PRIOR" group"
+        #the second specimen has three different orders, and the second and third are inside the ORDER PRIOR group
         specimen_2 = message.children[3]
         self.assertEqual(specimen_2.children[1].name, 'OML_O33_ORDER')
         spm_2_order =  specimen_2.children[1]
@@ -125,11 +125,11 @@ class TestParser(unittest.TestCase):
 
     def test_parse_message_with_repetition_segments_and_groups(self):
         msg = self._get_multiple_segments_groups_message()
-        m = parse_message(msg)
+        parse_message(msg)
 
     def test_parse_invalid_message(self):
-        msh = "PID|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.6||||AL\r"
-        pid = "PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M"
+        msh = 'PID|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.6||||AL\r'
+        pid = 'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M'
         msg = msh  + pid
         self.assertRaises(ParserError, parse_message, msg)
 
@@ -149,27 +149,27 @@ class TestParser(unittest.TestCase):
         self.assertRaises(InvalidEncodingChars, parse_message, a, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_parse_unknown_message_strict(self):
-        message = "MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.6||||AL\r"
+        message = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.6||||AL\r'
         parse_message(message, validation_level=VALIDATION_LEVEL.STRICT)
-        message = "MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000|||0123456789|P|2.6||||AL\r"
+        message = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000|||0123456789|P|2.6||||AL\r'
         self.assertRaises(OperationNotAllowed, parse_message, message, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_parse_message_duplicate_encoding_chars(self):
-        message = "MSH|^&&^|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.6||||AL\r"
+        message = 'MSH|^&&^|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.6||||AL\r'
         self.assertRaises(InvalidEncodingChars, parse_message, message)
         self.assertRaises(InvalidEncodingChars, parse_message, message, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_parse_message_missing_structure(self):
-        msh = "MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000|||0123456789|P|2.6||||AL\r"
-        pid = "PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r"
+        msh = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000|||0123456789|P|2.6||||AL\r'
+        pid = 'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r'
         msg = msh+pid
         parse_message(msg)
 
     def test_parse_message_missing_structure_strict(self):
-        msh = "MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000|||0123456789|P|2.6||||AL\r"
-        pid = "PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r"
+        msh = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000|||0123456789|P|2.6||||AL\r'
+        pid = 'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r'
         msg = msh+pid
-        self.assertRaises(OperationNotAllowed, parse_message, msg, validation_level = VALIDATION_LEVEL.STRICT)
+        self.assertRaises(OperationNotAllowed, parse_message, msg, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_parse_message_incomplete_structure(self):
         m = parse_message('MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^|')
@@ -179,8 +179,8 @@ class TestParser(unittest.TestCase):
 
 
     def test_parse_segments(self):
-        msh = "MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.5||||AL\r"
-        pid = "PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M"
+        msh = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.5||||AL\r'
+        pid = 'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M'
 
         segments_str = msh+pid
         segments = parse_segments(segments_str)
@@ -188,19 +188,20 @@ class TestParser(unittest.TestCase):
         self.assertEqual(pid, segments[1].to_er7())
 
     def test_parse_segment(self):
-        segment = "PV1|1|I|PATIENT WARD|U||||^REFERRING^DOCTOR|^CONSULTING^DOCTOR|CAR||||2|A0|||||||||||||||||||||||||||||2008"
+        segment = 'PV1|1|I|PATIENT WARD|U||||^REFERRING^DOCTOR|^CONSULTING^DOCTOR|CAR||||2|A0|||||||||||||||||||||||||||||2008'
         pv1 = parse_segment(segment)
         self.assertEqual(pv1.name, 'PV1')
         self.assertEqual(pv1.pv1_2.to_er7(), 'I')
 
     def test_parse_segment_invalid_encoding_chars(self):
         segment = 'EVN@@20080115153000@@@@20080114003000\r'
-        self.assertRaises(InvalidEncodingChars, parse_segment, segment, encoding_chars = self._get_invalid_encoding_chars())
-        self.assertRaises(InvalidEncodingChars, parse_segment, segment, encoding_chars = self._get_invalid_encoding_chars(), validation_level = VALIDATION_LEVEL.STRICT)
+        self.assertRaises(InvalidEncodingChars, parse_segment, segment, encoding_chars=self._get_invalid_encoding_chars())
+        self.assertRaises(InvalidEncodingChars, parse_segment, segment, encoding_chars=self._get_invalid_encoding_chars(),
+                          validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_parse_segment_custom_encoding_chars(self):
-        segment = "PV1@1@I@PATIENT WARD@U@@@@$REFERRING$DOCTOR$$MD@$CONSULTING$DOCTOR$P@CAR@@@@2@A0@@@@@@@@"
-        s = parse_segment(segment, encoding_chars = self._get_custom_encoding_chars())
+        segment = 'PV1@1@I@PATIENT WARD@U@@@@$REFERRING$DOCTOR$$MD@$CONSULTING$DOCTOR$P@CAR@@@@2@A0@@@@@@@@'
+        s = parse_segment(segment, encoding_chars=self._get_custom_encoding_chars())
         self.assertEqual(s.pv1_3.to_er7(), 'PATIENT WARD')
         self.assertEqual(s.pv1_8.pv1_8_2.to_er7(), 'REFERRING')
 
@@ -235,7 +236,7 @@ class TestParser(unittest.TestCase):
 
     def test_parse_fields_multiple_instances(self):
         field = '||@PID.3.1^aaaa^~@PID.8^F'
-        f = parse_fields(field, name_prefix = 'PID')
+        f = parse_fields(field, name_prefix='PID')
         self.assertEqual(len(f), 2) #only the valued field is recognized
         self.assertEqual(f[0].cx_1.to_er7(), '@PID.3.1')
 
@@ -246,12 +247,13 @@ class TestParser(unittest.TestCase):
 
     def test_parse_fields_invalid_encoding_chars(self):
         fields = 'PID|xxx|yyy^zz'
-        self.assertRaises(InvalidEncodingChars, parse_fields, fields, encoding_chars = self._get_invalid_encoding_chars())
-        self.assertRaises(InvalidEncodingChars, parse_fields, fields, encoding_chars = self._get_invalid_encoding_chars(), validation_level = VALIDATION_LEVEL.STRICT)
+        self.assertRaises(InvalidEncodingChars, parse_fields, fields, encoding_chars=self._get_invalid_encoding_chars())
+        self.assertRaises(InvalidEncodingChars, parse_fields, fields, encoding_chars=self._get_invalid_encoding_chars(),
+                          validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_parse_fields_custom_encoding_chars(self):
         fields = 'xxx@yyy$zz'
-        f = parse_fields(fields, encoding_chars = self._get_custom_encoding_chars())
+        f = parse_fields(fields, encoding_chars=self._get_custom_encoding_chars())
         self.assertEqual(f[0].to_er7(encoding_chars=self._get_custom_encoding_chars()), 'xxx')
         self.assertEqual(f[1].children[0].to_er7(), 'yyy')
 
@@ -261,8 +263,9 @@ class TestParser(unittest.TestCase):
 
     def test_parse_field_invalid_encoding_chars(self):
         field = 'xxx^yyy^zzz'
-        self.assertRaises(InvalidEncodingChars, parse_field, field, encoding_chars = self._get_invalid_encoding_chars())
-        self.assertRaises(InvalidEncodingChars, parse_field, field, encoding_chars = self._get_invalid_encoding_chars(), validation_level = VALIDATION_LEVEL.STRICT)
+        self.assertRaises(InvalidEncodingChars, parse_field, field, encoding_chars=self._get_invalid_encoding_chars())
+        self.assertRaises(InvalidEncodingChars, parse_field, field, encoding_chars=self._get_invalid_encoding_chars(),
+                          validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_parse_field_custom_encoding_chars(self):
         field = 'aaa$bbb$ccc'
@@ -299,7 +302,7 @@ class TestParser(unittest.TestCase):
         components = 'aaa^bbb'
         self.assertRaises(InvalidEncodingChars, parse_components, components, encoding_chars=self._get_invalid_encoding_chars())
         self.assertRaises(InvalidEncodingChars, parse_components, components, encoding_chars=self._get_invalid_encoding_chars(),
-                          validation_level = VALIDATION_LEVEL.STRICT)
+                          validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_parse_component(self):
         component = 'comp'
@@ -316,14 +319,12 @@ class TestParser(unittest.TestCase):
 
     def test_parse_component_invalid_encoding_chars(self):
         component = 'comp'
-        self.assertRaises(InvalidEncodingChars, parse_component, component,
-                          encoding_chars=self._get_invalid_encoding_chars())
-        self.assertRaises(InvalidEncodingChars, parse_component, component,
-                          encoding_chars=self._get_invalid_encoding_chars(),
-                          validation_level = VALIDATION_LEVEL.STRICT)
+        self.assertRaises(InvalidEncodingChars, parse_component, component, encoding_chars=self._get_invalid_encoding_chars())
+        self.assertRaises(InvalidEncodingChars, parse_component, component, encoding_chars=self._get_invalid_encoding_chars(),
+                          validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_parse_invalid_name_component_strict(self):
-        self.assertRaises(InvalidName, parse_component, 'xxx', 'XXX', validation_level = VALIDATION_LEVEL.STRICT)
+        self.assertRaises(InvalidName, parse_component, 'xxx', 'XXX', validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_parse_subcomponents(self):
         subcomponent = 'subcomp'
@@ -340,7 +341,7 @@ class TestParser(unittest.TestCase):
         self.assertRaises(InvalidEncodingChars, parse_subcomponents, subcomponents,
                           encoding_chars=self._get_invalid_encoding_chars())
         self.assertRaises(InvalidEncodingChars, parse_subcomponents, subcomponents,
-                          encoding_chars=self._get_invalid_encoding_chars(), validation_level = VALIDATION_LEVEL.STRICT)
+                          encoding_chars=self._get_invalid_encoding_chars(), validation_level=VALIDATION_LEVEL.STRICT)
 
 
 if __name__ == '__main__':

@@ -104,7 +104,7 @@ class ToStringTestCase(unittest.TestCase):
         from datetime import datetime
 
         msg = Message('RSP_K11')
-        self.assertEqual(msg.to_er7(), 'MSH|^~\\&|||||%s|||||2.5' %datetime.strftime(datetime.now(), '%Y%m%d%H%M%S')
+        self.assertEqual(msg.to_er7(), 'MSH|^~\\&|||||%s|||||2.5' % datetime.strftime(datetime.now(), '%Y%m%d%H%M%S')
 )
 
     def test_highlights(self):
@@ -159,7 +159,7 @@ class ToStringTestCase(unittest.TestCase):
 
     def test_to_mllp(self):
         test_msg = self._get_test_msg()
-        mllp_msg = "{0}{1}{2}{3}{2}".format(MLLP_ENCODING_CHARS.SB, test_msg,
+        mllp_msg = '{0}{1}{2}{3}{2}'.format(MLLP_ENCODING_CHARS.SB, test_msg,
                                             MLLP_ENCODING_CHARS.CR, MLLP_ENCODING_CHARS.EB)
 
         msg = parse_message(test_msg)
@@ -167,7 +167,7 @@ class ToStringTestCase(unittest.TestCase):
 
     def test_to_mllp_with_trailing(self):
         test_msg = self._get_test_msg(trailing_children=True)
-        mllp_msg = "{0}{1}{2}{3}{2}".format(MLLP_ENCODING_CHARS.SB, test_msg,
+        mllp_msg = '{0}{1}{2}{3}{2}'.format(MLLP_ENCODING_CHARS.SB, test_msg,
                                             MLLP_ENCODING_CHARS.CR, MLLP_ENCODING_CHARS.EB)
 
         msg = parse_message(test_msg)

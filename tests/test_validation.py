@@ -98,7 +98,6 @@ class TestValidation(unittest.TestCase):
         msg = self._create_message(self.oml_o33)
         del msg.oml_o33_specimen
         self.assertFalse(msg.validate())
-        # print msg.children.indexes.keys()
 
     def test_missing_required_segment(self):
         """
