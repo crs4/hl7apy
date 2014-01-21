@@ -8,7 +8,7 @@ HL7apy
 
 HL7apy is a Python package to parse, create and handle `HL7 <http://www.hl7.org>`_ v2 messages.
 
-Current version is 1.0 rc1
+Current version is 1.0.0-rc.2
 
 Currently supported HL7 versions are: 2.2, 2.3, 2.3.1, 2.4, 2.5, 2.5.1, 2.6.
 
@@ -48,7 +48,7 @@ HL7apy is released under the MIT License (MIT)
 
 ::
 
-  Copyright (c) 2012-2013, CRS4
+  Copyright (c) 2012-2014, CRS4
 
   Permission is hereby granted, free of charge, to any person obtaining a copy of
   this software and associated documentation files (the "Software"), to deal in

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2013, CRS4
+# Copyright (c) 2012-2014, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -25,7 +25,7 @@ from distutils.core import setup
 
 setup(
     name = 'hl7apy',
-    version = '1.0',
+    version = '1.0.0-rc.2',
     description = 'Python library for handling HL7 v2.x messages',
     license = 'MIT License',
     keywords = ['HL7', 'Health Level 7', 'healthcare'],
