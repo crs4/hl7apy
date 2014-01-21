@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2013, CRS4
+# Copyright (c) 2012-2014, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -79,17 +79,15 @@ class TestMessage(unittest.TestCase):
     def test_add_group_to_message(self):
         e = Message('OML_O35')
         self.assertRaises(ChildNotFound, e.add_group, 'UNKNOWN_GROUP')
-        g = e.add_group("OML_O35_PATIENT")
+        g = e.add_group('OML_O35_PATIENT')
         self.assertTrue(g.is_named('OML_O35_PATIENT'))
         self.assertEqual(g.classname, 'Group')
 
     def test_add_empty_children_to_message(self):
         a = Message('OML_O33', validation_level=VALIDATION_LEVEL.STRICT)
         self.assertRaises(ChildNotValid, a.add, Group())
-        #self.assertRaises(ChildNotValid, a.add, Segment())
         b = Message('OML_O33')
         b.add(Group())
-        #b.add(Segment())
 
     def test_add_not_allowed_segment_to_known_message(self):
         a = Message('OML_O33', validation_level=VALIDATION_LEVEL.STRICT)
@@ -118,30 +116,28 @@ class TestMessage(unittest.TestCase):
             b.pid = 'EVN||20080115153000||||20080114003000'
 
     def test_add_segment_to_message_mix(self):
-        a = Message("OML_O33",  validation_level=VALIDATION_LEVEL.QUIET)
-        msh = Segment("MSH", validation_level=VALIDATION_LEVEL.QUIET)
-        pid = Segment("PID", validation_level=VALIDATION_LEVEL.QUIET)
+        a = Message('OML_O33',  validation_level=VALIDATION_LEVEL.QUIET)
+        msh = Segment('MSH', validation_level=VALIDATION_LEVEL.QUIET)
+        pid = Segment('PID', validation_level=VALIDATION_LEVEL.QUIET)
         g = Group('OML_O33_PATIENT')
         g.add(pid)
         a.add(msh)
         a.add(g)
-        #print a.to_er7()      #check behaviour with when to_er7 is ready
-        self.assertTrue(True)
 
     def test_assign_value(self):
         msg = _get_test_msg()
-        a = Message("OML_O33", validation_level=VALIDATION_LEVEL.QUIET)
+        a = Message('OML_O33', validation_level=VALIDATION_LEVEL.QUIET)
         parsed_a = parse_message(msg, validation_level=VALIDATION_LEVEL.QUIET)
         a.value = msg
         self.assertEqual(a.to_er7(), parsed_a.to_er7())
 
-        b = Message("OML_O33", validation_level=VALIDATION_LEVEL.STRICT)
+        b = Message('OML_O33', validation_level=VALIDATION_LEVEL.STRICT)
         b.value = msg
         parsed_b = parse_message(msg, validation_level=VALIDATION_LEVEL.STRICT)
         self.assertEqual(b.to_er7(), parsed_b.to_er7())
         self.assertEqual(b.children.indexes.keys(), parsed_b.children.indexes.keys())
 
-        c = Message("ADT_A01", validation_level=VALIDATION_LEVEL.QUIET)
+        c = Message('ADT_A01', validation_level=VALIDATION_LEVEL.QUIET)
         with self.assertRaises(OperationNotAllowed):
             c.value = msg
 
@@ -149,7 +145,7 @@ class TestMessage(unittest.TestCase):
         with self.assertRaises(OperationNotAllowed):
             a.value = msg
 
-        c = Message("OML_O33", version='2.6')
+        c = Message('OML_O33', version='2.6')
         with self.assertRaises(OperationNotAllowed):
             c.value = msg
 
@@ -255,12 +251,12 @@ class TestSegment(unittest.TestCase):
         self.assertRaises(OperationNotAllowed, Segment)
 
     def test_create_unsupported_version_segment(self):
-        s = Segment('PID', version = '2.5')
+        s = Segment('PID', version='2.5')
         self.assertRaises(UnsupportedVersion, Segment, 'PID', version='2.0')
 
     def test_add_field(self):
         e = Segment('PID')
-        pid_5 = e.add_field("PID_5")
+        pid_5 = e.add_field('PID_5')
         self.assertEqual(pid_5.classname, 'Field')
         self.assertTrue(pid_5.is_named('PID_5'))
         self.assertTrue(pid_5.is_named('PATIENT_NAME'))
@@ -271,7 +267,7 @@ class TestSegment(unittest.TestCase):
         obr.obr_26 = 'xxx&yyy^zzz^www'
         obr_26 = obr.parent_result
         self.assertTrue(isinstance(obr_26, ElementProxy))
-        self.assertTrue(obr_26[0] == obr.obr_26[0], "obr.parent_result != obr.obr_26")
+        self.assertTrue(obr_26[0] == obr.obr_26[0], 'obr.parent_result != obr.obr_26')
 
     def test_traversal_by_name(self):
         obr = Segment('OBR')
@@ -377,9 +373,9 @@ class TestField(unittest.TestCase):
 
     def test_add_empty_component(self):
         f1 = Field('pid_3', validation_level=VALIDATION_LEVEL.STRICT)
-        self.assertRaises(ChildNotValid, f1.add, Component(datatype="ST"))
+        self.assertRaises(ChildNotValid, f1.add, Component(datatype='ST'))
         f2 =  Field('pid_3')
-        f2.add(Component(datatype="ST"))
+        f2.add(Component(datatype='ST'))
 
     def test_add_known_components_to_empty_fields(self):
         f1 = Field('pid_3', validation_level=VALIDATION_LEVEL.STRICT)
@@ -422,7 +418,7 @@ class TestField(unittest.TestCase):
         a = Field('pid_3',  validation_level=VALIDATION_LEVEL.STRICT)
         with self.assertRaises(OperationNotAllowed):
             a.datatype = 'HD'
-        self.assertRaises(OperationNotAllowed, Field, 'pid_3', datatype = 'HD', validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(OperationNotAllowed, Field, 'pid_3', datatype='HD', validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_override_field_datatype(self):
         a = Field('pid_3', 'HD')
@@ -511,10 +507,6 @@ class TestField(unittest.TestCase):
         self.assertEqual(f.to_er7(), 'xxx\F\yyy')
 
     def test_assign_value_with_repetition(self):
-        """
-        Check that the repetition encoding chars is handled as a normal char, thus escaped when converting the field to er7
-        :return:
-        """
         field_str = 'xxx~yyy'
         f = Field()
         f.value = field_str
@@ -531,18 +523,14 @@ class TestField(unittest.TestCase):
 
 class TestComponent(unittest.TestCase):
 
-#Component test cases
-
-    def test_create_empty_component_strict(self):
-        c = Component(datatype="ST")
-        self.assertEqual(c.classname, 'Component')
-        c1 = Component(datatype="ST", validation_level=VALIDATION_LEVEL.STRICT)
+    #Component test cases
 
     def test_create_empty_component(self):
         c = Component()
         self.assertEqual(c.classname, 'Component')
-
-    def test_create_empty_component_strict(self):
+        c = Component(datatype='ST')
+        self.assertEqual(c.classname, 'Component')
+        Component(datatype='ST', validation_level=VALIDATION_LEVEL.STRICT)
         self.assertRaises(OperationNotAllowed, Component, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_create_unknown_component(self):
@@ -553,13 +541,14 @@ class TestComponent(unittest.TestCase):
         self.assertRaises(InvalidName, Component, 'AD')
 
     def test_create_unsupported_version_component(self):
-        c = Component(datatype = 'ST', version = '2.5')
+        Component(datatype='ST', version='2.5')
+        self.assertRaises(UnsupportedVersion, Component, version='2.0')
 
     def test_add_empty_subcomponent(self):
         c1 = Component('cx_4', validation_level=VALIDATION_LEVEL.STRICT)
-        #self.assertRaises(ChildNotValid, c1.add, SubComponent()) #Strange Exception raised here: expected string or buffer(*)
+        self.assertRaises(ChildNotValid, c1.add, SubComponent(datatype='ST'))
         c2 = Component('cx_4')
-        #c2.add(SubComponent()) #the same as (*)
+        c2.add(SubComponent(datatype='ST'))
 
     def add_unknown_component_strict(self):
         self.assertRaises(OperationNotAllowed, Component, validation_level=VALIDATION_LEVEL.STRICT)
@@ -593,15 +582,15 @@ class TestComponent(unittest.TestCase):
     def test_add_more_subcomponents_to_base_datatype_component(self):
         c = Component(datatype='ST')
         c.add(SubComponent(datatype='ST'))
-        self.assertRaises(MaxChildLimitReached, c.add, SubComponent(datatype="ST"))
+        self.assertRaises(MaxChildLimitReached, c.add, SubComponent(datatype='ST'))
         #c1 = Component(datatype='ST', validation_level=VALIDATION_LEVEL.STRICT)
-        #self.assertRaises(ChildNotValid, c1.add, SubComponent(datatype="ST"))
+        #self.assertRaises(ChildNotValid, c1.add, SubComponent(datatype='ST'))
 
     def test_override_datatype_strict(self):
         c = Component('CX_1',  validation_level=VALIDATION_LEVEL.STRICT)
         with self.assertRaises(OperationNotAllowed):
             c.datatype = 'TX'
-        c1 = Component('CX_1', datatype = 'ST', validation_level=VALIDATION_LEVEL.STRICT)
+        c1 = Component('CX_1', datatype='ST', validation_level=VALIDATION_LEVEL.STRICT)
         with self.assertRaises(OperationNotAllowed):
             c1.datatype = 'TX'
 
@@ -623,10 +612,9 @@ class TestComponent(unittest.TestCase):
         g = Group()
         m = Message()
         f = Field()
-        c_base = Component(datatype="ST")
-        c_complex = Component(datatype="CWE")
-        sub = SubComponent(datatype="ST")
-        #Is this the correct Exception? or shall it be ChildNotValid?
+        c_base = Component(datatype='ST')
+        c_complex = Component(datatype='CWE')
+
         self.assertRaises(ChildNotValid, c_base.add, g)
         self.assertRaises(ChildNotValid, c_base.add, m)
         self.assertRaises(ChildNotValid, c_base.add, f)
@@ -736,10 +724,14 @@ class TestSubComponent(unittest.TestCase):
      #SubComponent test cases
 
     def test_create_subcomponent(self):
-        a = SubComponent('HD_1', datatype = 'ST')
+        a = SubComponent('HD_1', datatype='ST')
         self.assertEqual(a.classname, 'SubComponent')
-        b = SubComponent(datatype = 'ST')
+        b = SubComponent(datatype='ST')
         self.assertEqual(b.classname, 'SubComponent')
+
+    def test_create_unknown_subcomponent(self):
+        self.assertRaises(InvalidName, SubComponent, 'xxx_1')
+        self.assertRaises(InvalidName, SubComponent, 'CX')
 
     def test_create_invalid_subcomponent_empty(self):
         self.assertRaises(OperationNotAllowed, SubComponent)
@@ -748,8 +740,8 @@ class TestSubComponent(unittest.TestCase):
         self.assertRaises(OperationNotAllowed, SubComponent, 'CX_4', datatype='ST')
 
     def test_create_unsupported_version_subcomponent(self):
-        s = SubComponent(datatype = 'ST', version = '2.5')
-        self.assertRaises(UnsupportedVersion, SubComponent, datatype = 'ST', version = '2.0')
+        SubComponent(datatype='ST', version='2.5')
+        self.assertRaises(UnsupportedVersion, SubComponent, datatype='ST', version='2.0')
 
     def test_change_datatype_strict(self):
         self.assertRaises(OperationNotAllowed, SubComponent, 'HD_1', datatype='TX', validation_level=VALIDATION_LEVEL.STRICT)

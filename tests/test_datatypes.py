@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2013, CRS4
+# Copyright (c) 2012-2014, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -90,7 +90,7 @@ class TestDT(unittest.TestCase):
         date2 = datetime.strptime('20130715', '%Y%m%d')
         dt = DT(date, format='%Y')
         dt1 = DT(date1, format='%Y%m')
-        dt2 = DT(date2, format= '%Y%m%d')
+        dt2 = DT(date2, format='%Y%m%d')
         self.assertEqual(dt.classname, 'DT')
         self.assertEqual(dt.to_er7(), datetime.strftime(date, dt.format))
         self.assertEqual(dt1.to_er7(), datetime.strftime(date1, dt1.format))
@@ -149,21 +149,21 @@ class TestTM(unittest.TestCase):
         time2 = datetime.strptime('010111.111', '%H%M%S.%f')
         tm = TM(time, format='%H%M', offset='+0100')
         tm2 = TM(time2, format='%H%M%S.%f', offset='-0300')
-        TM(time, offset="+0000")
-        TM(time, offset="-0000")
-        TM(time, offset="+1200")
-        TM(time, offset="-1200")
+        TM(time, offset='+0000')
+        TM(time, offset='-0000')
+        TM(time, offset='+1200')
+        TM(time, offset='-1200')
         self.assertEqual(tm.offset, '+0100')
         self.assertEqual(tm2.offset, '-0300')
         self.assertEqual(tm.to_er7(), '0101+0100') #check if a space is needed between time and offset, or not
         self.assertEqual(tm2.to_er7(), '010111.111000-0300')
 
     def test_TM_invalid_offset(self):
-        self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset = '+00:00')
-        self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset = '&0100')
-        self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset = '+100')
-        self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset = '+1300')
-        self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset = '-1300')
+        self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset='+00:00')
+        self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset='&0100')
+        self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset='+100')
+        self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset='+1300')
+        self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset='-1300')
 
 
 class TestDTM(unittest.TestCase):
@@ -180,12 +180,12 @@ class TestDTM(unittest.TestCase):
 
         dtm  = DTM(dtime, format='%Y')
         dtm1 = DTM(dtime1, format='%Y%m')
-        dtm2 = DTM(dtime2, format= '%Y%m%d')
-        dtm3 = TM(dtime3, format= '%H')
-        dtm4 = TM(dtime4, format=  '%H%M')
-        dtm5 = TM(dtime5, format= '%H%M%S')
-        dtm6 = TM(dtime6, format= '%H%M%S.%f')
-        dtm7 = DTM(dtime7, format= '%Y%m%d%H%M%S.%f')
+        dtm2 = DTM(dtime2, format='%Y%m%d')
+        dtm3 = TM(dtime3, format='%H')
+        dtm4 = TM(dtime4, format='%H%M')
+        dtm5 = TM(dtime5, format='%H%M%S')
+        dtm6 = TM(dtime6, format='%H%M%S.%f')
+        dtm7 = DTM(dtime7, format='%Y%m%d%H%M%S.%f')
 
         self.assertEqual(dtm.classname, 'DTM')
         self.assertEqual(dtm.to_er7(), datetime.strftime(dtime, dtm.format))
@@ -208,14 +208,14 @@ class TestDTM(unittest.TestCase):
         self.assertRaises(InvalidDateFormat, DTM, dtime, format='%m%d%H%M%S.%f')
 
     def test_DTM_offset(self):
-        dtime =  dtime = datetime.strptime('20130715 010111.111000', '%Y%m%d %H%M%S.%f')
-        dtm = DTM(dtime, offset = '+0100')
+        dtime = datetime.strptime('20130715 010111.111000', '%Y%m%d %H%M%S.%f')
+        dtm = DTM(dtime, offset='+0100')
         self.assertEqual(dtm.to_er7(),'20130715010111.111000+0100' )
 
     def test_DTM_invalid_offset(self):
-        self.assertRaises(InvalidDateOffset, DTM, datetime.strptime('2013', '%Y'), offset = '+00:00')
-        self.assertRaises(InvalidDateOffset, DTM, datetime.strptime('2013', '%Y'), offset = '&0100')
-        self.assertRaises(InvalidDateOffset, DTM, datetime.strptime('2013', '%Y'), offset = '+100')
+        self.assertRaises(InvalidDateOffset, DTM, datetime.strptime('2013', '%Y'), offset='+00:00')
+        self.assertRaises(InvalidDateOffset, DTM, datetime.strptime('2013', '%Y'), offset='&0100')
+        self.assertRaises(InvalidDateOffset, DTM, datetime.strptime('2013', '%Y'), offset='+100')
 
 
 class TestST(unittest.TestCase):
@@ -228,12 +228,12 @@ class TestST(unittest.TestCase):
         self.assertEqual(st.to_er7(), 'Specimen')
 
     def test_ST_maxlength_strict(self):
-        str = 'a' * (ST(' ').max_length +1)
+        str = 'a' * (ST(' ').max_length + 1)
         self.assertRaises(MaxLengthReached, ST, str, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_ST_maxlength(self):
-        str = 'a' * (ST(' ').max_length +100)
-        st = ST(str) #no exception is raised here
+        str = 'a' * (ST(' ').max_length + 100)
+        ST(str)
 
     def test_ST_field_escaping(self):
         st = ST('|field|')
@@ -277,11 +277,11 @@ class TestFT(unittest.TestCase):
         self.assertEqual(ft.to_er7(), text)
 
     def test_FT_maxlength_strict(self):
-        ft = 'a'*(FT(' ').max_length +1)
+        ft = 'a' * (FT(' ').max_length + 1)
         self.assertRaises(MaxLengthReached, FT, ft, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_FT_maxlength(self):
-        ft_str = 'a'*(FT(' ').max_length +1)
+        ft_str = 'a' * (FT(' ').max_length + 1)
         ft = FT(ft_str) #no exception is raised here
 
     def test_FT_field_escaping(self):
@@ -325,7 +325,8 @@ class TestID(unittest.TestCase):
         self.assertEqual(id.classname, ('ID'))
         self.assertEqual(id.to_er7(), id_str)
 
-    #TODO: According to further implementations, add some tests to check strict validations
+
+class TestIS(unittest.TestCase):
 
     #Test IS datatype
 
@@ -336,10 +337,8 @@ class TestID(unittest.TestCase):
         self.assertEqual(is_obj.to_er7(), is_str)
 
     def test_IS_maxlength_strict(self):
-        is_str = 'a'*(IS(' ').max_length +1)
+        is_str = 'a' * (IS(' ').max_length + 1)
         self.assertRaises(MaxLengthReached, IS, is_str, validation_level=VALIDATION_LEVEL.STRICT)
-
-    #TODO: the same as IS
 
 
 class TestTX(unittest.TestCase):
@@ -353,12 +352,12 @@ class TestTX(unittest.TestCase):
         self.assertEqual(tx.to_er7(), text)
 
     def test_TX_maxlength_strict(self):
-        tx = 'a'*(TX(' ').max_length +1)
+        tx = 'a' * (TX(' ').max_length + 1)
         self.assertRaises(MaxLengthReached, TX, tx, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_TX_maxlength(self):
-        tx_str = 'a'*(TX(' ').max_length +1)
-        ft = TX(tx_str) #no exception is raised here
+        tx_str = 'a' * (TX(' ').max_length + 1)
+        TX(tx_str)
 
     def test_TX_field_escaping(self):
         tx = TX('|field|')
@@ -402,12 +401,12 @@ class TestGTS(unittest.TestCase):
         self.assertEqual(gts.to_er7(), text)
 
     def test_GTS_maxlength_strict(self):
-        gts = 'a'*(GTS(' ').max_length +1)
+        gts = 'a' * (GTS(' ').max_length + 1)
         self.assertRaises(MaxLengthReached, GTS, gts, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_GTS_maxlength(self):
-        gts_str = 'a'*(GTS(' ').max_length +1)
-        ft = GTS(gts_str) #no exception is raised here
+        gts_str = 'a' * (GTS(' ').max_length + 1)
+        GTS(gts_str)
 
     def test_GTS_field_escaping(self):
         gts = GTS('|field|')
@@ -449,9 +448,9 @@ class TestNM(unittest.TestCase):
         self.assertEqual(num.classname, 'NM')
         self.assertEqual(num.to_er7(),'1234')
         num = 1234
-        nm = NM(num)
+        NM(num)
         num = float(1234.54)
-        nm = NM(num)
+        NM(num)
 
     def test_NM_maxlength_strict(self):
         num = Decimal(1000000000000000000000000000000000000000000000000000000000000000000000000000)
@@ -462,7 +461,6 @@ class TestNM(unittest.TestCase):
         nm = NM(num)
         self.assertEqual(nm.to_er7(), '1000000000000000000000000000000000000000000000000000000000000000000000000000')
 
-
     def test_invalid_NM(self):
         self.assertRaises(ValueError, NM, 'aaaaa')
 
@@ -470,7 +468,6 @@ class TestNM(unittest.TestCase):
 class TestSI(unittest.TestCase):
 
     #Test SI datatype
-
 
     def test_SI(self):
         si = SI(1234)
