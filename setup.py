@@ -26,15 +26,26 @@ from distutils.core import setup
 setup(
     name = 'hl7apy',
     version = '1.0.0-rc.2',
-    description = 'Python library for handling HL7 v2.x messages',
+    description = 'Python library to parse, create and handle HL7 v2.x messages',
+    long_description = """
+    HL7apy is a Python library to parse, create and handle `HL7 <http://www.hl7.org>`_ v2 messages.
+
+    HL7apy is developed and maintained by `Healthcare Flows <http://www.crs4.it/healthcare-flows>`_ researchers at `CRS4 <http://www.crs4.it>`_.
+
+    Source code on GitHub: https://github.com/crs4/hl7apy
+
+    Documentation can be found here: http://hl7apy.org
+    """,
+    author = 'Daniela Ghironi, Vittorio Meloni, Alessandro Sulis, Federico Caboni',
+    author_email = '<daniela.ghironi@crs4.it>, <vittorio.meloni@crs4.it>, <alessandro.sulis@crs4.it>, <federico.caboni@me.com>',
+    url = 'https://github.com/crs4/hl7apy',
+    download_url = 'https://github.com/crs4/hl7apy/tarball/v1.0.0-rc.2',
     license = 'MIT License',
-    keywords = ['HL7', 'Health Level 7', 'healthcare'],
+    keywords = ['HL7', 'Health Level 7', 'healthcare', 'python'],
     classifiers = [
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Intended Audience :: Information Technology'
-        'Intended Audience :: Developers',
         'Intended Audience :: Healthcare Industry',
         'Topic :: Scientific/Engineering :: Medical Science Apps.'
     ],
