@@ -39,7 +39,7 @@ setup(
     author = 'Daniela Ghironi, Vittorio Meloni, Alessandro Sulis, Federico Caboni',
     author_email = '<daniela.ghironi@crs4.it>, <vittorio.meloni@crs4.it>, <alessandro.sulis@crs4.it>, <federico.caboni@me.com>',
     url = 'https://github.com/crs4/hl7apy',
-    download_url = 'https://github.com/crs4/hl7apy/tarball/v1.0.0-rc.1',
+    download_url = 'https://github.com/crs4/hl7apy/tarball/v1.0.0-rc.2',
     license = 'MIT License',
     keywords = ['HL7', 'Health Level 7', 'healthcare', 'python'],
     classifiers = [
