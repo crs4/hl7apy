@@ -202,12 +202,15 @@ def parse_field(text, name=None, version=None, encoding_chars=None, validation_l
     version = _get_version(version)
     encoding_chars = _get_encoding_chars(encoding_chars)
 
-    if force_varies:
-        reference = ('leaf', 'varies', None, None)
     try:
         field = Field(name, version=version, validation_level=validation_level, reference=reference)
     except InvalidName:
-        field = Field(version=version, validation_level=validation_level, reference=reference)
+        if force_varies:
+            reference = ('leaf', 'varies', None, None)
+            field = Field(name, version=version, validation_level=validation_level, reference=reference)
+        else:
+            field = Field(version=version, validation_level=validation_level, reference=reference)
+
     if name in ('MSH_1', 'MSH_2'):
         s = SubComponent(datatype='ST', value=text)
         c = Component(datatype='ST')
