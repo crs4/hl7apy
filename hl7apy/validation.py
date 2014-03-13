@@ -80,6 +80,8 @@ class Validator(object):
                 return False
             if element.is_unknown():
                 return False
+            if element.datatype == 'varies':
+                return True
             if not is_base_datatype(element.datatype, element.version):
                 # Component just to search in the datatypes....
                 ref = load_reference(element.datatype, 'Component', element.version)
