@@ -489,7 +489,7 @@ def _find_group(segment, search_data, validation_level=None):
         groups = [k for k, v in structure['structure_by_name'].iteritems() if v['cls'] == Group]
         # for any group found, create the group and check if the segment is one of its children
         for g in groups:
-            group = Group(g, validation_level=validation_level)
+            group = Group(g, version=segment.version, validation_level=validation_level)
             p_structure = ElementFinder.get_structure(group)
             search_data['structures'].append(p_structure)
             search_data['parents'].append(group)
