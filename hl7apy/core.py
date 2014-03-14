@@ -143,7 +143,7 @@ class ElementProxy(collections.Sequence):
         delattr(self.list[0], name)
 
     def __repr__(self):
-        return str(self.list)
+        return repr(self.list)
 
 
 class ElementList(collections.MutableSequence):
@@ -391,6 +391,9 @@ class ElementList(collections.MutableSequence):
 
     def __str__(self):
         return str(self.list)
+
+    def __repr__(self):
+        return repr(self.list)
 
 
 class ElementFinder(object):
