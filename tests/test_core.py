@@ -394,8 +394,8 @@ class TestField(unittest.TestCase):
         with self.assertRaises(ChildNotValid):
             f1.ce_1 = Component('CX_1')
         f2 = Field('pid_3')
-        #with self.assertRaises(ChildNotValid):   #this one is not raised!!!
-        #	f2.cx_1 = Component('HD_1')
+        with self.assertRaises(ChildNotValid):   #this one is not raised!!!
+            f2.cx_1 = Component('HD_1')
         f2.cx_1 = Component('CX_1')
 
     def test_access_to_unknown_component(self):
@@ -405,6 +405,14 @@ class TestField(unittest.TestCase):
             f1.ce_100
         with self.assertRaises(ChildNotFound):
             f2.cx_100
+
+    def test_access_to_wrong_component(self):
+        f1 = Field('pid_10', validation_level=VALIDATION_LEVEL.STRICT)
+        f2 = Field('pid_3')
+        with self.assertRaises(ChildNotValid):
+            f1.cwe_1
+        with self.assertRaises(ChildNotValid):
+            f2.ce_1
 
     def test_add_more_components_to_base_datatype_field(self):
         f1 = Field('pid_8', validation_level=VALIDATION_LEVEL.STRICT) #this is a base datatype field
@@ -424,9 +432,6 @@ class TestField(unittest.TestCase):
         a = Field('pid_3', 'HD')
         self.assertEqual(a.datatype, 'HD')
 
-        self.assertRaises(OperationNotAllowed, Field, 'pid_3', 'HD',
-                          validation_level=VALIDATION_LEVEL.STRICT)
-
         #in this case we are assigning the official datatype to the Field so no exception should be raised
         b = Field('pid_3', 'CX', validation_level=VALIDATION_LEVEL.STRICT)
         self.assertEqual(b.datatype, 'CX')
@@ -439,7 +444,7 @@ class TestField(unittest.TestCase):
             a.datatype = 'HD'
 
     def test_assign_value_with_overridden_datatype(self):
-        a = Field('pid_3', 'CE') #official datatype
+        a = Field('pid_3', 'CE') #official datatype is CX
         a.ce_1 = 'xyz'
         self.assertEqual(a.to_er7(), 'xyz')
 
@@ -590,6 +595,15 @@ class TestComponent(unittest.TestCase):
             c1.fn_100
         with self.assertRaises(ChildNotFound):
             c2.hd_100
+
+    def test_access_to_wrong_subcomponent(self):
+        c1 = Component('XPN_1', validation_level=VALIDATION_LEVEL.STRICT)
+        c2 = Component('cx_4')
+        with self.assertRaises(ChildNotValid):
+            c1.cwe_1
+        with self.assertRaises(ChildNotValid):
+            c2.cx_1
+
 
     def test_add_more_subcomponents_to_base_datatype_component(self):
         c = Component(datatype='ST')

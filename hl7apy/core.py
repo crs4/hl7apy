@@ -706,6 +706,21 @@ class SupportComplexDataType(Element):
         self.cls_attrs.extend(['_datatype', 'datatype'])
         self._datatype = None
 
+    def find_child_reference(self, name):
+        name = name.upper()
+        if isinstance(self.structure_by_name, collections.MutableMapping):
+            element =  self.structure_by_name.get(name) or self.structure_by_longname.get(name)
+        else:
+            element = None
+
+        if element is None: # not found in self.structure
+            element = find_reference(name, self.child_classes, self.version)
+            if element is None:
+                raise ChildNotFound(name)
+            if self.structure_by_name is not None:  # it means that the child exists but it's not valid for the Element (e.g. Field('pid_3').ce_1)
+                raise ChildNotValid(name, self)
+        return element
+
     def is_unknown(self):
         return self.name == self.datatype
 
@@ -1141,6 +1156,7 @@ class Field(SupportComplexDataType):
                        'name': name,
                        'ref' : ('leaf', None, None, None)}
             return element
+
         return super(Field, self).find_child_reference(name)
 
     def add(self, obj):
@@ -1368,8 +1384,10 @@ class Segment(Element):
                            'ref': ('leaf', 'varies', None, None)}
             else:
                 element = find_reference(name, self.child_classes, self.version)
-                if Validator.is_strict(self.validation_level): # cannot be created if validation is strict
+                if element:
                     raise ChildNotValid(name, self)
+                else:
+                    raise ChildNotFound(name)
         return element
 
     def parse_child(self, text, child_name=None, reference=None):
