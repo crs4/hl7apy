@@ -424,6 +424,13 @@ class TestField(unittest.TestCase):
         a = Field('pid_3', 'HD')
         self.assertEqual(a.datatype, 'HD')
 
+        self.assertRaises(OperationNotAllowed, Field, 'pid_3', 'HD',
+                          validation_level=VALIDATION_LEVEL.STRICT)
+
+        #in this case we are assigning the official datatype to the Field so no exception should be raised
+        b = Field('pid_3', 'CX', validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertEqual(b.datatype, 'CX')
+
     def test_override_field_containing_children_datatype(self):
         a = Field('pid_3')
         a.cx_1 = 'cx_1 value'

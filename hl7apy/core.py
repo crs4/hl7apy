@@ -1097,14 +1097,15 @@ class Field(SupportComplexDataType):
         if name is None and Validator.is_strict(validation_level) and datatype != 'varies':
             raise OperationNotAllowed("Cannot instantiate an unknown Element with strict validation")
 
-        if datatype is not None and Validator.is_strict(validation_level) and datatype != 'varies':
-            raise OperationNotAllowed("Cannot assign a different datatype with strict validation")
-
         if datatype == 'varies' and reference is None:
             reference = ('leaf', 'varies', None, None)
 
         Element.__init__(self, name, parent, reference, version,
                                     validation_level, traversal_parent)
+
+        if datatype is not None and Validator.is_strict(validation_level) and \
+                datatype != 'varies' and datatype != self.datatype:
+            raise OperationNotAllowed("Cannot assign a different datatype with strict validation")
 
         if datatype is not None: # force the datatype to be the one chosen by the user
             self.datatype = datatype
