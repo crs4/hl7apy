@@ -438,6 +438,11 @@ class TestField(unittest.TestCase):
         with self.assertRaises(OperationNotAllowed):
             a.datatype = 'HD'
 
+    def test_assign_value_with_overridden_datatype(self):
+        a = Field('pid_3', 'CE') #official datatype
+        a.ce_1 = 'xyz'
+        self.assertEqual(a.to_er7(), 'xyz')
+
     def test_delete_field(self):
         m = Message('OML_O33')
         msh = m.msh

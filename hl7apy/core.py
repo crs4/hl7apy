@@ -717,8 +717,9 @@ class SupportComplexDataType(Element):
                 datatype != self.datatype:
             raise OperationNotAllowed("Cannot change datatype using STRICT validation")
 
-        if self.name is None and not is_base_datatype(datatype, self.version) and datatype is not None:
-            reference = load_reference(datatype, self.classname, self.version)
+        if not is_base_datatype(datatype, self.version) and datatype != 'varies' and \
+                datatype is not None:
+            reference = load_reference(datatype, 'Component', self.version)
             structure = ElementFinder.get_structure(self, reference)
             for k, v in structure.iteritems():
                 setattr(self, k, v)
