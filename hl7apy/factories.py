@@ -89,8 +89,8 @@ def datatype_factory(datatype, value, version=None, validation_level=None):
     try:
         factory = factories[datatype]
         if isinstance(factory, FunctionType):
-            return factory(value, base_datatypes[datatype])
-        return factory(value)
+            return factory(value, base_datatypes[datatype], validation_level=validation_level)
+        return factory(value, validation_level=validation_level)
     except KeyError:
         raise InvalidDataType(datatype)
     except ValueError, e:
@@ -99,7 +99,7 @@ def datatype_factory(datatype, value, version=None, validation_level=None):
         #TODO: Do we really want this? In that case the parent's datatype must be changed accordingly
         return factories['ST'](value)
 
-def date_factory(value, datatype_cls):
+def date_factory(value, datatype_cls, validation_level=None):
     """
     Creates a :class:`hl7apy.base_datatypes.DT` object
 
@@ -144,7 +144,7 @@ def date_factory(value, datatype_cls):
     dt_value = _datetime_obj_factory(value, format)
     return datatype_cls(dt_value, format)
 
-def timestamp_factory(value, datatype_cls):
+def timestamp_factory(value, datatype_cls, validation_level=None):
     """
     Creates a :class:`hl7apy.base_datatypes.TM` object
 
@@ -196,7 +196,7 @@ def timestamp_factory(value, datatype_cls):
     dt_value = _datetime_obj_factory(value, form)
     return datatype_cls(dt_value, form, offset)
 
-def datetime_factory(value, datatype_cls):
+def datetime_factory(value, datatype_cls, validation_level=None):
     """
     Creates a :class:`hl7apy.base_datatypes.DTM` object
 
@@ -261,7 +261,7 @@ def datetime_factory(value, datatype_cls):
     dt_value = _datetime_obj_factory(value, form)
     return datatype_cls(dt_value, form, offset)
 
-def numeric_factory(value, datatype_cls):
+def numeric_factory(value, datatype_cls, validation_level=None):
     """
     Creates a :class:`hl7apy.base_datatypes.NM` object
 
@@ -273,19 +273,19 @@ def numeric_factory(value, datatype_cls):
     :type value: ``basestring`` or ``None``
     :param value: the value to assign the numeric object
 
-    :type datatype_cls: :class:`hl7apy.base_datatypes.NM`
+    :type datatype_cls: :class:`class`
     :param value: the :class:`hl7apy.base_datatypes.NM` class to use. It has to be one implementation of the different version modules
 
     :rtype: :class:`hl7apy.base_datatypes.NM`
     """
     if not value:
-        return datatype_cls()
+        return datatype_cls(validation_level=validation_level)
     try:
-        return datatype_cls(Decimal(value))
+        return datatype_cls(Decimal(value), validation_level=validation_level)
     except InvalidOperation:
         raise ValueError('{0} is not an HL7 valid NM value'.format(value))
 
-def sequence_id_factory(value, datatype_cls):
+def sequence_id_factory(value, datatype_cls, validation_level=None):
     """
     Creates a :class:`hl7apy.base_datatypes.SI` object
 
@@ -303,9 +303,9 @@ def sequence_id_factory(value, datatype_cls):
     :rtype: :class:`hl7apy.base_datatypes.SI`
     """
     if not value:
-        return datatype_cls()
+        return datatype_cls(validation_level=validation_level)
     try:
-        return datatype_cls(int(value))
+        return datatype_cls(int(value), validation_level=validation_level)
     except ValueError:
         raise ValueError('{0} is not an HL7 valid SI value'.format(value))
 
