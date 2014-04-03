@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Core classes &mdash; HL7apy 1.0.0-rc.2 documentation</title>
+    <title>Core classes &mdash; HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages</title>
     
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0.0-rc.2',
+        VERSION:     '1.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="HL7apy 1.0.0-rc.2 documentation" href="../index.html" />
+    <link rel="top" title="HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages" href="../index.html" />
     <link rel="up" title="API Docs" href="index.html" />
     <link rel="next" title="Consts" href="consts.html" />
     <link rel="prev" title="API Docs" href="index.html" /> 
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="index.html" title="API Docs"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">HL7apy 1.0.0-rc.2 documentation</a> &raquo;</li>
+        <li><a href="../index.html">HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Docs</a> &raquo;</li> 
       </ul>
     </div>  
@@ -92,11 +92,13 @@ separator at the end if needed</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoding_chars</strong> &#8211; The encoding chars to use.
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; The encoding chars to use.
 If it is <tt class="docutils literal"><span class="pre">None</span></tt> it uses <tt class="xref py py-attr docutils literal"><span class="pre">self.encoding_chars</span></tt>,
 which by default is <a class="reference internal" href="consts.html#hl7apy.consts.DEFAULT_ENCODING_CHARS" title="hl7apy.consts.DEFAULT_ENCODING_CHARS"><tt class="xref py py-attr docutils literal"><span class="pre">hl7apy.consts.DEFAULT_ENCODING_CHARS</span></tt></a></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">str</span></tt> the HL7 representation of the <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">Element</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">basestring</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HL7 representation of the <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -195,7 +197,7 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> &#8211; an instance of <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a> subclass</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> (<a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a>) &#8211; an instance of <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a> subclass</td>
 </tr>
 </tbody>
 </table>
@@ -238,11 +240,13 @@ separator at the end if needed</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoding_chars</strong> &#8211; The encoding chars to use.
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; The encoding chars to use.
 If it is <tt class="docutils literal"><span class="pre">None</span></tt> it uses <tt class="xref py py-attr docutils literal"><span class="pre">self.encoding_chars</span></tt>,
 which by default is <a class="reference internal" href="consts.html#hl7apy.consts.DEFAULT_ENCODING_CHARS" title="hl7apy.consts.DEFAULT_ENCODING_CHARS"><tt class="xref py py-attr docutils literal"><span class="pre">hl7apy.consts.DEFAULT_ENCODING_CHARS</span></tt></a></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">str</span></tt> the HL7 representation of the <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">Element</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">basestring</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HL7 representation of the <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -320,7 +324,7 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> &#8211; an instance of <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a> subclass</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> (<a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a>) &#8211; an instance of <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a> subclass</td>
 </tr>
 </tbody>
 </table>
@@ -429,7 +433,7 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> &#8211; an instance of <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a> subclass</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> (<a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a>) &#8211; an instance of <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a> subclass</td>
 </tr>
 </tbody>
 </table>
@@ -585,11 +589,13 @@ separator at the end if needed</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoding_chars</strong> &#8211; The encoding chars to use.
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; The encoding chars to use.
 If it is <tt class="docutils literal"><span class="pre">None</span></tt> it uses <tt class="xref py py-attr docutils literal"><span class="pre">self.encoding_chars</span></tt>,
 which by default is <a class="reference internal" href="consts.html#hl7apy.consts.DEFAULT_ENCODING_CHARS" title="hl7apy.consts.DEFAULT_ENCODING_CHARS"><tt class="xref py py-attr docutils literal"><span class="pre">hl7apy.consts.DEFAULT_ENCODING_CHARS</span></tt></a></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">str</span></tt> the HL7 representation of the <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">Element</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">basestring</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HL7 representation of the <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -777,7 +783,7 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
         <li class="right" >
           <a href="index.html" title="API Docs"
              >previous</a> |</li>
-        <li><a href="../index.html">HL7apy 1.0.0-rc.2 documentation</a> &raquo;</li>
+        <li><a href="../index.html">HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages</a> &raquo;</li>
           <li><a href="index.html" >API Docs</a> &raquo;</li> 
       </ul>
     </div>
