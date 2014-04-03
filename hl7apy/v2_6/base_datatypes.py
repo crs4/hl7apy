@@ -25,5 +25,5 @@ class ST(TextualDataType):
     """
     :attr:`max_length` is 199
     """
-    def __init__(self, value, highlights=None):
-        super(ST, self).__init__(value, 999, highlights)
+    def __init__(self, value, highlights=None, validation_level=None):
+        super(ST, self).__init__(value, 999, highlights, validation_level)

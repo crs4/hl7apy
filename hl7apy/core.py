@@ -46,7 +46,10 @@ def is_base_datatype(datatype, version=None):
 
     :type datatype: ``basestring``
     :param datatype: the datatype (e.g. ST)
+
+    :type version: ``basestring``
     :param version: the HL7 version (e.g. 2.5)
+
     :return: ``True`` if it is a base datatype, ``False`` otherwise
 
     >>> is_base_datatype('ST')
@@ -143,7 +146,7 @@ class ElementProxy(collections.Sequence):
         delattr(self.list[0], name)
 
     def __repr__(self):
-        return str(self.list)
+        return repr(self.list)
 
 
 class ElementList(collections.MutableSequence):
@@ -183,6 +186,8 @@ class ElementList(collections.MutableSequence):
 
         :type index: ``int``
         :param index: child position
+
+        :type child: :class:`hl7apy.core.Element`
         :param child: an instance of an :class:`hl7apy.core.Element` subclass
         """
         if self._can_add_child(child):
@@ -199,6 +204,7 @@ class ElementList(collections.MutableSequence):
         """
         Append the given child
 
+        :class:`hl7apy.core.Element`
         :param child: an instance of an :class:`hl7apy.core.Element` subclass
         """
         if self._can_add_child(child):
@@ -217,7 +223,9 @@ class ElementList(collections.MutableSequence):
         """
         Get the children having the given name
 
+        :type name: ``basestring``
         :param name: the name of the children (e.g. PID)
+
         :return: an instance of :class:`hl7apy.core.ElementProxy` containing the results
         """
         return self._default_child_lookup(name)
@@ -228,8 +236,11 @@ class ElementList(collections.MutableSequence):
 
         :type name: ``basestring``
         :param name: the child name (e.g. PID)
+
         :type value: an instance of :class:`hl7apy.core.Element`, a `basestring` or an instance of :class:`hl7apy.core.ElementProxy`
         :param value: the child value
+
+        :type index: ``int``
         :param index: the child position (e.g. 1)
         """
         if isinstance(value, ElementProxy): # just copy the first element of the ElementProxy (e.g. message.pid = message2.pid)
@@ -263,6 +274,7 @@ class ElementList(collections.MutableSequence):
         """
         Remove the given child from both child list and child indexes
 
+        :type child: :class:`hl7apy.core.Element`
         :param child: an instance of :class:`hl7apy.core.Element` subclass
         """
         self._remove_from_index(child)
@@ -272,8 +284,12 @@ class ElementList(collections.MutableSequence):
         """
         Remove the child having the given name at the given position
 
+        :type name: ``basestring``
         :param name: child name (e.g. PID)
+
+        :type index: ``int``
         :param index: child index
+
         :return: an instance of :class:`hl7apy.core.Element` subclass
         """
         child = self.child_at_index(name, index)
@@ -284,8 +300,12 @@ class ElementList(collections.MutableSequence):
         """
         Return the child named `name` at the given index
 
+        :type name: ``basestring``
         :param name: child name (e.g. PID)
+
+        :type index: ``int``
         :param index: child index
+
         :return: an instance of :class:`hl7apy.core.Element` subclass
         """
         child_name = None if name is None else self._find_name(name)
@@ -305,10 +325,16 @@ class ElementList(collections.MutableSequence):
         """
         Create an element having the given name
 
+        :type name: ``basestring``
         :param name: the name of the element to be created (e.g. PID)
-        :param traversal_parent: if True, the parent will be set as temporary for traversal purposes
+
+        :type traversal_parent: ``bool``
+        :param traversal_parent: if ``True``, the parent will be set as temporary for traversal purposes
+
         :param reference: the new element structure (see :func:`hl7apy.load_reference`)
+
         :return: an instance of an :class:`hl7apy.core.Element` subclass
+
         :raises: :exc:`hl7apy.exceptions.ChildNotFound` if the element does not exist
         """
         if reference is None:
@@ -330,7 +356,9 @@ class ElementList(collections.MutableSequence):
         """
         Find the reference of a child having the given name
 
+        :type name: ``basestring``
         :param name: the child name (e.g. PID)
+
         :return: the element structure (see :func:`hl7apy.load_reference`) or `None` if the element has not been found
         """
         name = name.upper()
@@ -341,7 +369,9 @@ class ElementList(collections.MutableSequence):
         """
         Return an instance of :class:`hl7apy.core.ElementProxy` containing the children found having the given name
 
+        :type name: ``basestring``
         :param name: the name of the children (e.g. PID)
+
         :return: an instance of :class:`hl7apy.core.ElementProxy` containing the results
         """
         if self.indexes.has_key(name): # use the indexes to find the children faster
@@ -392,6 +422,9 @@ class ElementList(collections.MutableSequence):
     def __str__(self):
         return str(self.list)
 
+    def __repr__(self):
+        return repr(self.list)
+
 
 class ElementFinder(object):
 
@@ -400,8 +433,11 @@ class ElementFinder(object):
         """
         Get the element structure
 
+        :type element: :class:`hl7apy.core.Element`
         :param element: element having the given reference structure
+
         :param reference: the element structure (see :func:`hl7apy.load_reference)
+
         :return: a dictionary containing the structure data
         """
         if reference is None:
@@ -418,8 +454,11 @@ class ElementFinder(object):
         """
         Parse the given reference
 
+        :type element: :class:`hl7apy.core.Element`
         :param element: element having the given reference structure
+
         :param reference: the element structure (see :func:`hl7apy.load_reference)
+
         :return: a dictionary containing the structure data
         """
         content_type = reference[0] # content type can be sequence, choice or leaf
@@ -509,6 +548,7 @@ class Element(object):
         """
         Add an instance of :class:`hl7apy.core.Element` subclass to the list of children
 
+        :type obj: :class:`hl7apy.core.Element`
         :param obj: an instance of :class:`hl7apy.core.Element` subclass
 
         >>> s = Segment('PID')
@@ -556,11 +596,13 @@ class Element(object):
         Returns the HL7 representation of the :class:`Element`. It adds the appropriate
         separator at the end if needed
 
+        :type encoding_chars: ``dict``
         :param encoding_chars: The encoding chars to use.
             If it is ``None`` it uses :attr:`self.encoding_chars`,
             which by default is :attr:`hl7apy.consts.DEFAULT_ENCODING_CHARS`
 
-        :rtype: ``str`` the HL7 representation of the :class:`Element`
+        :rtype: ``basestring``
+        :return: the HL7 representation of the :class:`hl7apy.core.Element`
         """
         if encoding_chars is None:
             encoding_chars = self.encoding_chars
@@ -703,6 +745,21 @@ class SupportComplexDataType(Element):
         self.cls_attrs.extend(['_datatype', 'datatype'])
         self._datatype = None
 
+    def find_child_reference(self, name):
+        name = name.upper()
+        if isinstance(self.structure_by_name, collections.MutableMapping):
+            element =  self.structure_by_name.get(name) or self.structure_by_longname.get(name)
+        else:
+            element = None
+
+        if element is None: # not found in self.structure
+            element = find_reference(name, self.child_classes, self.version)
+            if element is None:
+                raise ChildNotFound(name)
+            if self.structure_by_name is not None:  # it means that the child exists but it's not valid for the Element (e.g. Field('pid_3').ce_1)
+                raise ChildNotValid(name, self)
+        return element
+
     def is_unknown(self):
         return self.name == self.datatype
 
@@ -714,8 +771,9 @@ class SupportComplexDataType(Element):
                 datatype != self.datatype:
             raise OperationNotAllowed("Cannot change datatype using STRICT validation")
 
-        if self.name is None and not is_base_datatype(datatype, self.version) and datatype is not None:
-            reference = load_reference(datatype, self.classname, self.version)
+        if not is_base_datatype(datatype, self.version) and datatype != 'varies' and \
+                datatype is not None:
+            reference = load_reference(datatype, 'Component', self.version)
             structure = ElementFinder.get_structure(self, reference)
             for k, v in structure.iteritems():
                 setattr(self, k, v)
@@ -1094,14 +1152,15 @@ class Field(SupportComplexDataType):
         if name is None and Validator.is_strict(validation_level) and datatype != 'varies':
             raise OperationNotAllowed("Cannot instantiate an unknown Element with strict validation")
 
-        if datatype is not None and Validator.is_strict(validation_level) and datatype != 'varies':
-            raise OperationNotAllowed("Cannot assign a different datatype with strict validation")
-
         if datatype == 'varies' and reference is None:
             reference = ('leaf', 'varies', None, None)
 
         Element.__init__(self, name, parent, reference, version,
                                     validation_level, traversal_parent)
+
+        if datatype is not None and Validator.is_strict(validation_level) and \
+                datatype != 'varies' and datatype != self.datatype:
+            raise OperationNotAllowed("Cannot assign a different datatype with strict validation")
 
         if datatype is not None: # force the datatype to be the one chosen by the user
             self.datatype = datatype
@@ -1136,6 +1195,7 @@ class Field(SupportComplexDataType):
                        'name': name,
                        'ref' : ('leaf', None, None, None)}
             return element
+
         return super(Field, self).find_child_reference(name)
 
     def add(self, obj):
@@ -1363,8 +1423,10 @@ class Segment(Element):
                            'ref': ('leaf', 'varies', None, None)}
             else:
                 element = find_reference(name, self.child_classes, self.version)
-                if Validator.is_strict(self.validation_level): # cannot be created if validation is strict
+                if element:
                     raise ChildNotValid(name, self)
+                else:
+                    raise ChildNotFound(name)
         return element
 
     def parse_child(self, text, child_name=None, reference=None):

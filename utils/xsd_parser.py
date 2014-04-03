@@ -198,6 +198,10 @@ class Node(object):
         if s is not None:
             s = s.strip().upper()
             s = re.sub("\W+", "_", s)
+            if s.endswith('_'):
+                s = s[:-1]
+            if s.startswith('_'):
+                s = s[1:]
             m = re.match("^(C[MNKQ])(_[A-Z]+\d*){1,}(_\d+){0,}$", s)
             if m is not None:
                 s = re.sub("_\d+$", "", s)
@@ -233,7 +237,8 @@ class Node(object):
                         else:
                             node_dict['datatype'] = self._sanitize(ct.extension.get('base'))
 
-                    node_dict['table'] = self.node.appinfo.find('{urn:hl7-org:v2xml}Table')
+                    node_dict['table'] = self.node.appinfo.find('{urn:hl7-org:v2xml}Table') or \
+                                         self.node.appinfo.find('{urn:com.sun:encoder-hl7-1.0}Table')
             del(node_dict['tag'])
         if ref in self.types:
             node_dict['content'] = self.types[ref]

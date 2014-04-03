@@ -20,7 +20,19 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """
-HL7apy - helper functions
+HL7apy: a lightweight Python library to parse, create and handle HL7 v2.x messages
+----------------------------------------------------------------------------------
+
+HL7apy is a lightweight Python package to intuitively handle `HL7 <http://www.hl7.org>`_ v2 messages according to HL7 specifications.
+
+The main features includes:
+ * Message parsing
+ * Message creation
+ * Message validation following the HL7 xsd specifications
+ * Access to elements by name, long name or position
+ * Support to all simple and complex datatypes
+ * Encoding chars customization
+ * Message encoding in ER7 format and compliant with MLLP protocol
 """
 
 import os
@@ -30,6 +42,10 @@ import importlib
 
 from hl7apy.exceptions import UnsupportedVersion, InvalidEncodingChars, UnknownValidationLevel
 from hl7apy.consts import DEFAULT_ENCODING_CHARS, DEFAULT_VERSION, VALIDATION_LEVEL
+
+__author__ = 'Daniela Ghironi, Vittorio Meloni, Alessandro Sulis, Federico Caboni'
+__author_email__ = '<ghiron@gmail.com>, <vittorio.meloni@crs4.it>, <alessandro.sulis@crs4.it>, <federico.caboni@me.com>'
+__url__ = 'http://hl7apy.org'
 
 _DEFAULT_ENCODING_CHARS = DEFAULT_ENCODING_CHARS
 _DEFAULT_VERSION = DEFAULT_VERSION

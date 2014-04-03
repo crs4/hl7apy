@@ -225,6 +225,21 @@ class TestParser(unittest.TestCase):
         self.assertEqual(s.qpd_3[1].qpd_3_1.to_er7(), '@PID.8' )
         self.assertEqual(s.qpd_3[1].qpd_3_2.to_er7(), 'F')
 
+    def test_parse_segment_ending_with_varies_field(self):
+        segment = 'QPD|IHE PDQ Query|622e3df468654c2fb3e0ac35bfe3369e|xxxx|yyyyy||||zzzzz'
+        s = parse_segment(segment)
+        self.assertEqual(s.qpd_1.datatype, 'CE')
+        self.assertEqual(s.qpd_2.datatype, 'ST')
+        self.assertEqual(s.qpd_3.datatype, 'varies')
+        self.assertEqual(s.qpd_4.datatype, 'varies')
+        self.assertEqual(s.qpd_8.datatype, 'varies')
+
+    def test_parse_segment_containing_varies_field(self):
+        segment = 'OBX|1|ST|1^YYY||ABCDEFG|HJKLMN|||||O'
+        s = parse_segment(segment)
+        self.assertEqual(s.obx_5.datatype, 'varies')
+        self.assertNotEqual(s.obx_6.datatype, 'varies')
+
     def test_parse_fields(self):
         #note: this method seems not to work without segment definition, and also for MSH segment
         field = 'PID|xxx|yyy^zz'
@@ -283,7 +298,7 @@ class TestParser(unittest.TestCase):
         self.assertEqual(f.children[0].to_er7(encoding_chars=self._get_custom_encoding_chars()), field)
 
     def test_parse_invalid_name_field(self):
-        f = parse_field('xxx',name='yyy')
+        f = parse_field('xxx', name='yyy')
         self.assertIsNone(f.name)
 
     def test_parse_components(self):

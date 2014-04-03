@@ -76,7 +76,7 @@ class BaseDataType(object):
         """
         Encode to ER7 format
         """
-        return '{0}'.format(self.value or '')
+        return '{0}'.format(self.value if self.value is not None else '')
 
     @property
     def classname(self):
@@ -385,7 +385,7 @@ class SI(NumericDataType):
     """
     def __init__(self, value=None,
                  validation_level=None):
-        if value and not isinstance(value, numbers.Integral):
+        if value is not None and not isinstance(value, numbers.Integral):
             raise ValueError('Invalid value for a SI data')
 
         super(SI, self).__init__(value, 4, validation_level)

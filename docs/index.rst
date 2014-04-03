@@ -2,13 +2,23 @@
 HL7apy
 ======
 
-HL7apy is a Python library to parse, create and handle `HL7 <http://www.hl7.org>`_ v2 messages.
+HL7apy is a lightweight Python package to intuitively handle `HL7 <http://www.hl7.org>`_ v2 messages according to HL7 specifications.
 
-Current version is 1.0.0-rc.2
+The main features includes:
+
+ * Message parsing
+ * Message creation
+ * Message validation following the HL7 xsd specifications
+ * Access to elements by name, long name or position
+ * Support to all simple and complex datatypes
+ * Encoding chars customization
+ * Message encoding in ER7 format and compliant with MLLP protocol
 
 Currently supported HL7 versions are: 2.2, 2.3, 2.3.1, 2.4, 2.5, 2.5.1, 2.6.
 
-HL7apy is developed and maintained by `Healthcare Flows <http://www.crs4.it/healthcare-flows>`_ researchers at `CRS4 <http://www.crs4.it>`_.
+Current version is 1.0.0
+
+To get started visit the :ref:`Getting started <tutorial>` section
 
 This project is not affiliated with the HL7 organization: the library is just consistent with their specification.
 
