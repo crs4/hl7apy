@@ -22,24 +22,27 @@
 
 
 from distutils.core import setup
+from distutils.errors import DistutilsSetupError
+
+import hl7apy
+
+def _get_version():
+    try:
+        with open('VERSION') as f:
+            return f.read().strip()
+    except IOError:
+        raise DistutilsSetupError("failed to read version info")
+
 
 setup(
     name = 'hl7apy',
-    version = '1.0.0-rc.2',
-    description = 'Python library to parse, create and handle HL7 v2.x messages',
-    long_description = """
-    HL7apy is a Python library to parse, create and handle `HL7 <http://www.hl7.org>`_ v2 messages.
-
-    HL7apy is developed and maintained by `Healthcare Flows <http://www.crs4.it/healthcare-flows>`_ researchers at `CRS4 <http://www.crs4.it>`_.
-
-    Source code on GitHub: https://github.com/crs4/hl7apy
-
-    Documentation can be found here: http://hl7apy.org
-    """,
-    author = 'Daniela Ghironi, Vittorio Meloni, Alessandro Sulis, Federico Caboni',
-    author_email = '<daniela.ghironi@crs4.it>, <vittorio.meloni@crs4.it>, <alessandro.sulis@crs4.it>, <federico.caboni@me.com>',
-    url = 'https://github.com/crs4/hl7apy',
-    download_url = 'https://github.com/crs4/hl7apy/tarball/v1.0.0-rc.2',
+    version = _get_version(),
+    description = hl7apy.__doc__.strip().splitlines()[0],
+    long_description = hl7apy.__doc__.strip(),
+    author = hl7apy.__author__,
+    author_email = hl7apy.__author_email__,
+    url = hl7apy.__url__,
+    download_url = 'http://sourceforge.net/projects/hl7apy/files/',
     license = 'MIT License',
     keywords = ['HL7', 'Health Level 7', 'healthcare', 'python'],
     classifiers = [
@@ -49,6 +52,7 @@ setup(
         'Intended Audience :: Healthcare Industry',
         'Topic :: Scientific/Engineering :: Medical Science Apps.'
     ],
-    packages = ['hl7apy', 'hl7apy.v2_2', 'hl7apy.v2_3', 'hl7apy.v2_3_1', 'hl7apy.v2_4', 'hl7apy.v2_5', 'hl7apy.v2_5_1', 'hl7apy.v2_6'],
+    packages = ['hl7apy', 'hl7apy.v2_2', 'hl7apy.v2_3', 'hl7apy.v2_3_1', 'hl7apy.v2_4',
+                'hl7apy.v2_5', 'hl7apy.v2_5_1', 'hl7apy.v2_6'],
     test_suite = 'tests',
 )

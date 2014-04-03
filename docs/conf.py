@@ -109,7 +109,7 @@ html_theme = 'nature'
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-#html_title = None
+html_title = "HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages"
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
