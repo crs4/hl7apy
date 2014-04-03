@@ -37,9 +37,13 @@ def parse_message(message, validation_level=None, find_groups=True, reference=No
 
     :type message: ``basestring``
     :param message: the ER7-encoded message to be parsed
+
+    :type validation_level: ``int``
     :param validation_level: the validation level. Possible values are those defined in :class:`hl7apy.consts.VALIDATION_LEVEL` class or ``None`` to use the default validation level (see :func:`hl7apy.set_default_validation_level`)
+
     :type find_groups: ``bool``
     :param find_groups: if ``True``, automatically assign the segments found to the appropriate :class:`hl7apy.core.Group` instances. If ``False``, the segments found are assigned as children of the :class:`hl7apy.core.Message` instance
+
     :return: an instance of :class:`hl7apy.core.Message`
 
     >>> message = "MSH|^~\&|GHH_ADT||||20080115153000||OML^O33^OML_O33|0123456789|P|2.5||||AL\\rPID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004|||M\\r"
@@ -74,11 +78,16 @@ def parse_segments(text, version=None, encoding_chars=None, validation_level=Non
 
     :type text: ``basestring``
     :param text: the ER7-encoded string containing the segments to be parsed
+
     :type version: ``basestring``
     :param version: the HL7 version (e.g. "2.5"), or ``None`` to use the default (see :func:`hl7apy.set_default_version`)
+
     :type encoding_chars: ``dict``
     :param encoding_chars: a dictionary containing the encoding chars or None to use the default (see :func:`hl7apy.set_default_encoding_chars`)
+
+    :type validation_level: ``int``
     :param validation_level: the validation level. Possible values are those defined in :class:`hl7apy.consts.VALIDATION_LEVEL` class or ``None`` to use the default validation level (see :func:`hl7apy.set_default_validation_level`)
+
     :return: a list of :class:`hl7apy.core.Segment` instances
 
     >>> segments = "EVN||20080115153000||||20080114003000\\rPID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004|||M\\r"
@@ -97,13 +106,19 @@ def parse_segment(text, version=None, encoding_chars=None, validation_level=None
 
     :type text: ``basestring``
     :param text: the ER7-encoded string containing the segment to be parsed
+
     :type version: ``basestring``
     :param version: the HL7 version (e.g. "2.5"), or ``None`` to use the default (see :func:`hl7apy.set_default_version`)
+
     :type encoding_chars: ``dict``
     :param encoding_chars: a dictionary containing the encoding chars or None to use the default (see :func:`hl7apy.set_default_encoding_chars`)
+
+    :type validation_level: ``int``
     :param validation_level: the validation level. Possible values are those defined in :class:`hl7apy.consts.VALIDATION_LEVEL` class or ``None`` to use the default validation level (see :func:`hl7apy.set_default_validation_level`)
+
     :type reference: ``dict``
     :param reference: a dictionary containing the element structure returned by :func:`hl7apy.load_reference` or :func:`hl7apy.find_reference`
+
     :return: an instance of :class:`hl7apy.core.Segment`
 
     >>> segment = "EVN||20080115153000||||20080114003000"
@@ -128,13 +143,22 @@ def parse_fields(text, name_prefix=None, version=None, encoding_chars=None, vali
 
     :type text: ``basestring``
     :param text: the ER7-encoded string containing the fields to be parsed
+
     :type name_prefix: ``basestring``
     :param name_prefix: the field prefix (e.g. MSH)
+
     :type version: ``basestring``
     :param version: the HL7 version (e.g. "2.5"), or ``None`` to use the default (see :func:`hl7apy.set_default_version`)
+
     :type encoding_chars: ``dict``
     :param encoding_chars: a dictionary containing the encoding chars or None to use the default (see :func:`hl7apy.set_default_encoding_chars`)
+
+    :type validation_level: ``int``
     :param validation_level: the validation level. Possible values are those defined in :class:`hl7apy.consts.VALIDATION_LEVEL` class or ``None`` to use the default validation level (see :func:`hl7apy.set_default_validation_level`)
+
+    :type force_varies: ``bool``
+    :param force_varies: flag that force the fields to use a varies structure when no reference is found. It is used when a segment ends with a field of type varies that thus support infinite children
+
     :return: a list of :class:`hl7apy.core.Field` instances
 
     >>> fields = "1|NUCLEAR^NELDA^W|SPO|2222 HOME STREET^^ANN ARBOR^MI^^USA"
@@ -176,15 +200,25 @@ def parse_field(text, name=None, version=None, encoding_chars=None, validation_l
 
     :type text: ``basestring``
     :param text: the ER7-encoded string containing the fields to be parsed
+
     :type name: ``basestring``
     :param name: the field name (e.g. MSH_7)
+
     :type version: ``basestring``
     :param version: the HL7 version (e.g. "2.5"), or ``None`` to use the default (see :func:`hl7apy.set_default_version`)
+
     :type encoding_chars: ``dict``
     :param encoding_chars: a dictionary containing the encoding chars or None to use the default (see :func:`hl7apy.set_default_encoding_chars`)
+
+    :type validation_level: ``int``
     :param validation_level: the validation level. Possible values are those defined in :class:`hl7apy.consts.VALIDATION_LEVEL` class or ``None`` to use the default validation level (see :func:`hl7apy.set_default_validation_level`)
+
     :type reference: ``dict``
     :param reference: a dictionary containing the element structure returned by :func:`hl7apy.load_reference` or :func:`hl7apy.find_reference`
+
+    :type force_varies: ``boolean``
+    :param force_varies: flag that force the fields to use a varies structure when no reference is found. It is used when a segment ends with a field of type varies that thus support infinite children
+
     :return: an instance of :class:`hl7apy.core.Field`
 
     >>> field = "NUCLEAR^NELDA^W"
@@ -230,13 +264,19 @@ def parse_components(text, field_datatype='ST', version=None, encoding_chars=Non
 
     :type text: ``basestring``
     :param text: the ER7-encoded string containing the components to be parsed
+
     :type field_datatype: ``basestring``
     :param field_datatype: the datatype of the components (e.g. ST)
+
     :type version: ``basestring``
     :param version: the HL7 version (e.g. "2.5"), or ``None`` to use the default (see :func:`hl7apy.set_default_version`)
+
     :type encoding_chars: ``dict``
     :param encoding_chars: a dictionary containing the encoding chars or None to use the default (see :func:`hl7apy.set_default_encoding_chars`)
+
+    :type validation_level: ``int``
     :param validation_level: the validation level. Possible values are those defined in :class:`hl7apy.consts.VALIDATION_LEVEL` class or ``None`` to use the default validation level (see :func:`hl7apy.set_default_validation_level`)
+
     :return: a list of :class:`hl7apy.core.Component` instances
 
     >>> components = "NUCLEAR^NELDA^W^^TEST"
@@ -272,17 +312,25 @@ def parse_component(text, name=None, datatype='ST', version=None, encoding_chars
 
     :type text: ``basestring``
     :param text: the ER7-encoded string containing the components to be parsed
+
     :type name: ``basestring``
     :param name: the component's name (e.g. XPN_2)
+
     :type datatype: ``basestring``
     :param datatype: the datatype of the component (e.g. ST)
+
     :type version: ``basestring``
     :param version: the HL7 version (e.g. "2.5"), or ``None`` to use the default (see :func:`hl7apy.set_default_version`)
+
     :type encoding_chars: ``dict``
     :param encoding_chars: a dictionary containing the encoding chars or None to use the default (see :func:`hl7apy.set_default_encoding_chars`)
+
+    :type validation_level: ``int``
     :param validation_level: the validation level. Possible values are those defined in :class:`hl7apy.consts.VALIDATION_LEVEL` class or ``None`` to use the default validation level (see :func:`hl7apy.set_default_validation_level`)
+
     :type reference: ``dict``
     :param reference: a dictionary containing the element structure returned by :func:`hl7apy.load_reference` or :func:`hl7apy.find_reference`
+
     :return: an instance of :class:`hl7apy.core.Component`
 
     >>> component = "GATEWAY&1.3.6.1.4.1.21367.2011.2.5.17"
@@ -316,13 +364,19 @@ def parse_subcomponents(text, component_datatype='ST', version=None, encoding_ch
 
     :type text: ``basestring``
     :param text: the ER7-encoded string containing the components to be parsed
+
     :type component_datatype: ``basestring``
     :param component_datatype: the datatype of the subcomponents (e.g. ST)
+
     :type version: ``basestring``
     :param version: the HL7 version (e.g. "2.5"), or ``None`` to use the default (see :func:`hl7apy.set_default_version`)
+
     :type encoding_chars: ``dict``
     :param encoding_chars: a dictionary containing the encoding chars or None to use the default (see :func:`hl7apy.set_default_encoding_chars`)
+
+    :type validation_level: ``int``
     :param validation_level: the validation level. Possible values are those defined in :class:`hl7apy.consts.VALIDATION_LEVEL` class or ``None`` to use the default validation level (see :func:`hl7apy.set_default_validation_level`)
+
     :return: a list of :class:`hl7apy.core.SubComponent` instances
 
     >>> subcomponents= "ID&TEST&&AHAH"
@@ -362,13 +416,19 @@ def parse_subcomponent(text, name=None, datatype='ST', version=None, validation_
 
     :type text: ``basestring``
     :param text: the ER7-encoded string containing the subcomponent data
+
     :type name: ``basestring``
     :param name: the subcomponent's name (e.g. XPN_2)
+
     :type datatype: ``basestring``
     :param datatype: the datatype of the subcomponent (e.g. ST)
+
     :type version: ``basestring``
     :param version: the HL7 version (e.g. "2.5"), or ``None`` to use the default (see :func:`hl7apy.set_default_version`)
+
+    :type validation_level: ``int``
     :param validation_level: the validation level. Possible values are those defined in :class:`hl7apy.consts.VALIDATION_LEVEL` class or ``None`` to use the default validation level (see :func:`hl7apy.set_default_validation_level`)
+
     :return: an instance of :class:`hl7apy.core.SubComponent`
     """
     return SubComponent(name=name, datatype=datatype, value=text, version=version, validation_level=validation_level)
@@ -378,6 +438,7 @@ def get_message_info(content):
     Parse the given ER7-encoded message to find its version, structure and encoding chars
 
     :param content: the ER7-encoded message
+
     :return: a tuple containing (encoding_chars, message_structure, version)
     """
     regex = re.compile("^MSH(?P<field_sep>\S){1}")
@@ -443,8 +504,11 @@ def create_groups(message, children, validation_level=None):
     Create the message's groups
 
     :param message: a :class:`hl7apy.core.Message` instance
+
     :param children: a list of :class:`hl7apy.core.Segment` instances
+
     :param validation_level: the validation level. Possible values are those defined in :class:`hl7apy.consts.VALIDATION_LEVEL` class or ``None`` to use the default validation level (see :func:`hl7apy.set_default_validation_level`)
+
     """
     # get the message structure
     structure = ElementFinder.get_structure(message)
@@ -475,8 +539,11 @@ def _find_group(segment, search_data, validation_level=None):
     Recursively find the group the segment belongs to
 
     :param segment: a :class:`hl7apy.core.Segment` instance
+
     :param search_data: a dictionary containing current chain of parent, current indexes and element structures
+
     :param validation_level: the validation level. Possible values are those defined in :class:`hl7apy.consts.VALIDATION_LEVEL` class or ``None`` to use the default validation level (see :func:`hl7apy.set_default_validation_level`)
+
     :return: the index of the parent children list where the segment has been found
     """
     search_index = -1

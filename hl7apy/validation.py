@@ -80,7 +80,7 @@ class Validator(object):
                 return False
             if element.is_unknown():
                 return False
-            if element.datatype == 'varies':
+            if element.datatype == 'varies': #TODO: it should check the real rule
                 return True
             if not is_base_datatype(element.datatype, element.version):
                 # Component just to search in the datatypes....

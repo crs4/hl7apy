@@ -50,7 +50,7 @@ def datatype_factory(datatype, value, version=None, validation_level=None):
     :param version: A valid HL7 version. It must be one of :attr:`hl7apy.SUPPORTED_LIBRARIES`
 
     :type validation_level: ``int``
-    :param validation_level: It must be a value from class :attr:`validation_level` :class:`VALIDATION_LEVEL`
+    :param validation_level: It must be a value from class :attr:`validation_level` :class:`VALIDATION_LEVEL` or ``None`` to use the default value
 
     :rtype: The type specified in datatype
 
@@ -137,6 +137,9 @@ def date_factory(value, datatype_cls, validation_level=None):
     :type datatype_cls: `class`
     :param value: the :class:`hl7apy.base_datatypes.DT` class to use. It has to be one implementation of the different version modules
 
+    :type validation_level: ``int``
+    :param validation_level: It must be a value from class :attr:`validation_level` :class:`VALIDATION_LEVEL` or ``None`` to use the default value
+
     :rtype: :class:`hl7apy.base_datatypes.DT`
     """
 
@@ -187,6 +190,9 @@ def timestamp_factory(value, datatype_cls, validation_level=None):
 
     :type datatype_cls: `class`
     :param value: the :class:`hl7apy.base_datatypes.TM` class to use. It has to be one implementation of the different version modules
+
+    :type validation_level: ``int``
+    :param validation_level: It must be a value from class :attr:`validation_level` :class:`VALIDATION_LEVEL` or ``None`` to use the default value
 
     :rtype: :class:`hl7apy.base_datatypes.TM`
     """
@@ -244,6 +250,9 @@ def datetime_factory(value, datatype_cls, validation_level=None):
     :type datatype_cls: `class`
     :param value: the :class:`hl7apy.base_datatypes.DTM` class to use. It has to be one implementation of the different version modules
 
+    :type validation_level: ``int``
+    :param validation_level: It must be a value from class :attr:`validation_level` :class:`VALIDATION_LEVEL` or ``None`` to use the default value
+
     :rtype: :class:`hl7apy.base_datatypes.DTM`
     """
 
@@ -276,6 +285,9 @@ def numeric_factory(value, datatype_cls, validation_level=None):
     :type datatype_cls: :class:`class`
     :param value: the :class:`hl7apy.base_datatypes.NM` class to use. It has to be one implementation of the different version modules
 
+    :type validation_level: ``int``
+    :param validation_level: It must be a value from class :attr:`validation_level` :class:`VALIDATION_LEVEL` or ``None`` to use the default value
+
     :rtype: :class:`hl7apy.base_datatypes.NM`
     """
     if not value:
@@ -299,6 +311,9 @@ def sequence_id_factory(value, datatype_cls, validation_level=None):
 
     :type datatype_cls: `class`
     :param value: the SI class to use. It has to be loaded from one implementation of the different version modules
+
+    :type validation_level: ``int``
+    :param validation_level: It must be a value from class :attr:`validation_level` :class:`VALIDATION_LEVEL` or ``None`` to use the default value
 
     :rtype: :class:`hl7apy.base_datatypes.SI`
     """

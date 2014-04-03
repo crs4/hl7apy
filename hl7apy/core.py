@@ -46,7 +46,10 @@ def is_base_datatype(datatype, version=None):
 
     :type datatype: ``basestring``
     :param datatype: the datatype (e.g. ST)
+
+    :type version: ``basestring``
     :param version: the HL7 version (e.g. 2.5)
+
     :return: ``True`` if it is a base datatype, ``False`` otherwise
 
     >>> is_base_datatype('ST')
@@ -183,6 +186,8 @@ class ElementList(collections.MutableSequence):
 
         :type index: ``int``
         :param index: child position
+
+        :type child: :class:`hl7apy.core.Element`
         :param child: an instance of an :class:`hl7apy.core.Element` subclass
         """
         if self._can_add_child(child):
@@ -199,6 +204,7 @@ class ElementList(collections.MutableSequence):
         """
         Append the given child
 
+        :class:`hl7apy.core.Element`
         :param child: an instance of an :class:`hl7apy.core.Element` subclass
         """
         if self._can_add_child(child):
@@ -217,7 +223,9 @@ class ElementList(collections.MutableSequence):
         """
         Get the children having the given name
 
+        :type name: ``basestring``
         :param name: the name of the children (e.g. PID)
+
         :return: an instance of :class:`hl7apy.core.ElementProxy` containing the results
         """
         return self._default_child_lookup(name)
@@ -228,8 +236,11 @@ class ElementList(collections.MutableSequence):
 
         :type name: ``basestring``
         :param name: the child name (e.g. PID)
+
         :type value: an instance of :class:`hl7apy.core.Element`, a `basestring` or an instance of :class:`hl7apy.core.ElementProxy`
         :param value: the child value
+
+        :type index: ``int``
         :param index: the child position (e.g. 1)
         """
         if isinstance(value, ElementProxy): # just copy the first element of the ElementProxy (e.g. message.pid = message2.pid)
@@ -263,6 +274,7 @@ class ElementList(collections.MutableSequence):
         """
         Remove the given child from both child list and child indexes
 
+        :type child: :class:`hl7apy.core.Element`
         :param child: an instance of :class:`hl7apy.core.Element` subclass
         """
         self._remove_from_index(child)
@@ -272,8 +284,12 @@ class ElementList(collections.MutableSequence):
         """
         Remove the child having the given name at the given position
 
+        :type name: ``basestring``
         :param name: child name (e.g. PID)
+
+        :type index: ``int``
         :param index: child index
+
         :return: an instance of :class:`hl7apy.core.Element` subclass
         """
         child = self.child_at_index(name, index)
@@ -284,8 +300,12 @@ class ElementList(collections.MutableSequence):
         """
         Return the child named `name` at the given index
 
+        :type name: ``basestring``
         :param name: child name (e.g. PID)
+
+        :type index: ``int``
         :param index: child index
+
         :return: an instance of :class:`hl7apy.core.Element` subclass
         """
         child_name = None if name is None else self._find_name(name)
@@ -305,10 +325,16 @@ class ElementList(collections.MutableSequence):
         """
         Create an element having the given name
 
+        :type name: ``basestring``
         :param name: the name of the element to be created (e.g. PID)
-        :param traversal_parent: if True, the parent will be set as temporary for traversal purposes
+
+        :type traversal_parent: ``bool``
+        :param traversal_parent: if ``True``, the parent will be set as temporary for traversal purposes
+
         :param reference: the new element structure (see :func:`hl7apy.load_reference`)
+
         :return: an instance of an :class:`hl7apy.core.Element` subclass
+
         :raises: :exc:`hl7apy.exceptions.ChildNotFound` if the element does not exist
         """
         if reference is None:
@@ -330,7 +356,9 @@ class ElementList(collections.MutableSequence):
         """
         Find the reference of a child having the given name
 
+        :type name: ``basestring``
         :param name: the child name (e.g. PID)
+
         :return: the element structure (see :func:`hl7apy.load_reference`) or `None` if the element has not been found
         """
         name = name.upper()
@@ -341,7 +369,9 @@ class ElementList(collections.MutableSequence):
         """
         Return an instance of :class:`hl7apy.core.ElementProxy` containing the children found having the given name
 
+        :type name: ``basestring``
         :param name: the name of the children (e.g. PID)
+
         :return: an instance of :class:`hl7apy.core.ElementProxy` containing the results
         """
         if self.indexes.has_key(name): # use the indexes to find the children faster
@@ -403,8 +433,11 @@ class ElementFinder(object):
         """
         Get the element structure
 
+        :type element: :class:`hl7apy.core.Element`
         :param element: element having the given reference structure
+
         :param reference: the element structure (see :func:`hl7apy.load_reference)
+
         :return: a dictionary containing the structure data
         """
         if reference is None:
@@ -421,8 +454,11 @@ class ElementFinder(object):
         """
         Parse the given reference
 
+        :type element: :class:`hl7apy.core.Element`
         :param element: element having the given reference structure
+
         :param reference: the element structure (see :func:`hl7apy.load_reference)
+
         :return: a dictionary containing the structure data
         """
         content_type = reference[0] # content type can be sequence, choice or leaf
@@ -512,6 +548,7 @@ class Element(object):
         """
         Add an instance of :class:`hl7apy.core.Element` subclass to the list of children
 
+        :type obj: :class:`hl7apy.core.Element`
         :param obj: an instance of :class:`hl7apy.core.Element` subclass
 
         >>> s = Segment('PID')
@@ -559,11 +596,13 @@ class Element(object):
         Returns the HL7 representation of the :class:`Element`. It adds the appropriate
         separator at the end if needed
 
+        :type encoding_chars: ``dict``
         :param encoding_chars: The encoding chars to use.
             If it is ``None`` it uses :attr:`self.encoding_chars`,
             which by default is :attr:`hl7apy.consts.DEFAULT_ENCODING_CHARS`
 
-        :rtype: ``str`` the HL7 representation of the :class:`Element`
+        :rtype: ``basestring``
+        :return: the HL7 representation of the :class:`hl7apy.core.Element`
         """
         if encoding_chars is None:
             encoding_chars = self.encoding_chars
