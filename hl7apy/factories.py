@@ -198,9 +198,9 @@ def timestamp_factory(value, datatype_cls, validation_level=None):
     """
 
     value, offset = _split_offset(value)
-    form = _get_timestamp_format(value)
+    form, microsec = _get_timestamp_format(value)
     dt_value = _datetime_obj_factory(value, form)
-    return datatype_cls(dt_value, form, offset)
+    return datatype_cls(dt_value, form, offset, microsec)
 
 def datetime_factory(value, datatype_cls, validation_level=None):
     """
@@ -256,19 +256,20 @@ def datetime_factory(value, datatype_cls, validation_level=None):
     :rtype: :class:`hl7apy.base_datatypes.DTM`
     """
 
-    value, offset = _split_offset(value)
-    date_format = _get_date_format(value[:8])
+    date_value, offset = _split_offset(value)
+    date_format = _get_date_format(date_value[:8])
+
     try:
-        timestamp_form = _get_timestamp_format(value[8:])
-    except ValueError as e:
-        if not value[8:]: #if it's empty
-            timestamp_form = ''
+        timestamp_form, microsec = _get_timestamp_format(date_value[8:])
+    except ValueError:
+        if not date_value[8:]: #if it's empty
+            timestamp_form, microsec = '', 4
         else:
-            raise e
+            raise ValueError('{0} is not an HL7 valid date value'.format(value))
 
     form = '{0}{1}'.format(date_format, timestamp_form)
-    dt_value = _datetime_obj_factory(value, form)
-    return datatype_cls(dt_value, form, offset)
+    dt_value = _datetime_obj_factory(date_value, form)
+    return datatype_cls(dt_value, form, offset, microsec)
 
 def numeric_factory(value, datatype_cls, validation_level=None):
     """
@@ -344,18 +345,20 @@ def _get_date_format(value):
     return format
 
 def _get_timestamp_format(value):
+    microsec = 4
     if len(value) == 2:
         format = '%H'
     elif len(value) == 4:
         format = '%H%M'
     elif len(value) == 6:
         format = '%H%M%S'
-    elif 10 <= len(value) <= 13 and value[9] == '.':
+    elif 8 <= len(value) <= 11 and value[6] == '.':
         format = '%H%M%S.%f'
+        microsec = len(value) - 7 # it gets the precision of the microseconds part
     else:
         raise ValueError('{0} is not an HL7 valid date value'.format(value))
 
-    return format
+    return format, microsec
 
 def _datetime_obj_factory(value, format):
     try:

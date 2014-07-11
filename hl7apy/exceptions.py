@@ -257,6 +257,21 @@ class InvalidDateOffset(HL7apyException):
     def __str__(self):
         return 'Invalid date offset: {0}'.format(self.offset)
 
+class InvalidMicrosecondsPrecision(HL7apyException):
+    """
+    Raised when the microseconds precision of a TM or DTM oject is not between 1 and 4
+
+    >>> from hl7apy.v2_5 import get_base_datatypes
+    >>> DTM = get_base_datatypes()['DTM']
+    >>> DTM(value='20131010', microsec_precision=5)
+    Traceback (most recent call last):
+    ...
+    InvalidMicrosecondsPrecision: Invalid microseconds precision. It must be between 1 and 4
+    """
+
+    def __str__(self):
+        return 'Invalid microseconds precision. It must be between 1 and 4'
+
 
 class InvalidEncodingChars(HL7apyException):
     """
@@ -270,7 +285,7 @@ class InvalidEncodingChars(HL7apyException):
     InvalidEncodingChars: Invalid encoding chars
     """
     def __str__(self):
-        return 'Invalid encoding chars'
+        return self.message if self.message else 'Invalid encoding chars'
 
 
 if __name__ == '__main__':

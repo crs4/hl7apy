@@ -40,7 +40,8 @@ from datetime import datetime
 from decimal import Decimal
 
 from hl7apy import get_default_encoding_chars, get_default_validation_level
-from hl7apy.exceptions import MaxLengthReached, InvalidHighlightRange, InvalidDateFormat, InvalidDateOffset
+from hl7apy.exceptions import MaxLengthReached, InvalidHighlightRange, InvalidDateFormat, \
+                              InvalidDateOffset, InvalidMicrosecondsPrecision
 from hl7apy.validation import Validator
 
 
@@ -245,8 +246,13 @@ class TM(DateTimeDataType):
 
     allowed_formats = ('%H', '%H%M', '%H%M%S', '%H%M%S.%f')
 
-    def __init__(self, value=None, format='%H%M%S.%f', offset=''):
+    def __init__(self, value=None, format='%H%M%S.%f', offset='', microsec_precision=4):
         super(TM, self).__init__(value, format)
+
+        if not (1 <= microsec_precision <= 4):
+            raise InvalidMicrosecondsPrecision()
+
+        self.microsec_precision = microsec_precision
 
         if offset and len(offset) != 5:
             raise InvalidDateOffset(offset)
@@ -264,7 +270,11 @@ class TM(DateTimeDataType):
         self.offset = offset
 
     def to_er7(self, encoding_chars=None):
-        return '{0}{1}'.format(super(TM, self).to_er7(), self.offset)
+        date_value = super(TM, self).to_er7()
+        if self.format.find('%f') != -1:
+            index = 6 - self.microsec_precision
+            date_value = date_value[:-index]
+        return '{0}{1}'.format(date_value, self.offset)
 
 
 class DTM(TM):
@@ -280,8 +290,8 @@ class DTM(TM):
     allowed_formats = ('%Y', '%Y%m', '%Y%m%d', '%Y%m%d%H', '%Y%m%d%H%M',
                        '%Y%m%d%H%M%S', '%Y%m%d%H%M%S.%f')
 
-    def __init__(self, value=None, format='%Y%m%d%H%M%S.%f', offset=''):
-        super(DTM, self).__init__(value, format, offset)
+    def __init__(self, value=None, format='%Y%m%d%H%M%S.%f', offset='', microsec_precision=4):
+        super(DTM, self).__init__(value, format, offset, microsec_precision)
 
 
 class ST(TextualDataType):

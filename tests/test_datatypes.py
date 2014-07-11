@@ -24,10 +24,11 @@ import unittest
 from datetime import datetime
 from hl7apy.base_datatypes import DT, TM, DTM, ST, FT, ID, IS, TX, GTS, NM, SI
 from hl7apy.factories import datatype_factory
-from hl7apy.exceptions import InvalidDateFormat, InvalidDateOffset, MaxLengthReached, InvalidHighlightRange, InvalidDataType
+from hl7apy.exceptions import InvalidDateFormat, InvalidDateOffset, MaxLengthReached, \
+                              InvalidHighlightRange, InvalidDataType, InvalidMicrosecondsPrecision
 from hl7apy.validation import VALIDATION_LEVEL
 from decimal import Decimal
-import numbers
+
 
 class TestDatatypeFactory(unittest.TestCase):
 
@@ -54,6 +55,7 @@ class TestDatatypeFactory(unittest.TestCase):
         tm = datatype_factory('TM', '120000+0000')
         self.assertEqual(tm.classname, 'TM')
         self.assertEqual(tm.offset, '+0000')
+        self.assertEqual(tm.to_er7(), '120000+0000')
 
     def test_create_year_month_date_by_factory(self):
         dt = datatype_factory('DT', '201201')
@@ -69,6 +71,48 @@ class TestDatatypeFactory(unittest.TestCase):
         tm = datatype_factory('TM', '14')
         self.assertEqual(tm.classname, 'TM')
         self.assertEqual(tm.to_er7(), '14')
+
+    def test_create_datetime_by_factory(self):
+        dtm = datatype_factory('DTM', '20130726120252.0590+0200')
+        self.assertEqual(dtm.classname, 'DTM')
+        self.assertEqual(dtm.to_er7(), '20130726120252.0590+0200')
+
+        dtm = datatype_factory('DTM', '20130726120252.059+0200')
+        self.assertEqual(dtm.classname, 'DTM')
+        self.assertEqual(dtm.to_er7(), '20130726120252.059+0200')
+
+        dtm = datatype_factory('DTM', '20130726120252.05+0200')
+        self.assertEqual(dtm.classname, 'DTM')
+        self.assertEqual(dtm.to_er7(), '20130726120252.05+0200')
+
+        dtm = datatype_factory('DTM', '20130726120252.5+0200')
+        self.assertEqual(dtm.classname, 'DTM')
+        self.assertEqual(dtm.to_er7(), '20130726120252.5+0200')
+
+        dtm = datatype_factory('DTM', '20130726120252+0200')
+        self.assertEqual(dtm.classname, 'DTM')
+        self.assertEqual(dtm.to_er7(), '20130726120252+0200')
+
+    def test_create_timestamp_by_factory(self):
+        dtm = datatype_factory('TM', '120252.0590+0200')
+        self.assertEqual(dtm.classname, 'TM')
+        self.assertEqual(dtm.to_er7(), '120252.0590+0200')
+
+        dtm = datatype_factory('TM', '120252.059+0200')
+        self.assertEqual(dtm.classname, 'TM')
+        self.assertEqual(dtm.to_er7(), '120252.059+0200')
+
+        dtm = datatype_factory('TM', '120252.05+0200')
+        self.assertEqual(dtm.classname, 'TM')
+        self.assertEqual(dtm.to_er7(), '120252.05+0200')
+
+        dtm = datatype_factory('TM', '120252.5+0200')
+        self.assertEqual(dtm.classname, 'TM')
+        self.assertEqual(dtm.to_er7(), '120252.5+0200')
+
+        dtm = datatype_factory('TM', '120252+0200')
+        self.assertEqual(dtm.classname, 'TM')
+        self.assertEqual(dtm.to_er7(), '120252+0200')
 
     def test_create_nm_by_factory(self):
         nm = datatype_factory('NM', 100000)
@@ -121,16 +165,16 @@ class TestTM(unittest.TestCase):
         time = datetime.strptime('01', '%H')
         time1 = datetime.strptime('0101', '%H%M')
         time2 = datetime.strptime('010111', '%H%M%S')
-        time3 = datetime.strptime('010111.111', '%H%M%S.%f')
+        time3 = datetime.strptime('010111.1110', '%H%M%S.%f')
         tm = TM(time, format='%H')
         tm1 = TM(time1, format='%H%M')
         tm2 = TM(time2, format='%H%M%S')
         tm3 = TM(time3, format='%H%M%S.%f')
         self.assertEqual(tm.classname, 'TM')
-        self.assertEqual(tm.to_er7(), datetime.strftime(time, tm.format))
-        self.assertEqual(tm1.to_er7(), datetime.strftime(time1, tm1.format))
-        self.assertEqual(tm2.to_er7(), datetime.strftime(time2, tm2.format))
-        self.assertEqual(tm3.to_er7(), datetime.strftime(time3, tm3.format))
+        self.assertEqual(tm.to_er7(), '01')
+        self.assertEqual(tm1.to_er7(), '0101')
+        self.assertEqual(tm2.to_er7(), '010111')
+        self.assertEqual(tm3.to_er7(), '010111.1110')
 
     def test_TM_wrong_format(self):
         tm = datetime.strptime('01', '%I')
@@ -138,15 +182,14 @@ class TestTM(unittest.TestCase):
         self.assertRaises(InvalidDateFormat, TM,datetime.strptime('12', '%M'), format='%M')
         self.assertRaises(InvalidDateFormat, TM,datetime.strptime('1212', '%M%S'), format='%M%S')
 
-
     def test_TM_default_format(self):
-        time = datetime.strptime('010111.111', '%H%M%S.%f')
+        time = datetime.strptime('010111.1110', '%H%M%S.%f')
         tm = TM(time)
-        self.assertEqual(tm.to_er7(), datetime.strftime(time, tm.format))
+        self.assertEqual(tm.to_er7(), '010111.1110')
 
     def test_TM_offset(self):
         time = datetime.strptime('0101', '%H%M')
-        time2 = datetime.strptime('010111.111', '%H%M%S.%f')
+        time2 = datetime.strptime('010111.1110', '%H%M%S.%f')
         tm = TM(time, format='%H%M', offset='+0100')
         tm2 = TM(time2, format='%H%M%S.%f', offset='-0300')
         TM(time, offset='+0000')
@@ -156,7 +199,7 @@ class TestTM(unittest.TestCase):
         self.assertEqual(tm.offset, '+0100')
         self.assertEqual(tm2.offset, '-0300')
         self.assertEqual(tm.to_er7(), '0101+0100') #check if a space is needed between time and offset, or not
-        self.assertEqual(tm2.to_er7(), '010111.111000-0300')
+        self.assertEqual(tm2.to_er7(), '010111.1110-0300')
 
     def test_TM_invalid_offset(self):
         self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset='+00:00')
@@ -164,6 +207,21 @@ class TestTM(unittest.TestCase):
         self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset='+100')
         self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset='+1300')
         self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset='-1300')
+
+    def test_TM_custom_microsec_precision(self):
+        time = datetime.strptime('011959.1234', '%H%M%S.%f')
+        tm = TM(time, microsec_precision=1)
+        self.assertEqual(tm.to_er7(), '011959.1')
+        tm = TM(time, microsec_precision=2)
+        self.assertEqual(tm.to_er7(), '011959.12')
+        tm = TM(time, microsec_precision=3)
+        self.assertEqual(tm.to_er7(), '011959.123')
+        tm = TM(time, microsec_precision=4)
+        self.assertEqual(tm.to_er7(), '011959.1234')
+
+    def test_TM_invalid_microsec_precision(self):
+        self.assertRaises(InvalidMicrosecondsPrecision, TM, datetime.now(), microsec_precision=0)
+        self.assertRaises(InvalidMicrosecondsPrecision, TM, datetime.now(), microsec_precision=5)
 
 
 class TestDTM(unittest.TestCase):
@@ -175,8 +233,8 @@ class TestDTM(unittest.TestCase):
         dtime3 = datetime.strptime('01', '%H')
         dtime4 = datetime.strptime('0101', '%H%M')
         dtime5 = datetime.strptime('010111', '%H%M%S')
-        dtime6 = datetime.strptime('010111.111', '%H%M%S.%f')
-        dtime7 = datetime.strptime('20130715010111.111', '%Y%m%d%H%M%S.%f')
+        dtime6 = datetime.strptime('010111.1110', '%H%M%S.%f')
+        dtime7 = datetime.strptime('20130715010111.1110', '%Y%m%d%H%M%S.%f')
 
         dtm  = DTM(dtime, format='%Y')
         dtm1 = DTM(dtime1, format='%Y%m')
@@ -188,34 +246,48 @@ class TestDTM(unittest.TestCase):
         dtm7 = DTM(dtime7, format='%Y%m%d%H%M%S.%f')
 
         self.assertEqual(dtm.classname, 'DTM')
-        self.assertEqual(dtm.to_er7(), datetime.strftime(dtime, dtm.format))
-        self.assertEqual(dtm1.to_er7(), datetime.strftime(dtime1, dtm1.format))
-        self.assertEqual(dtm2.to_er7(), datetime.strftime(dtime2, dtm2.format))
-        self.assertEqual(dtm3.to_er7(), datetime.strftime(dtime3, dtm3.format))
-        self.assertEqual(dtm4.to_er7(), datetime.strftime(dtime4, dtm4.format))
-        self.assertEqual(dtm5.to_er7(), datetime.strftime(dtime5, dtm5.format))
-        self.assertEqual(dtm6.to_er7(), datetime.strftime(dtime6, dtm6.format))
-        self.assertEqual(dtm7.to_er7(), datetime.strftime(dtime7, dtm7.format))
-        self.assertEqual(dtm7.to_er7(), datetime.strftime(dtime7, dtm7.format))
+        self.assertEqual(dtm.to_er7(), '2013')
+        self.assertEqual(dtm1.to_er7(), '201307')
+        self.assertEqual(dtm2.to_er7(), '20130715')
+        self.assertEqual(dtm3.to_er7(), '01')
+        self.assertEqual(dtm4.to_er7(), '0101')
+        self.assertEqual(dtm5.to_er7(), '010111')
+        self.assertEqual(dtm6.to_er7(), '010111.1110')
+        self.assertEqual(dtm7.to_er7(), '20130715010111.1110')
 
     def test_DTM_default_format(self):
-        dtime = datetime.strptime('20130715 010111.111', '%Y%m%d %H%M%S.%f')
+        dtime = datetime.strptime('20130715 010111.1110', '%Y%m%d %H%M%S.%f')
         dtm = DTM(dtime)
-        self.assertEqual(dtm.to_er7(), datetime.strftime(dtime, dtm.format))
+        self.assertEqual(dtm.to_er7(), '20130715010111.1110')
 
     def test_DTM_wrong_format(self):
         dtime = datetime.strptime('0715010111.111', '%m%d%H%M%S.%f')
         self.assertRaises(InvalidDateFormat, DTM, dtime, format='%m%d%H%M%S.%f')
 
     def test_DTM_offset(self):
-        dtime = datetime.strptime('20130715 010111.111000', '%Y%m%d %H%M%S.%f')
+        dtime = datetime.strptime('20130715 010111.1110', '%Y%m%d %H%M%S.%f')
         dtm = DTM(dtime, offset='+0100')
-        self.assertEqual(dtm.to_er7(),'20130715010111.111000+0100' )
+        self.assertEqual(dtm.to_er7(), '20130715010111.1110+0100' )
 
     def test_DTM_invalid_offset(self):
         self.assertRaises(InvalidDateOffset, DTM, datetime.strptime('2013', '%Y'), offset='+00:00')
         self.assertRaises(InvalidDateOffset, DTM, datetime.strptime('2013', '%Y'), offset='&0100')
         self.assertRaises(InvalidDateOffset, DTM, datetime.strptime('2013', '%Y'), offset='+100')
+
+    def test_DTM_custom_microsec_precision(self):
+        time = datetime.strptime('20130705011959.1234', '%Y%m%d%H%M%S.%f')
+        tm = DTM(time, microsec_precision=1)
+        self.assertEqual(tm.to_er7(), '20130705011959.1')
+        tm = DTM(time, microsec_precision=2)
+        self.assertEqual(tm.to_er7(), '20130705011959.12')
+        tm = DTM(time, microsec_precision=3)
+        self.assertEqual(tm.to_er7(), '20130705011959.123')
+        tm = DTM(time, microsec_precision=4)
+        self.assertEqual(tm.to_er7(), '20130705011959.1234')
+
+    def test_DTM_invalid_microsec_precision(self):
+        self.assertRaises(InvalidMicrosecondsPrecision, DTM, datetime.now(), microsec_precision=0)
+        self.assertRaises(InvalidMicrosecondsPrecision, DTM, datetime.now(), microsec_precision=5)
 
 
 class TestST(unittest.TestCase):
