@@ -76,9 +76,8 @@ def print_report(n_messages, msg_per_version, msg_per_type, exceptions,
             output.write("\n\nProblems occurred:\n\n")
 
             for ex in exceptions[vl]:
-                output.write("Problem: {0}: \n".format(ex['ex']))
-                output.write("Filename {0}: \n".format(ex['file_name']))
-                output.write("Message: {0}: \n\n".format(repr(ex['msg'])))
+                output.write("Type: {}\nDescription: {}\nFilename: {}\nMessage: {}\n\n".format(
+                    ex['type'], ex['ex'], ex['file_name'], repr(ex['msg'])))
 
             output.write("\n\nParsing time statistics:\n\n")
             for tpm in time_per_message[vl]:
@@ -114,29 +113,31 @@ def parse_messages(directory, validation_level=VL.STRICT, find_groups=True, limi
                 # it parses QUIET only if the user asked (validation_level == VL.QUIET) or an error occurred
                 if vl == VL.QUIET and (validation_level != VL.QUIET and not error_occurred):
                     continue
-
+                file_base_name = os.path.basename(hl7_file.name)
                 n_messages[vl] += 1
                 try:
                     msg_start = time.time()
                     msg = parse_message(msg_str, vl, find_groups=find_groups)
                     msg_end = time.time()
 
-                    encoding_start = time.time()
-                    msg.to_er7()
-                    encoding_end = time.time()
-
-                    file_base_name = os.path.basename(hl7_file.name)
                     msg_per_versions[vl][msg.version] += 1
                     msg_per_type[vl][msg.msh.msh_9.to_er7()] += 1
                     parsing_time[vl].append((file_base_name, len(msg.children),
                                                    msg.msh.msh_9.to_er7(), msg_end - msg_start))
-
-                    encoding_time.append((file_base_name, len(msg.children), msg.msh.msh_9.to_er7(),
-                                          encoding_end - encoding_start))
                 except Exception as e:
-                    exceptions[vl].append({'ex': e, 'file_name' : f, 'msg' : msg_str})
+                    exceptions[vl].append({'type' : 'parsing', 'ex': e, 'file_name' : f, 'msg' : msg_str})
                     if vl == VL.STRICT:
                         error_occurred = True
+
+                try:
+                    encoding_start = time.time()
+                    msg.to_er7()
+                    encoding_end = time.time()
+
+                    encoding_time.append((file_base_name, len(msg.children), msg.msh.msh_9.to_er7(),
+                      encoding_end - encoding_start))
+                except Exception as e:
+                    exceptions[vl].append({'type' : 'encoding', 'ex': e, 'file_name' : f, 'msg' : msg_str})
 
     elapsed_time = time.time() - start
 
