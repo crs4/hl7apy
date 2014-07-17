@@ -282,7 +282,7 @@ class InvalidEncodingChars(HL7apyException):
     >>> m = Message('ADT_A01', encoding_chars=encoding_chars)
     Traceback (most recent call last):
     ...
-    InvalidEncodingChars: Invalid encoding chars
+    InvalidEncodingChars: Missing required encoding chars
     """
     def __str__(self):
         return self.message if self.message else 'Invalid encoding chars'

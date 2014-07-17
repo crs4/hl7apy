@@ -235,13 +235,18 @@ class DT(DateTimeDataType):
 class TM(DateTimeDataType):
     """
     Class for TM base datatype. It extends DateTimeDatatype and it represents a time value with
-    hours, minutes, seconds and microseconds. Parameters are the same of the superclass plus ``offset``
+    hours, minutes, seconds and microseconds. Parameters are the same of the superclass plus ``offset``.
+    Since HL7 supports only four digits for microseconds, and Python datetime uses 6 digits, the wanted precision
+    must be specified.
 
     The :attr:`allowed_formats` tuple is ``('%H', '%H%M', '%H%M%S', '%H%M%S.%f')``.
     It needs also the ``offset`` parameter which represents the UTC offset
 
     :type offset: ``basestring``
     :param offset: the UTC offset. By default it is ''. It must be in the form ``'+/-HHMM'``
+
+    :type microsec_precision: ``int``
+    :param microsec_precision: Number of digit of the microseconds part of the value. It must be between 1 and 4
     """
 
     allowed_formats = ('%H', '%H%M', '%H%M%S', '%H%M%S.%f')
@@ -279,7 +284,7 @@ class TM(DateTimeDataType):
 
 class DTM(TM):
     """
-    Class for TM base datatype. It extends TM and it represents classes DT and DTM combined.
+    Class for DTM base datatype. It extends TM and it represents classes DT and DTM combined.
     Thus it represents year, month, day, hours, minutes, seconds and microseconds.
     Parameters are the same of the superclass.
 
