@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -15,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0.0',
+        VERSION:     '1.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -83,7 +82,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; the encoding chars (see <a class="reference internal" href="#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_encoding_chars()</span></tt></a>)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.InvalidEncodingChars" title="hl7apy.exceptions.InvalidEncodingChars"><tt class="xref py py-exc docutils literal"><span class="pre">hl7apy.exceptions.InvalidEncodingChars</span></tt></a> if the given encoding chars are not valid</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.InvalidEncodingChars" title="hl7apy.exceptions.InvalidEncodingChars"><tt class="xref py py-exc docutils literal"><span class="pre">hl7apy.exceptions.InvalidEncodingChars</span></tt></a> if the given encoding chars are not valid</td>
 </tr>
 </tbody>
 </table>
@@ -99,7 +98,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; validation level (see <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt></a>)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.UnknownValidationLevel" title="hl7apy.exceptions.UnknownValidationLevel"><tt class="xref py py-exc docutils literal"><span class="pre">hl7apy.exceptions.UnknownValidationLevel</span></tt></a> if the given validation level is unsupported</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.UnknownValidationLevel" title="hl7apy.exceptions.UnknownValidationLevel"><tt class="xref py py-exc docutils literal"><span class="pre">hl7apy.exceptions.UnknownValidationLevel</span></tt></a> if the given validation level is unsupported</td>
 </tr>
 </tbody>
 </table>
@@ -115,7 +114,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the version to validate (e.g. <tt class="docutils literal"><span class="pre">2.6</span></tt>)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.UnsupportedVersion" title="hl7apy.exceptions.UnsupportedVersion"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.exceptions.UnsupportedVersion</span></tt></a> if the given version is unsupported</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.UnsupportedVersion" title="hl7apy.exceptions.UnsupportedVersion"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.exceptions.UnsupportedVersion</span></tt></a> if the given version is unsupported</td>
 </tr>
 </tbody>
 </table>
@@ -142,20 +141,18 @@
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a dictionary describing the element structure</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raise :</th><td class="field-body"><p class="first last"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.ChildNotFound" title="hl7apy.exceptions.ChildNotFound"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.exceptions.ChildNotFound</span></tt></a> if the element has not been found</p>
+<tr class="field-even field"><th class="field-name">Raise:</th><td class="field-body"><p class="first last"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.ChildNotFound" title="hl7apy.exceptions.ChildNotFound"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.exceptions.ChildNotFound</span></tt></a> if the element has not been found</p>
 </td>
 </tr>
 </tbody>
 </table>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="kn">import</span> <span class="n">Message</span><span class="p">,</span> <span class="n">Segment</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">find_reference</span><span class="p">(</span><span class="s">&#39;UNKNOWN&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">Segment</span><span class="p">,</span> <span class="p">),</span> <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
-<span class="gt">Traceback (most recent call last):</span>
-<span class="c">...</span>
-<span class="gr">ChildNotFound</span>: <span class="n">No child named UNKNOWN</span>
+<span class="gp">...</span>
+<span class="go">ChildNotFound: No child named UNKNOWN</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">find_reference</span><span class="p">(</span><span class="s">&#39;ADT_A01&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">Segment</span><span class="p">,),</span>  <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
-<span class="gt">Traceback (most recent call last):</span>
-<span class="c">...</span>
-<span class="gr">ChildNotFound</span>: <span class="n">No child named ADT_A01</span>
+<span class="gp">...</span>
+<span class="go">ChildNotFound: No child named ADT_A01</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">find_reference</span><span class="p">(</span><span class="s">&#39;ADT_A01&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">Message</span><span class="p">,),</span>  <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">r</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s">&#39;cls&#39;</span><span class="p">]</span>
 <span class="go">ADT_A01 &lt;class &#39;hl7apy.core.Message&#39;&gt;</span>
@@ -260,7 +257,7 @@
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a dictionary describing the element structure</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raise :</th><td class="field-body"><p class="first last"><tt class="docutils literal"><span class="pre">KeyError</span></tt> if the element has not been found</p>
+<tr class="field-even field"><th class="field-name">Raise:</th><td class="field-body"><p class="first last"><tt class="docutils literal"><span class="pre">KeyError</span></tt> if the element has not been found</p>
 </td>
 </tr>
 </tbody>
@@ -292,9 +289,8 @@
 </tbody>
 </table>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">load_reference</span><span class="p">(</span><span class="s">&#39;UNKNOWN&#39;</span><span class="p">,</span> <span class="s">&#39;Segment&#39;</span><span class="p">,</span> <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
-<span class="gt">Traceback (most recent call last):</span>
-<span class="c">...</span>
-<span class="gr">KeyError</span>: <span class="n">&#39;UNKNOWN&#39;</span>
+<span class="gp">...</span>
+<span class="go">KeyError: &#39;UNKNOWN&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">load_reference</span><span class="p">(</span><span class="s">&#39;ADT_A01&#39;</span><span class="p">,</span> <span class="s">&#39;Message&#39;</span><span class="p">,</span> <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="go">sequence</span>
@@ -315,7 +311,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; the new encoding chars</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.InvalidEncodingChars" title="hl7apy.exceptions.InvalidEncodingChars"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.exceptions.InvalidEncodingChars</span></tt></a> if the given encoding chars are not valid</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.InvalidEncodingChars" title="hl7apy.exceptions.InvalidEncodingChars"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.exceptions.InvalidEncodingChars</span></tt></a> if the given encoding chars are not valid</td>
 </tr>
 </tbody>
 </table>
@@ -357,7 +353,7 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_encoding_chars</span><span class="p">({</span><span class="s">&#39;FIELD&#39;</span><span class="p">:</span> <span class="s">&#39;!&#39;</span><span class="p">})</span>
 <span class="gt">Traceback (most recent call last):</span>
     <span class="o">...</span>
-<span class="gr">InvalidEncodingChars</span>: <span class="n">Invalid encoding chars</span>
+<span class="nc">InvalidEncodingChars</span>: <span class="n-Identifier">Invalid encoding chars</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_encoding_chars</span><span class="p">({</span><span class="s">&#39;FIELD&#39;</span><span class="p">:</span> <span class="s">&#39;!&#39;</span><span class="p">,</span> <span class="s">&#39;COMPONENT&#39;</span><span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="s">&#39;SUBCOMPONENT&#39;</span><span class="p">:</span> <span class="s">&#39;S&#39;</span><span class="p">,</span> <span class="s">&#39;REPETITION&#39;</span><span class="p">:</span> <span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="s">&#39;ESCAPE&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\\</span><span class="s">&#39;</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">get_default_encoding_chars</span><span class="p">()[</span><span class="s">&#39;FIELD&#39;</span><span class="p">]</span>
 <span class="go">!</span>
@@ -375,14 +371,14 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; validation level (see <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt></a>)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.UnknownValidationLevel" title="hl7apy.exceptions.UnknownValidationLevel"><tt class="xref py py-exc docutils literal"><span class="pre">hl7apy.exceptions.UnknownValidationLevel</span></tt></a> if the given validation level is unsupported</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.UnknownValidationLevel" title="hl7apy.exceptions.UnknownValidationLevel"><tt class="xref py py-exc docutils literal"><span class="pre">hl7apy.exceptions.UnknownValidationLevel</span></tt></a> if the given validation level is unsupported</td>
 </tr>
 </tbody>
 </table>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_validation_level</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 <span class="gt">Traceback (most recent call last):</span>
     <span class="o">...</span>
-<span class="gr">UnknownValidationLevel</span>
+<span class="nc">UnknownValidationLevel</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_validation_level</span><span class="p">(</span><span class="n">VALIDATION_LEVEL</span><span class="o">.</span><span class="n">QUIET</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">get_default_validation_level</span><span class="p">()</span>
 <span class="go">2</span>
@@ -400,14 +396,14 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the new default version (e.g. <tt class="docutils literal"><span class="pre">2.6</span></tt>)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.UnsupportedVersion" title="hl7apy.exceptions.UnsupportedVersion"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.exceptions.UnsupportedVersion</span></tt></a> if the given version is unsupported</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.UnsupportedVersion" title="hl7apy.exceptions.UnsupportedVersion"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.exceptions.UnsupportedVersion</span></tt></a> if the given version is unsupported</td>
 </tr>
 </tbody>
 </table>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_version</span><span class="p">(</span><span class="s">&#39;22&#39;</span><span class="p">)</span>
 <span class="gt">Traceback (most recent call last):</span>
     <span class="o">...</span>
-<span class="gr">UnsupportedVersion</span>: <span class="n">The version 22 is not supported</span>
+<span class="nc">UnsupportedVersion</span>: <span class="n-Identifier">The version 22 is not supported</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_version</span><span class="p">(</span><span class="s">&#39;2.3&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">get_default_version</span><span class="p">()</span>
 <span class="go">2.3</span>
@@ -473,7 +469,7 @@
 
     <div class="footer">
         &copy; Copyright 2012-2014, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
 <script type="text/javascript">
 

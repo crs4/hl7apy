@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -15,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0.0',
+        VERSION:     '1.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -183,7 +182,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">unknown_fields</span> <span class="o">=</span> <span class="n">parse_fields</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">unknown_fields</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">s</span><span class="o">.</span><span class="n">to_er7</span><span class="p">()</span>
-<span class="go">NK1|1|NUCLEAR^NELDA^W|SPO|2222 HOME STREET^^ANN ARBOR^MI^^USA</span>
+<span class="go">NK1||||||||||||||||||||||||||||||||||||||||1|NUCLEAR^NELDA^W|SPO|2222 HOME STREET^^ANN ARBOR^MI^^USA</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -252,7 +251,7 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">components</span> <span class="o">=</span> <span class="s">&quot;NUCLEAR^NELDA^W^^TEST&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">xpn</span> <span class="o">=</span> <span class="n">parse_components</span><span class="p">(</span><span class="n">components</span><span class="p">,</span> <span class="n">field_datatype</span><span class="o">=</span><span class="s">&quot;XPN&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">xpn</span>
-<span class="go">[&lt;Component XPN_1 (FAMILY_NAME) of type FN&gt;, &lt;Component XPN_2 (GIVEN_NAME) of type ST&gt;, &lt;Component XPN_3 (SECOND_AND_FURTHER_GIVEN_NAMES_OR_INITIALS_THEREOF) of type ST&gt;, &lt;Component XPN_5 (PREFIX_E_G_DR_) of type ST&gt;]</span>
+<span class="go">[&lt;Component XPN_1 (FAMILY_NAME) of type FN&gt;, &lt;Component XPN_2 (GIVEN_NAME) of type ST&gt;, &lt;Component XPN_3 (SECOND_AND_FURTHER_GIVEN_NAMES_OR_INITIALS_THEREOF) of type ST&gt;, &lt;Component XPN_5 (PREFIX_E_G_DR) of type ST&gt;]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">parse_components</span><span class="p">(</span><span class="n">components</span><span class="p">)</span>
 <span class="go">[&lt;Component ST (None) of type ST&gt;, &lt;Component ST (None) of type ST&gt;, &lt;Component ST (None) of type ST&gt;, &lt;Component ST (None) of type ST&gt;, &lt;Component ST (None) of type ST&gt;]</span>
 </pre></div>
@@ -330,7 +329,7 @@
 <span class="go">[&lt;SubComponent ST&gt;, &lt;SubComponent ST&gt;, &lt;SubComponent ST&gt;, &lt;SubComponent ST&gt;]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">subs</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">c</span><span class="o">.</span><span class="n">to_er7</span><span class="p">()</span>
-<span class="go">ID&amp;TEST&amp;&amp;AHAH</span>
+<span class="go">&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;ID&amp;TEST&amp;&amp;AHAH</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -392,7 +391,7 @@
 
     <div class="footer">
         &copy; Copyright 2012-2014, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
 <script type="text/javascript">
 
