@@ -16,7 +16,7 @@ The main features includes:
 
 Currently supported HL7 versions are: 2.2, 2.3, 2.3.1, 2.4, 2.5, 2.5.1, 2.6.
 
-Current version is 1.0.0
+Current version is 1.0.1
 
 To get started visit the :ref:`Getting started <tutorial>` section
 

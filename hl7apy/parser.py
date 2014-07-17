@@ -172,7 +172,7 @@ def parse_fields(text, name_prefix=None, version=None, encoding_chars=None, vali
     >>> unknown_fields = parse_fields(fields)
     >>> s.children = unknown_fields
     >>> print s.to_er7()
-    NK1|1|NUCLEAR^NELDA^W|SPO|2222 HOME STREET^^ANN ARBOR^MI^^USA
+    NK1||||||||||||||||||||||||||||||||||||||||1|NUCLEAR^NELDA^W|SPO|2222 HOME STREET^^ANN ARBOR^MI^^USA
     """
     version = _get_version(version)
     encoding_chars = _get_encoding_chars(encoding_chars)
@@ -282,7 +282,7 @@ def parse_components(text, field_datatype='ST', version=None, encoding_chars=Non
     >>> components = "NUCLEAR^NELDA^W^^TEST"
     >>> xpn = parse_components(components, field_datatype="XPN")
     >>> print xpn
-    [<Component XPN_1 (FAMILY_NAME) of type FN>, <Component XPN_2 (GIVEN_NAME) of type ST>, <Component XPN_3 (SECOND_AND_FURTHER_GIVEN_NAMES_OR_INITIALS_THEREOF) of type ST>, <Component XPN_5 (PREFIX_E_G_DR_) of type ST>]
+    [<Component XPN_1 (FAMILY_NAME) of type FN>, <Component XPN_2 (GIVEN_NAME) of type ST>, <Component XPN_3 (SECOND_AND_FURTHER_GIVEN_NAMES_OR_INITIALS_THEREOF) of type ST>, <Component XPN_5 (PREFIX_E_G_DR) of type ST>]
     >>> print parse_components(components)
     [<Component ST (None) of type ST>, <Component ST (None) of type ST>, <Component ST (None) of type ST>, <Component ST (None) of type ST>, <Component ST (None) of type ST>]
     """
@@ -392,7 +392,7 @@ def parse_subcomponents(text, component_datatype='ST', version=None, encoding_ch
     [<SubComponent ST>, <SubComponent ST>, <SubComponent ST>, <SubComponent ST>]
     >>> c.children = subs
     >>> print c.to_er7()
-    ID&TEST&&AHAH
+    &&&&&&&&&ID&TEST&&AHAH
     """
     version = _get_version(version)
     encoding_chars = _get_encoding_chars(encoding_chars)
