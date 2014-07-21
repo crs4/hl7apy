@@ -61,7 +61,7 @@ def check_encoding_chars(encoding_chars):
     """
     if not isinstance(encoding_chars, collections.MutableMapping):
         raise InvalidEncodingChars
-    required = {'FIELD', 'COMPONENT', 'SUBCOMPONENT', 'REPETITION', 'ESCAPE'}
+    required = set(['FIELD', 'COMPONENT', 'SUBCOMPONENT', 'REPETITION', 'ESCAPE'])
     missing = required - set(encoding_chars.keys())
     if missing:
         raise InvalidEncodingChars('Missing required encoding chars')
@@ -308,8 +308,8 @@ def find_reference(name, element_types, version):
 
 def _discover_libraries():
     current_dir = os.path.dirname(__file__)
-    return {o[1:].replace("_", "."): "hl7apy.{}".format(o)
-            for o in os.listdir(current_dir) if o.startswith("v2_")}
+    return dict((o[1:].replace("_", "."), "hl7apy.{0}".format(o))
+            for o in os.listdir(current_dir) if o.startswith("v2_"))
 
 SUPPORTED_LIBRARIES = _discover_libraries()
 

@@ -466,11 +466,11 @@ class ElementFinder(object):
         if content_type in ('sequence', 'choice'):
             children = reference[1]
             structure = collections.OrderedDict()
-            repetitions = {child_name:cardinality for child_name, cardinality in children}
+            repetitions = dict((child_name, cardinality) for (child_name, cardinality) in children)
             for c in children:
                 child_name, cardinality = c
                 structure[child_name] = find_reference(child_name, element.child_classes, element.version)
-            data['structure_by_longname'] = {e['ref'][2]: e for e in structure.values() if e['ref'][0] == 'leaf'}
+            data['structure_by_longname'] = dict((e['ref'][2], e) for e in structure.values() if e['ref'][0] == 'leaf')
             data['structure_by_name'] = structure
             data['repetitions'] = repetitions
         elif content_type == 'leaf':
