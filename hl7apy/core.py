@@ -23,6 +23,7 @@
 HL7apy - core classes
 """
 
+import re
 import collections
 import datetime
 from itertools import takewhile
@@ -86,6 +87,18 @@ def _valid_child_name(child_name, expected_parent):
             return False
         return True
 
+def _valid_z_message_name(name):
+    if name is None:
+        return False
+    regex = '^z[a-z0-9]{2}_z[a-z0-9]{2}$'
+    return re.match(regex, name, re.IGNORECASE) is not None
+
+def _valid_z_segment_name(name):
+    return name.upper().startswith('Z') and len(name) == 3
+
+def _valid_z_field_name(name):
+    regex = '^z[a-z1-9]{2}_\d+$'
+    return re.match(regex, name, re.IGNORECASE) is not None
 
 class ElementProxy(collections.Sequence):
     """
@@ -1105,12 +1118,15 @@ class Component(SupportComplexDataType, CanBeVaries):
             raise MaxChildLimitReached(self, obj, 1)
 
         # if the name is different from the datatype (i.e. the name has been forced to be the same as the datatype)
-        if obj.name and obj.name != obj.datatype:
-            try:
-                if not _valid_child_name(obj.name, self.datatype):
-                    raise ChildNotValid(obj.name, self)
-            except AttributeError:
-                pass
+        try:
+            if obj.name and obj.name != obj.datatype:
+                try:
+                    if not _valid_child_name(obj.name, self.datatype):
+                        raise ChildNotValid(obj.name, self)
+                except AttributeError:
+                    pass
+        except ChildNotFound: # obj.datatype causes ChildNotFound for some Elements (Message, Groups etc)
+            raise ChildNotValid(obj, self)
 
         return super(Component, self).add(obj)
 
@@ -1163,8 +1179,16 @@ class Field(SupportComplexDataType):
         if datatype == 'varies' and reference is None:
             reference = ('leaf', 'varies', None, None)
 
-        Element.__init__(self, name, parent, reference, version,
-                                    validation_level, traversal_parent)
+        try:
+            Element.__init__(self, name, parent, reference, version,
+                             validation_level, traversal_parent)
+        except InvalidName:
+            if _valid_z_field_name(name):
+                reference = ('leaf', datatype, None, None)
+                Element.__init__(self, name, parent, reference, version,
+                             validation_level, traversal_parent)
+            else:
+                raise
 
         if datatype is not None and Validator.is_strict(validation_level) and \
                 datatype != 'varies' and datatype != self.datatype:
@@ -1392,14 +1416,30 @@ class Segment(Element):
         if name is None:
             raise OperationNotAllowed("Cannot instantiate an unknown Segment")
 
-        super(Segment, self).__init__(name, parent, reference, version,
-                                      validation_level, traversal_parent)
+        if _valid_z_segment_name(name):
+            if reference is None:
+                reference = ('sequence', ())
 
-        last_field = self.ordered_children[-1]
-        last_field_structure = self.structure_by_name[last_field]
-        self.allow_infinite_children = last_field_structure['ref'][1] == 'varies'
-        self._last_allowed_child_index = int(last_field_structure['name'][4:])
-        self._last_child_index = self._last_allowed_child_index
+            super(Segment, self).__init__(name, parent, reference, version,
+                                          validation_level, traversal_parent)
+            self.allow_infinite_children = True
+            self._last_allowed_child_index = 0
+            self._last_child_index = 0
+        else:
+            super(Segment, self).__init__(name, parent, reference, version,
+                                      validation_level, traversal_parent)
+            last_field = self.ordered_children[-1]
+            last_field_structure = self.structure_by_name[last_field]
+            self.allow_infinite_children = last_field_structure['ref'][1] == 'varies'
+            self._last_allowed_child_index = int(last_field_structure['name'][4:])
+            self._last_child_index = self._last_allowed_child_index
+
+    def add(self, obj):
+        super(Segment, self).add(obj)
+        if obj.name and self.allow_infinite_children: # updates the index of the last children not allowed (e.g. )
+            field_index = int(obj.name[4:])
+            if field_index > self._last_child_index:
+                self._last_child_index = field_index
 
     def add_field(self, name):
         """
@@ -1416,12 +1456,12 @@ class Segment(Element):
 
     def find_child_reference(self, name):
         """
-        Override the corresponding ``Element``'s method. This because if the Segment allows children
-        other then the ones expected in the HL7 structure (i.e. if the last known field is of type `varies`)
-        the ``Field`` will be created although it is not found in the HL7 structures, but only if its name is `<SegmentName>_<index>`.
-        In this case the method returns a reference for a ``Field`` of type `varies`.
+        Override the corresponding ``Element``'s method. This is done for segments that allow children
+        other than the ones expected in the HL7 structure: the ones with the last known field of type `varies` and the Z-Segments.
+        The ``Field`` will be created although it is not found in the HL7 structures, but only if its name is `<SegmentName>_<index>`.
+        In this case the method returns a reference for a ``Field`` of type `None` in case of Z-Segment and `varies` otherwise.
 
-        For example the segment `QPD` in the version 2.5 has the last known child `QPD_3` of type varies
+        An example of a segment with the last field of type ``varies`` is the `QPD` in the version 2.5, whose last field is QPD_3.
         That means that it allows fields with name QPD_4, QPD_5,...QPD_n.
         """
         name = name.upper()
@@ -1429,9 +1469,12 @@ class Segment(Element):
 
         if element is None: # not found in self.structure
             if self.allow_infinite_children and _valid_child_name(name, self.name):
-                element = {'cls': Field,
-                           'name': name.upper(),
-                           'ref': ('leaf', 'varies', None, None)}
+                if _valid_z_field_name(name):
+                    datatype = None
+                else:
+                    datatype = 'varies'
+
+                element = {'cls': Field, 'name': name, 'ref': ('leaf', datatype, None, None)}
             else:
                 element = find_reference(name, self.child_classes, self.version)
                 if element:
@@ -1505,6 +1548,16 @@ class Segment(Element):
                     return True
         return valid
 
+    def _get_children(self, trailing=False):
+        children = self.children.get_ordered_children()
+        if self.allow_infinite_children:
+            for i in xrange(self._last_allowed_child_index + 1, self._last_child_index + 1):
+                children.append( self.children.indexes.get('{}_{}'.format(self.name, i), None) )
+        children.extend([c for c in self.children.get_children() if c[0].name in (None, 'ST')])
+        if not trailing:
+            children = _remove_trailing(children)
+        return children
+
     def _handle_empty_children(self, encoding_chars=None):
         return ''
 
@@ -1567,13 +1620,35 @@ class Group(Element):
 
         return self.children.create_element(name)
 
+    def find_child_reference(self, name):
+        name = name.upper()
+        if isinstance(self.structure_by_name, collections.MutableMapping):
+            element = self.structure_by_name.get(name) or self.structure_by_longname.get(name)
+        else:
+            element = None
+        if element is None: # not found in self.structure
+            if _valid_z_segment_name(name):
+                element = {'cls': Segment, 'name': name, 'ref' : ('sequence', ())}
+            else:
+                element = find_reference(name, self.child_classes, self.version)
+                if Validator.is_strict(self.validation_level): # cannot be created if validation is strict
+                    raise ChildNotValid(name, self)
+        return element
+
     def parse_child(self, text, child_name=None, reference=None):
         ref = self.find_child_reference(child_name)
         if ref['cls'] == Group:
-            g = Group(child_name, validation_level=self.validation_level, version=self.version, reference=ref['ref'])
+            g = Group(child_name, validation_level=self.validation_level, version=self.version,
+                      reference=ref['ref'])
             g.value = text
             return g
         else:
+            # Check that the value starts with the correct name of the segment.
+            # If it doesn't, it sets the reference to None to force the initializer to search again for the segment reference.
+            # This is done to avoid situation like m.zip = 'PAP|||asb|' which results in this call to parse child
+            # parse_child(self, 'PAP|||asb|', 'zip', ('sequence', ()))
+            if text[:3] != child_name:
+                reference = None
             kwargs = {'encoding_chars': self.encoding_chars, 'reference': reference}
             return Element.parse_child(self, text, **kwargs)
 
@@ -1633,8 +1708,16 @@ class Message(Group):
                  validation_level=None,
                  encoding_chars=None):
 
-        super(Message, self).__init__(name, None, reference, version,
-                                      validation_level)
+        try:
+            super(Message, self).__init__(name, None, reference, version,
+                                          validation_level)
+        except InvalidName:
+            if _valid_z_message_name(name):
+                reference = ('sequence', ())
+                super(Message, self).__init__(name, None, reference, version,
+                                              validation_level)
+            else:
+                raise
 
         if encoding_chars is None:
             encoding_chars = get_default_encoding_chars()
@@ -1643,6 +1726,21 @@ class Message(Group):
         self.encoding_chars = encoding_chars
         self.msh.msh_7 = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         self.msh.msh_12 = self.version
+
+    def find_child_reference(self, name):
+        name = name.upper()
+        if isinstance(self.structure_by_name, collections.MutableMapping):
+            element = self.structure_by_name.get(name) or self.structure_by_longname.get(name)
+        else:
+            element = None
+        if element is None: # not found in self.structure
+            if _valid_z_segment_name(name):
+                element = {'cls': Segment, 'name': name, 'ref' : ('sequence', ())}
+            else:
+                element = find_reference(name, self.child_classes, self.version)
+                if not _valid_z_message_name(self.name) and Validator.is_strict(self.validation_level):
+                    raise ChildNotValid(name, self)
+        return element
 
     def parse_children(self, text, find_groups=True, **kwargs):
         from hl7apy.parser import get_message_info

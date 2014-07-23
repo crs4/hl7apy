@@ -96,6 +96,52 @@ class TestMessage(unittest.TestCase):
         b = Message('OML_O33')
         b.add(Segment('MSA'))
 
+    def test_create_z_message(self):
+        Message('ZDT_ZDT')
+        Message('ZA1_ZB2')
+        Message('za1_zb2')
+        self.assertRaises(InvalidName, Message, 'za1azb2')
+        self.assertRaises(InvalidName, Message, 'z##_azb2')
+        self.assertRaises(InvalidName, Message, 'zab_zaba')
+        self.assertRaises(InvalidName, Message, 'zaba_zab')
+        self.assertRaises(InvalidName, Message, 'OML_ZAB')
+        self.assertRaises(InvalidName, Message, 'zab_oml')
+
+        Message('ZDT_ZDT', validation_level=VALIDATION_LEVEL.STRICT)
+        Message('ZA1_ZB2', validation_level=VALIDATION_LEVEL.STRICT)
+        Message('za1_zb2', validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(InvalidName, Message, 'za1azb2', validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(InvalidName, Message, 'z##_azb2', validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(InvalidName, Message, 'zab_zaba', validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(InvalidName, Message, 'zaba_zab', validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(InvalidName, Message, 'OML_ZAB', validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(InvalidName, Message, 'zab_oml', validation_level=VALIDATION_LEVEL.STRICT)
+
+    def test_add_z_segment(self):
+        a = Message('OML_O33', validation_level=VALIDATION_LEVEL.STRICT)
+        a.add(Segment('ZIN'))
+        a.add_segment('zap')
+        a.zbe = 'ZBE||ab|ab|'
+
+        b = Message('OML_O33', validation_level=VALIDATION_LEVEL.QUIET)
+        b.add(Segment('ZIN'))
+        b.add_segment('zap')
+        b.zbe = 'ZBE||ab|ab|'
+
+    def test_add_to_z_message(self):
+        m = Message('ZDT_ZDT')
+        m.add(Segment('PID'))
+        m.add_segment('ZIN')
+        m.zap = 'ZAP||21||'
+        m.add_group('OML_O33_PATIENT')
+
+        m = Message('ZDT_ZDT', validation_level=VALIDATION_LEVEL.STRICT)
+        m.add(Segment('PID'))
+        m.add_segment('ZIN')
+        m.zap = 'ZAP||21||'
+
+        m.add_group('OML_O33_PATIENT')
+
     def test_add_known_segment_to_empty_message(self):
         a = Message('OML_O33')
         a.add(Segment('MSA'))
@@ -111,10 +157,19 @@ class TestMessage(unittest.TestCase):
             a.msh = Segment('SPM')
         with self.assertRaises(ChildNotValid):
             a.pid = 'EVN||20080115153000||||20080114003000'
+        with self.assertRaises(InvalidName):
+            a.zin = 'PAP||abc||'
+        with self.assertRaises(InvalidName):
+            a.msh = 'PAP||abc||'
+
         with self.assertRaises(ChildNotValid):
             b.msh = Segment('SPM')
         with self.assertRaises(ChildNotValid):
             b.pid = 'EVN||20080115153000||||20080114003000'
+        with self.assertRaises(InvalidName):
+            b.zin = 'PAP||abc||'
+        with self.assertRaises(InvalidName):
+            b.pid = 'PAP||abc||'
 
     def test_add_segment_to_message_mix(self):
         a = Message('OML_O33',  validation_level=VALIDATION_LEVEL.QUIET)
@@ -192,7 +247,7 @@ class TestGroup(unittest.TestCase):
 
     def test_add_unexpected_child_to_group(self):
         g = Group()
-        m = Message()
+        m = Message('OML_O33')
         f = Field()
         c = Component(datatype='ST')
         sub = SubComponent(datatype='ST')
@@ -202,8 +257,8 @@ class TestGroup(unittest.TestCase):
         self.assertRaises(ChildNotValid, g.add, sub)
 
     def test_delete_group(self):
-        m = Message('OML_O33',  validation_level=VALIDATION_LEVEL.QUIET)
-        g = Group ('OML_O33_PATIENT')
+        m = Message('OML_O33', validation_level=VALIDATION_LEVEL.QUIET)
+        g = Group('OML_O33_PATIENT')
         m.add(g)
         self.assertEqual(m.oml_O33_patient.name, 'OML_O33_PATIENT' )
         del m.oml_o33_patient
@@ -214,6 +269,17 @@ class TestGroup(unittest.TestCase):
 
     def test_create_unsupported_version_group(self):
         self.assertRaises(UnsupportedVersion, Group, version='2.0')
+
+    def test_add_z_segment(self):
+        a = Group('OML_O33_PATIENT', validation_level=VALIDATION_LEVEL.STRICT)
+        a.add(Segment('ZIN'))
+        a.add_segment('zap')
+        a.zbe = 'ZBE||ab|ab|'
+
+        b = Group('OML_O33_PATIENT', validation_level=VALIDATION_LEVEL.QUIET)
+        b.add(Segment('ZIN'))
+        b.add_segment('zap')
+        b.zbe = 'ZBE||ab|ab|'
 
     def test_assign_value(self):
         g = Group('OML_O33_SPECIMEN')
@@ -228,7 +294,6 @@ class TestGroup(unittest.TestCase):
         m1.oml_o33_specimen.value = self.oml_o33_specimen
         m2.oml_o33_specimen = self.oml_o33_specimen
         self.assertEqual(m1.to_er7(), m2.to_er7())
-
 
     def test_assign_value_unknown_group(self):
         g = Group()
@@ -252,8 +317,40 @@ class TestSegment(unittest.TestCase):
         self.assertRaises(OperationNotAllowed, Segment)
 
     def test_create_unsupported_version_segment(self):
-        s = Segment('PID', version='2.5')
+        Segment('PID', version='2.5')
         self.assertRaises(UnsupportedVersion, Segment, 'PID', version='2.0')
+
+    def test_create_z_segment(self):
+        Segment('ZIN', validation_level=VALIDATION_LEVEL.STRICT)
+        Segment('ZIN', validation_level=VALIDATION_LEVEL.QUIET)
+        self.assertRaises(InvalidName, Segment, 'ZDSW' , validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(InvalidName, Segment, 'ZDSW' , validation_level=VALIDATION_LEVEL.QUIET)
+
+    def test_add_field_to_z_segments(self):
+        zin = Segment('ZIN')
+        zin.add(Field('ZIN_10'))
+        zin.zin_12 = 'abc'
+        zin.add_field('zin_2')
+
+        with self.assertRaises(ChildNotFound):
+            zin.add(Field('ZAP_10'))
+            zin.zap_12 = 'abc'
+            zin.add_field('zap_2')
+
+    def test_allow_infinite_children(self):
+        qpd = Segment('QPD',validation_level=VALIDATION_LEVEL.STRICT) # last field is varies
+        self.assertTrue(qpd.allow_infinite_children)
+        pid = Segment('PID',validation_level=VALIDATION_LEVEL.STRICT) # last field is not varies
+        self.assertFalse(pid.allow_infinite_children)
+        zin = Segment('ZIN',validation_level=VALIDATION_LEVEL.STRICT) # z segment
+        self.assertTrue(zin.allow_infinite_children)
+
+        qpd.qpd_4 = 'abc'
+        qpd.add_field('qpd_4')
+
+        zin.add(Field('ZIN_100'))
+        zin.zin_4 = 'abc'
+        zin.add_field('zin_4')
 
     def test_add_field(self):
         e = Segment('PID')
@@ -365,12 +462,34 @@ class TestField(unittest.TestCase):
         self.assertRaises(InvalidName, Field, 'ckk_10', validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_create_unsupported_version_field(self):
-        # f = Field(version = '2.5')
         self.assertRaises(UnsupportedVersion, Field, version='2.0')
 
     def test_create_varies_datatype_field(self):
         f = Field ('PID_1', datatype='varies')
         self.assertEqual(f.datatype, 'varies')
+
+    def test_create_z_field(self):
+        Field('ZIN_1', validation_level=VALIDATION_LEVEL.STRICT)
+        Field('ZIN_1', validation_level=VALIDATION_LEVEL.QUIET)
+        Field('zin_1', validation_level=VALIDATION_LEVEL.STRICT)
+        Field('zin_1', validation_level=VALIDATION_LEVEL.QUIET)
+
+        self.assertRaises(InvalidName, Field, 'ZINQW')
+        self.assertRaises(InvalidName, Field, 'ZIN_W')
+
+    def test_z_field_datatype(self):
+        s = Segment('zin')
+        s.zin_1 = 'zzz'
+        self.assertIsNone(s.zin_1.datatype)
+
+        s.add_field('zin_2')
+        self.assertIsNone(s.zin_2.datatype)
+
+        s.add(Field('zin_3', datatype='ST'))
+        self.assertEqual(s.zin_3.datatype, 'ST')
+
+        s.add(Field('zin_4', datatype='CWE'))
+        self.assertEqual(s.zin_4.datatype, 'CWE')
 
     def test_add_empty_component(self):
         f1 = Field('pid_3', validation_level=VALIDATION_LEVEL.STRICT)
@@ -398,6 +517,15 @@ class TestField(unittest.TestCase):
         with self.assertRaises(ChildNotValid):   #this one is not raised!!!
             f2.cx_1 = Component('HD_1')
         f2.cx_1 = Component('CX_1')
+
+    def test_access_to_z_field_component(self):
+        s = Segment('ZIN')
+        f = Field('ZIN_1', datatype='CWE')
+        f.value = 'abc'
+        s.zin_1 = f
+        self.assertEqual(s.zin_1.zin_1_1.name, 'CWE_1')
+        with self.assertRaises(ChildNotFound):
+            s.zin_2.zin_2_2
 
     def test_access_to_unknown_component(self):
         f1 = Field('pid_10', validation_level=VALIDATION_LEVEL.STRICT)
@@ -637,7 +765,7 @@ class TestComponent(unittest.TestCase):
 
     def test_add_unexpected_child_to_component(self):
         g = Group()
-        m = Message()
+        m = Message('OML_O33')
         f = Field()
         c_base = Component(datatype='ST')
         c_complex = Component(datatype='CWE')
@@ -752,7 +880,6 @@ class TestComponent(unittest.TestCase):
         s1.pid_4.pid_4_1.value = complex_cmp_str
         s2.pid_4.pid_4_1 = complex_cmp_str
         self.assertEqual(f1.to_er7(), f2.to_er7())
-
 
     def test_assign_value_unknown_component(self):
         cmp_str = 'xxx'
