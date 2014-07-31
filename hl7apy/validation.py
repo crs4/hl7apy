@@ -49,8 +49,9 @@ class Validator(object):
         from hl7apy.core import is_base_datatype
 
         def _is_valid(ref, element):
-            children = set([ child.name for child in element.children ])
+            children = set([ child.name for child in element.children if not child.is_z_element() ])
             valid_children = set([ child[0] for child in ref[1] ])
+            z_children = [child for child in element.children if child.is_z_element()]
             if not children <= valid_children:
                 return False
             for child in ref[1]:
@@ -68,24 +69,47 @@ class Validator(object):
                 for el in children:
                     if not Validator.validate(el):
                         return False
+
+            for el in z_children:
+                if not Validator.validate(el):
+                    return False
             return True
 
         if element.is_unknown():
             return False
-        ref = load_reference(element.name, element.classname, element.version)
-        if ref[0] in ('sequence', 'choice'):
-            return _is_valid(ref, element)
-        else: # it's an element that has a datatype
-            if element.datatype != ref[1]:
-                return False
-            if element.is_unknown():
-                return False
-            if element.datatype == 'varies': #TODO: it should check the real rule
-                return True
-            if not is_base_datatype(element.datatype, element.version):
-                # Component just to search in the datatypes....
-                ref = load_reference(element.datatype, 'Component', element.version)
+
+        try:
+            ref = load_reference(element.name, element.classname, element.version)
+        except KeyError: # Z segments cause KeyError
+            if element.is_z_element():
+                if element.classname == 'Field':
+                    if is_base_datatype(element.datatype, element.version) or \
+                        element.datatype == 'varies':
+                        return True
+                    elif element.datatype is not None:
+                        # Component just to search in the datatypes....
+                        ref = load_reference(element.datatype, 'Component', element.version)
+                        return _is_valid(ref, element)
+
+                for el in element.children:
+                    if not Validator.validate(el):
+                        return False
+            else:
+                raise
+        else:
+            if ref[0] in ('sequence', 'choice'):
                 return _is_valid(ref, element)
+            else: # it's an element that has a datatype
+                if element.datatype != ref[1]:
+                    return False
+                if element.is_unknown():
+                    return False
+                if element.datatype == 'varies': #TODO: it should check the real rule
+                    return True
+                if not is_base_datatype(element.datatype, element.version):
+                    # Component just to search in the datatypes....
+                    ref = load_reference(element.datatype, 'Component', element.version)
+                    return _is_valid(ref, element)
 
         return True
 

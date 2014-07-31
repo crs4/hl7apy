@@ -480,16 +480,19 @@ class TestField(unittest.TestCase):
     def test_z_field_datatype(self):
         s = Segment('zin')
         s.zin_1 = 'zzz'
-        self.assertIsNone(s.zin_1.datatype)
+        self.assertEqual(s.zin_1.datatype, 'ST')
 
         s.add_field('zin_2')
-        self.assertIsNone(s.zin_2.datatype)
+        self.assertEqual(s.zin_2.datatype, 'ST')
 
         s.add(Field('zin_3', datatype='ST'))
         self.assertEqual(s.zin_3.datatype, 'ST')
 
         s.add(Field('zin_4', datatype='CWE'))
         self.assertEqual(s.zin_4.datatype, 'CWE')
+
+        s.zin_5 = 'abc^def'
+        self.assertEqual(s.zin_5.datatype, None)
 
     def test_add_empty_component(self):
         f1 = Field('pid_3', validation_level=VALIDATION_LEVEL.STRICT)

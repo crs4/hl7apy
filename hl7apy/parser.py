@@ -63,7 +63,7 @@ def parse_message(message, validation_level=None, find_groups=True, reference=No
     except InvalidName:
         m = Message(version=version, validation_level=validation_level, encoding_chars=encoding_chars)
     children = parse_segments(message, m.version, encoding_chars, validation_level)
-    if m.name is not None and find_groups:
+    if find_groups and m.name is not None and not m.is_z_element():
         m.children = []
         create_groups(m, children, validation_level)
     else:

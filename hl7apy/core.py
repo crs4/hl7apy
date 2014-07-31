@@ -652,6 +652,9 @@ class Element(object):
         """
         return Validator.validate(self)
 
+    def is_z_element(self):
+        return False
+
     def _get_parent(self):
         return self._parent
 
@@ -1184,6 +1187,7 @@ class Field(SupportComplexDataType):
                              validation_level, traversal_parent)
         except InvalidName:
             if _valid_z_field_name(name):
+                datatype = datatype or 'ST'
                 reference = ('leaf', datatype, None, None)
                 Element.__init__(self, name, parent, reference, version,
                              validation_level, traversal_parent)
@@ -1291,6 +1295,9 @@ class Field(SupportComplexDataType):
             except IndexError:
                 return self.msh_2_1.children[0].value
         return super(Field, self).to_er7(encoding_chars, trailing_children)
+
+    def is_z_element(self):
+        return self.name is not None and _valid_z_field_name(self.name)
 
     def _set_value(self, value):
         if self.name in ('MSH_1', 'MSH_2'):
@@ -1470,7 +1477,7 @@ class Segment(Element):
         if element is None: # not found in self.structure
             if self.allow_infinite_children and _valid_child_name(name, self.name):
                 if _valid_z_field_name(name):
-                    datatype = None
+                    datatype = 'ST'
                 else:
                     datatype = 'varies'
 
@@ -1488,7 +1495,7 @@ class Segment(Element):
         return super(Segment, self).parse_child(text, **kwargs)
 
     def parse_children(self, text, **kwargs):
-        segment_name = text[:3]
+        segment_name = text[:3].upper()
         if segment_name != self.name:
             raise OperationNotAllowed('Cannot assign a segment with a different name')
         text = text[4:] if segment_name != 'MSH' else text[3:]
@@ -1532,6 +1539,9 @@ class Segment(Element):
             s.pop(1)
 
         return separator.join(s)
+
+    def is_z_element(self):
+        return _valid_z_segment_name(self.name)
 
     def _is_valid_child(self, child):
         # cannot add an unknown child with strict validation
@@ -1778,6 +1788,9 @@ class Message(Group):
                                         self.to_er7(encoding_chars, trailing_children),
                                         MLLP_ENCODING_CHARS.CR,
                                         MLLP_ENCODING_CHARS.EB)
+
+    def is_z_element(self):
+        return _valid_z_message_name(self.name)
 
     def _get_encoding_chars(self):
         msh_2 = self.msh.msh_2.msh_2_1.children[0].value.value

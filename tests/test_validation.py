@@ -39,6 +39,13 @@ class TestValidation(unittest.TestCase):
                        'PV1|1|I|PATIENT WARD|U||||^REFERRING^DOCTOR^^MD|^CONSULTING^DOCTOR|CAR||||2|A0|||||||||||||||||||||||||||||2013\r' \
                        'IN1|1|INSURANCE PLAN ID^PLAN DESC|COMPANY ID|INSURANCE COMPANY, INC.|5555 INSURERS STREET^^SOMEWHERE^^^USA||||||||||||||||||||||||||||||||||||||||||||555-44-3333\r'
 
+        self.zdt_z01 = 'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20130101101500||ZDT^Z01^ZDT_Z01|0123456789|P|2.5||||AL\r' \
+                       'EVN||20130101101500||AAA|AAA|20130101082500\r' \
+                       'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r' \
+                       'NK1|1|WOMAN^WIFE|SPO|1111 SOMEWHERE STREET^^SOMEWHERE^^^USA\r' \
+                       'PV1|1|I|PATIENT WARD|U||||^REFERRING^DOCTOR^^MD|^CONSULTING^DOCTOR|CAR||||2|A0|||||||||||||||||||||||||||||2013\r' \
+                       'IN1|1|INSURANCE PLAN ID^PLAN DESC|COMPANY ID|INSURANCE COMPANY, INC.|5555 INSURERS STREET^^SOMEWHERE^^^USA||||||||||||||||||||||||||||||||||||||||||||555-44-3333\r'
+
         self.oml_o33 = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
                        'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009^^~^^^^^^L^^^|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100|||||||||||\r' \
                        'PV1||O|||||||||||||||||1107080001^^^LIS\r' \
@@ -252,6 +259,56 @@ class TestValidation(unittest.TestCase):
         msg.pid.pid_3.cx_10 = Component('CX_10')
         msg.pid.pid_3.cx_10.add(unkn_subcomponent)
         self.assertFalse(msg.validate())
+
+    def test_z_message(self):
+        """
+        Tests that a Z Message is validated, no matter what segments it has
+        """
+        msg = self._create_message(self.zdt_z01)
+        self.assertTrue(msg.validate())
+
+    def test_z_segment(self):
+        """
+        Tests that, after adding a Z segment to a valid message, the message is still valid
+        """
+        msg = self._create_message(self.adt_a01)
+        msg.add_segment('zin')
+        msg.zin = 'ZIN|aa|bb|cc|'
+        zin_4 = Field('ZIN_4', datatype='CWE')
+        zin_4.value = 'dd'
+        msg.zin.zin_4 = zin_4
+        self.assertTrue(msg.validate())
+
+    def test_wrong_z_segment(self):
+        """
+        Tests that, if the Z segment doesn't follow HL7 rules, the message is not validated
+        """
+        msg = self._create_message(self.adt_a01)
+        msg.add_segment('zin')
+        msg.zin = 'ZIN|aa|bb|cc|'
+        #CX_1 is mandatory
+        zin_4 = Field('ZIN_4', datatype='CX')
+        zin_4.value = '^12'
+        msg.zin.add(zin_4)
+        self.assertFalse(msg.validate())
+
+        del msg.zin.zin_4
+
+        # Z segment with unknown fields are not validated
+        msg.zin.add(Field())
+        self.assertFalse(msg.validate())
+
+    def test_z_field(self):
+        f = Field('zin_1')
+        self.assertTrue(f.validate())
+
+    def test_wrong_z_field(self):
+        """
+        Tests that Fields of None datatype are not validated
+        """
+        f = Field('zin_1')
+        f.value = 'aa^bb'
+        self.assertFalse(f.validate())
 
 if __name__ == '__main__':
     unittest.main()
