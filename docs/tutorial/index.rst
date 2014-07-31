@@ -190,6 +190,14 @@ You can also use custom encoding chars:
   segment = parse_segment(pid)
   print segment.to_er7(encoding_chars=custom_chars)
 
+For ``Message`` objects, you can get the string ready to be sent using mllp, by calling :meth:`hl7apy.Element.to_mllp` method:
+
+.. code-block:: python
+
+  m = Message('OML_O33')
+  m.to_mllp()
+
+
 Datatypes
 ---------
 
@@ -353,3 +361,75 @@ validation is compliant to the standard by calling the :func:`hl7apy.core.Elemen
   m = Message("ADT_A01")
   m.validate()
 
+Z Elements
+----------
+
+The library supports the use of Z Elements which are Z messages, Z segments and Z fields
+
+A Z Message can be created using a name starting with Z: both parts of the trigger event must start with a Z
+
+.. code-block:: python
+
+  m = Message('ZBE_Z01') # This is allowed
+  m = Message('ZBEZ01') # This is not allowed
+  m = Message('ZBE_A01') # This is not allowed
+
+You can add every kind of segment to a Z Message, both normal segment or Z segment. Also groups are allowed.
+
+.. code-block:: python
+
+  m = Message('ZBE_Z01') # This is allowed
+  m.pid = 'PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M\r'
+  m.zin = 'ZIN|aa|bb|cc'
+  m.add(Group('ADT_A01_INSURANCE'))
+
+When encoding to ER7, segments and groups are encoded in the order of creation
+
+.. code-block:: python
+
+  m = Message('ZBE_Z01') # This is allowed
+  m.pid = 'PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M\r'
+  m.zin = 'ZIN|aa|bb|cc'
+  m.to_er7()
+
+  # 'MSH|^~\\&|||||20140731143925|||||2.5\rPID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M\rZIN|aa|bb|cc'
+
+A Z segment is a segment that have the name starting with a Z
+
+.. code-block:: python
+
+  s = Segment('ZBE') # This is allowed
+  s = Segment('ZCEV') # This is not allowed
+
+As other segments, you can add fields with the positional name or unknown fields, (the latter in ``QUIET`` only)
+
+.. code-block:: python
+
+  s = Segments('ZIN')
+  s.zin_1 = 'abc'
+  s.add_field('zin_2')
+  zin_3 = Field('ZIN_3', datatype='CX')
+  s.add(zin_3)
+
+Z fields are fields belonging to a Z segment. They're named with the name of the segment plus the position
+
+.. code-block:: python
+
+  f = Field('ZIN_1')
+
+By default a Z field's datatype is ``ST``. When the value assigned to the ``Field`` contains more than one component, its datatype is converted to ``None``
+
+.. code-block:: python
+
+  f = Field('ZIN_1')
+  f.datatype # 'ST'
+  f.value = 'abc^def'
+  f.datatype # None
+
+Validation of Z elements follow the same rules of the other elements. So for example you can't a Field of datatype None is not validated
+
+.. code-block:: python
+
+  f = Field('ZIN_1')
+  f.value = 'abc^def'
+  f.validate() # False
