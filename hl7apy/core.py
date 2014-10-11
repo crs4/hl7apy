@@ -39,6 +39,11 @@ from hl7apy.exceptions import ChildNotFound, ChildNotValid, \
 from hl7apy.factories import datatype_factory
 from hl7apy.base_datatypes import BaseDataType
 from hl7apy.consts import MLLP_ENCODING_CHARS
+import time
+
+counter = 0
+
+_default_dts = {}
 
 def is_base_datatype(datatype, version=None):
     """
@@ -168,7 +173,8 @@ class ElementList(collections.MutableSequence):
 
         :return: a list of :class:`hl7apy.core.Element`
         """
-        ordered_keys = self.element.structure_by_name.keys() if self.element.structure_by_name is not None else []
+        #ordered_keys = self.element.structure_by_name.keys() if self.element.structure_by_name is not None else []
+        ordered_keys = self.element.ordered_children if self.element.ordered_children is not None else []
         children = [self.indexes.get(k, None) for k in ordered_keys]
         return children
 
@@ -465,13 +471,16 @@ class ElementFinder(object):
         data = {}
         if content_type in ('sequence', 'choice'):
             children = reference[1]
-            structure = collections.OrderedDict()
+            ordered_children = []
+            structure = dict()
             repetitions = {child_name:cardinality for child_name, cardinality in children}
             for c in children:
                 child_name, cardinality = c
                 structure[child_name] = find_reference(child_name, element.child_classes, element.version)
+                ordered_children.append(child_name)
             data['structure_by_longname'] = {e['ref'][2]: e for e in structure.values() if e['ref'][0] == 'leaf'}
             data['structure_by_name'] = structure
+            data['ordered_children'] = ordered_children
             data['repetitions'] = repetitions
         elif content_type == 'leaf':
             child_type, datatype, long_name, table = reference
@@ -494,7 +503,7 @@ class Element(object):
     Base class for all HL7 elements. It is not meant to be directly instantiated.
     """
 
-    cls_attrs = ['name', 'validation_level', 'version', 'children',
+    cls_attrs = ['name', 'validation_level', 'version', 'children', 'ordered_children',
                  'table', 'long_name', 'value', '_value', 'parent',  '_parent', 'traversal_parent',
                  'child_classes', 'encoding_chars', 'structure_by_name', 'structure_by_longname', 'repetitions']
 
@@ -526,16 +535,14 @@ class Element(object):
             self.traversal_parent = None
         self.structure_by_name = None
         self.structure_by_longname = None
+        self.ordered_children = None
         self.repetitions = {}
-        if self.name is not None:
-            structure = ElementFinder.get_structure(self, reference)
-            for k, v in structure.iteritems():
-                setattr(self, k, v)
+        self._find_structure(reference)
 
     def find_child_reference(self, name):
         name = name.upper()
         if isinstance(self.structure_by_name, collections.MutableMapping):
-            element =  self.structure_by_name.get(name) or self.structure_by_longname.get(name)
+            element = self.structure_by_name.get(name) or self.structure_by_longname.get(name)
         else:
             element = None
         if element is None: # not found in self.structure
@@ -682,6 +689,12 @@ class Element(object):
             return self.parent.encoding_chars
         return get_default_encoding_chars()
 
+    def _find_structure(self, reference=None):
+        if self.name is not None:
+            structure = ElementFinder.get_structure(self, reference)
+            for k, v in structure.iteritems():
+                setattr(self, k, v)
+
     def _is_valid_child(self, child):
         valid = child.classname in (c.__name__ for c in self.child_classes)
         if valid:
@@ -704,7 +717,7 @@ class Element(object):
         raise NotImplementedError
 
     def __getattr__(self, name):
-        if hasattr(self, 'children'):
+        if hasattr(self, 'children') and name not in self.cls_attrs:
             return self.children.get(name)
         else:
             raise AttributeError(name)
@@ -736,13 +749,13 @@ class SupportComplexDataType(Element):
     """
     Mixin for classes that support complex datatypes
     """
+    cls_attrs = Element.cls_attrs + ['_datatype', 'datatype', 'table', 'long_name']
 
     def __init__(self):
 
         if self.__class__ == SupportComplexDataType:
             raise OperationNotAllowed("Cannot instantiate a SupportComplexDataType")
 
-        self.cls_attrs.extend(['_datatype', 'datatype'])
         self._datatype = None
 
     def find_child_reference(self, name):
@@ -855,12 +868,12 @@ class CanBeVaries(Element):
             reference = ('leaf', 'varies', None, None)
 
         if name is not None and _valid_child_name(name, 'VARIES'):
-            Element.__init__(self, None, None, reference, version,
-                                            validation_level, traversal_parent)
+            Element.__init__(self, None, parent, reference, version,
+                             validation_level, traversal_parent)
             self.name = name.upper()
         else:
             try:
-                Element.__init__(self, name, None, reference, version,
+                Element.__init__(self, name, parent, reference, version,
                                  validation_level, traversal_parent)
             except ChildNotFound:
                 raise InvalidName(self.classname, self.name)
@@ -881,12 +894,6 @@ class CanBeVaries(Element):
         else:
             self.datatype = datatype
             self.name = self.datatype
-
-        self.parent = parent
-        if parent is None:
-            self.traversal_parent = traversal_parent
-        else:
-            self.traversal_parent = None
 
     def is_unknown(self):
         return self.name == self.datatype
@@ -920,11 +927,12 @@ class SubComponent(CanBeVaries):
     :param traversal_parent: the temporary parent used during traversal
     """
     child_classes = ()
+    cls_attrs = Element.cls_attrs + ['datatype', '_datatype', 'table', 'long_name', ]
 
     def __init__(self, name=None, datatype=None, value=None, parent=None,
                  reference=None, version=None, validation_level=None,
                  traversal_parent=None):
-        self.cls_attrs.extend([ '_value', 'value', 'datatype', '_datatype'])
+
         self._parent = None # we need to initialize it
         self._datatype = None # we need to initialize it
         if not name and datatype is None:
@@ -1375,6 +1383,8 @@ class Segment(Element):
     """
     child_classes = (Field,)
     child_parser = ('parse_field', 'parse_fields')
+    cls_attrs = Element.cls_attrs + ['allow_infinite_children', '_last_allowed_child_index',
+                                     '_last_child_index']
 
     def __init__(self, name=None, parent=None, reference=None, version=None,
                  validation_level=None, traversal_parent=None):
@@ -1385,9 +1395,11 @@ class Segment(Element):
         super(Segment, self).__init__(name, parent, reference, version,
                                       validation_level, traversal_parent)
 
-        self.cls_attrs.extend(['allow_infinite_children'])
-        last_field_structure = self.structure_by_name.items()[-1][1]['ref']
-        self.allow_infinite_children = last_field_structure[1] == 'varies'
+        last_field = self.ordered_children[-1]
+        last_field_structure = self.structure_by_name[last_field]
+        self.allow_infinite_children = last_field_structure['ref'][1] == 'varies'
+        self._last_allowed_child_index = int(last_field_structure['name'][4:])
+        self._last_child_index = self._last_allowed_child_index
 
     def add_field(self, name):
         """
@@ -1411,7 +1423,6 @@ class Segment(Element):
 
         For example the segment `QPD` in the version 2.5 has the last known child `QPD_3` of type varies
         That means that it allows fields with name QPD_4, QPD_5,...QPD_n.
-
         """
         name = name.upper()
         element =  self.structure_by_name.get(name, None) or self.structure_by_longname.get(name, None)
@@ -1642,6 +1653,7 @@ class Message(Group):
             raise OperationNotAllowed('Cannot assign a message with a different name')
         elif self.is_unknown(): # the message become a known message
             self.name = message_structure
+            self._find_structure()
         if self.version != version:
             raise OperationNotAllowed('Cannot assign a message with a different version')
         elif self.encoding_chars != encoding_chars:
@@ -1685,7 +1697,7 @@ class Message(Group):
         check_encoding_chars(encoding_chars)
         msh_1 = Field('MSH_1')
         msh_2 = Field('MSH_2')
-        msh_1.msh_1_1 = encoding_chars['FIELD']
+        msh_1.st = encoding_chars['FIELD']
         value = '{0}{1}{2}{3}'.format(encoding_chars['COMPONENT'],
                                       encoding_chars['REPETITION'],
                                       encoding_chars['ESCAPE'],
@@ -1693,7 +1705,7 @@ class Message(Group):
         s = SubComponent(datatype='ST', value=value)
         c = Component(datatype='ST')
         c.add(s)
-        msh_2.msh_2_1 = c
+        msh_2.st = c
         self.msh.msh_1 = msh_1
         self.msh.msh_2 = msh_2
 

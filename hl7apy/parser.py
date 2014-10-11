@@ -511,7 +511,9 @@ def create_groups(message, children, validation_level=None):
 
     """
     # get the message structure
-    structure = ElementFinder.get_structure(message)
+    structure = {'structure_by_name' : message.structure_by_name,
+                 'ordered_children' : message.ordered_children,
+                 'repetitions' : message.repetitions }
     # create the initial search data structure
     search_data = {'parents': [message], 'indexes': [-1], 'structures': [structure]}
     # for each segment found in the message...
@@ -550,14 +552,16 @@ def _find_group(segment, search_data, validation_level=None):
     current_index = search_data['indexes'][-1]
     structure = search_data['structures'][-1]
     try:
-        search_index = structure['structure_by_name'].keys().index(segment.name)
+        search_index = structure['ordered_children'].index(segment.name)
     except ValueError:
         # groups of the current parent
-        groups = [k for k, v in structure['structure_by_name'].iteritems() if v['cls'] == Group]
+        groups = [k for k in structure['ordered_children'] if structure['structure_by_name'][k]['cls'] == Group]
         # for any group found, create the group and check if the segment is one of its children
         for g in groups:
             group = Group(g, version=segment.version, validation_level=validation_level)
-            p_structure = ElementFinder.get_structure(group)
+            p_structure = {'structure_by_name' :  group.structure_by_name,
+                           'ordered_children' : group.ordered_children,
+                           'repetitions' : group.repetitions}
             search_data['structures'].append(p_structure)
             search_data['parents'].append(group)
             search_data['indexes'].append(-1)
@@ -566,7 +570,7 @@ def _find_group(segment, search_data, validation_level=None):
             if found_index > -1:
                 find_parent = search_data['parents'].index(group) - 1
                 group.parent = search_data['parents'][find_parent]
-                search_index = structure['structure_by_name'].keys().index(g)
+                search_index = structure['ordered_children'].index(g)
                 search_data['indexes'][find_parent] = search_index
                 break
             else: # the segment is not a child of the current group, continue the search
