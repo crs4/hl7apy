@@ -19,7 +19,10 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import os
 import unittest
+
+import hl7apy
 from hl7apy.core import Message, Segment, Field, Group, Component, SubComponent, ElementProxy
 from hl7apy.exceptions import ChildNotValid, ChildNotFound, OperationNotAllowed, InvalidName, \
                               MaxChildLimitReached, UnsupportedVersion, InvalidEncodingChars, \
@@ -28,13 +31,42 @@ from hl7apy.v2_5 import ST, SI
 from hl7apy.validation import VALIDATION_LEVEL
 from hl7apy.parser import parse_message, parse_segment, parse_field, parse_component
 
+
 def _get_invalid_encoding_chars():
-    return {'COMPONENT' : '$',
-            'SUBCOMPONENT' : '@',
-            'REPETITION' : 'r',
-            'ESCAPE' : '@'}
+    return {'COMPONENT': '$',
+            'SUBCOMPONENT': '@',
+            'REPETITION': 'r',
+            'ESCAPE': '@'}
+
 
 def _get_test_msg():
+    return 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
+           'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009^^~^^^^^^L^^^|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100|||||||||||\r' \
+           'PV1||O|||||||||||||||||1107080001^^^LIS\r' \
+           'SPM|1|100187400201^||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
+           'ORC|NW|83428|83428|18740|SC||||20110708162817||||||||^\r' \
+           'TQ1|||||||||R\r' \
+           'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN\r'
+
+
+def _get_test_msg_2():
+    return 'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33|978226056138290600|D|2.5|||||USA||EN\r' \
+           'PID|1||566-554-3423^^^GHH^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r' \
+           'PV1||O|||||||||||||||||1107080001^^^LIS\r' \
+           'SPM|1|100187400201||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
+           'ORC|NW|83428|83428|18740|SC||||20110708162817||||||||\r' \
+           'TQ1|||||||||R\r' \
+           'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN\r' \
+           'SPM|2|100187400101||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
+           'ORC|NW|83425|83425|18740|SC||||20110708162817||||||||\rTQ1|||||||||R\r' \
+           'OBR||83425|83425|CA^S-CALCIUM^^CA||||||||||||ND^Sconosciuto^Sconosciuto\rORC|NW|83426|83426|18740|SC||||20110708162817||||||||\r' \
+           'TQ1|||||||||R\rOBR||83426|83426|HDL^HDL CHOLESTEROL^^HDL||||||||||||ND^UNKNOWN^UNKNOWN\r' \
+           'ORC|NW|83427|83427|18740|SC||||20110708162817||||||||\r' \
+           'TQ1|||||||||R\rOBR||83427|83427|LDL^LDL CHOLESTEROL^^LDL||||||||||||ND^UNKNOWN^UNKNOWN'
+
+
+def _get_fail_test_msg():
+    # This message will fail validation because of the OML_O33 message structure
     return 'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
            'PID|1||566-554-3423^^^GHH^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r' \
            'PV1||O|||||||||||||||||1107080001^^^LIS\r' \
@@ -52,13 +84,16 @@ def _get_test_msg():
 
 class TestMessage(unittest.TestCase):
 
-    #Message test cases
+    def setUp(self):
+        base_path = os.path.abspath(os.path.dirname(__file__))
+        path = os.path.join(base_path, 'profiles/iti_21')
+        self.rsp_k21_mp = hl7apy.load_message_profile(path)
 
+    # Message test cases
     def test_create_empty_message(self):
         e = Message()
         self.assertEqual(e.classname, 'Message')
-        self.assertRaises(OperationNotAllowed, Message,
-                          validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(OperationNotAllowed, Message, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_create_unknown_message(self):
         self.assertRaises(InvalidName, Message, 'AAA_A01')
@@ -69,7 +104,8 @@ class TestMessage(unittest.TestCase):
 
     def test_create_invalid_encoding_chars_message(self):
         self.assertRaises(InvalidEncodingChars, Message, encoding_chars=_get_invalid_encoding_chars())
-        self.assertRaises(InvalidEncodingChars, Message, 'ADT_A01', encoding_chars=_get_invalid_encoding_chars(),
+        self.assertRaises(InvalidEncodingChars, Message, 'ADT_A01',
+                          encoding_chars=_get_invalid_encoding_chars(),
                           validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_create_insensitive(self):
@@ -206,14 +242,20 @@ class TestMessage(unittest.TestCase):
             c.value = msg
 
     def test_assign_value_unknown_message(self):
-        msg = _get_test_msg()
+        msg = _get_test_msg_2()
         a = Message()
         parsed_a = parse_message(msg, validation_level=VALIDATION_LEVEL.QUIET)
         a.value = msg
         self.assertEqual(a.name, 'OML_O33')
         self.assertEqual(a.to_er7(), parsed_a.to_er7())
 
-    #def test_message_ordered_children(self):
+    def test_message_profile(self):
+        m = Message('RSP_K21', reference=self.rsp_k21_mp['RSP_K21'])
+        # The original qpd_3 is varies
+        self.assertEqual(m.qpd.qpd_3.datatype, 'QIP')
+        self.assertFalse(m.qpd.allow_infinite_children)
+
+    # def test_message_ordered_children(self):
     #    m = Message('OML_O33')
     #    m.add(Group('OML_O33_PATIENT'))
     #    ordered_children = m.children.get_ordered_children()
@@ -223,7 +265,7 @@ class TestMessage(unittest.TestCase):
     #    self.assertIsNone(ordered_children[2])
     #    self.assertIsNone(ordered_children[4])
 
-    #def test_message_get_children(self):
+    # def test_message_get_children(self):
     #    m = Message('OML_O33')
     #    children = m.children.get_children()
     #    self.assertEqual(len(children), 1)
@@ -234,8 +276,7 @@ class TestMessage(unittest.TestCase):
 
 class TestGroup(unittest.TestCase):
 
-    #Group test cases
-
+    # Group test cases
     def setUp(self):
         self.oml_o33_specimen = 'SPM|1|100187400201||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
            'ORC|NW|83428|83428|18740|SC||||20110708162817||||||||\r' \
@@ -317,7 +358,7 @@ class TestSegment(unittest.TestCase):
         self.assertRaises(OperationNotAllowed, Segment)
 
     def test_create_unsupported_version_segment(self):
-        Segment('PID', version='2.5')
+        s = Segment('PID', version='2.5')
         self.assertRaises(UnsupportedVersion, Segment, 'PID', version='2.0')
 
     def test_create_z_segment(self):

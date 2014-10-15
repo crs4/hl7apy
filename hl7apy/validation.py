@@ -25,7 +25,8 @@ HL7apy - validation
 
 from hl7apy import load_reference
 from hl7apy.consts import VALIDATION_LEVEL
-from hl7apy.exceptions import ChildNotFound
+from hl7apy.exceptions import ChildNotFound, ValidationError, ValidationWarning
+
 
 class Validator(object):
     """
@@ -37,9 +38,10 @@ class Validator(object):
         self.level = level
 
     @staticmethod
-    def validate(element):
+    def validate(element, reference=None, report_file=None):
         """
-        Checks if the :class:`hl7apy.core.Element` is a valid HL7 message according to the official structures.
+        Checks if the :class:`hl7apy.core.Element` is a valid HL7 message according to the official
+        structures.
         It checks if it follows the max and min number of occurrences for every child and if it
         doesn't contain children not allowed.
 
@@ -49,68 +51,161 @@ class Validator(object):
 
         from hl7apy.core import is_base_datatype
 
-        def _is_valid(ref, element):
-            children = set([ child.name for child in element.children if not child.is_z_element() ])
-            valid_children = set([ child[0] for child in ref[1] ])
-            z_children = [child for child in element.children if child.is_z_element()]
-            if not children <= valid_children:
-                return False
-            for child in ref[1]:
-                child_name, cardinality = child
-                min, max = cardinality
-
-                children = element.children.get(child_name)
-                num_children = len(children)
-                if max != -1:
-                    if num_children < min or num_children > max:
-                        return False
-                else:
-                    if num_children < min:
-                        return False
-                for el in children:
-                    if not Validator.validate(el):
-                        return False
-
-            for el in z_children:
-                if not Validator.validate(el):
-                    return False
+        def _check_z_element(el, errs, warns):
+            if el.classname == 'Field':
+                if is_base_datatype(el.datatype, el.version) or \
+                        el.datatype == 'varies':
+                    return True
+                elif el.datatype is not None:
+                    # if the datatype the is a complex datatype, the z element must follow the correct
+                    # structure of that datatype
+                    # Component just to search in the datatypes....
+                    ref = load_reference(el.datatype, 'Component', el.version)
+                    _check_known_element(el, ref, errs, warns)
+            for c in el.children:
+                _is_valid(c, None, errs, warns)
             return True
 
-        if element.is_unknown():
-            return False
-
-        try:
-            ref = load_reference(element.name, element.classname, element.version)
-        except ChildNotFound: # Z segments cause KeyError
-            if element.is_z_element():
-                if element.classname == 'Field':
-                    if is_base_datatype(element.datatype, element.version) or \
-                        element.datatype == 'varies':
-                        return True
-                    elif element.datatype is not None:
-                        # Component just to search in the datatypes....
-                        ref = load_reference(element.datatype, 'Component', element.version)
-                        return _is_valid(ref, element)
-
-                for el in element.children:
-                    if not Validator.validate(el):
-                        return False
+        def _check_repetitions(el, children, cardinality, child_name, errs):
+            children_num = len(children)
+            min_repetitions, max_repetitions = cardinality
+            if max_repetitions != -1:
+                if children_num < min_repetitions:
+                    errs.append(ValidationError("Missing required child {}.{}".format(el.name,
+                                                                                      child_name)))
+                elif children_num > max_repetitions:
+                    errs.append(ValidationError("Child limit exceeded {}.{}".format(child_name,
+                                                                                    el.name)))
             else:
-                raise
-        else:
+                if children_num < min_repetitions:
+                    errs.append(ValidationError("Missing required child {}.{}".format(el.name,
+                                                                                      child_name)))
+
+        def _check_table_compliance(el, ref, is_profile, warns):
+            table = ref[7] if is_profile else ref[3]
+
+            if table is not None:
+                try:
+                    table_ref = load_reference(table, 'Table', el.version)
+                except ChildNotFound:
+                    pass
+                else:
+                    table_children = [c[0] for c in table_ref[1]]
+                    if el.to_er7() not in table_children:
+                        warns.append(ValidationWarning("Value {} not in table {} in element {}.{}".
+                                                       format(el.to_er7(), table, el.parent.name,
+                                                              el.name)))
+
+        def _check_length(el, ref, is_profile, warns):
+            max_length = ref[8] if is_profile else -1
+            if -1 < max_length < len(el.to_er7()):
+                warns.append(ValidationWarning("Exceeded max length ({}) of {}.{}".
+                                               format(max_length, el.parent.name, el.name)))
+
+        def _check_datatype(el, ref, is_profile, errs):
+            ref_datatype = ref[5] if is_profile else ref[1]
+            if el.datatype != ref_datatype:
+                errs.append(ValidationError("Datatype {} is not correct for {}.{} (it must be {})".
+                                            format(el.datatype, el.parent.name, el.name, ref[1])))
+
+        def _get_valid_children_info(ref, is_profile):
+            if is_profile:
+                valid_children = set([c[2] for c in ref[2]])
+                children_refs = ref[2]
+            else:
+                valid_children = set([c[0] for c in ref[1]])
+                children_refs = ref[1]
+            return valid_children, children_refs
+
+        def _get_child_reference_info(ref, is_profile):
+            if is_profile:
+                child_name, cardinality = ref[2], ref[4]
+            else:
+                child_name, cardinality = ref
+            return child_name, cardinality
+
+        def _check_known_element(el, ref, errs, warns):
+            if ref is None:
+                is_profile = False
+                try:
+                    ref = load_reference(el.name, el.classname, el.version)
+                except ChildNotFound:
+                    errs.append(ValidationError("Invalid element found: {}".format(el)))
+            else:
+                is_profile = ref[0] == 'mp'
+
+            if is_profile:  # it is a message profile
+                ref = ref[1:]  # ref[0] is 'mp'
+
             if ref[0] in ('sequence', 'choice'):
-                return _is_valid(ref, element)
-            else: # it's an element that has a datatype
-                if element.datatype != ref[1]:
-                    return False
-                if element.is_unknown():
-                    return False
-                if element.datatype == 'varies': #TODO: it should check the real rule
+                element_children = set([c.name for c in el.children if not c.is_z_element()])
+                valid_children, valid_children_refs = _get_valid_children_info(ref, is_profile)
+                z_children = [c for c in el.children if c.is_z_element()]
+
+                # check that the children are all allowed children
+                if not element_children <= valid_children:
+                    errs.append(ValidationError("Invalid children detected for {}: {}".
+                                                format(el, list(element_children - valid_children))))
+
+                # iterates the valid children
+                for child_ref in valid_children_refs:
+                    # it gets the structure of the children to check
+                    child_name, cardinality = _get_child_reference_info(child_ref, is_profile)
+
+                    try:
+                        # it gets all the occurrences of the children of a type
+                        children = el.children.get(child_name)
+                    except Exception:
+                        pass  # TODO: it is due to the lack of element in the official reference files...  should we raise an exception here?
+                    else:
+                        _check_repetitions(el, children, cardinality, child_name, errs)
+                        # calls validation for every children
+                        for c in children:
+                            ref = child_ref if is_profile else None
+                            _is_valid(c, ref, errs, warns)
+
+                # finally calls validation for z_elements
+                for c in z_children:
+                    _is_valid(c, None, errs, warns)
+            else:
+                _check_table_compliance(el, ref, is_profile, warns)
+
+                _check_length(el, ref, is_profile, warns)
+
+                if el.datatype == 'varies':  # TODO: it should check the real rule
                     return True
-                if not is_base_datatype(element.datatype, element.version):
+                _check_datatype(el, ref, is_profile, errs)
+
+                # For complex datatypes element, the reference is the one of the datatype
+                if not is_base_datatype(el.datatype, el.version):
                     # Component just to search in the datatypes....
-                    ref = load_reference(element.datatype, 'Component', element.version)
-                    return _is_valid(ref, element)
+                    ref = load_reference(el.datatype, 'Component', el.version)
+                    _is_valid(el, ref, errs, warns)
+
+        def _is_valid(el, ref, errs, warns):
+            if el.is_unknown():
+                errs.append(ValidationError("Unknown element found: {}.{}".format(el.parent, el)))
+                return
+
+            if el.is_z_element():
+                return _check_z_element(el, errs, warns)
+
+            return _check_known_element(el, ref, errs, warns)
+
+        errors = []
+        warnings = []
+
+        _is_valid(element, reference, errors, warnings)
+
+        if report_file is not None:
+            with open(report_file, "w") as f:
+                for e in errors:
+                    f.write("Error: {}\n".format(e))
+                for w in warnings:
+                    f.write("Warning: {}\n".format(w))
+
+        if errors:
+            raise errors[0]
 
         return True
 

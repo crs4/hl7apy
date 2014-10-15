@@ -26,12 +26,14 @@ from segments import SEGMENTS
 from fields import FIELDS
 from datatypes import DATATYPES
 from groups import GROUPS
+from tables import TABLES
 
 from hl7apy.v2_6.base_datatypes import ST
 from hl7apy.exceptions import ChildNotFound
 
 ELEMENTS = {'Message': MESSAGES, 'Segment': SEGMENTS, 'Field': FIELDS,
-            'Component': DATATYPES, 'Group': GROUPS, 'SubComponent': DATATYPES}
+            'Component': DATATYPES, 'Group': GROUPS, 'SubComponent': DATATYPES,
+            'Table': TABLES}
 
 def get(name, element_type):
     try:

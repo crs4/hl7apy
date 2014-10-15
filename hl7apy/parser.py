@@ -24,14 +24,15 @@ HL7apy - parsing functions
 """
 
 import re
+import cPickle
 
 from hl7apy import get_default_encoding_chars, get_default_version, check_version, check_encoding_chars
-from hl7apy.consts import N_SEPS
+from hl7apy.consts import N_SEPS, VALIDATION_LEVEL
 from hl7apy.core import is_base_datatype, Message, Group, Segment, Field, Component, SubComponent, ElementFinder
 from hl7apy.exceptions import InvalidName, ParserError, InvalidEncodingChars
 from hl7apy.validation import Validator
 
-def parse_message(message, validation_level=None, find_groups=True, reference=None):
+def parse_message(message, validation_level=None, find_groups=True, message_profile=None, report_file=None):
     """
     Parse the given ER7-encoded message and return an instance of :class:`hl7apy.core.Message`.
 
@@ -58,21 +59,33 @@ def parse_message(message, validation_level=None, find_groups=True, reference=No
     message = message.lstrip()
     encoding_chars, message_structure, version = get_message_info(message)
 
+    # if message_profile is not None:
+    #     validation_level = VALIDATION_LEVEL.QUIET
+    #     message_structure = message_profile.keys()[0]
+    reference = message_profile[message_structure] if message_profile else None
+
     try:
-        m = Message(name=message_structure, version=version, validation_level=validation_level, encoding_chars=encoding_chars)
+        m = Message(name=message_structure, reference=reference, version=version,
+                    validation_level=validation_level, encoding_chars=encoding_chars)
     except InvalidName:
-        m = Message(version=version, validation_level=validation_level, encoding_chars=encoding_chars)
-    children = parse_segments(message, m.version, encoding_chars, validation_level)
-    if find_groups and m.name is not None and not m.is_z_element():
+        m = Message(version=version, validation_level=validation_level,
+                    encoding_chars=encoding_chars)
+    children = parse_segments(message, m.version, encoding_chars, validation_level,
+                              m.structure_by_name)
+    if m.name is not None and find_groups:
         m.children = []
         create_groups(m, children, validation_level)
     else:
         m.children = children
     if Validator.is_strict(validation_level):
-        m.validate()
+        if message_profile is None:
+            Validator.validate(m, report_file=report_file)
+        else:
+            Validator.validate(m, message_profile[message_structure], report_file=report_file)
+
     return m
 
-def parse_segments(text, version=None, encoding_chars=None, validation_level=None):
+def parse_segments(text, version=None, encoding_chars=None, validation_level=None, references=None):
     """
     Parse the given ER7-encoded segments and return a list of :class:`hl7apy.core.Segment` instances.
 
@@ -98,7 +111,20 @@ def parse_segments(text, version=None, encoding_chars=None, validation_level=Non
     encoding_chars = _get_encoding_chars(encoding_chars)
 
     segment_sep = encoding_chars['SEGMENT']
-    return [parse_segment(s.strip(), version, encoding_chars, validation_level) for s in text.split(segment_sep) if len(s) > 0]
+    segments = []
+    for s in text.split(segment_sep):
+        if len(s) > 0:
+            segment_name = s[:3]
+            try:
+                reference = references[segment_name]['ref'] if references else None
+            except KeyError:
+                # the message can be in the groups
+                reference = None
+
+            segments.append(parse_segment(s.strip(), version, encoding_chars, validation_level,
+                                          reference))
+    return segments
+    # return [parse_segment(s.strip(), version, encoding_chars, validation_level) for s in text.split(segment_sep) if len(s) > 0]
 
 def parse_segment(text, version=None, encoding_chars=None, validation_level=None, reference=None):
     """
@@ -133,11 +159,14 @@ def parse_segment(text, version=None, encoding_chars=None, validation_level=None
 
     segment_name = text[:3]
     text = text[4:] if segment_name != 'MSH' else text[3:]
-    segment = Segment(segment_name, version=version, validation_level=validation_level, reference=reference)
-    segment.children = parse_fields(text, segment_name, version, encoding_chars, validation_level, segment.allow_infinite_children)
+    segment = Segment(segment_name, version=version, validation_level=validation_level,
+                      reference=reference)
+    segment.children = parse_fields(text, segment_name, version, encoding_chars, validation_level,
+                                    segment.structure_by_name, segment.allow_infinite_children)
     return segment
 
-def parse_fields(text, name_prefix=None, version=None, encoding_chars=None, validation_level=None, force_varies=False):
+def parse_fields(text, name_prefix=None, version=None, encoding_chars=None, validation_level=None,
+                 references=None, force_varies=False):
     """
     Parse the given ER7-encoded fields and return a list of :class:`hl7apy.core.Field`.
 
@@ -184,17 +213,26 @@ def parse_fields(text, name_prefix=None, version=None, encoding_chars=None, vali
     fields = []
     for index, field in enumerate(splitted_fields):
         name = "{0}_{1}".format(name_prefix, index+1) if name_prefix is not None else None
+        try:
+            reference = references[name]['ref'] if references is not None else None
+        except KeyError:
+            reference = None
+
         if field.strip() or name is None:
             if name == 'MSH_2':
-                fields.append(parse_field(field, name, version, encoding_chars, validation_level))
+                fields.append(parse_field(field, name, version, encoding_chars, validation_level,
+                                          reference))
             else:
                 for rep in field.split(repetition_sep):
-                    fields.append(parse_field(rep, name, version, encoding_chars, validation_level, force_varies=force_varies))
+                    fields.append(parse_field(rep, name, version, encoding_chars, validation_level,
+                                              reference, force_varies))
         elif name == "MSH_1":
-            fields.append(parse_field(field_sep, name, version, encoding_chars, validation_level))
+            fields.append(parse_field(field_sep, name, version, encoding_chars, validation_level,
+                                      reference))
     return fields
 
-def parse_field(text, name=None, version=None, encoding_chars=None, validation_level=None, reference=None, force_varies=False):
+def parse_field(text, name=None, version=None, encoding_chars=None, validation_level=None,
+                reference=None, force_varies=False):
     """
     Parse the given ER7-encoded field and return an instance of :class:`hl7apy.core.Field`.
 
@@ -251,14 +289,16 @@ def parse_field(text, name=None, version=None, encoding_chars=None, validation_l
         c.add(s)
         field.add(c)
     else:
-        children = parse_components(text, field.datatype, version, encoding_chars, validation_level)
+        children = parse_components(text, field.datatype, version, encoding_chars, validation_level,
+                                    field.structure_by_name)
         if Validator.is_quiet(validation_level) and is_base_datatype(field.datatype, version) and \
                 len(children) > 1:
             field.datatype = None
         field.children = children
     return field
 
-def parse_components(text, field_datatype='ST', version=None, encoding_chars=None, validation_level=None):
+def parse_components(text, field_datatype='ST', version=None, encoding_chars=None,
+                     validation_level=None, references=None):
     """
     Parse the given ER7-encoded components and return a list of :class:`hl7apy.core.Component` instances.
 
@@ -301,12 +341,16 @@ def parse_components(text, field_datatype='ST', version=None, encoding_chars=Non
         else:
             component_name = "{0}_{1}".format(field_datatype, index+1)
             component_datatype = None
+
+        reference = references[component_name]['ref'] if None not in (references, component_name) else None
+
         if component.strip() or component_name is None or component_name.startswith("VARIES_"):
             components.append(parse_component(component, component_name, component_datatype,
-                                              version, encoding_chars, validation_level))
+                                              version, encoding_chars, validation_level, reference))
     return components
 
-def parse_component(text, name=None, datatype='ST', version=None, encoding_chars=None, validation_level=None, reference=None):
+def parse_component(text, name=None, datatype='ST', version=None, encoding_chars=None,
+                    validation_level=None, reference=None):
     """
     Parse the given ER7-encoded component and return an instance of :class:`hl7apy.core.Component`.
 
