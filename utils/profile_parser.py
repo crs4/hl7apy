@@ -71,11 +71,11 @@ class ProfileParser(object):
             cardinality = self._get_cardinality(child)
             if child.tag == 'Segment':
                 segment_children = self._parse_segment(child)
-                children.append(('cp', 'sequence', segment_children, child_name, cardinality, 'Segment'))
+                children.append(('mp', 'sequence', child_name, segment_children, cardinality, 'Segment'))
             elif child.tag == 'SegGroup':
                 group_name = "{}_{}".format(parent_name, child_name)
                 group_children = self._parse_children(child, parent_name)
-                children.append(('cp', 'sequence', group_children, group_name, cardinality, 'Group'))
+                children.append(('mp', 'sequence', group_name, group_children, cardinality, 'Group'))
         return tuple(children)
 
     def _parse_segment(self, segment):
@@ -89,7 +89,7 @@ class ProfileParser(object):
             field_table = "HL7{}".format(field.get('Table')) if field.get('Table') else None
             field_children = self._parse_datatype(field)
             field_type = 'sequence' if len(field_children) > 1 else 'leaf'
-            field_data = ['cp', field_type, field_children, field_name, field_cardinality, 'Field',
+            field_data = ['mp', field_type, field_name, field_children, field_cardinality, 'Field',
                           field_datatype.upper(), field_length, field_table]
             # field_data = [field_name, field_cardinality, self._parse_field(field), 'Field']
             fields.append(tuple(field_data))
@@ -111,7 +111,7 @@ class ProfileParser(object):
                     comp_table = "HL7{}".format(component.get('Table')) if component.get('Table') else None
                     comp_children = self._parse_datatype(component)
                     comp_type = 'sequence' if len(comp_children) > 1 else 'leaf'
-                    component_data = ('cp', comp_type, comp_children, comp_name, comp_cardinality,
+                    component_data = ('mp', comp_type, comp_name, comp_children, comp_cardinality,
                                       type, comp_datatype.upper(), comp_length, comp_table)
                     # component_data = (comp_name, cardinality, self._parse_field(component), type)
                     components.append(component_data)
@@ -157,12 +157,12 @@ class ProfileParser(object):
             print "Invalid XML file: ", file, ex
             sys.exit(1)
 
-        messageStructure = f.HL7v2xStaticDef.get('MsgStructID')
+        message_structure = f.HL7v2xStaticDef.get('MsgStructID')
 
         messages = collections.defaultdict(list)
 
-        children = self._parse_children(f.HL7v2xStaticDef, messageStructure)
-        messages[messageStructure] = ('cp', 'sequence', children)
+        children = self._parse_children(f.HL7v2xStaticDef, message_structure)
+        messages[message_structure] = ('mp', 'sequence', message_structure, children)
 
         return messages
 
