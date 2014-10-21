@@ -25,6 +25,7 @@ HL7apy - validation
 
 from hl7apy import load_reference
 from hl7apy.consts import VALIDATION_LEVEL
+from hl7apy.exceptions import ChildNotFound
 
 class Validator(object):
     """
@@ -80,7 +81,7 @@ class Validator(object):
 
         try:
             ref = load_reference(element.name, element.classname, element.version)
-        except KeyError: # Z segments cause KeyError
+        except ChildNotFound: # Z segments cause KeyError
             if element.is_z_element():
                 if element.classname == 'Field':
                     if is_base_datatype(element.datatype, element.version) or \

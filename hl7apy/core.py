@@ -500,13 +500,13 @@ class ElementFinder(object):
             data['datatype'] = datatype
             data['table'] = table
             data['long_name'] = long_name
-            if not is_base_datatype(data['datatype'], element.version) and \
-                    data['datatype'] != 'varies':
-                try:
-                    reference = find_reference(data['datatype'], element.child_classes, element.version)
-                    data.update(ElementFinder._parse_structure(element, reference['ref']))
-                except ChildNotFound: # if element.child_classes is empty (e.g SubComponent)
-                    pass
+            # if not is_base_datatype(data['datatype'], element.version) and \
+            #         data['datatype'] != 'varies':
+            #     try:
+            #         reference = find_reference(data['datatype'], element.child_classes, element.version)
+            #         data.update(ElementFinder._parse_structure(element, reference['ref']))
+            #     except ChildNotFound: # if element.child_classes is empty (e.g SubComponent)
+            #         pass
 
         return data
 
@@ -800,8 +800,8 @@ class SupportComplexDataType(Element):
                 datatype != self.datatype:
             raise OperationNotAllowed("Cannot change datatype using STRICT validation")
 
-        if not is_base_datatype(datatype, self.version) and datatype != 'varies' and \
-                datatype is not None:
+        if not is_base_datatype(datatype, self.version) and \
+                datatype not in ('varies', None, self.datatype):
             reference = load_reference(datatype, 'Component', self.version)
             structure = ElementFinder.get_structure(self, reference)
             for k, v in structure.iteritems():

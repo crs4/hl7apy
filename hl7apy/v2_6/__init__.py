@@ -34,7 +34,10 @@ ELEMENTS = {'Message': MESSAGES, 'Segment': SEGMENTS, 'Field': FIELDS,
             'Component': DATATYPES, 'Group': GROUPS, 'SubComponent': DATATYPES}
 
 def get(name, element_type):
-    return ELEMENTS[element_type][name]
+    try:
+        return ELEMENTS[element_type][name]
+    except KeyError:
+        raise ChildNotFound(name)
 
 def find(name, where):
     for cls in where:
