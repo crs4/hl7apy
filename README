@@ -1,0 +1,5 @@
+The examples listed in the paper submitted at IHIC 2015, "HL7apy: a Python library to parse, create and handle HL7 v2.x messages",
+can be found in the ihic2015_examples/ directory. Only the Python examples are included.
+Before launching them, it is necessary to install the library with the following command.
+
+python setup.py install
