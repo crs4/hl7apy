@@ -24,7 +24,7 @@ from hl7apy.core import Message, Segment, Field, Group, Component, SubComponent,
 from hl7apy.exceptions import ChildNotValid, ChildNotFound, OperationNotAllowed, InvalidName, \
                               MaxChildLimitReached, UnsupportedVersion, InvalidEncodingChars, \
                               MaxLengthReached
-
+from hl7apy.v2_5 import ST, SI
 from hl7apy.validation import VALIDATION_LEVEL
 from hl7apy.parser import parse_message, parse_segment, parse_field, parse_component
 
@@ -494,10 +494,19 @@ class TestField(unittest.TestCase):
         s.zin_5 = 'abc^def'
         self.assertEqual(s.zin_5.datatype, None)
 
+    def test_add_component(self):
+        f = Field('PID_5')
+        f.add(Component('XPN_1'))
+        self.assertEqual(f.children[0].name,'XPN_1')
+
+        f = Field('PID_5')
+        f.add_component('XPN_1')
+        self.assertEqual(f.children[0].name,'XPN_1')
+
     def test_add_empty_component(self):
         f1 = Field('pid_3', validation_level=VALIDATION_LEVEL.STRICT)
         self.assertRaises(ChildNotValid, f1.add, Component(datatype='ST'))
-        f2 =  Field('pid_3')
+        f2 = Field('pid_3')
         f2.add(Component(datatype='ST'))
 
     def test_add_known_components_to_empty_fields(self):
@@ -517,7 +526,7 @@ class TestField(unittest.TestCase):
         with self.assertRaises(ChildNotValid):
             f1.ce_1 = Component('CX_1')
         f2 = Field('pid_3')
-        with self.assertRaises(ChildNotValid):   #this one is not raised!!!
+        with self.assertRaises(ChildNotValid):
             f2.cx_1 = Component('HD_1')
         f2.cx_1 = Component('CX_1')
 
@@ -542,40 +551,44 @@ class TestField(unittest.TestCase):
         f1 = Field('pid_10', validation_level=VALIDATION_LEVEL.STRICT)
         f2 = Field('pid_3')
         with self.assertRaises(ChildNotValid):
-            f1.cwe_1
+            f1.cwe_1 # pid_10 datatype is CE
         with self.assertRaises(ChildNotValid):
-            f2.ce_1
+            f2.ce_1 # pid_3 datatype is CX
 
     def test_add_more_components_to_base_datatype_field(self):
         f1 = Field('pid_8', validation_level=VALIDATION_LEVEL.STRICT) #this is a base datatype field
         f1.add(Component(datatype='IS'))
         self.assertRaises(MaxChildLimitReached, f1.add, Component(datatype='ST'))
+
         f2 = Field('pid_8')
         f2.add(Component(datatype='IS'))
         self.assertRaises(MaxChildLimitReached, f2.add, Component(datatype='ST'))
 
     def test_override_field_datatype_strict(self):
-        a = Field('pid_3',  validation_level=VALIDATION_LEVEL.STRICT)
+        f = Field('pid_3',  validation_level=VALIDATION_LEVEL.STRICT)
         with self.assertRaises(OperationNotAllowed):
-            a.datatype = 'HD'
-        self.assertRaises(OperationNotAllowed, Field, 'pid_3', datatype='HD', validation_level=VALIDATION_LEVEL.STRICT)
-
-    def test_override_field_datatype(self):
-        a = Field('pid_3', 'HD')
-        self.assertEqual(a.datatype, 'HD')
-
+            f.datatype = 'HD'
+        self.assertRaises(OperationNotAllowed, Field, 'pid_3', datatype='HD',
+                          validation_level=VALIDATION_LEVEL.STRICT)
         #in this case we are assigning the official datatype to the Field so no exception should be raised
         b = Field('pid_3', 'CX', validation_level=VALIDATION_LEVEL.STRICT)
         self.assertEqual(b.datatype, 'CX')
 
-    def test_override_field_containing_children_datatype(self):
+        f = Field('pid_3')
+        f.datatype = 'HD'
+        self.assertEqual(f.datatype, 'HD')
+
+        f = Field('pid_3', datatype='HD')
+        self.assertEqual(f.datatype, 'HD')
+
+        # it raises an exception because the field already has some children
         a = Field('pid_3')
-        a.cx_1 = 'cx_1 value'
-        a.cx_4 = 'cx_4 value'
+        a.cx_1 = 'aaa'
+        a.cx_4 = 'bbb'
         with self.assertRaises(OperationNotAllowed):
             a.datatype = 'HD'
 
-    def test_assign_value_with_overridden_datatype(self):
+        # test that the children's names follow the new datatype name
         a = Field('pid_3', 'CE') #official datatype is CX
         a.ce_1 = 'xyz'
         self.assertEqual(a.to_er7(), 'xyz')
@@ -585,29 +598,7 @@ class TestField(unittest.TestCase):
         msh = m.msh
         msh7 = msh.msh_7
         del msh.msh_7
-        self.assertTrue(msh7 not in msh.children)
-
-    #def test_create_fields_by_get(self):
-    #    s = Segment('MSH')
-    #    s.msh_18
-
-    def test_base_datatype_field_get(self):
-        s = Segment('MSH')
-        s.msh_10.msh_10_1
-        s.msh_10.msh_10_1.value = 'Value'
-        s.msh_10.msh_10_1.value = '11111'
-        with self.assertRaises(ChildNotFound):
-            s.msh_10.msh_10_2
-
-    def test_assign_field_by_get(self):
-        s = Segment('MSH')
-        s.msh_10 = 'Value'
-        s.msh_10.msh_10_1 = 'Value'
-
-    def test_add_component(self):
-        f = Field('PID_5')
-        f.add_component('XPN_1')
-        self.assertEqual(f.children[0].name,'XPN_1')
+        self.assertNotIn(msh7, msh.children)
 
     def test_assign_value(self):
         field_str = '1010110909194822^^^AUTH&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK'
@@ -625,22 +616,84 @@ class TestField(unittest.TestCase):
         with self.assertRaises(MaxChildLimitReached):
             f.value = '1^2'
 
+        f = Field('PID_1', validation_level=VALIDATION_LEVEL.QUIET)
+        f.value = SI(1)
+        self.assertEqual(f.to_er7(), '1')
+        f.value = SI(2)
+        self.assertEqual(f.to_er7(), '2')
+        with self.assertRaises(ChildNotValid):
+            f.value = ST('aaa')
+
+        f = Field('PID_3', validation_level=VALIDATION_LEVEL.QUIET) # It is a complex datatype field
+        with self.assertRaises(ChildNotValid):
+            f.value = ST('aaa')
+
+        f = Field('PID_1', validation_level=VALIDATION_LEVEL.STRICT)
+        f.value = SI(1)
+        self.assertEqual(f.to_er7(), '1')
+        f.value = SI(2)
+        self.assertEqual(f.to_er7(), '2')
+        with self.assertRaises(ChildNotValid):
+            f.value = ST('aaa')
+
+        f = Field('PID_3', validation_level=VALIDATION_LEVEL.STRICT) # It is a complex datatype field
+        with self.assertRaises(ChildNotValid):
+            f.value = ST('aaa')
+
+        f = Field()
+        f.value = field_str
+        self.assertEqual(f.to_er7(), field_str)
+
+        f = Field()
+        with self.assertRaises(ChildNotValid):
+            f.value = ST('aaa')
+
+        f = Field(datatype='ST')
+        f.value = ST('aaa')
+
     def test_assign_value_traversal(self):
         field_str = '1010110909194822^^^AUTH&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK'
 
-        s1 = Segment('PID')
-        s2 = Segment('PID')
-        s1.pid_3.value = field_str
-        s2.pid_3 = field_str
+        # assigns string using value
+        s = Segment('PID')
+        s.pid_3.value = field_str
+        self.assertEqual(s.pid_3.to_er7(), field_str)
 
-        self.assertEqual(s1.to_er7(), s2.to_er7())
+        # assigns string
+        s = Segment('PID')
+        s.pid_3 = field_str
+        self.assertEqual(s.pid_3.to_er7(), field_str)
 
-    def test_assign_value_unknown_field(self):
-        field_str = '1010110909194822^^^AUTH&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK'
-        f = Field()
-        f.value = field_str
+        # assigns base datatype using value
+        s = Segment('MSH')
+        s.msh_10.value = ST('aaa')
+        self.assertEqual(s.msh_10.to_er7(), 'aaa')
 
-    def test_assign_value_with_field_separator(self):
+        # assigns base datatype
+        s = Segment('MSH')
+        s.msh_10 = ST('aaa')
+        self.assertEqual(s.msh_10.to_er7(), 'aaa')
+
+        # same tests with a further level iof traversal
+
+        m = Message('RSP_K21')
+        m.pid.pid_3.value = field_str
+        self.assertEqual(m.pid.pid_3.to_er7(), field_str)
+
+        m = Message('RSP_K21')
+        m.pid.pid_3 = field_str
+        self.assertEqual(m.pid.pid_3.to_er7(), field_str)
+
+        m = Message('RSP_K21')
+        m.msh.msh_10.value = ST('aaa')
+        self.assertEqual(m.msh.msh_10.to_er7(), 'aaa')
+
+        m = Message('RSP_K21')
+        m.msh.msh_10 = ST('aaa')
+        self.assertEqual(m.msh.msh_10.to_er7(), 'aaa')
+
+    def test_assign_value_with_encoding_chars(self):
+        # using field separator
         field_str = 'xxx|yyy'
         escaped_str = 'xxx\F\yyy'
         f = Field('PID_3')
@@ -655,7 +708,7 @@ class TestField(unittest.TestCase):
         f.value = field_str
         self.assertEqual(f.to_er7(), 'xxx\F\yyy')
 
-    def test_assign_value_with_repetition(self):
+        # using repetition
         field_str = 'xxx~yyy'
         f = Field()
         f.value = field_str
@@ -678,6 +731,7 @@ class TestComponent(unittest.TestCase):
         c = Component()
         self.assertEqual(c.classname, 'Component')
         c = Component(datatype='ST')
+
         self.assertEqual(c.classname, 'Component')
         Component(datatype='ST', validation_level=VALIDATION_LEVEL.STRICT)
         self.assertRaises(OperationNotAllowed, Component, validation_level=VALIDATION_LEVEL.STRICT)
@@ -685,22 +739,17 @@ class TestComponent(unittest.TestCase):
     def test_create_unknown_component(self):
         self.assertRaises(InvalidName, Component, 'xxx_1')
         self.assertRaises(InvalidName, Component, 'xxx_1', validation_level=VALIDATION_LEVEL.STRICT)
-
-    def test_create_invalid_component(self):
-        self.assertRaises(InvalidName, Component, 'AD')
+        self.assertRaises(InvalidName, Component, 'AD') # AD is a datatype but not a correct component name
 
     def test_create_unsupported_version_component(self):
-        Component(datatype='ST', version='2.5')
         self.assertRaises(UnsupportedVersion, Component, version='2.0')
 
     def test_add_empty_subcomponent(self):
         c1 = Component('cx_4', validation_level=VALIDATION_LEVEL.STRICT)
         self.assertRaises(ChildNotValid, c1.add, SubComponent(datatype='ST'))
+
         c2 = Component('cx_4')
         c2.add(SubComponent(datatype='ST'))
-
-    def add_unknown_component_strict(self):
-        self.assertRaises(OperationNotAllowed, Component, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_add_known_subcomponent_to_empty_component(self):
         c = Component()
@@ -709,6 +758,7 @@ class TestComponent(unittest.TestCase):
     def test_add_not_allowed_subcomponent_to_known_component(self):
         c = Component('cx_4', validation_level=VALIDATION_LEVEL.STRICT)
         self.assertRaises(ChildNotValid, c.add, SubComponent('fn_1'))
+
         c1 = Component('cx_4')
         self.assertRaises(ChildNotValid, c1.add, SubComponent('fn_1'))
 
@@ -716,6 +766,7 @@ class TestComponent(unittest.TestCase):
         c = Component('XPN_1')
         with self.assertRaises(ChildNotValid):
             c.fn_1 = SubComponent('hd_1')
+
         c1 = Component('XPN_1', validation_level=VALIDATION_LEVEL.STRICT)
         with self.assertRaises(ChildNotValid):
             c1.fn_1 = SubComponent('hd_1')
@@ -736,7 +787,6 @@ class TestComponent(unittest.TestCase):
         with self.assertRaises(ChildNotValid):
             c2.cx_1
 
-
     def test_add_more_subcomponents_to_base_datatype_component(self):
         c = Component(datatype='ST')
         c.add(SubComponent(datatype='ST'))
@@ -744,27 +794,28 @@ class TestComponent(unittest.TestCase):
         #c1 = Component(datatype='ST', validation_level=VALIDATION_LEVEL.STRICT)
         #self.assertRaises(ChildNotValid, c1.add, SubComponent(datatype='ST'))
 
-    def test_override_datatype_strict(self):
+    def test_override_datatype(self):
+        c = Component('CX_1',  validation_level=VALIDATION_LEVEL.QUIET)
+        c.datatype = 'TX'
+        self.assertEqual(c.datatype, 'TX')
+
+        c = Component('CX_1',  datatype='TX', validation_level=VALIDATION_LEVEL.QUIET)
+        self.assertEqual(c.datatype, 'TX')
+
+        c = Component()
+        c.value = 'a&b'
+        with self.assertRaises(OperationNotAllowed):
+            c.datatype = 'TX'
+
         c = Component('CX_1',  validation_level=VALIDATION_LEVEL.STRICT)
         with self.assertRaises(OperationNotAllowed):
             c.datatype = 'TX'
+
         c1 = Component('CX_1', datatype='ST', validation_level=VALIDATION_LEVEL.STRICT)
         with self.assertRaises(OperationNotAllowed):
             c1.datatype = 'TX'
 
-    def test_override_valued_datatype(self):
-        c = Component('CX_1')
-        c.datatype = 'TX'
-        self.assertEqual(c.datatype, 'TX')
-
-    #def test_override_none_datatype(self):
-    #    c = Component('CX_1')
-    #    with self.assertRaises(OperationNotAllowed):
-    #        c.datatype = 'TX'
-
-    # def test_add_subcomponent_to_unknown_component(self):
-    #     c = Component()
-    #     self.assertRaises(ChildNotValid, c.add, SubComponent(datatype = 'ST'))
+        self.assertRaises(OperationNotAllowed, Component, 'CX_1', datatype='', validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_add_unexpected_child_to_component(self):
         g = Group()
@@ -783,15 +834,9 @@ class TestComponent(unittest.TestCase):
     def test_delete_component(self):
         m = Message('OML_O33')
         m.pid = 'PID|||||bianchi^mario|||'
-        pid51 = m.pid.pid_5.pid_5_1
+        pid_5_1 = m.pid.pid_5.pid_5_1
         del m.pid.pid_5.pid_5_1
-
-    def test_create_component_by_get(self):
-        s = Segment('MSH')
-        #no children are created here
-        with self.assertRaises(IndexError):
-            s.msh_9.msh_9_1
-            s.children[0].children[0].name
+        self.assertNotIn(pid_5_1, m.pid.pid_5.children)
 
     def test_assign_complex_field_datatype_by_get(self):
         p = Segment('PID')
@@ -810,88 +855,199 @@ class TestComponent(unittest.TestCase):
 
     def test_add_subcomponent(self):
         c = Component('XPN_1')
+        c.add(SubComponent('FN_1'))
+        self.assertEqual(c.children[0].name, 'FN_1')
+
+        c = Component('XPN_1')
         c.add_subcomponent('FN_1')
         self.assertEqual(c.children[0].name, 'FN_1')
 
-    def test_assign_value_quiet(self):
-        cmp_str = 'xxx'
-        c = Component('CWE_1')
-        c.value = cmp_str
-        parsed_cmp = parse_component(cmp_str, 'CWE_1')
-        self.assertEqual(c.to_er7(), parsed_cmp.to_er7())
+    def test_assign_value_string(self):
+        # simple string
+        cmp_str = 'aaa'
 
-        c = Component('CWE_1') # more child than allowed
-        c.value = '1&2'
+        # quiet
+        c = Component('CWE_1', validation_level=VALIDATION_LEVEL.QUIET)
+        c.value = cmp_str
+        self.assertEqual(c.to_er7(), cmp_str)
+
+        # strict
+        c = Component('CWE_1', validation_level=VALIDATION_LEVEL.STRICT)
+        c.value = cmp_str
+        self.assertEqual(c.to_er7(), cmp_str)
+
+        # unknown
+        c = Component()
+        c.value = cmp_str
+        self.assertEqual(c.to_er7(), cmp_str)
+
+        # complex string
+        cmp_str = '1&2'
+
+        # quiet
+        c = Component('CWE_1', validation_level=VALIDATION_LEVEL.QUIET) # more child than allowed
+        c.value = cmp_str
+        self.assertEqual(c.to_er7(), cmp_str)
+        self.assertEqual(len(c.children), 2)
+
+        # strict
+        c = Component('CWE_1', validation_level=VALIDATION_LEVEL.STRICT)
+        with self.assertRaises(MaxChildLimitReached):
+            c.value = cmp_str
+
+        # unknown
+        c = Component('CWE_1', validation_level=VALIDATION_LEVEL.QUIET) # more child than allowed
+        c.value = cmp_str
+        self.assertEqual(c.to_er7(), cmp_str)
+        self.assertEqual(len(c.children), 2)
+
+        # max length
+        # quiet
         for dt in ('ST', 'ID', 'FT', 'GTS', 'IS', 'TX'):
-            c = Component(datatype=dt) # max length reached string type
+            c = Component(datatype=dt, validation_level=VALIDATION_LEVEL.QUIET) # max length reached string type
             c.value = 65537*'a'
         for dt in ('NM', 'SI'):
-            c = Component(datatype=dt)
+            c = Component(datatype=dt, validation_level=VALIDATION_LEVEL.QUIET)
             c.value = 65537*'1'
 
+        # strict
+        c = Component(datatype='ID', validation_level=VALIDATION_LEVEL.STRICT) # ID works because its length depends on HL7 table
+        c.value = 65537*'a'
+        self.assertEqual(c.to_er7(), 65537*'a')
+        for dt in ('ST', 'FT', 'GTS', 'IS', 'TX'):
+            with self.assertRaises(MaxLengthReached):
+                c = Component(datatype=dt, validation_level=VALIDATION_LEVEL.STRICT) # max length reached string type
+                c.value = 65537*'a'
+        for dt in ('NM', 'SI'):
+            with self.assertRaises(MaxLengthReached):
+                c = Component(datatype=dt, validation_level=VALIDATION_LEVEL.STRICT)
+                c.value = 65537*'1'
+
+        # complex datatypes
+        # quiet
         complex_cmp_str = 'xxx&yyy&zzz'
         c = Component('CX_10', validation_level=VALIDATION_LEVEL.QUIET)
         c.value = complex_cmp_str
-        parsed_cmp = parse_component(complex_cmp_str, 'CX_10', datatype='CWE', validation_level=VALIDATION_LEVEL.STRICT)
-        self.assertEqual(c.to_er7(), parsed_cmp.to_er7())
+        self.assertEqual(c.to_er7(), complex_cmp_str)
+        self.assertEqual(len(c.children), 3)
 
-    def test_assign_value_strict(self):
-        cmp_str = 'xxx'
-        c = Component('CWE_1', validation_level=VALIDATION_LEVEL.STRICT)
-        c.value = cmp_str
-        parsed_cmp = parse_component(cmp_str, 'CWE_1')
-        self.assertEqual(c.to_er7(), parsed_cmp.to_er7())
-
-        c = Component('CWE_1', validation_level=VALIDATION_LEVEL.STRICT)
-        with self.assertRaises(MaxChildLimitReached):
-            c.value = '1&2'
-
-        with self.assertRaises(MaxLengthReached):
-            for dt in ('ST', 'ID', 'FT', 'GTS', 'IS', 'TX'):
-                c = Component(datatype=dt, validation_level=VALIDATION_LEVEL.STRICT) # max length reached string type
-                c.value = 65537*'a'
-            for dt in ('NM', 'SI'):
-                c = Component(datatype=dt, validation_level=VALIDATION_LEVEL.STRICT)
-                c.value = int(65537*'1')
-
+        # strict
         complex_cmp_str = 'xxx&yyy&zzz'
         c = Component('CX_10', validation_level=VALIDATION_LEVEL.STRICT)
         c.value = complex_cmp_str
-        parsed_cmp = parse_component(complex_cmp_str, 'CX_10', datatype='CWE', validation_level=VALIDATION_LEVEL.STRICT)
-        self.assertEqual(c.to_er7(), parsed_cmp.to_er7())
+        self.assertEqual(c.to_er7(), complex_cmp_str)
+        self.assertEqual(len(c.children), 3)
+
+        # unknown
+        complex_cmp_str = 'xxx&yyy&zzz'
+        c = Component(validation_level=VALIDATION_LEVEL.QUIET)
+        c.value = complex_cmp_str
+        self.assertEqual(c.to_er7(), complex_cmp_str)
+        self.assertEqual(len(c.children), 3)
+
+    def test_assign_value_base_datatype(self):
+        # quiet
+        c = Component('CX_1', validation_level=VALIDATION_LEVEL.QUIET)
+        c.value = ST('aaa')
+        self.assertEqual(c.to_er7(), 'aaa')
+        c.value = ST('bbb')
+        self.assertEqual(c.to_er7(), 'bbb')
+
+        with self.assertRaises(ChildNotValid):
+            c.value = SI(1)
+
+        # strict
+        c = Component('CX_1', validation_level=VALIDATION_LEVEL.STRICT)
+        c.value = ST('aaa')
+        self.assertEqual(c.to_er7(), 'aaa')
+        c.value = ST('bbb')
+        self.assertEqual(c.to_er7(), 'bbb')
+
+        with self.assertRaises(ChildNotValid):
+            c.value = SI(1)
+
+        # complex datatype
+        # quiet
+        c = Component('CX_10', validation_level=VALIDATION_LEVEL.QUIET)
+        with self.assertRaises(ChildNotValid):
+            c.value = ST('aaa')
+
+        # strict
+        c = Component('CX_10', validation_level=VALIDATION_LEVEL.STRICT)
+        with self.assertRaises(ChildNotValid):
+            c.value = ST('aaa')
 
     def test_assign_value_traversal(self):
-        cmp_str = 'xxx'
-        f1 = Field('PID_39')
-        f2 = Field('PID_39')
-        f1.cwe_1.value = cmp_str
-        f2.cwe_1 = cmp_str
-        self.assertEqual(f1.to_er7(), f2.to_er7())
+        cmp_str = 'aaa'
 
-        s1 = Segment('PID')
-        s2 = Segment('PID')
-        s1.pid_39.pid_39_1.value = cmp_str
-        s2.pid_39.pid_39_1 = cmp_str
+        # name
+        f = Field('PID_39')
+        f.cwe_1 = cmp_str
+        self.assertEqual(f.cwe_1.to_er7(), cmp_str)
 
+        # alternative name
+        f = Field('PID_39')
+        f.pid_39_1 = cmp_str
+        self.assertEqual(f.cwe_1.to_er7(), cmp_str)
+
+        # value
+        f = Field('PID_39')
+        f.cwe_1.value = cmp_str
+        self.assertEqual(f.cwe_1.to_er7(), cmp_str)
+
+        # value alternative name
+        f = Field('PID_39')
+        f.cwe_1.value = cmp_str
+        self.assertEqual(f.cwe_1.to_er7(), cmp_str)
+
+        # name with base datatype
+        f = Field('PID_39')
+        f.cwe_1 = ST(cmp_str)
+        self.assertEqual(f.cwe_1.to_er7(), cmp_str)
+
+        # value with base datatype
+        f = Field('PID_39')
+        f.cwe_1.value = ST(cmp_str)
+        self.assertEqual(f.cwe_1.to_er7(), cmp_str)
+
+        # further level
+
+        # name
+        m = Message('RSP_K21')
+        m.pid.pid_39.cwe_1 = cmp_str
+        self.assertEqual(m.pid.pid_39.cwe_1.to_er7(), cmp_str)
+
+        # value
+        m = Message('RSP_K21')
+        m.pid.pid_39.cwe_1.value = cmp_str
+        self.assertEqual(m.pid.pid_39.cwe_1.to_er7(), cmp_str)
+
+        # name with base datatype
+        m = Message('RSP_K21')
+        m.pid.pid_39.cwe_1 = ST(cmp_str)
+        self.assertEqual(m.pid.pid_39.cwe_1.to_er7(), cmp_str)
+
+        # value with base datatype
+        m = Message('RSP_K21')
+        m.pid.pid_39.cwe_1.value = ST(cmp_str)
+        self.assertEqual(m.pid.pid_39.cwe_1.to_er7(), cmp_str)
+
+        # complex datatype
         complex_cmp_str = 'xxx&yyy&zzz'
-        f1 = Field('PID_4')
-        f2 = Field('PID_4')
-        f1.cx_10.value = complex_cmp_str
-        f2.cx_10 = complex_cmp_str
-        self.assertEqual(f1.to_er7(), f2.to_er7())
 
-        s1.pid_4.pid_4_1.value = complex_cmp_str
-        s2.pid_4.pid_4_1 = complex_cmp_str
-        self.assertEqual(f1.to_er7(), f2.to_er7())
+        # name
+        f = Field('PID_4')
+        f.cx_10 = complex_cmp_str
+        self.assertEqual(f.cx_10.to_er7(), complex_cmp_str)
+        self.assertEqual(len(f.cx_10.children), 3)
 
-    def test_assign_value_unknown_component(self):
-        cmp_str = 'xxx'
-        complex_cmp_str = 'xxx&&&&yyy'
-        c = Component()
-        c.value = cmp_str
-        c.value = complex_cmp_str
+        # value
+        f = Field('PID_4')
+        f.cx_10.value = complex_cmp_str
+        self.assertEqual(f.cx_10.to_er7(), complex_cmp_str)
+        self.assertEqual(len(f.cx_10.children), 3)
 
-    def test_assign_value_with_component_separator(self):
+    def test_assign_value_with_encoding_chars(self):
         cmp_str = 'xxx^yyy'
         c = Component()
         c.value = cmp_str

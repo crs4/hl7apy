@@ -140,14 +140,12 @@ class ElementProxy(collections.Sequence):
         if name in self.cls_attrs:
             super(ElementProxy, self).__setattr__(name, value)
         else:
+            try:
+                element = self.list[0]
+            except IndexError: # first child not found, create the element
+                element = self.element_list.create_element(self.element_name, traversal_parent=True)
             if name == 'value':
-                element = self.element_list.element
-                name = self.element_name
-            else:
-                try:
-                    element = self.list[0]
-                except IndexError: # first child not found, create the element
-                    element = self.element_list.create_element(self.element_name, traversal_parent=True)
+                element.set_parent_to_traversal()
             setattr(element, name, value)
 
     def __setitem__(self, index, value):
@@ -273,6 +271,9 @@ class ElementList(collections.MutableSequence):
             child = self.element.parse_child(value, child_name=child_name, reference=child_ref)
         elif isinstance(value, Element): # it is already an instance of Element
             child = value
+        elif isinstance(value, BaseDataType):
+            child = self.create_element(name, True, reference)
+            child.value = value
         else:
             raise ChildNotValid(value, child_name)
 
@@ -357,7 +358,6 @@ class ElementList(collections.MutableSequence):
         :raises: :exc:`hl7apy.exceptions.ChildNotFound` if the element does not exist
         """
         if reference is None:
-            name = name.upper()
             reference = self.element.find_child_reference(name)
         if reference is not None:
             cls = reference['cls']
@@ -820,14 +820,27 @@ class SupportComplexDataType(Element):
     datatype = property(_get_datatype, _set_datatype)
 
     def _set_value(self, value):
-        children = self.parse_children(value)
-        if Validator.is_quiet(self.validation_level) and is_base_datatype(self.datatype, self.version) and \
-                len(children) > 1:
-            self.datatype = None
-        self.children = children
+        if isinstance(value, BaseDataType):
+            if not is_base_datatype(self.datatype, self.version):
+                raise ChildNotValid(value, self)
+            cls = self.child_classes[0]
+            child = cls(datatype=value.classname, version=self.version,
+                     validation_level=self.validation_level)
+            child.value = value
+            try:
+                old_child = self.children[0]
+                self.children.replace_child(old_child, child)
+            except:
+                self.add(child)
+        else:
+            children = self.parse_children(value)
+            if Validator.is_quiet(self.validation_level) and is_base_datatype(self.datatype, self.version) and \
+                    len(children) > 1:
+                self.datatype = None
+            self.children = children
 
     def _get_value(self):
-        return self.to_er7()
+        return super(SupportComplexDataType, self)._get_value()
 
     value = property(_get_value, _set_value)
 
@@ -1301,9 +1314,9 @@ class Field(SupportComplexDataType):
 
     def _set_value(self, value):
         if self.name in ('MSH_1', 'MSH_2'):
-            s = SubComponent(datatype='ST', value=value)
-            c = Component(datatype='ST')
-            c.add(s)
+            c = Component(datatype='ST', version=self.version,
+                          validation_level=self.validation_level)
+            c.value = value
             self.add(c)
         else:
             super(Field, self)._set_value(value)
