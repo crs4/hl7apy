@@ -62,3 +62,14 @@ def _load_base_datatypes():
     return datatypes
 
 BASE_DATATYPES = _load_base_datatypes()
+
+ST = BASE_DATATYPES['ST']
+ID = BASE_DATATYPES['ID']
+DT = BASE_DATATYPES['DT']
+FT = BASE_DATATYPES['FT']
+IS = BASE_DATATYPES['IS']
+NM = BASE_DATATYPES['NM']
+SI = BASE_DATATYPES['SI']
+TM = BASE_DATATYPES['TM']
+TX = BASE_DATATYPES['TX']
+TN = BASE_DATATYPES['TN']
