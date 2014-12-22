@@ -26,6 +26,25 @@ from distutils.errors import DistutilsSetupError
 
 import hl7apy
 
+desc = "HL7apy: a lightweight Python library to parse, create and handle HL7 v2.x messages"
+
+long_desc = """
+HL7apy: a lightweight Python library to parse, create and handle HL7 v2.x messages
+----------------------------------------------------------------------------------
+
+HL7apy is a lightweight Python package to intuitively handle `HL7 <http://www.hl7.org>`_ v2 messages according to HL7 specifications.
+
+The main features includes:
+ * Message parsing
+ * Message creation
+ * Message validation following the HL7 xsd specifications
+ * Access to elements by name, long name or position
+ * Support to all simple and complex datatypes
+ * Encoding chars customization
+ * Message encoding in ER7 format and compliant with MLLP protocol
+"""
+
+
 def _get_version():
     try:
         with open('VERSION') as f:
