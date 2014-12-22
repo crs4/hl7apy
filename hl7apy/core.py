@@ -36,7 +36,7 @@ from hl7apy import get_default_version, get_default_encoding_chars, \
 from hl7apy.validation import Validator, VALIDATION_LEVEL
 from hl7apy.exceptions import ChildNotFound, ChildNotValid, \
                               MaxChildLimitReached, OperationNotAllowed, \
-                              InvalidName
+                              InvalidName, MessageProfileNotFound
 from hl7apy.factories import datatype_factory
 from hl7apy.base_datatypes import BaseDataType
 from hl7apy.consts import MLLP_ENCODING_CHARS
@@ -1745,11 +1745,17 @@ class Message(Group):
     :type encoding_chars: ``dict``
     :param encoding_chars: a dictionary containing the encoding chars or None to use the default (see :func:`hl7apy.set_default_encoding_chars`)
     """
-
     def __init__(self, name=None, reference=None, version=None,
                  validation_level=None,
                  encoding_chars=None):
 
+        if reference is not None:
+            try:
+                reference = reference[name]
+            except KeyError:
+                raise MessageProfileNotFound()
+            except TypeError:
+                pass
         try:
             super(Message, self).__init__(name, None, reference, version,
                                           validation_level)

@@ -311,6 +311,13 @@ class InvalidEncodingChars(HL7apyException):
         return self.message if self.message else 'Invalid encoding chars'
 
 
+class MessageProfileNotFound(HL7apyException):
+    """
+    Raised when the structure for a message is not found in the message profile specified
+    """
+    def __str__(self):
+        return 'Message profile not found for the specified message'
+
 if __name__ == '__main__':
 
     import doctest

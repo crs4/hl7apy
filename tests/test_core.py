@@ -26,7 +26,7 @@ import hl7apy
 from hl7apy.core import Message, Segment, Field, Group, Component, SubComponent, ElementProxy
 from hl7apy.exceptions import ChildNotValid, ChildNotFound, OperationNotAllowed, InvalidName, \
                               MaxChildLimitReached, UnsupportedVersion, InvalidEncodingChars, \
-                              MaxLengthReached
+                              MaxLengthReached, MessageProfileNotFound
 from hl7apy.v2_5 import ST, SI
 from hl7apy.validation import VALIDATION_LEVEL
 from hl7apy.parser import parse_message, parse_segment, parse_field, parse_component
@@ -250,11 +250,13 @@ class TestMessage(unittest.TestCase):
         self.assertEqual(a.to_er7(), parsed_a.to_er7())
 
     def test_message_profile(self):
-        m = Message('RSP_K21', reference=self.rsp_k21_mp['RSP_K21'])
+        m = Message('RSP_K21', reference=self.rsp_k21_mp)
         # The original qpd_3 is varies
         self.assertEqual(m.qpd.qpd_3.datatype, 'QIP')
         self.assertFalse(m.qpd.allow_infinite_children)
 
+    def test_message_profile_not_found(self):
+        self.assertRaises(MessageProfileNotFound, Message, 'ADT_A01', reference=self.rsp_k21_mp)
     # def test_message_ordered_children(self):
     #    m = Message('OML_O33')
     #    m.add(Group('OML_O33_PATIENT'))
