@@ -123,7 +123,6 @@ class ProfileParser(object):
         return tuple(components)
 
     def parse_profiles(self):
-        files = [f for f in os.listdir(self.input_path) if f.endswith('.xml')]
         try:
             if not os.path.exists(self.output_path):
                 os.mkdir(self.output_path)
@@ -131,21 +130,28 @@ class ProfileParser(object):
             print "Error occurred while saving the output to: ", self.output_path, ex
             sys.exit(1)
 
+        if os.path.isdir(self.input_path):
+            files = [os.path.abspath(os.path.join(self.input_path, f)) for f in os.listdir(self.input_path)
+                     if f.endswith('.xml')]
+        elif os.path.isfile(self.input_path):
+            files = [os.path.abspath(self.input_path)]
+        else:
+            return
         for f in files:
-            filename, ext = os.path.splitext(f)
+            filename, ext = os.path.splitext(os.path.basename(f))
             content = self.parse_profile(f)
             file_path = os.path.join(self.output_path, filename)
             with open(file_path, "wb") as output_file:
                 cPickle.dump(dict(content), output_file)
 
-    def parse_profile(self, file):
+    def parse_profile(self, profile_file):
         """
         Parses the given message profile file using the lxml library then returns a dictionary
         containing parsing results.
         """
         elements = {}
         try:
-            schema_path = os.path.join(self.input_path, file)
+            schema_path = os.path.join(self.input_path, profile_file)
             with open(schema_path) as xml_file:
                 data = xml_file.read()
         except Exception, ex:
@@ -155,7 +161,7 @@ class ProfileParser(object):
         try:
             f = objectify.XML(data)
         except Exception, ex:
-            print "Invalid XML file: ", file, ex
+            print "Invalid XML file: ", profile_file, ex
             sys.exit(1)
 
         message_structure = f.HL7v2xStaticDef.get('MsgStructID')
@@ -168,7 +174,8 @@ class ProfileParser(object):
         return messages
 
 if __name__ == '__main__':
-    usage = "%prog [options] message_profile_folder"
+    usage = "%prog [options] input_path\ninputh_path can be a file or a folder containing the message " \
+            "profiles files"
     example = "Example: python profile_parser.py /home/user/ihe_2_3_folder"
     parser = OptionParser(usage=usage, epilog=example)
     parser.add_option("-o", "--output_dir",
@@ -177,9 +184,9 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
     try:
         path = args[0]
-    except:
-        parser.error("Please specify the folder containing message profile files.")
+    except IndexError:
+        parser.error("Please specify a message profile file or a folder containing message profile files.")
     else:
-        if not os.path.isdir(path):
-            parser.error("Folder %s not found." % path)
+        if not os.path.isdir(path) and os.path.isdir(path):
+            parser.error("Path %s not found." % path)
         ProfileParser(path, options.output_dir)
