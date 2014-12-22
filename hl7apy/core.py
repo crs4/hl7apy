@@ -663,10 +663,11 @@ class Element(object):
 
     def validate(self, report_file=None):
         """
-        Validate the HL7 element using the :attr:`hl7apy.consts.VALIDATION_LEVEL.STRICT` validation level
+        Validate the HL7 element using the :attr:`hl7apy.consts.VALIDATION_LEVEL.STRICT` validation level.
+        It calls the :meth:`hl7apy.validation.Validator.validate` method passing the reference used in the
+        instantiation of the element.
 
-        :rtype: ``bool``
-        :return: True if validation succeeds, False otherwise
+        :param: report_file: the report file to pass to the validator
         """
         return Validator.validate(self, reference=self.reference, report_file=report_file)
 

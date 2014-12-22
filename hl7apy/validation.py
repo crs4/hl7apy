@@ -40,13 +40,25 @@ class Validator(object):
     @staticmethod
     def validate(element, reference=None, report_file=None):
         """
-        Checks if the :class:`hl7apy.core.Element` is a valid HL7 message according to the official
-        structures.
-        It checks if it follows the max and min number of occurrences for every child and if it
-        doesn't contain children not allowed.
+        Checks if the :class:`hl7apy.core.Element` is a valid HL7 message according to the reference specified.
+        If the reference is not specified, it will be used the official HL7 structures for the elements
+        In particular it checks:
+            * the maximum and minimum number of occurrences for every child
+            * that children are all allowed
+            * the datatype of fields, components and subcomponents
+            * the values, in particular the length and the adherence with the HL7 table, if one is specified
 
-        :param element: :class:`hl7apy.core.Element`
-        :return: The element to be validated
+        It raises the first exception that it finds.
+
+        If :attr:`report_file` is specified, it will create a file with all the errors that occur.
+
+        :param element: :class:`hl7apy.core.Element`: The element to validate
+        :param reference: the reference to use. Usually is None or a message profile object
+        :param report_file: the name of the report file to create
+
+        :return: The True if everything is ok
+        :raises: :exc:`hl7apy.exceptions.ValidationError`: when errors occur
+        :raises: :exc:`hl7apy.exceptions.ValidationWarning`: errors concerning the values
         """
 
         from hl7apy.core import is_base_datatype
