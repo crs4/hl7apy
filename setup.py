@@ -35,24 +35,25 @@ def _get_version():
 
 
 setup(
-    name = 'hl7apy',
-    version = _get_version(),
-    description = hl7apy.__doc__.strip().splitlines()[0],
-    long_description = hl7apy.__doc__.strip(),
-    author = hl7apy.__author__,
-    author_email = hl7apy.__author_email__,
-    url = hl7apy.__url__,
-    download_url = 'http://sourceforge.net/projects/hl7apy/files/',
-    license = 'MIT License',
-    keywords = ['HL7', 'Health Level 7', 'healthcare', 'python'],
-    classifiers = [
+    name='hl7apy',
+    version=_get_version(),
+    description=desc,
+    long_description=long_desc,
+    author=hl7apy.__author__,
+    author_email=hl7apy.__author_email__,
+    url=hl7apy.__url__,
+    download_url='http://sourceforge.net/projects/hl7apy/files/',
+    license='MIT License',
+    keywords=['HL7', 'Health Level 7', 'healthcare', 'python'],
+    classifiers=[
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Intended Audience :: Healthcare Industry',
         'Topic :: Scientific/Engineering :: Medical Science Apps.'
     ],
-    packages = ['hl7apy', 'hl7apy.v2_2', 'hl7apy.v2_3', 'hl7apy.v2_3_1', 'hl7apy.v2_4',
-                'hl7apy.v2_5', 'hl7apy.v2_5_1', 'hl7apy.v2_6'],
-    test_suite = 'tests',
+    packages=['hl7apy', 'hl7apy.v2_2', 'hl7apy.v2_3', 'hl7apy.v2_3_1', 'hl7apy.v2_4',
+              'hl7apy.v2_5', 'hl7apy.v2_5_1', 'hl7apy.v2_6'],
+    scripts=['utils/hl7apy_profile_parser'],
+    test_suite='tests',
 )
