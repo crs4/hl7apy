@@ -39,6 +39,7 @@ import os
 import sys
 import collections
 import importlib
+import cPickle
 
 from hl7apy.exceptions import UnsupportedVersion, InvalidEncodingChars, UnknownValidationLevel
 from hl7apy.consts import DEFAULT_ENCODING_CHARS, DEFAULT_VERSION, VALIDATION_LEVEL
@@ -203,7 +204,7 @@ def set_default_encoding_chars(encoding_chars):
     >>> set_default_encoding_chars({'FIELD': '!'})
     Traceback (most recent call last):
         ...
-    InvalidEncodingChars: Invalid encoding chars
+    InvalidEncodingChars: Missing required encoding chars
     >>> set_default_encoding_chars({'FIELD': '!', 'COMPONENT': 'C', 'SUBCOMPONENT': 'S', 'REPETITION': 'R', 'ESCAPE': '\\\\'})
     >>> print get_default_encoding_chars()['FIELD']
     !
@@ -305,6 +306,12 @@ def find_reference(name, element_types, version):
     lib = load_library(version)
     ref = lib.find(name, element_types)
     return ref
+
+def load_message_profile(path):
+    with open(path) as f:
+        mp = cPickle.load(f)
+
+    return mp
 
 def _discover_libraries():
     current_dir = os.path.dirname(__file__)

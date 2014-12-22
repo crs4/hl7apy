@@ -33,18 +33,14 @@ from hl7apy import get_default_version, get_default_encoding_chars, \
                    get_default_validation_level, check_validation_level, \
                    check_encoding_chars, check_version, load_library, \
                    find_reference, load_reference
-from hl7apy.validation import Validator
+from hl7apy.validation import Validator, VALIDATION_LEVEL
 from hl7apy.exceptions import ChildNotFound, ChildNotValid, \
                               MaxChildLimitReached, OperationNotAllowed, \
-                              InvalidName
+                              InvalidName, MessageProfileNotFound
 from hl7apy.factories import datatype_factory
 from hl7apy.base_datatypes import BaseDataType
 from hl7apy.consts import MLLP_ENCODING_CHARS
-import time
 
-counter = 0
-
-_default_dts = {}
 
 def is_base_datatype(datatype, version=None):
     """
@@ -87,18 +83,22 @@ def _valid_child_name(child_name, expected_parent):
             return False
         return True
 
+
 def _valid_z_message_name(name):
     if name is None:
         return False
     regex = '^z[a-z0-9]{2}_z[a-z0-9]{2}$'
     return re.match(regex, name, re.IGNORECASE) is not None
 
+
 def _valid_z_segment_name(name):
     return name.upper().startswith('Z') and len(name) == 3
+
 
 def _valid_z_field_name(name):
     regex = '^z[a-z1-9]{2}_\d+$'
     return re.match(regex, name, re.IGNORECASE) is not None
+
 
 class ElementProxy(collections.Sequence):
     """
@@ -480,34 +480,51 @@ class ElementFinder(object):
 
         :return: a dictionary containing the structure data
         """
+        data = {
+            'reference': reference
+        }
+        if reference[0] == 'mp':
+            reference = reference[1:]
+            is_profile = True
+        else:
+            is_profile = False
+
         content_type = reference[0] # content type can be sequence, choice or leaf
-        data = {}
         if content_type in ('sequence', 'choice'):
-            children = reference[1]
+            children = reference[1] if is_profile is False else reference[2]
             ordered_children = []
-            structure = dict()
-            repetitions = {child_name:cardinality for child_name, cardinality in children}
+            structure = {}
+            repetitions = {}
             for c in children:
-                child_name, cardinality = c
-                structure[child_name] = find_reference(child_name, element.child_classes, element.version)
+                if is_profile is False:
+                    child_name, cardinality = c
+                    structure[child_name] = find_reference(child_name, element.child_classes, element.version)
+                else:
+                    child_name, cardinality, cls = c[2], c[4], c[5]
+                    structure[child_name] = {'name' : child_name,
+                                            'cls' : eval(cls),  #TODO: is there another way?
+                                            'ref' : c}
+                repetitions[child_name] = cardinality
                 ordered_children.append(child_name)
-            data['structure_by_longname'] = {e['ref'][2]: e for e in structure.values() if e['ref'][0] == 'leaf'}
-            data['structure_by_name'] = structure
-            data['ordered_children'] = ordered_children
             data['repetitions'] = repetitions
-        elif content_type == 'leaf':
-            child_type, datatype, long_name, table = reference
+            data['ordered_children'] = ordered_children
+            data['structure_by_name'] = structure
+            if is_profile is False:
+                data['structure_by_longname'] = {e['ref'][2]: e for e in structure.values()
+                                                 if e['ref'][0] == 'leaf'}
+            else:
+                # in this case the len is 6 and not 5 as above because here the first is 'mp'
+                data['structure_by_longname'] = {e['ref'][7]: e for e in structure.values()
+                                                 if e['ref'][1] == 'leaf' or len(e['ref']) > 6}
+
+        if content_type == 'leaf' or (is_profile and len(reference) > 5):
+            if is_profile is False:
+                child_type, datatype, long_name, table = reference
+            else:
+                datatype, long_name, table, max_length = reference[5:]
             data['datatype'] = datatype
             data['table'] = table
             data['long_name'] = long_name
-            # if not is_base_datatype(data['datatype'], element.version) and \
-            #         data['datatype'] != 'varies':
-            #     try:
-            #         reference = find_reference(data['datatype'], element.child_classes, element.version)
-            #         data.update(ElementFinder._parse_structure(element, reference['ref']))
-            #     except ChildNotFound: # if element.child_classes is empty (e.g SubComponent)
-            #         pass
-
         return data
 
 
@@ -518,7 +535,8 @@ class Element(object):
 
     cls_attrs = ['name', 'validation_level', 'version', 'children', 'ordered_children',
                  'table', 'long_name', 'value', '_value', 'parent',  '_parent', 'traversal_parent',
-                 'child_classes', 'encoding_chars', 'structure_by_name', 'structure_by_longname', 'repetitions']
+                 'child_classes', 'encoding_chars', 'structure_by_name', 'structure_by_longname',
+                 'repetitions', 'reference']
 
     def __init__(self, name=None, parent=None, reference=None, version=None,
                  validation_level=None, traversal_parent=None):
@@ -534,7 +552,7 @@ class Element(object):
 
         check_validation_level(validation_level)
         check_version(version)
-
+        
         self.validation_level = validation_level
         self.name = name.upper() if name is not None else None
         self.version = version
@@ -643,14 +661,15 @@ class Element(object):
 
         return separator.join(s)
 
-    def validate(self):
+    def validate(self, report_file=None):
         """
-        Validate the HL7 element using the :attr:`hl7apy.consts.VALIDATION_LEVEL.STRICT` validation level
+        Validate the HL7 element using the :attr:`hl7apy.consts.VALIDATION_LEVEL.STRICT` validation level.
+        It calls the :meth:`hl7apy.validation.Validator.validate` method passing the reference used in the
+        instantiation of the element.
 
-        :rtype: ``bool``
-        :return: True if validation succeeds, False otherwise
+        :param: report_file: the report file to pass to the validator
         """
-        return Validator.validate(self)
+        return Validator.validate(self, reference=self.reference, report_file=report_file)
 
     def is_z_element(self):
         return False
@@ -765,7 +784,7 @@ class SupportComplexDataType(Element):
     """
     Mixin for classes that support complex datatypes
     """
-    cls_attrs = Element.cls_attrs + ['_datatype', 'datatype', 'table', 'long_name']
+    cls_attrs = Element.cls_attrs + ['_datatype', 'datatype', 'table', 'long_name', 'max_length']
 
     def __init__(self):
 
@@ -956,7 +975,7 @@ class SubComponent(CanBeVaries):
     :param traversal_parent: the temporary parent used during traversal
     """
     child_classes = ()
-    cls_attrs = Element.cls_attrs + ['datatype', '_datatype', 'table', 'long_name', ]
+    cls_attrs = Element.cls_attrs + ['datatype', '_datatype', 'table', 'long_name', 'max_length']
 
     def __init__(self, name=None, datatype=None, value=None, parent=None,
                  reference=None, version=None, validation_level=None,
@@ -1448,6 +1467,7 @@ class Segment(Element):
         else:
             super(Segment, self).__init__(name, parent, reference, version,
                                       validation_level, traversal_parent)
+
             last_field = self.ordered_children[-1]
             last_field_structure = self.structure_by_name[last_field]
             self.allow_infinite_children = last_field_structure['ref'][1] == 'varies'
@@ -1726,11 +1746,17 @@ class Message(Group):
     :type encoding_chars: ``dict``
     :param encoding_chars: a dictionary containing the encoding chars or None to use the default (see :func:`hl7apy.set_default_encoding_chars`)
     """
-
     def __init__(self, name=None, reference=None, version=None,
                  validation_level=None,
                  encoding_chars=None):
 
+        if reference is not None:
+            try:
+                reference = reference[name]
+            except KeyError:
+                raise MessageProfileNotFound()
+            except TypeError:
+                pass
         try:
             super(Message, self).__init__(name, None, reference, version,
                                           validation_level)
@@ -1745,6 +1771,7 @@ class Message(Group):
         if encoding_chars is None:
             encoding_chars = get_default_encoding_chars()
 
+        # TODO: Change it to support message profiles
         self.msh = Segment('MSH', version=self.version, validation_level=self.validation_level)
         self.encoding_chars = encoding_chars
         self.msh.msh_7 = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
@@ -1756,12 +1783,12 @@ class Message(Group):
             element = self.structure_by_name.get(name) or self.structure_by_longname.get(name)
         else:
             element = None
-        if element is None: # not found in self.structure
+        if element is None:  # not found in self.structure
             if _valid_z_segment_name(name):
-                element = {'cls': Segment, 'name': name, 'ref' : ('sequence', ())}
+                element = {'cls': Segment, 'name': name, 'ref': ('sequence', ())}
             else:
                 element = find_reference(name, self.child_classes, self.version)
-                if not _valid_z_message_name(self.name) and Validator.is_strict(self.validation_level):
+                if not self.is_z_element() and Validator.is_strict(self.validation_level):
                     raise ChildNotValid(name, self)
         return element
 

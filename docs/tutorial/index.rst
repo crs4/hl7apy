@@ -197,7 +197,6 @@ For ``Message`` objects, you can get the string ready to be sent using mllp, by 
   m = Message('OML_O33')
   m.to_mllp()
 
-
 Datatypes
 ---------
 
@@ -296,7 +295,6 @@ You can also iterate over all the repetitions of a given child
 
 You can delete a child from an elements
 
-
 .. code-block:: python
 
     m = Message('OML_O33')
@@ -313,7 +311,56 @@ During children traversal if you try to access to an element which has not been 
     f.cx_10 = Component('CX_10')
     f.cx_10 # it returns [<Component CX_10>]
 
+Message Profiles
+----------------
 
+It is possible to create or parse a message using message profiles instead of the standard HL7 structures.
+
+To use a message profile, first you need to create the file that HL7apy can read. The file will be created using
+the utilities script `profile_parser.py` which needs the XML static definition of the profile as input.
+
+The command below will create the file for `message_profile.xml`
+
+.. code-block:: bash
+
+    python profile_parser.py message_profile.xml -o $HOME/message_profile
+
+To create messages according to a message profile, it is necessary to load the profile and pass it ot the
+Message or the parser.
+
+.. code-block:: python
+
+    from hl7apy import load_message_profile
+    mp = load_message_profile('$HOME/message_profile')
+    m = Message('RSP_K21', mp)
+
+Now the children will be created using the profile specification
+
+.. warning::
+
+    The message profile can be specified just for the message and not for other elements. This means that
+    when populating the message is better to create the children using element's navigation, since in this way
+    the library will get the correct structure from the message.
+    For example, let's use a message profile that specify the datatype of the PID.3 to be CWE (the official
+    one is CX).
+
+    .. code-block:: python
+
+        m.pid_3.cwe_1 = 'aaa'
+
+        f = Field('PID_3', datatype="CWE")
+        f.cwe_1 = 'aaa'
+        m.pid_3 = f
+
+    In the first example the PID.3 field will be created automatically as CWE, in the second the developer
+    must specify the different dataype.
+    Notice that the datatype redefinition cannot be done using ``STRICT`` validation.
+
+The message profile can be used also parsing messages
+
+.. code-block:: python
+
+    parse_message(er7_str, message_profile=mp)
 
 Validation
 ----------
@@ -323,7 +370,7 @@ The library supports 2 levels of validation: ``STRICT`` and ``QUIET``.
 In ``STRICT`` mode, the elements should completely adhere to the structures defined by HL7. In particular, the library checks:
     * children name (e.g. a segment is not a valid child of a message according to the message's structure)
     * children cardinality (e.g. a segment is mandatory and it is missing in the message)
-    * datatype constraints (e.g. a field of datatype ST exceeds 200 chars)
+    * value constraints (e.g. a field of datatype ST that exceeds 200 chars)
 
 Moreover, when using ``STRICT`` validation it is not possible to instantiate an unknown element - instantiating a ``Message``,
 ``Group``, ``Field``, ``Component`` with ``name=None`` is not allowed.
@@ -351,8 +398,9 @@ The following examples will raise an exception in case of ``STRICT`` validation:
   #...
   #ValueError: abcde is not an HL7 valid date value
 
-In ``QUIET`` mode, the library does not perform the checks listed above, but you can still verify if an element created with ``QUIET``
-validation is compliant to the standard by calling the :func:`hl7apy.core.Element.validate` method:
+In ``QUIET`` mode, the library does not perform the checks listed above, but you can still verify if an
+element created with ``QUIET`` validation is compliant to the standard by calling the
+:func:`hl7apy.core.Element.validate` method:
 
 .. code-block:: python
 
@@ -360,6 +408,15 @@ validation is compliant to the standard by calling the :func:`hl7apy.core.Elemen
 
   m = Message("ADT_A01")
   m.validate()
+
+When a message is created using a message profile, the validation will be performed using it as reference.
+
+The validate method can also save a report file with all the errors and warnings occurred during validation.
+You just need to specify the file path as input
+
+.. code-block:: python
+
+    m.validate(report_file='report')
 
 Z Elements
 ----------

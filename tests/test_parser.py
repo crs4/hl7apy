@@ -19,13 +19,35 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import os
 import unittest
 
-from hl7apy.parser import parse_message, parse_segments, parse_segment, parse_fields, parse_field, parse_components, parse_component, parse_subcomponent, parse_subcomponents
+import hl7apy
+from hl7apy.parser import parse_message, parse_segments, parse_segment, parse_fields, parse_field, \
+    parse_components, parse_component, parse_subcomponent, parse_subcomponents
 from hl7apy.validation import VALIDATION_LEVEL
-from hl7apy.exceptions import ParserError, OperationNotAllowed, InvalidEncodingChars, InvalidName
+from hl7apy.exceptions import ParserError, OperationNotAllowed, InvalidEncodingChars, InvalidName, \
+    ValidationError
 
 class TestParser(unittest.TestCase):
+
+    def setUp(self):
+        self.rsp_k21 = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|867139535853990000|D|2.5|||||ITA||EN\r' \
+                       'MSA|AA|26775702551812240|\r' \
+                       'QAK|111069|OK||1|1|0\r' \
+                       'QPD|IHE PDQ Query|111069|@PID.3.1^1010110909194822~@PID.5.1^SMITH||||\r' \
+                       'PID|1||1010110909194822^^^GATEWAY&1.3.6.1.4.1.21367.2011.2.5.17&ISO||JOHN^SMITH^^^^^A||19690113|M|||VIA DELLE VIE^^CAGLIARI^^^100^H^^092009||||||||||||CAGLIARI|||||\r'
+
+        # it misses some PID.3 components
+        self.invalid_rsp_k21 = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|867139535853990000|D|2.5|||||ITA||EN\r' \
+                               'MSA|AA|26775702551812240|\r' \
+                               'QAK|111069|OK||1|1|0\r' \
+                               'QPD|IHE PDQ Query|111069|@PID.3.1^1010110909194822~@PID.5.1^SMITH||||\r' \
+                               'PID|1||1010110909194822^^^||JOHN^SMITH^^^^^A||19690113|M|||VIA DELLE VIE^^CAGLIARI^^^100^H^^092009||||||||||||CAGLIARI|||||\r'
+
+        base_path = os.path.abspath(os.path.dirname(__file__))
+        path = os.path.join(base_path, 'profiles/iti_21')
+        self.rsp_k21_mp = hl7apy.load_message_profile(path)
 
     def _get_multiple_segments_groups_message(self):
 
@@ -122,7 +144,6 @@ class TestParser(unittest.TestCase):
         #     message.oml_o33_specimen[1].oml_o33_order.oml_o33_observation_request.oml_o33_prior_result.oml_o33_order_prior[2].obr.obr_4.obr_4_1.to_er7()
         #self.assertEqual(message.to_er7(), msg)
 
-
     def test_parse_message_with_repetition_segments_and_groups(self):
         msg = self._get_multiple_segments_groups_message()
         parse_message(msg)
@@ -150,7 +171,7 @@ class TestParser(unittest.TestCase):
 
     def test_parse_unknown_message_strict(self):
         message = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.6||||AL\r'
-        parse_message(message, validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(ValidationError, parse_message, message, validation_level=VALIDATION_LEVEL.STRICT)
         message = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000|||0123456789|P|2.6||||AL\r'
         self.assertRaises(OperationNotAllowed, parse_message, message, validation_level=VALIDATION_LEVEL.STRICT)
 
@@ -176,7 +197,6 @@ class TestParser(unittest.TestCase):
 
     def test_parse_message_missing_version(self):
         m = parse_message('MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01||')
-
 
     def test_parse_segments(self):
         msh = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.5||||AL\r'
@@ -358,6 +378,18 @@ class TestParser(unittest.TestCase):
         self.assertRaises(InvalidEncodingChars, parse_subcomponents, subcomponents,
                           encoding_chars=self._get_invalid_encoding_chars(), validation_level=VALIDATION_LEVEL.STRICT)
 
+    def test_message_profile(self):
+        m = parse_message(self.rsp_k21, message_profile=self.rsp_k21_mp, validation_level=VALIDATION_LEVEL.QUIET)
+        self.assertEqual(m.qpd.qpd_3.datatype, 'QIP')
+        self.assertFalse(m.qpd.allow_infinite_children)
+
+        m = parse_message(self.rsp_k21, message_profile=self.rsp_k21_mp, validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertEqual(m.qpd.qpd_3.datatype, 'QIP')
+        self.assertFalse(m.qpd.allow_infinite_children)
+
+    def test_message_profile_invalid_message(self):
+        with self.assertRaises(ValidationError):
+            m = parse_message(self.invalid_rsp_k21, message_profile=self.rsp_k21_mp, validation_level=VALIDATION_LEVEL.STRICT)
 
 if __name__ == '__main__':
     unittest.main()
