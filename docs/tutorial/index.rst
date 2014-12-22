@@ -222,10 +222,8 @@ The library implements base datatypes classes and validation of their values
 
 .. code-block:: python
 
-  from hl7apy.v2_4 import get_base_datatypes #...the list of datatypes depends on the version
-  ST = get_base_datatypes()['ST']
-  NM = get_base_datatypes()['NM']
-  DTM = get_base_datatypes()['DTM']
+  from hl7apy.v2_4 import ST, NM, DTM #...the list of datatypes depends on the version
+
   s = ST('some information')
   s = ST(1000*'a') # it raises an exceptions since the given value exceeds the max length for an ST datatype
   n = NM(111)

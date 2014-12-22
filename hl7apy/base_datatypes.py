@@ -27,8 +27,7 @@
     :func:`get_base_datatypes` function from a specific version's module
     For example if you're using version 2.4 and you need an `FT` base datatype do the following:
 
-    >>> from hl7apy.v2_4 import get_base_datatypes
-    >>> FT = get_base_datatypes()['FT']
+    >>> from hl7apy.v2_4 import FT
     >>> f = FT('some useful information')
 
 """
