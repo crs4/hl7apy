@@ -24,13 +24,12 @@ This module contains factory functions for hl7apy base data types.
 The functions get the value of the data type as string and return the correct object
 """
 
-import re
-from datetime import datetime
 from decimal import Decimal, InvalidOperation
 from types import FunctionType
 
 from hl7apy import load_library, get_default_validation_level, get_default_version
 from hl7apy.exceptions import InvalidDataType
+from hl7apy.utils import get_date_info, get_datetime_info, get_timestamp_info
 
 def datatype_factory(datatype, value, version=None, validation_level=None):
     """
@@ -143,9 +142,8 @@ def date_factory(value, datatype_cls, validation_level=None):
     :rtype: :class:`hl7apy.base_datatypes.DT`
     """
 
-    format = _get_date_format(value)
-    dt_value = _datetime_obj_factory(value, format)
-    return datatype_cls(dt_value, format)
+    dt_value, fmt = get_date_info(value)
+    return datatype_cls(dt_value, fmt)
 
 def timestamp_factory(value, datatype_cls, validation_level=None):
     """
@@ -197,10 +195,8 @@ def timestamp_factory(value, datatype_cls, validation_level=None):
     :rtype: :class:`hl7apy.base_datatypes.TM`
     """
 
-    value, offset = _split_offset(value)
-    form, microsec = _get_timestamp_format(value)
-    dt_value = _datetime_obj_factory(value, form)
-    return datatype_cls(dt_value, form, offset, microsec)
+    dt_value, fmt, offset, microsec = get_timestamp_info(value)
+    return datatype_cls(dt_value, fmt, offset, microsec)
 
 def datetime_factory(value, datatype_cls, validation_level=None):
     """
@@ -256,20 +252,8 @@ def datetime_factory(value, datatype_cls, validation_level=None):
     :rtype: :class:`hl7apy.base_datatypes.DTM`
     """
 
-    date_value, offset = _split_offset(value)
-    date_format = _get_date_format(date_value[:8])
-
-    try:
-        timestamp_form, microsec = _get_timestamp_format(date_value[8:])
-    except ValueError:
-        if not date_value[8:]: #if it's empty
-            timestamp_form, microsec = '', 4
-        else:
-            raise ValueError('{0} is not an HL7 valid date value'.format(value))
-
-    form = '{0}{1}'.format(date_format, timestamp_form)
-    dt_value = _datetime_obj_factory(date_value, form)
-    return datatype_cls(dt_value, form, offset, microsec)
+    dt_value, fmt, offset, microsec = get_datetime_info(value)
+    return datatype_cls(dt_value, fmt, offset, microsec)
 
 def numeric_factory(value, datatype_cls, validation_level=None):
     """
@@ -324,48 +308,6 @@ def sequence_id_factory(value, datatype_cls, validation_level=None):
         return datatype_cls(int(value), validation_level=validation_level)
     except ValueError:
         raise ValueError('{0} is not an HL7 valid SI value'.format(value))
-
-def _split_offset(value):
-    offset = re.search('\d*((-|\+)(1[0-2]|0[0-9])([0-5][0-9]))$', value)
-    if offset:
-        offset = offset.groups()[0]
-        return value.replace(offset, ''), offset
-    return value, ''
-
-def _get_date_format(value):
-    if len(value) == 4:
-        format = '%Y'
-    elif len(value) == 6:
-        format = '%Y%m'
-    elif len(value) == 8:
-        format = '%Y%m%d'
-    else:
-        raise ValueError('{0} is not an HL7 valid date value'.format(value))
-
-    return format
-
-def _get_timestamp_format(value):
-    microsec = 4
-    if len(value) == 2:
-        format = '%H'
-    elif len(value) == 4:
-        format = '%H%M'
-    elif len(value) == 6:
-        format = '%H%M%S'
-    elif 8 <= len(value) <= 11 and value[6] == '.':
-        format = '%H%M%S.%f'
-        microsec = len(value) - 7 # it gets the precision of the microseconds part
-    else:
-        raise ValueError('{0} is not an HL7 valid date value'.format(value))
-
-    return format, microsec
-
-def _datetime_obj_factory(value, format):
-    try:
-        dt_value = datetime.strptime(value, format)
-    except ValueError:
-        raise ValueError('{0} is not an HL7 valid date value'.format(value))
-    return dt_value
 
 
 if __name__ == '__main__':
