@@ -379,7 +379,7 @@ class TestParser(unittest.TestCase):
                           encoding_chars=self._get_invalid_encoding_chars(), validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_message_profile(self):
-        m = parse_message(self.rsp_k21, message_profile=self.rsp_k21_mp, validation_level=VALIDATION_LEVEL.QUIET)
+        m = parse_message(self.rsp_k21, message_profile=self.rsp_k21_mp, validation_level=VALIDATION_LEVEL.TOLERANT)
         self.assertEqual(m.qpd.qpd_3.datatype, 'QIP')
         self.assertFalse(m.qpd.allow_infinite_children)
 

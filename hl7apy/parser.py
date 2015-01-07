@@ -60,7 +60,7 @@ def parse_message(message, validation_level=None, find_groups=True, message_prof
     encoding_chars, message_structure, version = get_message_info(message)
 
     # if message_profile is not None:
-    #     validation_level = VALIDATION_LEVEL.QUIET
+    #     validation_level = VALIDATION_LEVEL.TOLERANT
     #     message_structure = message_profile.keys()[0]
     reference = message_profile[message_structure] if message_profile else None
 
@@ -291,7 +291,7 @@ def parse_field(text, name=None, version=None, encoding_chars=None, validation_l
     else:
         children = parse_components(text, field.datatype, version, encoding_chars, validation_level,
                                     field.structure_by_name)
-        if Validator.is_quiet(validation_level) and is_base_datatype(field.datatype, version) and \
+        if Validator.is_tolerant(validation_level) and is_base_datatype(field.datatype, version) and \
                 len(children) > 1:
             field.datatype = None
         field.children = children
@@ -396,7 +396,7 @@ def parse_component(text, name=None, datatype='ST', version=None, encoding_chars
             raise e
         component = Component(datatype, version=version, validation_level=validation_level, reference=reference)
     children = parse_subcomponents(text, component.datatype, version, encoding_chars, validation_level)
-    if Validator.is_quiet(component.validation_level) and is_base_datatype(component.datatype, version) and \
+    if Validator.is_tolerant(component.validation_level) and is_base_datatype(component.datatype, version) and \
             len(children) > 1:
         component.datatype = None
     component.children = children

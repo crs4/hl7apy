@@ -234,13 +234,22 @@ class Validator(object):
         return level == VALIDATION_LEVEL.STRICT
 
     @staticmethod
-    def is_quiet(level):
+    def is_tolerant(level):
         """
-        Check if the given validation level is quiet
+        Check if the given validation level is tolerant
 
         :type level: ``int``
         :param level: validation level (see `hl7apy.consts.VALIDATION_LEVEL`)
         :rtype: ``bool``
-        :return: ``True`` if validation level is quiet
+        :return: ``True`` if validation level is tolerant
         """
-        return level == VALIDATION_LEVEL.QUIET
+        return level == VALIDATION_LEVEL.TOLERANT
+
+    @staticmethod
+    def is_quiet(level):
+        """
+        Equal to is_tolerant. Kept for backward compatibility
+        :param level:
+        :return:
+        """
+        return Validator.is_tolerant()

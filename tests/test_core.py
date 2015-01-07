@@ -159,7 +159,7 @@ class TestMessage(unittest.TestCase):
         a.add_segment('zap')
         a.zbe = 'ZBE||ab|ab|'
 
-        b = Message('OML_O33', validation_level=VALIDATION_LEVEL.QUIET)
+        b = Message('OML_O33', validation_level=VALIDATION_LEVEL.TOLERANT)
         b.add(Segment('ZIN'))
         b.add_segment('zap')
         b.zbe = 'ZBE||ab|ab|'
@@ -208,9 +208,9 @@ class TestMessage(unittest.TestCase):
             b.pid = 'PAP||abc||'
 
     def test_add_segment_to_message_mix(self):
-        a = Message('OML_O33',  validation_level=VALIDATION_LEVEL.QUIET)
-        msh = Segment('MSH', validation_level=VALIDATION_LEVEL.QUIET)
-        pid = Segment('PID', validation_level=VALIDATION_LEVEL.QUIET)
+        a = Message('OML_O33',  validation_level=VALIDATION_LEVEL.TOLERANT)
+        msh = Segment('MSH', validation_level=VALIDATION_LEVEL.TOLERANT)
+        pid = Segment('PID', validation_level=VALIDATION_LEVEL.TOLERANT)
         g = Group('OML_O33_PATIENT')
         g.add(pid)
         a.add(msh)
@@ -218,8 +218,8 @@ class TestMessage(unittest.TestCase):
 
     def test_assign_value(self):
         msg = _get_test_msg()
-        a = Message('OML_O33', validation_level=VALIDATION_LEVEL.QUIET)
-        parsed_a = parse_message(msg, validation_level=VALIDATION_LEVEL.QUIET)
+        a = Message('OML_O33', validation_level=VALIDATION_LEVEL.TOLERANT)
+        parsed_a = parse_message(msg, validation_level=VALIDATION_LEVEL.TOLERANT)
         a.value = msg
         self.assertEqual(a.to_er7(), parsed_a.to_er7())
 
@@ -229,7 +229,7 @@ class TestMessage(unittest.TestCase):
         self.assertEqual(b.to_er7(), parsed_b.to_er7())
         self.assertEqual(b.children.indexes.keys(), parsed_b.children.indexes.keys())
 
-        c = Message('ADT_A01', validation_level=VALIDATION_LEVEL.QUIET)
+        c = Message('ADT_A01', validation_level=VALIDATION_LEVEL.TOLERANT)
         with self.assertRaises(OperationNotAllowed):
             c.value = msg
 
@@ -244,7 +244,7 @@ class TestMessage(unittest.TestCase):
     def test_assign_value_unknown_message(self):
         msg = _get_test_msg_2()
         a = Message()
-        parsed_a = parse_message(msg, validation_level=VALIDATION_LEVEL.QUIET)
+        parsed_a = parse_message(msg, validation_level=VALIDATION_LEVEL.TOLERANT)
         a.value = msg
         self.assertEqual(a.name, 'OML_O33')
         self.assertEqual(a.to_er7(), parsed_a.to_er7())
@@ -300,7 +300,7 @@ class TestGroup(unittest.TestCase):
         self.assertRaises(ChildNotValid, g.add, sub)
 
     def test_delete_group(self):
-        m = Message('OML_O33', validation_level=VALIDATION_LEVEL.QUIET)
+        m = Message('OML_O33', validation_level=VALIDATION_LEVEL.TOLERANT)
         g = Group('OML_O33_PATIENT')
         m.add(g)
         self.assertEqual(m.oml_O33_patient.name, 'OML_O33_PATIENT' )
@@ -319,7 +319,7 @@ class TestGroup(unittest.TestCase):
         a.add_segment('zap')
         a.zbe = 'ZBE||ab|ab|'
 
-        b = Group('OML_O33_PATIENT', validation_level=VALIDATION_LEVEL.QUIET)
+        b = Group('OML_O33_PATIENT', validation_level=VALIDATION_LEVEL.TOLERANT)
         b.add(Segment('ZIN'))
         b.add_segment('zap')
         b.zbe = 'ZBE||ab|ab|'
@@ -365,9 +365,9 @@ class TestSegment(unittest.TestCase):
 
     def test_create_z_segment(self):
         Segment('ZIN', validation_level=VALIDATION_LEVEL.STRICT)
-        Segment('ZIN', validation_level=VALIDATION_LEVEL.QUIET)
+        Segment('ZIN', validation_level=VALIDATION_LEVEL.TOLERANT)
         self.assertRaises(InvalidName, Segment, 'ZDSW' , validation_level=VALIDATION_LEVEL.STRICT)
-        self.assertRaises(InvalidName, Segment, 'ZDSW' , validation_level=VALIDATION_LEVEL.QUIET)
+        self.assertRaises(InvalidName, Segment, 'ZDSW' , validation_level=VALIDATION_LEVEL.TOLERANT)
 
     def test_add_field_to_z_segments(self):
         zin = Segment('ZIN')
@@ -513,9 +513,9 @@ class TestField(unittest.TestCase):
 
     def test_create_z_field(self):
         Field('ZIN_1', validation_level=VALIDATION_LEVEL.STRICT)
-        Field('ZIN_1', validation_level=VALIDATION_LEVEL.QUIET)
+        Field('ZIN_1', validation_level=VALIDATION_LEVEL.TOLERANT)
         Field('zin_1', validation_level=VALIDATION_LEVEL.STRICT)
-        Field('zin_1', validation_level=VALIDATION_LEVEL.QUIET)
+        Field('zin_1', validation_level=VALIDATION_LEVEL.TOLERANT)
 
         self.assertRaises(InvalidName, Field, 'ZINQW')
         self.assertRaises(InvalidName, Field, 'ZIN_W')
@@ -659,7 +659,7 @@ class TestField(unittest.TestCase):
         with self.assertRaises(MaxChildLimitReached):
             f.value = '1^2'
 
-        f = Field('PID_1', validation_level=VALIDATION_LEVEL.QUIET)
+        f = Field('PID_1', validation_level=VALIDATION_LEVEL.TOLERANT)
         f.value = SI(1)
         self.assertEqual(f.to_er7(), '1')
         f.value = SI(2)
@@ -667,7 +667,7 @@ class TestField(unittest.TestCase):
         with self.assertRaises(ChildNotValid):
             f.value = ST('aaa')
 
-        f = Field('PID_3', validation_level=VALIDATION_LEVEL.QUIET) # It is a complex datatype field
+        f = Field('PID_3', validation_level=VALIDATION_LEVEL.TOLERANT) # It is a complex datatype field
         with self.assertRaises(ChildNotValid):
             f.value = ST('aaa')
 
@@ -838,11 +838,11 @@ class TestComponent(unittest.TestCase):
         #self.assertRaises(ChildNotValid, c1.add, SubComponent(datatype='ST'))
 
     def test_override_datatype(self):
-        c = Component('CX_1',  validation_level=VALIDATION_LEVEL.QUIET)
+        c = Component('CX_1',  validation_level=VALIDATION_LEVEL.TOLERANT)
         c.datatype = 'TX'
         self.assertEqual(c.datatype, 'TX')
 
-        c = Component('CX_1',  datatype='TX', validation_level=VALIDATION_LEVEL.QUIET)
+        c = Component('CX_1',  datatype='TX', validation_level=VALIDATION_LEVEL.TOLERANT)
         self.assertEqual(c.datatype, 'TX')
 
         c = Component()
@@ -909,8 +909,8 @@ class TestComponent(unittest.TestCase):
         # simple string
         cmp_str = 'aaa'
 
-        # quiet
-        c = Component('CWE_1', validation_level=VALIDATION_LEVEL.QUIET)
+        # tolerant
+        c = Component('CWE_1', validation_level=VALIDATION_LEVEL.TOLERANT)
         c.value = cmp_str
         self.assertEqual(c.to_er7(), cmp_str)
 
@@ -927,8 +927,8 @@ class TestComponent(unittest.TestCase):
         # complex string
         cmp_str = '1&2'
 
-        # quiet
-        c = Component('CWE_1', validation_level=VALIDATION_LEVEL.QUIET) # more child than allowed
+        # tolerant
+        c = Component('CWE_1', validation_level=VALIDATION_LEVEL.TOLERANT) # more child than allowed
         c.value = cmp_str
         self.assertEqual(c.to_er7(), cmp_str)
         self.assertEqual(len(c.children), 2)
@@ -939,18 +939,18 @@ class TestComponent(unittest.TestCase):
             c.value = cmp_str
 
         # unknown
-        c = Component('CWE_1', validation_level=VALIDATION_LEVEL.QUIET) # more child than allowed
+        c = Component('CWE_1', validation_level=VALIDATION_LEVEL.TOLERANT) # more child than allowed
         c.value = cmp_str
         self.assertEqual(c.to_er7(), cmp_str)
         self.assertEqual(len(c.children), 2)
 
         # max length
-        # quiet
+        # tolerant
         for dt in ('ST', 'ID', 'FT', 'GTS', 'IS', 'TX'):
-            c = Component(datatype=dt, validation_level=VALIDATION_LEVEL.QUIET) # max length reached string type
+            c = Component(datatype=dt, validation_level=VALIDATION_LEVEL.TOLERANT) # max length reached string type
             c.value = 65537*'a'
         for dt in ('NM', 'SI'):
-            c = Component(datatype=dt, validation_level=VALIDATION_LEVEL.QUIET)
+            c = Component(datatype=dt, validation_level=VALIDATION_LEVEL.TOLERANT)
             c.value = 65537*'1'
 
         # strict
@@ -967,9 +967,9 @@ class TestComponent(unittest.TestCase):
                 c.value = 65537*'1'
 
         # complex datatypes
-        # quiet
+        # tolerant
         complex_cmp_str = 'xxx&yyy&zzz'
-        c = Component('CX_10', validation_level=VALIDATION_LEVEL.QUIET)
+        c = Component('CX_10', validation_level=VALIDATION_LEVEL.TOLERANT)
         c.value = complex_cmp_str
         self.assertEqual(c.to_er7(), complex_cmp_str)
         self.assertEqual(len(c.children), 3)
@@ -983,14 +983,14 @@ class TestComponent(unittest.TestCase):
 
         # unknown
         complex_cmp_str = 'xxx&yyy&zzz'
-        c = Component(validation_level=VALIDATION_LEVEL.QUIET)
+        c = Component(validation_level=VALIDATION_LEVEL.TOLERANT)
         c.value = complex_cmp_str
         self.assertEqual(c.to_er7(), complex_cmp_str)
         self.assertEqual(len(c.children), 3)
 
     def test_assign_value_base_datatype(self):
-        # quiet
-        c = Component('CX_1', validation_level=VALIDATION_LEVEL.QUIET)
+        # tolerant
+        c = Component('CX_1', validation_level=VALIDATION_LEVEL.TOLERANT)
         c.value = ST('aaa')
         self.assertEqual(c.to_er7(), 'aaa')
         c.value = ST('bbb')
@@ -1010,8 +1010,8 @@ class TestComponent(unittest.TestCase):
             c.value = SI(1)
 
         # complex datatype
-        # quiet
-        c = Component('CX_10', validation_level=VALIDATION_LEVEL.QUIET)
+        # tolerant
+        c = Component('CX_10', validation_level=VALIDATION_LEVEL.TOLERANT)
         with self.assertRaises(ChildNotValid):
             c.value = ST('aaa')
 
@@ -1162,7 +1162,7 @@ class TestSubComponent(unittest.TestCase):
         s2.pid_4.pid_4_10_1 = subcmp_str
         self.assertEqual(s1.to_er7(), s2.to_er7())
 
-    def test_assign_value_quiet(self):
+    def test_assign_value_tolerant(self):
         cmp_str = 'xxx'
         c = SubComponent('CWE_1')
         c.value = cmp_str

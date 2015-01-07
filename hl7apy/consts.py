@@ -59,5 +59,7 @@ class VALIDATION_LEVEL:
     """
     #: Strict validation
     STRICT = 1
-    #: Quiet validation
-    QUIET = 2
+    #: Tolerant validation
+    TOLERANT = 2
+    # kept for backward compatibility
+    QUIET = TOLERANT

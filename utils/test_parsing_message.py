@@ -38,7 +38,7 @@ def get_parser():
     parser.add_option("-n", "--number_of_message", type="int", dest="n_msg",
                       help="maximum number of message to parse")
     parser.add_option("-v", "--validation_level", dest="validation_level", default='strict',
-                      choices=['quiet', 'strict'], help="validation level to use")
+                      choices=['tolerant', 'strict'], help="validation level to use")
     parser.add_option("-g", "--find_groups", dest="find_groups", help="wheter it should find groups or not",
                       choices=["yes", "no"], default="yes")
     return parser
@@ -53,14 +53,14 @@ def usage():
 def print_report(n_messages, msg_per_version, msg_per_type, exceptions,
                  elapsed_time, output_file, time_per_message, encoding_time, validation_level):
 
-    validations = [VL.STRICT, VL.QUIET]
-    if validation_level == VL.QUIET:
+    validations = [VL.STRICT, VL.TOLERANT]
+    if validation_level == VL.TOLERANT:
         validations.remove(VL.STRICT)
 
     with open(output_file, 'w') if output_file else sys.stdout as output:
         for vl in validations:
             n_exceptions = len(exceptions[vl])
-            output.write("Validation {0}\n".format( "QUIET" if vl == VL.QUIET else "STRICT" ))
+            output.write("Validation {0}\n".format( "TOLERANT" if vl == VL.TOLERANT else "STRICT" ))
             output.write(80 * "-")
             output.write("\n\nParsed {0} messages in {1}\n".format(n_messages[vl], elapsed_time))
             output.write("Succeed: {0} - Failed {1}\n\n\n".format(n_messages[vl] - n_exceptions, n_exceptions))
@@ -89,13 +89,13 @@ def print_report(n_messages, msg_per_version, msg_per_type, exceptions,
 
 def parse_messages(directory, validation_level=VL.STRICT, find_groups=True, limit=-1, output_file=None):
 
-    exceptions = {VL.QUIET: [], VL.STRICT: []}
-    msg_per_versions = {VL.QUIET: defaultdict(int), VL.STRICT: defaultdict(int)}
-    msg_per_type = {VL.QUIET: defaultdict(int), VL.STRICT: defaultdict(int)}
-    parsing_time = {VL.QUIET : [], VL.STRICT : []}
+    exceptions = {VL.TOLERANT: [], VL.STRICT: []}
+    msg_per_versions = {VL.TOLERANT: defaultdict(int), VL.STRICT: defaultdict(int)}
+    msg_per_type = {VL.TOLERANT: defaultdict(int), VL.STRICT: defaultdict(int)}
+    parsing_time = {VL.TOLERANT : [], VL.STRICT : []}
     encoding_time = []
     files = _get_files(directory)[:limit] if limit != -1 else _get_files(directory)
-    n_messages = {VL.QUIET : 0, VL.STRICT : 0}
+    n_messages = {VL.TOLERANT : 0, VL.STRICT : 0}
 
     start = time.time()
     for f in sorted(files):
@@ -105,13 +105,13 @@ def parse_messages(directory, validation_level=VL.STRICT, find_groups=True, limi
             msg_str = msg_str.replace('\n', '\r')
             error_occurred = False
 
-            validations = [VL.STRICT, VL.QUIET]
-            if validation_level == VL.QUIET:
+            validations = [VL.STRICT, VL.TOLERANT]
+            if validation_level == VL.TOLERANT:
                 validations.remove(VL.STRICT)
 
             for vl in validations:
-                # it parses QUIET only if the user asked (validation_level == VL.QUIET) or an error occurred
-                if vl == VL.QUIET and (validation_level != VL.QUIET and not error_occurred):
+                # it parses TOLERANT only if the user asked (validation_level == VL.TOLERANT) or an error occurred
+                if vl == VL.TOLERANT and (validation_level != VL.TOLERANT and not error_occurred):
                     continue
                 file_base_name = os.path.basename(hl7_file.name)
                 n_messages[vl] += 1
@@ -159,7 +159,7 @@ if __name__ == '__main__':
 
     input_dir = options.input_dir
     output_file = options.output_file
-    validation_level = VL.STRICT if options.validation_level == 'strict' else VL.QUIET
+    validation_level = VL.STRICT if options.validation_level == 'strict' else VL.TOLERANT
     find_groups = True if options.find_groups == 'yes' else False
     n_msg = options.n_msg or -1
 

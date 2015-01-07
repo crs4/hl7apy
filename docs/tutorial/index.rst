@@ -363,7 +363,7 @@ The message profile can be used also parsing messages
 Validation
 ----------
 
-The library supports 2 levels of validation: ``STRICT`` and ``QUIET``.
+The library supports 2 levels of validation: ``STRICT`` and ``TOLERANT``.
 
 In ``STRICT`` mode, the elements should completely adhere to the structures defined by HL7. In particular, the library checks:
     * children name (e.g. a segment is not a valid child of a message according to the message's structure)
@@ -396,8 +396,8 @@ The following examples will raise an exception in case of ``STRICT`` validation:
   #...
   #ValueError: abcde is not an HL7 valid date value
 
-In ``QUIET`` mode, the library does not perform the checks listed above, but you can still verify if an
-element created with ``QUIET`` validation is compliant to the standard by calling the
+In ``TOLERANT`` mode, the library does not perform the checks listed above, but you can still verify if an
+element created with ``TOLERANT`` validation is compliant to the standard by calling the
 :func:`hl7apy.core.Element.validate` method:
 
 .. code-block:: python
@@ -456,7 +456,7 @@ A Z segment is a segment that have the name starting with a Z
   s = Segment('ZBE') # This is allowed
   s = Segment('ZCEV') # This is not allowed
 
-As other segments, you can add fields with the positional name or unknown fields, (the latter in ``QUIET`` only)
+As other segments, you can add fields with the positional name or unknown fields, (the latter in ``TOLERANT`` only)
 
 .. code-block:: python
 

@@ -221,7 +221,7 @@ class ToStringTestCase(unittest.TestCase):
         msg.zbe = 'ZBE|yyy|ww||||||yyy'
         self.assertEqual(msg.to_er7(), self.msh_standard + '\rZIN||abc||cba^www~abc^yyy\rZBE|yyy|ww||||||yyy')
 
-        g = Group('OML_O33_PATIENT', validation_level=VALIDATION_LEVEL.QUIET)
+        g = Group('OML_O33_PATIENT', validation_level=VALIDATION_LEVEL.TOLERANT)
         g.pid = 'PID|1'
         g.zbe = 'ZBE||ab|ab'
 

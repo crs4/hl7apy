@@ -35,7 +35,7 @@ __url__ = 'http://hl7apy.org'
 
 _DEFAULT_ENCODING_CHARS = DEFAULT_ENCODING_CHARS
 _DEFAULT_VERSION = DEFAULT_VERSION
-_DEFAULT_VALIDATION_LEVEL = VALIDATION_LEVEL.QUIET
+_DEFAULT_VALIDATION_LEVEL = VALIDATION_LEVEL.TOLERANT
 
 def check_encoding_chars(encoding_chars):
     """
@@ -64,7 +64,7 @@ def check_validation_level(validation_level):
     :param validation_level: validation level (see :class:`hl7apy.consts.VALIDATION_LEVEL`)
     :raises: :exc:`hl7apy.exceptions.UnknownValidationLevel` if the given validation level is unsupported
     """
-    if validation_level not in (VALIDATION_LEVEL.QUIET, VALIDATION_LEVEL.STRICT):
+    if validation_level not in (VALIDATION_LEVEL.QUIET, VALIDATION_LEVEL.STRICT, VALIDATION_LEVEL.TOLERANT):
         raise UnknownValidationLevel
 
 def check_version(version):
@@ -126,7 +126,7 @@ def set_default_validation_level(validation_level):
     Traceback (most recent call last):
         ...
     UnknownValidationLevel
-    >>> set_default_validation_level(VALIDATION_LEVEL.QUIET)
+    >>> set_default_validation_level(VALIDATION_LEVEL.TOLERANT)
     >>> print get_default_validation_level()
     2
     """

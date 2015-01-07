@@ -32,7 +32,7 @@ from hl7apy.exceptions import ValidationError, ValidationWarning
 class TestValidation(unittest.TestCase):
 
     def setUp(self):
-        hl7apy.set_default_validation_level(VALIDATION_LEVEL.QUIET)
+        hl7apy.set_default_validation_level(VALIDATION_LEVEL.TOLERANT)
         self.adt_a01 = \
             'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20130101101500||ADT^A01^ADT_A01|0123456789|P|2.5||||AL\r' \
             'EVN||20130101101500||01|AAA|20130101082500\r' \

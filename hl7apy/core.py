@@ -853,7 +853,7 @@ class SupportComplexDataType(Element):
                 self.add(child)
         else:
             children = self.parse_children(value)
-            if Validator.is_quiet(self.validation_level) and is_base_datatype(self.datatype, self.version) and \
+            if Validator.is_tolerant(self.validation_level) and is_base_datatype(self.datatype, self.version) and \
                     len(children) > 1:
                 self.datatype = None
             self.children = children
@@ -936,7 +936,7 @@ class CanBeVaries(Element):
             if Validator.is_strict(self.validation_level) and not None in (datatype, self.datatype) and \
                     datatype != self.datatype:
                 raise OperationNotAllowed("Cannot override datatype in strict mode")
-            # in QUIET we overwrite it only if the given one is not None
+            # in TOLERANT we overwrite it only if the given one is not None
             elif datatype is not None:
                 self.datatype = datatype
         else:

@@ -39,7 +39,7 @@ def datatype_factory(datatype, value, version=None, validation_level=None):
     It should be noted that if you use the factory it is not possible to specify
     some parameters for the datatype (e.g. the format for datetime base datatypes)
     If the value is not valid for the datatype specified if the ``validation_level`` is
-    :attr:`hl7apy.consts.VALIDATION_LEVEL.QUIET` it generates an :class:`hl7apy.base_datatypes.ST` object
+    :attr:`hl7apy.consts.VALIDATION_LEVEL.TOLERANT` it generates an :class:`hl7apy.base_datatypes.ST` object
 
     :type datatype: ``basestring``
     :param datatype: The datatype to be generated
