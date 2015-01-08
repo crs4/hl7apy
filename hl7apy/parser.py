@@ -342,7 +342,10 @@ def parse_components(text, field_datatype='ST', version=None, encoding_chars=Non
             component_name = "{0}_{1}".format(field_datatype, index+1)
             component_datatype = None
 
-        reference = references[component_name]['ref'] if None not in (references, component_name) else None
+        try:
+            reference = references[component_name]['ref'] if None not in (references, component_name) else None
+        except KeyError:
+            reference = None
 
         if component.strip() or component_name is None or component_name.startswith("VARIES_"):
             components.append(parse_component(component, component_name, component_datatype,
