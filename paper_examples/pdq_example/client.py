@@ -41,6 +41,6 @@ def query(host, port):
         sock.close()
 
 if __name__ == '__main__':
-    host, port = 'localhost', 6790
+    host, port = 'localhost', 6789
     res = query(host, port)
     print repr(res)
