@@ -25,12 +25,15 @@ import time
 from collections import defaultdict
 from optparse import OptionParser
 
+from hl7apy import load_message_profile
 from hl7apy import SUPPORTED_LIBRARIES
 from hl7apy.parser import parse_message
+from hl7apy.exceptions import MessageProfileNotFound, InvalidEncodingChars
 from hl7apy.validation import VALIDATION_LEVEL as VL
 
+
 def get_parser():
-    parser = OptionParser("usage: %prog -d directory -o output_file -n number_of_message")
+    parser = OptionParser()
     parser.add_option("-d", "--input_dir",  type="string", dest="input_dir",
                       help="directory containing .hl7 files")
     parser.add_option("-o", "--output_file", type="string", dest="output_file",
@@ -39,9 +42,11 @@ def get_parser():
                       help="maximum number of message to parse")
     parser.add_option("-v", "--validation_level", dest="validation_level", default='strict',
                       choices=['tolerant', 'strict'], help="validation level to use")
-    parser.add_option("-g", "--find_groups", dest="find_groups", help="wheter it should find groups or not",
+    parser.add_option("-g", "--find_groups", dest="find_groups", help="whether it should find groups or not",
                       choices=["yes", "no"], default="yes")
+    parser.add_option("-m", "--message_profile", dest="message_profile", help="message profile to use")
     return parser
+
 
 def usage():
     print("Parse HL7 messages contained in the directory specified and print a report.")
@@ -50,8 +55,10 @@ def usage():
     print("-n message number limit")
     print("-d ")
 
+
 def print_report(n_messages, msg_per_version, msg_per_type, exceptions,
-                 elapsed_time, output_file, time_per_message, encoding_time, validation_level):
+                 elapsed_time, output_file, time_per_message, encoding_time,
+                 validation_level, message_profile):
 
     validations = [VL.STRICT, VL.TOLERANT]
     if validation_level == VL.TOLERANT:
@@ -60,9 +67,11 @@ def print_report(n_messages, msg_per_version, msg_per_type, exceptions,
     with open(output_file, 'w') if output_file else sys.stdout as output:
         for vl in validations:
             n_exceptions = len(exceptions[vl])
-            output.write("Validation {0}\n".format( "TOLERANT" if vl == VL.TOLERANT else "STRICT" ))
+            output.write("Validation {0}\n".format("TOLERANT" if vl == VL.TOLERANT else "STRICT"))
             output.write(80 * "-")
             output.write("\n\nParsed {0} messages in {1}\n".format(n_messages[vl], elapsed_time))
+            if message_profile is not None:
+                output.write("Used Message Profile: {0}\n".format(message_profile))
             output.write("Succeed: {0} - Failed {1}\n\n\n".format(n_messages[vl] - n_exceptions, n_exceptions))
 
             output.write("Succeeded message per version:\n\n")
@@ -87,7 +96,9 @@ def print_report(n_messages, msg_per_version, msg_per_type, exceptions,
         for et in encoding_time:
             output.write("File: {}\tSegments: {}\tMessage Type: {}\tTime: {}\n".format(et[0], et[1], et[2], et[3]))
 
-def parse_messages(directory, validation_level=VL.STRICT, find_groups=True, limit=-1, output_file=None):
+
+def parse_messages(directory, validation_level=VL.STRICT, find_groups=True, limit=-1,
+                   output_file=None, message_profile=None):
 
     exceptions = {VL.TOLERANT: [], VL.STRICT: []}
     msg_per_versions = {VL.TOLERANT: defaultdict(int), VL.STRICT: defaultdict(int)}
@@ -95,8 +106,8 @@ def parse_messages(directory, validation_level=VL.STRICT, find_groups=True, limi
     parsing_time = {VL.TOLERANT : [], VL.STRICT : []}
     encoding_time = []
     files = _get_files(directory)[:limit] if limit != -1 else _get_files(directory)
-    n_messages = {VL.TOLERANT : 0, VL.STRICT : 0}
-
+    n_messages = {VL.TOLERANT: 0, VL.STRICT: 0}
+    mp = load_message_profile(message_profile) if message_profile is not None else None
     start = time.time()
     for f in sorted(files):
         with open(f) as hl7_file:
@@ -110,24 +121,35 @@ def parse_messages(directory, validation_level=VL.STRICT, find_groups=True, limi
                 validations.remove(VL.STRICT)
 
             for vl in validations:
-                # it parses TOLERANT only if the user asked (validation_level == VL.TOLERANT) or an error occurred
+                # it parses TOLERANT only if the user asked (validation_level == VL.TOLERANT)
+                # or an error occurred
                 if vl == VL.TOLERANT and (validation_level != VL.TOLERANT and not error_occurred):
                     continue
                 file_base_name = os.path.basename(hl7_file.name)
-                n_messages[vl] += 1
                 try:
                     msg_start = time.time()
-                    msg = parse_message(msg_str, vl, find_groups=find_groups)
+                    msg = parse_message(msg_str, vl, find_groups=find_groups, message_profile=mp)
                     msg_end = time.time()
 
                     msg_per_versions[vl][msg.version] += 1
                     msg_per_type[vl][msg.msh.msh_9.to_er7()] += 1
                     parsing_time[vl].append((file_base_name, len(msg.children),
-                                                   msg.msh.msh_9.to_er7(), msg_end - msg_start))
+                                             msg.msh.msh_9.to_er7(), msg_end - msg_start))
+                except MessageProfileNotFound:
+                    continue
+                except InvalidEncodingChars:
+                    if mp is None:
+                        exceptions[vl].append({'type': 'parsing', 'ex': e, 'file_name': f, 'msg': msg_str})
+                        if vl == VL.STRICT:
+                            error_occurred = True
+                    else:
+                        continue
                 except Exception as e:
-                    exceptions[vl].append({'type' : 'parsing', 'ex': e, 'file_name' : f, 'msg' : msg_str})
+                    exceptions[vl].append({'type': 'parsing', 'ex': e, 'file_name': f, 'msg': msg_str})
                     if vl == VL.STRICT:
                         error_occurred = True
+
+                n_messages[vl] += 1
 
                 try:
                     encoding_start = time.time()
@@ -135,19 +157,21 @@ def parse_messages(directory, validation_level=VL.STRICT, find_groups=True, limi
                     encoding_end = time.time()
 
                     encoding_time.append((file_base_name, len(msg.children), msg.msh.msh_9.to_er7(),
-                      encoding_end - encoding_start))
+                                          encoding_end - encoding_start))
                 except Exception as e:
-                    exceptions[vl].append({'type' : 'encoding', 'ex': e, 'file_name' : f, 'msg' : msg_str})
+                    exceptions[vl].append({'type': 'encoding', 'ex': e, 'file_name': f, 'msg': msg_str})
 
     elapsed_time = time.time() - start
 
     print_report(n_messages, msg_per_versions, msg_per_type, exceptions,
-                 elapsed_time, output_file, parsing_time, encoding_time, validation_level)
+                 elapsed_time, output_file, parsing_time, encoding_time,
+                 validation_level, message_profile)
+
 
 def _get_files(directory):
     try:
         files = os.listdir(directory)
-        return [ os.path.abspath( '{0}/{1}'.format(directory, f) ) for f in files if f.endswith('.hl7') ]
+        return [os.path.abspath( '{0}/{1}'.format(directory, f) ) for f in files if f.endswith('.hl7')]
     except IOError:
         print("Invalid directory")
 
@@ -162,5 +186,5 @@ if __name__ == '__main__':
     validation_level = VL.STRICT if options.validation_level == 'strict' else VL.TOLERANT
     find_groups = True if options.find_groups == 'yes' else False
     n_msg = options.n_msg or -1
-
-    parse_messages(input_dir, validation_level, find_groups, n_msg, output_file)
+    message_profile = options.message_profile or None
+    parse_messages(input_dir, validation_level, find_groups, n_msg, output_file, message_profile)
