@@ -260,7 +260,8 @@ class ElementList(collections.MutableSequence):
         :type index: ``int``
         :param index: the child position (e.g. 1)
         """
-        if isinstance(value, ElementProxy): # just copy the first element of the ElementProxy (e.g. message.pid = message2.pid)
+        # just copy the first element of the ElementProxy (e.g. message.pid = message2.pid)
+        if isinstance(value, ElementProxy):
             value = value[0].to_er7()
 
         name = name.upper()
@@ -362,7 +363,9 @@ class ElementList(collections.MutableSequence):
         if reference is not None:
             cls = reference['cls']
             element_name = reference['name']
-            kwargs = {'reference': reference['ref'], 'validation_level': self.element.validation_level}
+            kwargs = {'reference': reference['ref'],
+                      'validation_level': self.element.validation_level,
+                      'version': self.element.version}
             if not traversal_parent:
                 kwargs['parent'] = self.element
             else:
@@ -404,7 +407,7 @@ class ElementList(collections.MutableSequence):
 
     def _can_add_child(self, child):
         if self.element._is_valid_child(child):
-            if child.parent != self.element: #avoid infinite recursion
+            if child.parent != self.element:  # avoid infinite recursion
                 child.parent = self.element
             else:
                 # if validation is strict, check the child cardinality
@@ -506,9 +509,9 @@ class ElementFinder(object):
                     structure[child_name] = find_reference(child_name, element.child_classes, element.version)
                 else:
                     child_name, cardinality, cls = c[2], c[4], c[5]
-                    structure[child_name] = {'name' : child_name,
-                                            'cls' : eval(cls),  #TODO: is there another way?
-                                            'ref' : c}
+                    structure[child_name] = {'name': child_name,
+                                             'cls': eval(cls),  #TODO: is there another way?
+                                             'ref': c}
                 repetitions[child_name] = cardinality
                 ordered_children.append(child_name)
             data['repetitions'] = repetitions
@@ -524,7 +527,7 @@ class ElementFinder(object):
 
         if content_type == 'leaf' or (is_profile and len(reference) > 5):
             if is_profile is False:
-                child_type, datatype, long_name, table = reference
+                datatype, long_name, table = reference[1:]
             else:
                 datatype, long_name, table, max_length = reference[5:]
             data['datatype'] = datatype
@@ -564,16 +567,16 @@ class Element(object):
         self.table = None
         self.long_name = None
         self.children = ElementList(self)
-        self.parent = parent
-        if parent is None:
-            self.traversal_parent = traversal_parent
-        else:
-            self.traversal_parent = None
         self.structure_by_name = None
         self.structure_by_longname = None
         self.ordered_children = None
         self.repetitions = {}
         self._find_structure(reference)
+        self.parent = parent
+        if parent is None:
+            self.traversal_parent = traversal_parent
+        else:
+            self.traversal_parent = None
 
     def find_child_reference(self, name):
         name = name.upper()
@@ -630,6 +633,8 @@ class Element(object):
         if self.child_parser:
             kwargs['version'] = self.version
             kwargs['validation_level'] = self.validation_level
+            kwargs['encoding_chars'] = self.encoding_chars
+
             module = importlib.import_module("hl7apy.parser")
             parser = getattr(module, self.child_parser[1])
             return parser(text, **kwargs)
@@ -801,7 +806,7 @@ class SupportComplexDataType(Element):
     def find_child_reference(self, name):
         name = name.upper()
         if isinstance(self.structure_by_name, collections.MutableMapping):
-            element =  self.structure_by_name.get(name) or self.structure_by_longname.get(name)
+            element = self.structure_by_name.get(name) or self.structure_by_longname.get(name)
         else:
             element = None
 
@@ -1173,11 +1178,11 @@ class Component(SupportComplexDataType, CanBeVaries):
     def parse_child(self, text, child_name=None, reference=None):
         kwargs = {'name': child_name}
         if reference is not None:
-            kwargs['datatype'] = reference[1]
+            kwargs['datatype'] = reference[6] if reference[0] == 'mp' else reference[1]
         return super(Component, self).parse_child(text, **kwargs)
 
     def parse_children(self, text, **kwargs):
-        kwargs = {'component_datatype' : self.datatype, 'encoding_chars' : self.encoding_chars}
+        kwargs = {'component_datatype': self.datatype, 'encoding_chars': self.encoding_chars}
         return super(Component, self).parse_children(text, **kwargs)
 
 
@@ -1295,11 +1300,11 @@ class Field(SupportComplexDataType):
     def parse_child(self, text, child_name=None, reference=None):
         kwargs = {'encoding_chars': self.encoding_chars, 'reference': reference, 'name': child_name}
         if reference is not None:
-            kwargs['datatype'] = reference[1]
+            kwargs['datatype'] = reference[6] if reference[0] == 'mp' else reference[1]
         return super(Field, self).parse_child(text, **kwargs)
 
     def parse_children(self, text, **kwargs):
-        kwargs = {'field_datatype': self.datatype, 'encoding_chars' : self.encoding_chars}
+        kwargs = {'field_datatype': self.datatype, 'references': self.structure_by_name}
         return super(Field, self).parse_children(text, **kwargs)
 
     def to_er7(self, encoding_chars=None, trailing_children=False):
@@ -1376,7 +1381,7 @@ class Field(SupportComplexDataType):
         else:
             if prefix != self.name:
                 return None, None
-        return (component, subcomponent)
+        return component, subcomponent
 
     def _do_traversal(self, mode, name, value=None):
         try:
@@ -1406,7 +1411,8 @@ class Field(SupportComplexDataType):
                     delattr(self, component_name)
             else:
                 component = getattr(self, component_name)
-                component_datatype =  self.structure_by_name[component_name]['ref'][1]
+                component_ref = self.structure_by_name[component_name]['ref']
+                component_datatype = component_ref[6] if component_ref[0] == 'mp' else component_ref[1]
                 subcomponent_name = '{0}_{1}'.format(component_datatype, subcomponent)
                 try:
                     if mode == 'get':
@@ -1529,7 +1535,9 @@ class Segment(Element):
         return element
 
     def parse_child(self, text, child_name=None, reference=None):
-        kwargs = {'encoding_chars': self.encoding_chars, 'reference': reference, 'name': child_name}
+        kwargs = {'encoding_chars': self.encoding_chars,
+                  'reference': reference, 'name': child_name,
+                  'force_varies': self.allow_infinite_children}
         return super(Segment, self).parse_child(text, **kwargs)
 
     def parse_children(self, text, **kwargs):
@@ -1537,7 +1545,9 @@ class Segment(Element):
         if segment_name != self.name:
             raise OperationNotAllowed('Cannot assign a segment with a different name')
         text = text[4:] if segment_name != 'MSH' else text[3:]
-        kwargs = {'name_prefix': self.name, 'encoding_chars' : self.encoding_chars}
+        kwargs = {'name_prefix': self.name,
+                  'references': self.structure_by_name,
+                  'force_varies': self.allow_infinite_children}
         return super(Segment, self).parse_children(text, **kwargs)
 
     def to_er7(self, encoding_chars=None, trailing_children=False):
@@ -1702,7 +1712,7 @@ class Group(Element):
 
     def parse_children(self, text, find_groups=True, **kwargs):
         from hl7apy.parser import create_groups
-
+        kwargs = {'references': self.structure_by_name}
         children = super(Group, self).parse_children(text, **kwargs)
         if self.name and find_groups:
             self.children = []
