@@ -24,12 +24,12 @@ HL7apy - parsing functions
 """
 
 import re
-import cPickle
 
-from hl7apy import get_default_encoding_chars, get_default_version, check_version, check_encoding_chars
-from hl7apy.consts import N_SEPS, VALIDATION_LEVEL
-from hl7apy.core import is_base_datatype, Message, Group, Segment, Field, Component, SubComponent, ElementFinder
-from hl7apy.exceptions import InvalidName, ParserError, InvalidEncodingChars
+from hl7apy import get_default_encoding_chars, get_default_version, \
+    get_default_validation_level, check_version, check_encoding_chars, check_validation_level
+from hl7apy.consts import N_SEPS
+from hl7apy.core import is_base_datatype, Message, Group, Segment, Field, Component, SubComponent
+from hl7apy.exceptions import InvalidName, ParserError, InvalidEncodingChars, MessageProfileNotFound
 from hl7apy.validation import Validator
 
 def parse_message(message, validation_level=None, find_groups=True, message_profile=None, report_file=None):
@@ -59,10 +59,12 @@ def parse_message(message, validation_level=None, find_groups=True, message_prof
     message = message.lstrip()
     encoding_chars, message_structure, version = get_message_info(message)
 
-    # if message_profile is not None:
-    #     validation_level = VALIDATION_LEVEL.TOLERANT
-    #     message_structure = message_profile.keys()[0]
-    reference = message_profile[message_structure] if message_profile else None
+    validation_level = _get_validation_level(validation_level)
+
+    try:
+        reference = message_profile[message_structure] if message_profile else None
+    except KeyError:
+        raise MessageProfileNotFound()
 
     try:
         m = Message(name=message_structure, reference=reference, version=version,
@@ -109,6 +111,7 @@ def parse_segments(text, version=None, encoding_chars=None, validation_level=Non
     """
     version = _get_version(version)
     encoding_chars = _get_encoding_chars(encoding_chars)
+    validation_level = _get_validation_level(validation_level)
 
     segment_sep = encoding_chars['SEGMENT']
     segments = []
@@ -156,6 +159,7 @@ def parse_segment(text, version=None, encoding_chars=None, validation_level=None
     """
     version = _get_version(version)
     encoding_chars = _get_encoding_chars(encoding_chars)
+    validation_level = _get_validation_level(validation_level)
 
     segment_name = text[:3]
     text = text[4:] if segment_name != 'MSH' else text[3:]
@@ -205,6 +209,7 @@ def parse_fields(text, name_prefix=None, version=None, encoding_chars=None, vali
     """
     version = _get_version(version)
     encoding_chars = _get_encoding_chars(encoding_chars)
+    validation_level = _get_validation_level(validation_level)
 
     text = text.strip("\r")
     field_sep = encoding_chars['FIELD']
@@ -273,6 +278,7 @@ def parse_field(text, name=None, version=None, encoding_chars=None, validation_l
     """
     version = _get_version(version)
     encoding_chars = _get_encoding_chars(encoding_chars)
+    validation_level = _get_validation_level(validation_level)
 
     try:
         field = Field(name, version=version, validation_level=validation_level, reference=reference)
@@ -328,6 +334,7 @@ def parse_components(text, field_datatype='ST', version=None, encoding_chars=Non
     """
     version = _get_version(version)
     encoding_chars = _get_encoding_chars(encoding_chars)
+    validation_level = _get_validation_level(validation_level)
 
     component_sep = encoding_chars['COMPONENT']
     components = []
@@ -391,6 +398,7 @@ def parse_component(text, name=None, datatype='ST', version=None, encoding_chars
     """
     version = _get_version(version)
     encoding_chars = _get_encoding_chars(encoding_chars)
+    validation_level = _get_validation_level(validation_level)
 
     try:
         component = Component(name, datatype, version=version, validation_level=validation_level, reference=reference)
@@ -443,6 +451,7 @@ def parse_subcomponents(text, component_datatype='ST', version=None, encoding_ch
     """
     version = _get_version(version)
     encoding_chars = _get_encoding_chars(encoding_chars)
+    validation_level = _get_validation_level(validation_level)
 
     subcomp_sep = encoding_chars['SUBCOMPONENT']
     subcomponents = []
@@ -478,7 +487,11 @@ def parse_subcomponent(text, name=None, datatype='ST', version=None, validation_
 
     :return: an instance of :class:`hl7apy.core.SubComponent`
     """
-    return SubComponent(name=name, datatype=datatype, value=text, version=version, validation_level=validation_level)
+    version = _get_version(version)
+    validation_level = _get_validation_level(validation_level)
+
+    return SubComponent(name=name, datatype=datatype, value=text, version=version,
+                        validation_level=validation_level)
 
 def get_message_info(content):
     """
@@ -635,16 +648,21 @@ def _find_group(segment, search_data, validation_level=None):
 
 def _get_version(version):
     if version is None:
-        version = get_default_version()
+        return get_default_version()
     check_version(version)
     return version
 
 def _get_encoding_chars(encoding_chars):
     if encoding_chars is None:
-        encoding_chars = get_default_encoding_chars()
+        return get_default_encoding_chars()
     check_encoding_chars(encoding_chars)
     return encoding_chars
 
+def _get_validation_level(validation_level):
+    if validation_level is None:
+        return get_default_validation_level()
+    check_validation_level(validation_level)
+    return validation_level
 
 if __name__ == '__main__':
 
