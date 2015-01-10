@@ -249,7 +249,7 @@ def load_reference(name, element_type, version):
     >>> load_reference('UNKNOWN', 'Segment', '2.5')
     Traceback (most recent call last):
     ...
-    KeyError: 'UNKNOWN'
+    ChildNotFound: No child named UNKNOWN
     >>> r = load_reference('ADT_A01', 'Message', '2.5')
     >>> print r[0]
     sequence

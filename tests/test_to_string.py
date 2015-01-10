@@ -104,8 +104,7 @@ class ToStringTestCase(unittest.TestCase):
         from datetime import datetime
 
         msg = Message('RSP_K11')
-        self.assertEqual(msg.to_er7(), 'MSH|^~\\&|||||%s|||||2.5' % datetime.strftime(datetime.now(), '%Y%m%d%H%M%S')
-)
+        self.assertRegexpMatches(msg.to_er7(), 'MSH|^~\\&|||||d+|||||2.5')
 
     def test_highlights(self):
         """

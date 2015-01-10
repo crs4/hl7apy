@@ -229,8 +229,7 @@ class InvalidHighlightRange(HL7apyException):
 
     For a description of highlight range see :class:`hl7apy.base_datatypes.TextualDataType`
 
-    >>> from hl7apy.v2_5 import get_base_datatypes
-    >>> ST = get_base_datatypes()['ST']
+    >>> from hl7apy.v2_5 import ST
     >>> s = ST(value='some useful information', highlights=((5, 3),))
     >>> s.to_er7()
     Traceback (most recent call last):
@@ -249,8 +248,7 @@ class InvalidDateFormat(HL7apyException):
     """
     Raised when the output format for a :class:`hl7apy.base_datatypes.DateTimeDataType` is not valid
 
-    >>> from hl7apy.v2_5 import get_base_datatypes
-    >>> DTM = get_base_datatypes()['DTM']
+    >>> from hl7apy.v2_5 import DTM
     >>> DTM(value='10102013', format="%d%m%Y")
     Traceback (most recent call last):
     ...
@@ -267,8 +265,7 @@ class InvalidDateOffset(HL7apyException):
     """
     Raised when the offset for a :class:`TM` or :class:`hl7apy.base_datatypes.DTM` is not valid
 
-    >>> from hl7apy.v2_5 import get_base_datatypes
-    >>> DTM = get_base_datatypes()['DTM']
+    >>> from hl7apy.v2_5 import DTM
     >>> DTM(value='20131010', format="%Y%m%d", offset='+1300')
     Traceback (most recent call last):
     ...
@@ -279,6 +276,7 @@ class InvalidDateOffset(HL7apyException):
 
     def __str__(self):
         return 'Invalid date offset: {0}'.format(self.offset)
+
 
 class InvalidMicrosecondsPrecision(HL7apyException):
     """
