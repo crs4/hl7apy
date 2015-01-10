@@ -412,7 +412,12 @@ class ElementList(collections.MutableSequence):
                     min, max = self.element.repetitions.get(child.name, (0, -1))
                     if len(self.indexes.get(child.name, [])) + 1 > int(max) and max > -1:
                         raise MaxChildLimitReached(self.element, child, max)
+                if self.element.validation_level != child.validation_level:
+                    raise OperationNotAllowed('Cannot add a child with a different validation_level')
+                elif self.element.version != child.version:
+                    raise OperationNotAllowed('Cannot add a child with a different HL7 version')
                 return True
+
         else:
             raise ChildNotValid(child, self.element)
         return False
@@ -1846,15 +1851,17 @@ class Message(Group):
 
     def _set_encoding_chars(self, encoding_chars):
         check_encoding_chars(encoding_chars)
-        msh_1 = Field('MSH_1')
-        msh_2 = Field('MSH_2')
+        msh_1 = Field('MSH_1', validation_level=self.validation_level, version=self.version)
+        msh_2 = Field('MSH_2', validation_level=self.validation_level, version=self.version)
         msh_1.st = encoding_chars['FIELD']
         value = '{0}{1}{2}{3}'.format(encoding_chars['COMPONENT'],
                                       encoding_chars['REPETITION'],
                                       encoding_chars['ESCAPE'],
                                       encoding_chars['SUBCOMPONENT'])
-        s = SubComponent(datatype='ST', value=value)
-        c = Component(datatype='ST')
+        s = SubComponent(datatype='ST', value=value,
+                         validation_level=self.validation_level, version=self.version)
+        c = Component(datatype='ST', validation_level=self.validation_level,
+                      version=self.version)
         c.add(s)
         msh_2.st = c
         self.msh.msh_1 = msh_1

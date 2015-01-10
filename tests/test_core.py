@@ -134,6 +134,32 @@ class TestMessage(unittest.TestCase):
         self.assertTrue(g.is_named('RSP_K21_QUERY_RESPONSE'))
         self.assertIn(g, m.children)
 
+    def test_add_child_with_different_validation_level(self):
+        m = Message('RSP_K21', validation_level=VALIDATION_LEVEL.STRICT)
+        g = Group('RSP_K21_QUERY_RESPONSE', validation_level=VALIDATION_LEVEL.TOLERANT)
+        self.assertRaises(OperationNotAllowed, m.add, g)
+
+        m = Message('RSP_K21', validation_level=VALIDATION_LEVEL.TOLERANT)
+        g = Group('RSP_K21_QUERY_RESPONSE', validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(OperationNotAllowed, m.add, g)
+
+        m = Message('RSP_K21', validation_level=VALIDATION_LEVEL.STRICT)
+        s = Segment('QPD', validation_level=VALIDATION_LEVEL.TOLERANT)
+        self.assertRaises(OperationNotAllowed, m.add, s)
+
+        m = Message('RSP_K21', validation_level=VALIDATION_LEVEL.TOLERANT)
+        s = Segment('QPD', validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(OperationNotAllowed, m.add, s)
+
+    def test_add_child_with_different_version(self):
+        m = Message('RSP_K21', version='2.4')
+        g = Group('RSP_K21_QUERY_RESPONSE', version='2.5')
+        self.assertRaises(OperationNotAllowed, m.add, g)
+
+        m = Message('RSP_K21', version='2.4')
+        s = Segment('QPD', version='2.5')
+        self.assertRaises(OperationNotAllowed, m.add, s)
+
     def test_add_empty_children_to_message(self):
         a = Message('OML_O33', validation_level=VALIDATION_LEVEL.STRICT)
         self.assertRaises(ChildNotValid, a.add, Group())
@@ -179,22 +205,22 @@ class TestMessage(unittest.TestCase):
 
     def test_add_z_segment(self):
         a = Message('OML_O33', validation_level=VALIDATION_LEVEL.STRICT)
-        a.add(Segment('ZIN'))
+        a.add(Segment('ZIN', validation_level=VALIDATION_LEVEL.STRICT))
         a.add_segment('zap')
         a.zbe = 'ZBE||ab|ab|'
 
         b = Message('OML_O33', validation_level=VALIDATION_LEVEL.TOLERANT)
-        b.add(Segment('ZIN'))
+        b.add(Segment('ZIN', validation_level=VALIDATION_LEVEL.TOLERANT))
         b.add_segment('zap')
         b.zbe = 'ZBE||ab|ab|'
 
         a = Message('RSP_K21', validation_level=VALIDATION_LEVEL.STRICT, reference=self.rsp_k21_mp)
-        a.add(Segment('ZIN'))
+        a.add(Segment('ZIN', validation_level=VALIDATION_LEVEL.STRICT))
         a.add_segment('zap')
         a.zbe = 'ZBE||ab|ab|'
 
         a = Message('RSP_K21', validation_level=VALIDATION_LEVEL.TOLERANT, reference=self.rsp_k21_mp)
-        a.add(Segment('ZIN'))
+        a.add(Segment('ZIN', validation_level=VALIDATION_LEVEL.TOLERANT))
         a.add_segment('zap')
         a.zbe = 'ZBE||ab|ab|'
 
@@ -206,7 +232,7 @@ class TestMessage(unittest.TestCase):
         m.add_group('OML_O33_PATIENT')
 
         m = Message('ZDT_ZDT', validation_level=VALIDATION_LEVEL.STRICT)
-        m.add(Segment('PID'))
+        m.add(Segment('PID', validation_level=VALIDATION_LEVEL.STRICT))
         m.add_segment('ZIN')
         m.zap = 'ZAP||21||'
 
@@ -346,6 +372,20 @@ class TestGroup(unittest.TestCase):
     def test_create_unamed_group_strict(self):
         self.assertRaises(OperationNotAllowed, Group, validation_level=VALIDATION_LEVEL.STRICT)
 
+    def test_add_child_with_different_validation_level(self):
+        g = Group('RSP_K21_QUERY_RESPONSE', validation_level=VALIDATION_LEVEL.STRICT)
+        s = Segment('PID', validation_level=VALIDATION_LEVEL.TOLERANT)
+        self.assertRaises(OperationNotAllowed, g.add, s)
+
+        g = Group('RSP_K21_QUERY_RESPONSE', validation_level=VALIDATION_LEVEL.TOLERANT)
+        s = Segment('PID', validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(OperationNotAllowed, g.add, s)
+
+    def test_add_child_with_different_version(self):
+        g = Group('RSP_K21_QUERY_RESPONSE', version='2.5')
+        s = Segment('QPD', version='2.4')
+        self.assertRaises(OperationNotAllowed, g.add, s)
+
     def test_add_unexpected_child_to_group(self):
         g = Group()
         m = Message('OML_O33')
@@ -359,14 +399,14 @@ class TestGroup(unittest.TestCase):
 
     def test_delete_group(self):
         m = Message('OML_O33', validation_level=VALIDATION_LEVEL.TOLERANT)
-        g = Group('OML_O33_PATIENT')
+        g = Group('OML_O33_PATIENT', validation_level=VALIDATION_LEVEL.TOLERANT)
         m.add(g)
         self.assertTrue(g in m.children)
         del m.oml_o33_patient
         self.assertFalse(g in m.children)
 
         m = Message('OML_O33', validation_level=VALIDATION_LEVEL.STRICT)
-        g = Group('OML_O33_PATIENT')
+        g = Group('OML_O33_PATIENT', validation_level=VALIDATION_LEVEL.STRICT)
         m.add(g)
         self.assertTrue(g in m.children)
         del m.oml_o33_patient
@@ -392,18 +432,18 @@ class TestGroup(unittest.TestCase):
 
     def test_add_z_segment(self):
         a = Group('OML_O33_PATIENT', validation_level=VALIDATION_LEVEL.STRICT)
-        a.add(Segment('ZIN'))
+        a.add(Segment('ZIN', validation_level=VALIDATION_LEVEL.STRICT))
         a.add_segment('zap')
         a.zbe = 'ZBE||ab|ab|'
 
         b = Group('OML_O33_PATIENT', validation_level=VALIDATION_LEVEL.TOLERANT)
-        b.add(Segment('ZIN'))
+        b.add(Segment('ZIN', validation_level=VALIDATION_LEVEL.TOLERANT))
         b.add_segment('zap')
         b.zbe = 'ZBE||ab|ab|'
 
         m = Message('RSP_K21', validation_level=VALIDATION_LEVEL.STRICT, reference=self.rsp_k21_mp)
         g = m.add_group('RSP_K21_QUERY_RESPONSE')
-        g.add(Segment('ZIN'))
+        g.add(Segment('ZIN', validation_level=VALIDATION_LEVEL.STRICT))
         g.add_segment('zap')
         g.zbe = 'ZBE||ab|ab|'
 
@@ -497,7 +537,7 @@ class TestSegment(unittest.TestCase):
         qpd.qpd_4 = 'abc'
         qpd.add_field('qpd_4')
 
-        zin.add(Field('ZIN_100'))
+        zin.add(Field('ZIN_100', validation_level=VALIDATION_LEVEL.STRICT))
         zin.zin_4 = 'abc'
         zin.add_field('zin_4')
 
@@ -527,6 +567,20 @@ class TestSegment(unittest.TestCase):
         msa_1 = s.add_field('MSA_1')
         self.assertEqual(msa_1.classname, 'Field')
         self.assertIn(msa_1, s.children)
+
+    def test_add_child_with_different_validation_level(self):
+        s = Segment('PID', validation_level=VALIDATION_LEVEL.TOLERANT)
+        f = Field('PID_1', validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(OperationNotAllowed, s.add, f)
+
+        s = Segment('PID', validation_level=VALIDATION_LEVEL.STRICT)
+        f = Field('PID_1', validation_level=VALIDATION_LEVEL.TOLERANT)
+        self.assertRaises(OperationNotAllowed, s.add, f)
+
+    def test_add_child_with_different_version(self):
+        s = Segment('QPD', version='2.4')
+        f = Field('QPD_3', version='2.5')
+        self.assertRaises(OperationNotAllowed, s.add, f)
 
     def test_traversal_equality(self):
         obr = Segment('OBR')
@@ -744,7 +798,7 @@ class TestField(unittest.TestCase):
 
     def test_add_component(self):
         f = Field('PID_5', validation_level=VALIDATION_LEVEL.STRICT)
-        c = Component('XPN_1')
+        c = Component('XPN_1', validation_level=VALIDATION_LEVEL.STRICT)
         f.add(c)
         self.assertIn(c, f.children)
 
@@ -758,6 +812,20 @@ class TestField(unittest.TestCase):
         c = f.add_component('QIP_1')
         self.assertEqual(c.name, 'QIP_1')
         self.assertIn(c, f.children)
+
+    def test_add_child_with_different_validation_level(self):
+        f = Field('PID_4', validation_level=VALIDATION_LEVEL.STRICT)
+        c = Component('CX_10', validation_level=VALIDATION_LEVEL.TOLERANT)
+        self.assertRaises(OperationNotAllowed, f.add, c)
+
+        f = Field('PID_4', validation_level=VALIDATION_LEVEL.TOLERANT)
+        c = Component('CX_10', validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(OperationNotAllowed, f.add, c)
+
+    def test_add_child_with_different_version(self):
+        f = Field('PID_4', version='2.4')
+        c = Component('CX_10', version='2.5')
+        self.assertRaises(OperationNotAllowed, f.add, c)
 
     def test_add_empty_component(self):
         f1 = Field('pid_3', validation_level=VALIDATION_LEVEL.STRICT)
@@ -865,7 +933,7 @@ class TestField(unittest.TestCase):
 
     def test_add_more_components_to_base_datatype_field(self):
         f1 = Field('pid_8', validation_level=VALIDATION_LEVEL.STRICT)  # this is a base datatype field
-        f1.add(Component(datatype='IS'))
+        f1.add(Component(datatype='IS', validation_level=VALIDATION_LEVEL.STRICT))
         self.assertRaises(MaxChildLimitReached, f1.add, Component(datatype='ST'))
 
         f2 = Field('pid_8')
@@ -1154,6 +1222,20 @@ class TestComponent(unittest.TestCase):
     def test_create_unsupported_version_component(self):
         self.assertRaises(UnsupportedVersion, Component, version='2.0')
 
+    def test_add_child_with_different_validation_level(self):
+        c = Component('CX_10', validation_level=VALIDATION_LEVEL.TOLERANT)
+        s = SubComponent('CWE_1', validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(OperationNotAllowed, c.add, s)
+
+        c = Component('CX_10', validation_level=VALIDATION_LEVEL.STRICT)
+        s = SubComponent('CWE_1', validation_level=VALIDATION_LEVEL.TOLERANT)
+        self.assertRaises(OperationNotAllowed, c.add, s)
+
+    def test_add_child_with_different_version(self):
+        c = Component('CX_10', version='2.5')
+        s = SubComponent('CWE_1', version='2.6')
+        self.assertRaises(OperationNotAllowed, c.add, s)
+
     def test_add_empty_subcomponent(self):
         c1 = Component('cx_4', validation_level=VALIDATION_LEVEL.STRICT)
         self.assertRaises(ChildNotValid, c1.add, SubComponent(datatype='ST'))
@@ -1252,7 +1334,7 @@ class TestComponent(unittest.TestCase):
 
         m = Message('RSP_K21', reference=self.rsp_k21_mp, validation_level=VALIDATION_LEVEL.STRICT)
         c = m.add_segment('QPD').add_field('QPD_8').add_component('CX_2')
-        c.add(SubComponent(datatype='ST'))
+        c.add(SubComponent(datatype='ST', validation_level=VALIDATION_LEVEL.STRICT))
         self.assertRaises(MaxChildLimitReached, c.add, SubComponent(datatype='ST'))
 
     def test_override_datatype(self):
