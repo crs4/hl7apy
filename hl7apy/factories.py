@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2014, CRS4
+# Copyright (c) 2012-2015, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -24,13 +24,13 @@ This module contains factory functions for hl7apy base data types.
 The functions get the value of the data type as string and return the correct object
 """
 
-import re
-from datetime import datetime
 from decimal import Decimal, InvalidOperation
 from types import FunctionType
 
 from hl7apy import load_library, get_default_validation_level, get_default_version
 from hl7apy.exceptions import InvalidDataType
+from hl7apy.utils import get_date_info, get_datetime_info, get_timestamp_info
+
 
 def datatype_factory(datatype, value, version=None, validation_level=None):
     """
@@ -39,25 +39,29 @@ def datatype_factory(datatype, value, version=None, validation_level=None):
     It should be noted that if you use the factory it is not possible to specify
     some parameters for the datatype (e.g. the format for datetime base datatypes)
     If the value is not valid for the datatype specified if the ``validation_level`` is
-    :attr:`hl7apy.consts.VALIDATION_LEVEL.QUIET` it generates an :class:`hl7apy.base_datatypes.ST` object
+    :attr:`hl7apy.consts.VALIDATION_LEVEL.TOLERANT` it generates an :class:`hl7apy.base_datatypes.ST` object
 
-    :type datatype: ``basestring``
+    :type datatype: ``str``
     :param datatype: The datatype to be generated
 
     :param value: The value of the datatype
 
-    :type version: ``basestring``
-    :param version: A valid HL7 version. It must be one of :attr:`hl7apy.SUPPORTED_LIBRARIES`
+    :type version: ``str``
+    :param version: A valid HL7 version. It must be one of
+        :attr:`SUPPRTED_LIBRARIES <hl7apy.SUPPORTED_LIBRARIES>`
 
     :type validation_level: ``int``
-    :param validation_level: It must be a value from class :attr:`validation_level` :class:`VALIDATION_LEVEL` or ``None`` to use the default value
+    :param validation_level: It must be a value from class :attr:`validation_level`
+        :class:`VALIDATION_LEVEL hl7apy.consts.VALIDATION_LEVEL` or ``None`` to use the default value
 
     :rtype: The type specified in datatype
 
-    :raises :exc:`hl7apy.exceptions.ValueError`: If the ``validation_level`` is :attr:`hl7apy.consts.VALIDATION_LEVEL.STRICT`
+    :raises :exc:`ValueError`: If the ``validation_level`` is
+        :attr:`VALIDATION_LEVEL.STRICT <hl7apy.consts.VALIDATION_LEVEL.STRICT>`
      and the value is not valid for the specified datatype
 
-    :raises :exc:`hl7apy.exceptions.InvalidDatatype`: If the ``datatype`` specified is not valid for the given ``version``
+    :raises :exc:`InvalidDatatype <hl7apy.exceptions.InvalidDatatype>`: If the ``datatype`` specified is not
+        valid for the given ``version``
 
     """
 
@@ -96,12 +100,13 @@ def datatype_factory(datatype, value, version=None, validation_level=None):
     except ValueError, e:
         if Validator.is_strict(validation_level):
             raise e
-        #TODO: Do we really want this? In that case the parent's datatype must be changed accordingly
+        # TODO: Do we really want this? In that case the parent's datatype must be changed accordingly
         return factories['ST'](value)
+
 
 def date_factory(value, datatype_cls, validation_level=None):
     """
-    Creates a :class:`hl7apy.base_datatypes.DT` object
+    Creates a :class:`DT <hl7apy.base_datatypes.DT>` object
 
     The value in input must be a string parsable with :meth:`datetime.strptime`.
     The date format is chosen according to the length of the value as stated in this table:
@@ -131,25 +136,27 @@ def date_factory(value, datatype_cls, validation_level=None):
 
     If the value does not match one of the valid format it raises :exc:`ValueError`
 
-    :type value: ``basestring``
+    :type value: ``str``
     :param value: the value to assign the date object
 
     :type datatype_cls: `class`
-    :param value: the :class:`hl7apy.base_datatypes.DT` class to use. It has to be one implementation of the different version modules
+    :param value: the :class:`DT <hl7apy.base_datatypes.DT>` class to use. It has to be one implementation of
+        the different version modules
 
     :type validation_level: ``int``
-    :param validation_level: It must be a value from class :attr:`validation_level` :class:`VALIDATION_LEVEL` or ``None`` to use the default value
+    :param validation_level: It must be a value from class :attr:`validation_level`
+        :class:`VALIDATION_LEVEL hl7apy.consts.VALIDATION_LEVEL` or ``None`` to use the default value
 
     :rtype: :class:`hl7apy.base_datatypes.DT`
     """
 
-    format = _get_date_format(value)
-    dt_value = _datetime_obj_factory(value, format)
-    return datatype_cls(dt_value, format)
+    dt_value, fmt = get_date_info(value)
+    return datatype_cls(dt_value, fmt)
+
 
 def timestamp_factory(value, datatype_cls, validation_level=None):
     """
-    Creates a :class:`hl7apy.base_datatypes.TM` object
+    Creates a :class:`TM <hl7apy.base_datatypes.TM>` object
 
     The value in input must be a string parsable with :meth:`datetime.strptime`.
     It can also have an offset part specified with the format +/-HHMM.
@@ -185,22 +192,23 @@ def timestamp_factory(value, datatype_cls, validation_level=None):
 
     If the value does not match one of the valid format it raises :exc:ValueError`
 
-    :type value: ``basestring``
+    :type value: ``str``
     :param value: the value to assign the date object
 
     :type datatype_cls: `class`
-    :param value: the :class:`hl7apy.base_datatypes.TM` class to use. It has to be one implementation of the different version modules
+    :param value: the :class:`TM <hl7apy.base_datatypes.TM>` class to use. It has to be one implementation
+        of the different version modules
 
     :type validation_level: ``int``
-    :param validation_level: It must be a value from class :attr:`validation_level` :class:`VALIDATION_LEVEL` or ``None`` to use the default value
+    :param validation_level: It must be a value from class :attr:`validation_level`
+        :class:`VALIDATION_LEVEL hl7apy.consts.VALIDATION_LEVEL` or ``None`` to use the default value
 
-    :rtype: :class:`hl7apy.base_datatypes.TM`
+    :rtype: :class:`TM <hl7apy.base_datatypes.TM>`
     """
 
-    value, offset = _split_offset(value)
-    form, microsec = _get_timestamp_format(value)
-    dt_value = _datetime_obj_factory(value, form)
-    return datatype_cls(dt_value, form, offset, microsec)
+    dt_value, fmt, offset, microsec = get_timestamp_info(value)
+    return datatype_cls(dt_value, fmt, offset, microsec)
+
 
 def datetime_factory(value, datatype_cls, validation_level=None):
     """
@@ -244,52 +252,45 @@ def datetime_factory(value, datatype_cls, validation_level=None):
 
     If the value does not match one of the valid format it raises :exc:`ValueError`
 
-    :type value: ``basestring``
+    :type value: ``str``
     :param value: the value to assign the date object
 
     :type datatype_cls: `class`
-    :param value: the :class:`hl7apy.base_datatypes.DTM` class to use. It has to be one implementation of the different version modules
+    :param value: the :class:`DTM <hl7apy.base_datatypes.DTM>` class to use. It has to be one implementation
+        of the different version modules
 
     :type validation_level: ``int``
-    :param validation_level: It must be a value from class :attr:`validation_level` :class:`VALIDATION_LEVEL` or ``None`` to use the default value
+    :param validation_level: It must be a value from class :attr:`validation_level`
+        :class:`VALIDATION_LEVEL hl7apy.consts.VALIDATION_LEVEL` or ``None`` to use the default value
 
-    :rtype: :class:`hl7apy.base_datatypes.DTM`
+    :rtype: :class:`DTM <hl7apy.base_datatypes.DTM>`
     """
 
-    date_value, offset = _split_offset(value)
-    date_format = _get_date_format(date_value[:8])
+    dt_value, fmt, offset, microsec = get_datetime_info(value)
+    return datatype_cls(dt_value, fmt, offset, microsec)
 
-    try:
-        timestamp_form, microsec = _get_timestamp_format(date_value[8:])
-    except ValueError:
-        if not date_value[8:]: #if it's empty
-            timestamp_form, microsec = '', 4
-        else:
-            raise ValueError('{0} is not an HL7 valid date value'.format(value))
-
-    form = '{0}{1}'.format(date_format, timestamp_form)
-    dt_value = _datetime_obj_factory(date_value, form)
-    return datatype_cls(dt_value, form, offset, microsec)
 
 def numeric_factory(value, datatype_cls, validation_level=None):
     """
-    Creates a :class:`hl7apy.base_datatypes.NM` object
+    Creates a :class:`NM <hl7apy.base_datatypes.NM>` object
 
     The value in input can be a string representing a decimal number or a ``float``.
     (i.e. a string valid for :class:`decimal.Decimal()`).
-    If it's not, a :exc:`hl7apy.exceptions.ValueError` is raised
+    If it's not, a :exc:`ValueError` is raised
     Also an empty string or ``None`` are allowed
 
-    :type value: ``basestring`` or ``None``
+    :type value: ``str`` or ``None``
     :param value: the value to assign the numeric object
 
     :type datatype_cls: :class:`class`
-    :param value: the :class:`hl7apy.base_datatypes.NM` class to use. It has to be one implementation of the different version modules
+    :param value: the :class:`NM <hl7apy.base_datatypes.NM>` class to use. It has to be one implementation
+        of the different version modules
 
     :type validation_level: ``int``
-    :param validation_level: It must be a value from class :attr:`validation_level` :class:`VALIDATION_LEVEL` or ``None`` to use the default value
+    :param validation_level: It must be a value from class
+        :class:`VALIDATION_LEVEL hl7apy.consts.VALIDATION_LEVEL` or ``None`` to use the default value
 
-    :rtype: :class:`hl7apy.base_datatypes.NM`
+    :rtype: :class:`NM <hl7apy.base_datatypes.NM>`
     """
     if not value:
         return datatype_cls(validation_level=validation_level)
@@ -298,25 +299,28 @@ def numeric_factory(value, datatype_cls, validation_level=None):
     except InvalidOperation:
         raise ValueError('{0} is not an HL7 valid NM value'.format(value))
 
+
 def sequence_id_factory(value, datatype_cls, validation_level=None):
     """
-    Creates a :class:`hl7apy.base_datatypes.SI` object
+    Creates a :class:`SI <hl7apy.base_datatypes.SI>` object
 
     The value in input can be a string representing an integer number or an ``int``.
     (i.e. a string valid for ``int()``  ).
     If it's not, a :exc:`ValueError` is raised
     Also an empty string or ``None`` are allowed
 
-    :type value: ``basestring`` or ``None``
+    :type value: ``str`` or ``None``
     :param value: the value to assign the date object
 
     :type datatype_cls: `class`
-    :param value: the SI class to use. It has to be loaded from one implementation of the different version modules
+    :param value: the SI class to use. It has to be loaded from one implementation of the different version
+        modules
 
     :type validation_level: ``int``
-    :param validation_level: It must be a value from class :attr:`validation_level` :class:`VALIDATION_LEVEL` or ``None`` to use the default value
+    :param validation_level: It must be a value from class
+        :class:`VALIDATION_LEVEL hl7apy.consts.VALIDATION_LEVEL` or ``None`` to use the default value
 
-    :rtype: :class:`hl7apy.base_datatypes.SI`
+    :rtype: :class:`SI <hl7apy.base_datatypes.SI>`
     """
     if not value:
         return datatype_cls(validation_level=validation_level)
@@ -324,48 +328,6 @@ def sequence_id_factory(value, datatype_cls, validation_level=None):
         return datatype_cls(int(value), validation_level=validation_level)
     except ValueError:
         raise ValueError('{0} is not an HL7 valid SI value'.format(value))
-
-def _split_offset(value):
-    offset = re.search('\d*((-|\+)(1[0-2]|0[0-9])([0-5][0-9]))$', value)
-    if offset:
-        offset = offset.groups()[0]
-        return value.replace(offset, ''), offset
-    return value, ''
-
-def _get_date_format(value):
-    if len(value) == 4:
-        format = '%Y'
-    elif len(value) == 6:
-        format = '%Y%m'
-    elif len(value) == 8:
-        format = '%Y%m%d'
-    else:
-        raise ValueError('{0} is not an HL7 valid date value'.format(value))
-
-    return format
-
-def _get_timestamp_format(value):
-    microsec = 4
-    if len(value) == 2:
-        format = '%H'
-    elif len(value) == 4:
-        format = '%H%M'
-    elif len(value) == 6:
-        format = '%H%M%S'
-    elif 8 <= len(value) <= 11 and value[6] == '.':
-        format = '%H%M%S.%f'
-        microsec = len(value) - 7 # it gets the precision of the microseconds part
-    else:
-        raise ValueError('{0} is not an HL7 valid date value'.format(value))
-
-    return format, microsec
-
-def _datetime_obj_factory(value, format):
-    try:
-        dt_value = datetime.strptime(value, format)
-    except ValueError:
-        raise ValueError('{0} is not an HL7 valid date value'.format(value))
-    return dt_value
 
 
 if __name__ == '__main__':

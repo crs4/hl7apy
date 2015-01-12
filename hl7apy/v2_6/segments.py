@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2014, CRS4
+# Copyright (c) 2012-2015, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -934,7 +934,10 @@ SEGMENTS = {'ABS': ('sequence',
           ('IN1_35', (0, 1)),
           ('IN1_36', (0, 1)),
           ('IN1_37', (0, 1)),
+          ('IN1_38', (0, 1)),
           ('IN1_39', (0, 1)),
+          ('IN1_40', (0, 1)),
+          ('IN1_41', (0, 1)),
           ('IN1_42', (0, 1)),
           ('IN1_43', (0, 1)),
           ('IN1_44', (0, -1)),

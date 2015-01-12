@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2014, CRS4
+# Copyright (c) 2012-2015, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -876,7 +876,8 @@ DATATYPES = {'AD': ('sequence',
  'XPN_8': ('leaf', 'ID', 'NAME_REPRESENTATION_CODE', None),
  'XPN_9': ('leaf', 'CWE', 'NAME_CONTEXT', None),
  'XTN': ('sequence',
-         (('XTN_2', (0, 1)),
+         (('XTN_1', (0, 1)),
+          ('XTN_2', (0, 1)),
           ('XTN_3', (0, 1)),
           ('XTN_4', (0, 1)),
           ('XTN_5', (0, 1)),
@@ -893,6 +894,7 @@ DATATYPES = {'AD': ('sequence',
           ('XTN_16', (0, 1)),
           ('XTN_17', (0, 1)),
           ('XTN_18', (0, 1)))),
+ 'XTN_1': ('leaf', 'ST', 'TELEPHONE_NUMBER', None),
  'XTN_10': ('leaf', 'ST', 'EXTENSION_PREFIX', None),
  'XTN_11': ('leaf', 'ST', 'SPEED_DIAL_CODE', None),
  'XTN_12': ('leaf', 'ST', 'UNFORMATTED_TELEPHONE_NUMBER', None),

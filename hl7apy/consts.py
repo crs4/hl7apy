@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2014, CRS4
+# Copyright (c) 2012-2015, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -28,13 +28,13 @@ N_SEPS = 4
 
 #: Dictionary with default encoding characters as per standard specifications
 DEFAULT_ENCODING_CHARS = {
-    'GROUP' : '\r',
-    'SEGMENT' : '\r',
-    'FIELD' :  '|',
-    'COMPONENT' : '^',
-    'SUBCOMPONENT' : '&',
-    'REPETITION' : '~',
-    'ESCAPE' : '\\'
+    'GROUP': '\r',
+    'SEGMENT': '\r',
+    'FIELD':  '|',
+    'COMPONENT': '^',
+    'SUBCOMPONENT': '&',
+    'REPETITION': '~',
+    'ESCAPE': '\\'
 }
 
 #: default hl7 version
@@ -59,5 +59,7 @@ class VALIDATION_LEVEL:
     """
     #: Strict validation
     STRICT = 1
-    #: Quiet validation
-    QUIET = 2
+    #: Tolerant validation
+    TOLERANT = 2
+    # kept for backward compatibility
+    QUIET = TOLERANT

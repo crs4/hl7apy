@@ -7,6 +7,7 @@ HL7apy API documentation.
 
 .. toctree::
 
+    hl7apy
     core
     consts
     parser
@@ -14,4 +15,5 @@ HL7apy API documentation.
     factories
     exceptions
     validation
-    hl7apy
+    mllp
+    utils

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2014, CRS4
+# Copyright (c) 2012-2015, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -23,12 +23,11 @@
 
     The HL7 versions can have different implementation of base datatypes; for example the ST base datatype
     of HL7 v2.6 is different from the v2.5 one. This module contains reference classes for all base datatypes
-    but you should not import them directly from here. If you need an implementation for a particular version use the
-    :func:`get_base_datatypes` function from a specific version's module
+    but you should not import them directly from here. If you need an implementation for a particular version
+    use the :func:`get_base_datatypes` function from a specific version's module
     For example if you're using version 2.4 and you need an `FT` base datatype do the following:
 
-    >>> from hl7apy.v2_4 import get_base_datatypes
-    >>> FT = get_base_datatypes()['FT']
+    >>> from hl7apy.v2_4 import FT
     >>> f = FT('some useful information')
 
 """
@@ -41,7 +40,7 @@ from decimal import Decimal
 
 from hl7apy import get_default_encoding_chars, get_default_validation_level
 from hl7apy.exceptions import MaxLengthReached, InvalidHighlightRange, InvalidDateFormat, \
-                              InvalidDateOffset, InvalidMicrosecondsPrecision
+    InvalidDateOffset, InvalidMicrosecondsPrecision
 from hl7apy.validation import Validator
 
 
@@ -56,11 +55,14 @@ class BaseDataType(object):
     :param max_length: The maximum length of the value. Default to None
 
     :type validation_level: ``int``
-    :param validation_level: It must be a value from class :class:`hl7apy.consts.VALIDATION_LEVEL`
-        If it is :attr:`STRICT` it checks that :attr:`value` doesn't exceed the attr:`max_length`
+    :param validation_level: It must be a value from class
+        :class:`VALIDATION_LEVEL <hl7apy.consts.VALIDATION_LEVEL>`
+        If it is :attr:`STRICT <VALIDATION_LEVEL.STRICT>` it checks that :attr:`value` doesn't exceed the
+        attr:`max_length`
 
-    :raise: :exc:`hl7apy.exceptions.MaxLengthReached` When the :attr:`value`'s length is greater than the
-     :attr:`max_length`. Only if :attr:`validation_level` is :attr:`STRICT`
+    :raise: :exc:`MaxLengthReached <hl7apy.exceptions.MaxLengthReached>` When the :attr:`value`'s length is
+        greater than the :attr:`max_length`. Only if :attr:`validation_level` is
+        :attr:`STRICT <VALIDATION_LEVEL.STRICT>`
     """
     def __init__(self, value, max_length=None, validation_level=None):
         if validation_level is None:
@@ -68,8 +70,7 @@ class BaseDataType(object):
         self.validation_level = validation_level
         self.max_length = max_length
         if Validator.is_strict(self.validation_level):
-            if self.max_length is not None and \
-                len('{0}'.format(value)) > self.max_length:
+            if self.max_length is not None and len('{0}'.format(value)) > self.max_length:
                 raise MaxLengthReached(value, self.max_length)
         self.value = value
 
@@ -92,7 +93,7 @@ class TextualDataType(BaseDataType):
     Base class for textual data types.
     It is meant to be extended and it should not be used directly
 
-    :type value: ``basestring``
+    :type value: ``str``
     :param value: the value of the data type
 
     :type max_length: ``int``
@@ -105,9 +106,11 @@ class TextualDataType(BaseDataType):
         thrown when to_er7 method is called
 
     :type validation_level: ``int``
-    :param validation_level: It has the same meaning as in :class:`BaseDatatype`
+    :param validation_level: It has the same meaning as in
+        :class:`BaseDatatype <hl7apy.base_datatype.BaseDatatype>`
 
-    :raise: :exc:`hl7apy.exceptions.MaxLengthReached` When the `value`'s length is greater than `max_length`
+    :raise: :exc:`MaxLengthReached <hl7apy.exceptions.MaxLengthReached>` When the :attr:`value`'s length is
+        greater than :attr:`max_length`
     """
     def __init__(self, value, max_length=32, highlights=None,
                  validation_level=None):
@@ -123,20 +126,20 @@ class TextualDataType(BaseDataType):
     def _escape_value(self, value, encoding_chars=None):
         escape_char = encoding_chars['ESCAPE']
         translations = ((encoding_chars['FIELD'], '{esc}F{esc}'.format(esc=escape_char)),
-                       (encoding_chars['COMPONENT'], '{esc}S{esc}'.format(esc=escape_char)),
-                       (encoding_chars['SUBCOMPONENT'], '{esc}T{esc}'.format(esc=escape_char)),
-                       (encoding_chars['REPETITION'], '{esc}R{esc}'.format(esc=escape_char)))
+                        (encoding_chars['COMPONENT'], '{esc}S{esc}'.format(esc=escape_char)),
+                        (encoding_chars['SUBCOMPONENT'], '{esc}T{esc}'.format(esc=escape_char)),
+                        (encoding_chars['REPETITION'], '{esc}R{esc}'.format(esc=escape_char)))
 
         # Inserts the highlights escape sequences
         if self.highlights is not None:
             def _sort_highlights(x, y):
                 if x[0] < y[0]:
-                    if y[0] < x[1]: #overlapping ranges
+                    if y[0] < x[1]:  # overlapping ranges
                         raise InvalidHighlightRange(x, y)
                     else:
                         return -1
                 elif x[0] > y[0]:
-                    if x[0] < y[1]: #overlapping ranges
+                    if x[0] < y[1]:  # overlapping ranges
                         raise InvalidHighlightRange(x, y)
                     else:
                         return 1
@@ -158,12 +161,13 @@ class TextualDataType(BaseDataType):
         for char, esc_seq in translations:
             value = value.replace(char, esc_seq)
         # Escapes the escape_char. If it is found in other escape sequences it is not escaped.
-        # For example if the escape char is / and we find /H/ the escape chars are not re-escaped, otherwise it would become
-        # /E/H/E/ which is not the result wanted.
-        # Thus the regex search for escape chars not followed and not preceeded by one of the litteral composing an escape sequence
-        # We use lambda because otherwise the backslash sequence in the string is processed (look for re.sub in python doc) and we don't want this
+        # For example if the escape char is / and we find /H/ the escape chars are not re-escaped,
+        # otherwise it would become /E/H/E/ which is not the result wanted.
+        # Thus the regex search for escape chars not followed and not preceeded by one of the litteral
+        # composing an escape sequence. We use lambda because otherwise the backslash sequence in the string
+        # is processed (look for re.sub in python doc) and we don't want this
         value = re.sub('(?<!%s[HNFSTRE])%s(?![HNFSTRE]%s)' % tuple(3*[re.escape(escape_char)]),
-                        lambda x: '{esc}E{esc}'.format(esc=escape_char), value)
+                       lambda x: '{esc}E{esc}'.format(esc=escape_char), value)
 
         return value
 
@@ -203,7 +207,8 @@ class DateTimeDataType(BaseDataType):
     :param format: the format that will be used converting the object to string.
         It must be an item of the :attr:`allowed_formats` tuple
 
-    :raise: :exc:``hl7apy.exceptions.InvalidDateFormat` if the ``format`` is not in the :attr:`allowed_formats` member
+    :raise: :exc:``InvalidDateFormat <hl7apy.exceptions.InvalidDateFormat>` if the ``format`` is not in
+        the :attr:`allowed_formats` member
     """
 
     allowed_formats = ()
@@ -236,17 +241,18 @@ class TM(DateTimeDataType):
     """
     Class for TM base datatype. It extends DateTimeDatatype and it represents a time value with
     hours, minutes, seconds and microseconds. Parameters are the same of the superclass plus ``offset``.
-    Since HL7 supports only four digits for microseconds, and Python datetime uses 6 digits, the wanted precision
-    must be specified.
+    Since HL7 supports only four digits for microseconds, and Python datetime uses 6 digits, the wanted
+    precision must be specified.
 
     The :attr:`allowed_formats` tuple is ``('%H', '%H%M', '%H%M%S', '%H%M%S.%f')``.
     It needs also the ``offset`` parameter which represents the UTC offset
 
-    :type offset: ``basestring``
+    :type offset: ``str``
     :param offset: the UTC offset. By default it is ''. It must be in the form ``'+/-HHMM'``
 
     :type microsec_precision: ``int``
-    :param microsec_precision: Number of digit of the microseconds part of the value. It must be between 1 and 4
+    :param microsec_precision: Number of digit of the microseconds part of the value.
+        It must be between 1 and 4
     """
 
     allowed_formats = ('%H', '%H%M', '%H%M%S', '%H%M%S.%f')
@@ -301,7 +307,8 @@ class DTM(TM):
 
 class ST(TextualDataType):
     """
-    Class for ST datatype. It extends :class:`hl7apy.base_datatypes.TextualDatatype` and the parameters are the same of the superclass
+    Class for ST datatype. It extends :class:`hl7apy.base_datatypes.TextualDatatype` and the parameters are
+    the same of the superclass
 
     :attr:`max_length` is 199
     """
@@ -312,7 +319,8 @@ class ST(TextualDataType):
 
 class FT(TextualDataType):
     """
-    Class for FT datatype. It extends :class:`hl7apy.base_datatypes.TextualDataType` and the parameters are the same of the superclass
+    Class for FT datatype. It extends :class:`hl7apy.base_datatypes.TextualDataType` and the parameters are
+    the same of the superclass
 
     :attr:`max_length` is 65536
     """
@@ -323,7 +331,8 @@ class FT(TextualDataType):
 
 class ID(TextualDataType):
     """
-    Class for ID datatype. It extends :class:`hl7apy.base_datatypes.TextualDataType` and the parameters are the same of the superclass
+    Class for ID datatype. It extends :class:`hl7apy.base_datatypes.TextualDataType` and the parameters are
+    the same of the superclass
 
     :attr:`max_length` None
     """
@@ -336,19 +345,21 @@ class ID(TextualDataType):
 
 class IS(TextualDataType):
     """
-    Class for IS datatype. It extends :class:`hl7apy.base_datatypes.TextualDataType` and the parameters are the same of the superclass
+    Class for IS datatype. It extends :class:`hl7apy.base_datatypes.TextualDataType` and the parameters are
+    the same of the superclass
 
     :attr:`max_length` is 20
     """
     def __init__(self, value, highlights=None,
                  validation_level=None):
         super(IS, self).__init__(value, 20, highlights, validation_level)
-        #TODO: check for tables of allowed values (also defined on site): are we strict or not?
+        # TODO: check for tables of allowed values (also defined on site): are we strict or not?
 
 
 class TX(TextualDataType):
     """
-    Class for TX datatype. It extends :class:`hl7apy.base_datatypes.TextualDataType` and the parameters are the same of the superclass
+    Class for TX datatype. It extends :class:`hl7apy.base_datatypes.TextualDataType` and the parameters are
+    the same of the superclass
 
     :attr:`max_length` is 65536
     """
@@ -359,7 +370,8 @@ class TX(TextualDataType):
 
 class GTS(TextualDataType):
     """
-    Class for GTS datatype. It extends :class:`hl7apy.base_datatypes.TextualDataType` and the parameters are the same of the superclass
+    Class for GTS datatype. It extends :class:`hl7apy.base_datatypes.TextualDataType` and the parameters are
+    the same of the superclass
 
     :attr:`max_length` is 199
     """
@@ -370,11 +382,12 @@ class GTS(TextualDataType):
 
 class NM(NumericDataType):
     """
-    Class for NM datatype. It extends :class:`hl7apy.base_datatypes.NumericDatatype` and the parameters are the same of the superclass
+    Class for NM datatype. It extends :class:`hl7apy.base_datatypes.NumericDatatype` and the parameters are
+    the same of the superclass
 
     :attr:`max_length` is 16.
 
-    The type of ``value`` must be :class:`decimal.Decimal` or :class:`numbers.Real`
+    The type of ``value`` must be :class:`decimal.Decimal` or :class:`Real <numbers.Real>`
 
     :raise: :exc:`ValueError` raised when the value is not of one of the correct type
     """
@@ -412,7 +425,7 @@ class TN(TextualDataType):
 
     :attr:`max_length` is 199.
 
-    The type of ``value`` must be `basestring` and should match the format
+    The type of ``value`` must be `str` and should match the format
     [NN] [(999)]999-9999[X99999][B99999][C any text]
 
     :raise: :exc:`ValueError` raised when the value does not match the expected format

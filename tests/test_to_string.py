@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2014, CRS4
+# Copyright (c) 2012-2015, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -20,11 +20,11 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import unittest
-from hl7apy.core import Message, Field, Component, SubComponent
+from hl7apy.core import Message, Group, Segment, Field, Component, SubComponent
 from hl7apy.parser import parse_segment, parse_message
 from hl7apy.base_datatypes import *
 from hl7apy.exceptions import InvalidHighlightRange
-from hl7apy.consts import MLLP_ENCODING_CHARS
+from hl7apy.consts import MLLP_ENCODING_CHARS, VALIDATION_LEVEL
 
 class ToStringTestCase(unittest.TestCase):
     """
@@ -104,8 +104,7 @@ class ToStringTestCase(unittest.TestCase):
         from datetime import datetime
 
         msg = Message('RSP_K11')
-        self.assertEqual(msg.to_er7(), 'MSH|^~\\&|||||%s|||||2.5' % datetime.strftime(datetime.now(), '%Y%m%d%H%M%S')
-)
+        self.assertRegexpMatches(msg.to_er7(), 'MSH|^~\\&|||||d+|||||2.5')
 
     def test_highlights(self):
         """
@@ -172,6 +171,62 @@ class ToStringTestCase(unittest.TestCase):
 
         msg = parse_message(test_msg)
         self.assertEqual(msg.to_mllp(trailing_children=True), mllp_msg)
+
+    def test_to_string_segment_with_infinite_children(self):
+        qpd = Segment('QPD', validation_level=VALIDATION_LEVEL.STRICT)
+        qpd.qpd_3 = 'abc'
+        qpd.qpd_10 = 'cba'
+        self.assertEqual(qpd.to_er7(), 'QPD|||abc|||||||cba')
+
+        zin = Segment('ZIN',validation_level=VALIDATION_LEVEL.STRICT)
+        zin.zin_1 = 'yyy'
+        self.assertEqual(zin.to_er7(), 'ZIN|yyy')
+        zin.zin_10 = 'www'
+        self.assertEqual(zin.to_er7(), 'ZIN|yyy|||||||||www')
+
+    def test_to_string_segment_with_unknown_fields(self):
+        f1 = Field()
+        f1.value = 'abc'
+        f2 = Field()
+        f2.value = 'cba'
+
+        pid_er7 = 'PID|1||566-554-3423^^^GHH^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M|||||||||||||||||||||||'
+        pid = parse_segment(pid_er7)
+        pid.add(f1)
+        self.assertEqual(pid.to_er7(trailing_children=True), pid_er7 + '|abc')
+        pid.add(f2)
+        self.assertEqual(pid.to_er7(trailing_children=True), pid_er7 + '|abc|cba')
+
+    def test_to_string_z_segment_with_unknown_fields(self):
+        f1 = Field()
+        f1.value = 'abc'
+        f2 = Field()
+        f2.value = 'cba'
+
+        zin = Segment('ZIN')
+        zin.zin_1 = 'yyy'
+        zin.add(f1)
+        self.assertEqual(zin.to_er7(), 'ZIN|yyy|abc')
+        zin.zin_4 = 'zzz'
+        self.assertEqual(zin.to_er7(), 'ZIN|yyy|||zzz|abc')
+        zin.add(f2)
+        self.assertEqual(zin.to_er7(), 'ZIN|yyy|||zzz|abc|cba')
+
+    def test_to_string_message_with_z_segment(self):
+        msg = self._create_test_message(self.msh_values_standard)
+        msg.zin = 'ZIN||abc||cba^www~abc^yyy'
+        self.assertEqual(msg.to_er7(), self.msh_standard + '\rZIN||abc||cba^www~abc^yyy')
+
+        msg.zbe = 'ZBE|yyy|ww||||||yyy'
+        self.assertEqual(msg.to_er7(), self.msh_standard + '\rZIN||abc||cba^www~abc^yyy\rZBE|yyy|ww||||||yyy')
+
+        g = Group('OML_O33_PATIENT', validation_level=VALIDATION_LEVEL.TOLERANT)
+        g.pid = 'PID|1'
+        g.zbe = 'ZBE||ab|ab'
+
+        msg.add(g)
+        self.assertEqual(msg.to_er7(), self.msh_standard + '\rZIN||abc||cba^www~abc^yyy\rZBE|yyy|ww||||||yyy\rPID|1\rZBE||ab|ab')
+
 
 
 if __name__ == '__main__':

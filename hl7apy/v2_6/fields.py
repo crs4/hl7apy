@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2014, CRS4
+# Copyright (c) 2012-2015, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -761,8 +761,11 @@ FIELDS = {'ABS_1': ('leaf', 'XCN', 'DISCHARGE_CARE_PROVIDER', 'HL70010'),
  'IN1_35': ('leaf', 'IS', 'COMPANY_PLAN_CODE', 'HL70042'),
  'IN1_36': ('leaf', 'ST', 'POLICY_NUMBER', None),
  'IN1_37': ('leaf', 'CP', 'POLICY_DEDUCTIBLE', None),
+ 'IN1_38': ('leaf', 'CP', 'POLICY_LIMIT_AMOUNT', None),
  'IN1_39': ('leaf', 'NM', 'POLICY_LIMIT_DAYS', None),
  'IN1_4': ('leaf', 'XON', 'INSURANCE_COMPANY_NAME', None),
+ 'IN1_40': ('leaf', 'CP', 'ROOM_RATE_SEMI_PRIVATE', None),
+ 'IN1_41': ('leaf', 'CP', 'ROOM_RATE_PRIVATE', None),
  'IN1_42': ('leaf', 'CWE', 'INSURED_S_EMPLOYMENT_STATUS', 'HL70066'),
  'IN1_43': ('leaf', 'IS', 'INSURED_S_ADMINISTRATIVE_SEX', 'HL70001'),
  'IN1_44': ('leaf', 'XAD', 'INSURED_S_EMPLOYER_S_ADDRESS', None),

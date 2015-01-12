@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2014, CRS4
+# Copyright (c) 2012-2015, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -19,9 +19,6 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""
-HL7apy - Exceptions
-"""
 
 class HL7apyException(Exception):
     """
@@ -38,6 +35,29 @@ class ParserError(HL7apyException):
     Traceback (most recent call last):
     ...
     ParserError: Invalid message
+    """
+
+
+class ValidationError(HL7apyException):
+    """
+    Error during validation
+
+    >>> from hl7apy.parser import parse_message
+    >>> from hl7apy.validation import VALIDATION_LEVEL
+    >>> msh = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.5||||AL\\r'
+    >>> evn = 'EVN||20080115153000||AAA|AAA|20080114003000\\r'
+    >>> pid = 'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\\r'
+    >>> message = msh + evn + pid
+    >>> parse_message(message, validation_level=VALIDATION_LEVEL.STRICT)
+    Traceback (most recent call last):
+    ...
+    ValidationError: Missing required child ADT_A01.PV1
+    """
+
+
+class ValidationWarning(HL7apyException):
+    """
+    Warning during validation
     """
 
 
@@ -78,7 +98,7 @@ class ChildNotFound(HL7apyException):
 
 class ChildNotValid(HL7apyException):
     """
-    Raised when you try to assign an unexpected child to an :class:`hl7apy.core.Element`
+    Raised when you try to assign an unexpected child to an :class:`Element <hl7apy.core.Element>`
 
     >>> from hl7apy.core import Segment, Field
     >>> s = Segment('PID', validation_level=1)
@@ -99,7 +119,7 @@ class UnknownValidationLevel(HL7apyException):
     """
     Raised when the validation_level specified is not valid
 
-    It should be one of those defined in :class:`hl7apy.consts.VALIDATION_LEVEL`.
+    It should be one of those defined in :class:`VALIDATION_LEVEL <hl7apy.consts.VALIDATION_LEVEL>`.
 
     >>> from hl7apy import set_default_validation_level
     >>> set_default_validation_level(3)
@@ -123,9 +143,10 @@ class OperationNotAllowed(HL7apyException):
 
 class MaxChildLimitReached(HL7apyException):
     """
-    Raised when a child cannot be added to an instance of :class:`hl7apy.core.Element`
-    since the :class:`hl7apy.core.Element` has already reached the maximum number
-    of children allowed for the given child type (e.g. a :class:`hl7apy.core.Message` should have at most 1 MSH segment)
+    Raised when a child cannot be added to an instance of :class:`Element <hl7apy.core.Element>`
+    since the :class:`Element <hl7apy.core.Element>` has already reached the maximum number
+    of children allowed for the given child type (e.g. a :class:`Message <hl7apy.core.Message>` should have
+    at most 1 MSH segment)
 
     >>> from hl7apy.core import Message, Segment
     >>> m = Message("OML_O33", validation_level=1)
@@ -206,8 +227,7 @@ class InvalidHighlightRange(HL7apyException):
 
     For a description of highlight range see :class:`hl7apy.base_datatypes.TextualDataType`
 
-    >>> from hl7apy.v2_5 import get_base_datatypes
-    >>> ST = get_base_datatypes()['ST']
+    >>> from hl7apy.v2_5 import ST
     >>> s = ST(value='some useful information', highlights=((5, 3),))
     >>> s.to_er7()
     Traceback (most recent call last):
@@ -226,8 +246,7 @@ class InvalidDateFormat(HL7apyException):
     """
     Raised when the output format for a :class:`hl7apy.base_datatypes.DateTimeDataType` is not valid
 
-    >>> from hl7apy.v2_5 import get_base_datatypes
-    >>> DTM = get_base_datatypes()['DTM']
+    >>> from hl7apy.v2_5 import DTM
     >>> DTM(value='10102013', format="%d%m%Y")
     Traceback (most recent call last):
     ...
@@ -244,8 +263,7 @@ class InvalidDateOffset(HL7apyException):
     """
     Raised when the offset for a :class:`TM` or :class:`hl7apy.base_datatypes.DTM` is not valid
 
-    >>> from hl7apy.v2_5 import get_base_datatypes
-    >>> DTM = get_base_datatypes()['DTM']
+    >>> from hl7apy.v2_5 import DTM
     >>> DTM(value='20131010', format="%Y%m%d", offset='+1300')
     Traceback (most recent call last):
     ...
@@ -256,6 +274,7 @@ class InvalidDateOffset(HL7apyException):
 
     def __str__(self):
         return 'Invalid date offset: {0}'.format(self.offset)
+
 
 class InvalidMicrosecondsPrecision(HL7apyException):
     """
@@ -278,7 +297,8 @@ class InvalidEncodingChars(HL7apyException):
     Raised when the encoding chars specified is not a correct set of HL7 encoding chars
 
     >>> from hl7apy.core import Message
-    >>> encoding_chars = {'GROUP' : '\\r', 'SEGMENT' : '\\r', 'COMPONENT' : '^', 'SUBCOMPONENT' : '&', 'REPETITION' : '~', 'ESCAPE' : '\\\\'}
+    >>> encoding_chars = {'GROUP': '\\r', 'SEGMENT': '\\r', 'COMPONENT': '^', \
+                          'SUBCOMPONENT': '&', 'REPETITION': '~', 'ESCAPE': '\\\\'}
     >>> m = Message('ADT_A01', encoding_chars=encoding_chars)
     Traceback (most recent call last):
     ...
@@ -287,6 +307,13 @@ class InvalidEncodingChars(HL7apyException):
     def __str__(self):
         return self.message if self.message else 'Invalid encoding chars'
 
+
+class MessageProfileNotFound(HL7apyException):
+    """
+    Raised when the structure for a message is not found in the message profile specified
+    """
+    def __str__(self):
+        return 'Message profile not found for the specified message'
 
 if __name__ == '__main__':
 

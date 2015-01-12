@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2014, CRS4
+# Copyright (c) 2012-2015, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -26,15 +26,20 @@ from segments import SEGMENTS
 from fields import FIELDS
 from datatypes import DATATYPES
 from groups import GROUPS
+from tables import TABLES
 
 from hl7apy.v2_6.base_datatypes import ST
 from hl7apy.exceptions import ChildNotFound
 
 ELEMENTS = {'Message': MESSAGES, 'Segment': SEGMENTS, 'Field': FIELDS,
-            'Component': DATATYPES, 'Group': GROUPS, 'SubComponent': DATATYPES}
+            'Component': DATATYPES, 'Group': GROUPS, 'SubComponent': DATATYPES,
+            'Table': TABLES}
 
 def get(name, element_type):
-    return ELEMENTS[element_type][name]
+    try:
+        return ELEMENTS[element_type][name]
+    except KeyError:
+        raise ChildNotFound(name)
 
 def find(name, where):
     for cls in where:
@@ -61,3 +66,15 @@ def _load_base_datatypes():
     return datatypes
 
 BASE_DATATYPES = _load_base_datatypes()
+
+ST = BASE_DATATYPES['ST']
+ID = BASE_DATATYPES['ID']
+DT = BASE_DATATYPES['DT']
+DTM = BASE_DATATYPES['DTM']
+FT = BASE_DATATYPES['FT']
+GTS = BASE_DATATYPES['GTS']
+IS = BASE_DATATYPES['IS']
+NM = BASE_DATATYPES['NM']
+SI = BASE_DATATYPES['SI']
+TM = BASE_DATATYPES['TM']
+TX = BASE_DATATYPES['TX']
