@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2014, CRS4
+# Copyright (c) 2012-2015, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -999,7 +999,7 @@ class SubComponent(CanBeVaries):
         :class:`VALIDATION_LEVEL <hl7apy.consts.VALIDATION_LEVEL>` class or ``None`` to use the default
         validation level (see :func:`get_default_validation_level <hl7apy.get_default_validation_level>`)
 
-    :type traversal_parent: an instance of :class:`Component <hl7apy.core.Component>`or None
+    :type traversal_parent: an instance of :class:`Component <hl7apy.core.Component>` or None
     :param traversal_parent: the temporary parent used during traversal
     """
     child_classes = ()

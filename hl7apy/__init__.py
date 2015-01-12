@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2014, CRS4
+# Copyright (c) 2012-2015, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -30,12 +30,14 @@ from hl7apy.exceptions import UnsupportedVersion, InvalidEncodingChars, UnknownV
 from hl7apy.consts import DEFAULT_ENCODING_CHARS, DEFAULT_VERSION, VALIDATION_LEVEL
 
 __author__ = 'Daniela Ghironi, Vittorio Meloni, Alessandro Sulis, Federico Caboni'
-__author_email__ = '<ghiron@gmail.com>, <vittorio.meloni@crs4.it>, <alessandro.sulis@crs4.it>, <federico.caboni@me.com>'
+__author_email__ = '<ghiron@gmail.com>, <vittorio.meloni@crs4.it>, <alessandro.sulis@crs4.it>, ' \
+                   '<federico.caboni@me.com>'
 __url__ = 'http://hl7apy.org'
 
 _DEFAULT_ENCODING_CHARS = DEFAULT_ENCODING_CHARS
 _DEFAULT_VERSION = DEFAULT_VERSION
 _DEFAULT_VALIDATION_LEVEL = VALIDATION_LEVEL.TOLERANT
+
 
 def check_encoding_chars(encoding_chars):
     """
@@ -55,6 +57,7 @@ def check_encoding_chars(encoding_chars):
     values = [ v for k, v in encoding_chars.items() if k in required ]
     if len(values) > len(set(values)):
         raise InvalidEncodingChars('Found duplicate encoding chars')
+
 
 def check_validation_level(validation_level):
     """
@@ -78,6 +81,7 @@ def check_version(version):
     if version not in SUPPORTED_LIBRARIES:
         raise UnsupportedVersion(version)
 
+
 def get_default_encoding_chars():
     """
     Get the default encoding chars
@@ -89,6 +93,7 @@ def get_default_encoding_chars():
     |
     """
     return _DEFAULT_ENCODING_CHARS
+
 
 def get_default_version():
     """
@@ -114,6 +119,7 @@ def get_default_validation_level():
     """
     return _DEFAULT_VALIDATION_LEVEL
 
+
 def set_default_validation_level(validation_level):
     """
     Set the given validation level as default
@@ -136,6 +142,7 @@ def set_default_validation_level(validation_level):
 
     _DEFAULT_VALIDATION_LEVEL = validation_level
 
+
 def set_default_version(version):
     """
     Set the given version as default
@@ -157,6 +164,7 @@ def set_default_version(version):
     global _DEFAULT_VERSION
 
     _DEFAULT_VERSION = version
+
 
 def set_default_encoding_chars(encoding_chars):
     """
@@ -202,6 +210,7 @@ def set_default_encoding_chars(encoding_chars):
 
     _DEFAULT_ENCODING_CHARS = encoding_chars
 
+
 def load_library(version):
     """
     Load the correct module according to the version
@@ -216,6 +225,7 @@ def load_library(version):
     if lib is None:
         lib = importlib.import_module(module_name)
     return lib
+
 
 def load_reference(name, element_type, version):
     """
@@ -261,6 +271,7 @@ def load_reference(name, element_type, version):
     ref = lib.get(name, element_type)
     return ref
 
+
 def find_reference(name, element_types, version):
     """
     Look for an element of the given name and version into the given types and return its reference structure
@@ -292,11 +303,13 @@ def find_reference(name, element_types, version):
     ref = lib.find(name, element_types)
     return ref
 
+
 def load_message_profile(path):
     with open(path) as f:
         mp = cPickle.load(f)
 
     return mp
+
 
 def _discover_libraries():
     current_dir = os.path.dirname(__file__)

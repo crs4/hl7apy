@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2014, CRS4
+# Copyright (c) 2012-2015, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -248,7 +248,7 @@ class Validator(object):
     @staticmethod
     def is_quiet(level):
         """
-        Equal to :funct:`is_tolerant <Validator.is_tolerant>`. Kept for backward compatibility
+        Equal to :func:`is_tolerant <Validator.is_tolerant>`. Kept for backward compatibility
         :param level:
         :rtype: ``bool``
         :return: ``True`` if validation level is tolerant
