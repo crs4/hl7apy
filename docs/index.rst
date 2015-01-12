@@ -53,6 +53,7 @@ Contents
    tutorial/index
    api_docs/index
    examples/index
+   release_notes
 
 License
 =======
