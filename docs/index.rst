@@ -17,10 +17,13 @@ The main features includes:
  * Support to all simple and complex datatypes
  * Encoding chars customization
  * Message encoding in ER7 format and compliant with MLLP protocol
+ * Support to message profile
+ * Support to Z-Elements
+ * Simple MLLP server implementation
 
 Currently supported HL7 versions are: 2.2, 2.3, 2.3.1, 2.4, 2.5, 2.5.1, 2.6.
 
-Current version is 1.0.1
+Current version is 1.1.0
 
 To get started visit the :ref:`Getting started <tutorial>` section
 
@@ -50,6 +53,7 @@ Contents
    tutorial/index
    api_docs/index
    examples/index
+   release_notes
 
 License
 =======
@@ -58,7 +62,7 @@ HL7apy is released under the MIT License (MIT)
 
 ::
 
-  Copyright (c) 2012-2014, CRS4
+  Copyright (c) 2012-2015, CRS4
 
   Permission is hereby granted, free of charge, to any person obtaining a copy of
   this software and associated documentation files (the "Software"), to deal in

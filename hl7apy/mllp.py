@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2014, CRS4
+# Copyright (c) 2012-2015, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -72,20 +72,19 @@ class _MLLPRequestHandler(StreamRequestHandler):
 
 
 class MLLPServer(TCPServer):
-
-    def __init__(self, host, port, handlers):
-        """
-        An MLLP server implementation. It receives HL7 messages encoded in MLLP and redirects them to the
+    """
+        A :class:`TCPServer <SocketServer.TCPServer>` subclass that implements an MLLP server
+        receives HL7 messages encoded in MLLP and redirects them to the
         correct handler.
 
         :param host: the address of the listener
         :param port: the port of the listener
         :param handlers: a dictionary that specify the handler classes for every kind of supported message.
-        The keys of the dictionary must be the message type and the values the handlers classes. The latter
-        must be subclasses of :class:`AbstractTransactionHandler` that implement the
-        reply() method
-
-        """
+            The keys of the dictionary must be the message type and the values the handlers classes.
+            The latter must be subclasses of :class:`AbstractTransactionHandler` that implement the
+            :func:`reply() <AbstractTransactionHandler.reply>` method
+    """
+    def __init__(self, host, port, handlers):
         self.host = host
         self.port = port
         self.handlers = handlers
@@ -97,14 +96,18 @@ class MLLPServer(TCPServer):
 
 
 class AbstractTransactionHandler(object):
+    """
+        Abstract transaction handler. Handlers should implement the
+        :func:`reply() <AbstractTransactionHandler.reply>` method which handle the incoming message.
+
+        :param message: a :obj:`Message <hl7apy.core.Message>` object
+    """
     def __init__(self, message):
-        """
-        :param message: a :obj:`hl7apy.core.Message` object
-        """
+
         self.msg = message
 
     def reply(self):
         """
-        Abstract method. It should implement the handling of the request message and return the response
+            Abstract method. It should implement the handling of the request message and return the response
         """
         raise NotImplementedError("The method reply() must be implemented in subclasses")

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2014, CRS4
+# Copyright (c) 2012-2015, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -101,7 +101,7 @@ def get_datetime_info(value):
     try:
         timestamp_form, microsec = _get_timestamp_format(date_value[8:])
     except ValueError:
-        if not date_value[8:]: #if it's empty
+        if not date_value[8:]:  # if it's empty
             timestamp_form, microsec = '', 4
         else:
             raise ValueError('{0} is not an HL7 valid date value'.format(value))
@@ -121,37 +121,37 @@ def _split_offset(value):
 
 def _get_date_format(value):
     if len(value) == 4:
-        format = '%Y'
+        fmt = '%Y'
     elif len(value) == 6:
-        format = '%Y%m'
+        fmt = '%Y%m'
     elif len(value) == 8:
-        format = '%Y%m%d'
+        fmt = '%Y%m%d'
     else:
         raise ValueError('{0} is not an HL7 valid date value'.format(value))
 
-    return format
+    return fmt
 
 
 def _get_timestamp_format(value):
     microsec = 4
     if len(value) == 2:
-        format = '%H'
+        fmt = '%H'
     elif len(value) == 4:
-        format = '%H%M'
+        fmt = '%H%M'
     elif len(value) == 6:
-        format = '%H%M%S'
+        fmt = '%H%M%S'
     elif 8 <= len(value) <= 11 and value[6] == '.':
-        format = '%H%M%S.%f'
-        microsec = len(value) - 7 # it gets the precision of the microseconds part
+        fmt = '%H%M%S.%f'
+        microsec = len(value) - 7  # it gets the precision of the microseconds part
     else:
         raise ValueError('{0} is not an HL7 valid date value'.format(value))
 
-    return format, microsec
+    return fmt, microsec
 
 
-def _datetime_obj_factory(value, format):
+def _datetime_obj_factory(value, fmt):
     try:
-        dt_value = datetime.strptime(value, format)
+        dt_value = datetime.strptime(value, fmt)
     except ValueError:
         raise ValueError('{0} is not an HL7 valid date value'.format(value))
     return dt_value

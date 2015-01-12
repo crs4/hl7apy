@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2014, CRS4
+# Copyright (c) 2012-2015, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,6 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""
-HL7apy - validation
-"""
-
 from hl7apy import load_reference
 from hl7apy.consts import VALIDATION_LEVEL
 from hl7apy.exceptions import ChildNotFound, ValidationError, ValidationWarning
@@ -31,7 +27,7 @@ from hl7apy.exceptions import ChildNotFound, ValidationError, ValidationWarning
 class Validator(object):
     """
     Class that handles validation. It defines validation levels and validate
-    an element using :attr:`hl7apy.consts.VALIDATION_LEVEL.STRICT` validation level
+    an element using :attr:`VALIDATION.STRICT <hl7apy.consts.VALIDATION_LEVEL.STRICT>` validation level
     """
     def __init__(self, level):
         super(Validator, self).__init__()
@@ -40,25 +36,27 @@ class Validator(object):
     @staticmethod
     def validate(element, reference=None, report_file=None):
         """
-        Checks if the :class:`hl7apy.core.Element` is a valid HL7 message according to the reference specified.
-        If the reference is not specified, it will be used the official HL7 structures for the elements
+        Checks if the :class:`Element <hl7apy.core.Element>` is a valid HL7 message according to the reference
+        specified. If the reference is not specified, it will be used the official HL7 structures for the
+        elements.
         In particular it checks:
-            * the maximum and minimum number of occurrences for every child
-            * that children are all allowed
-            * the datatype of fields, components and subcomponents
-            * the values, in particular the length and the adherence with the HL7 table, if one is specified
+
+        * the maximum and minimum number of occurrences for every child
+        * that children are all allowed
+        * the datatype of fields, components and subcomponents
+        * the values, in particular the length and the adherence with the HL7 table, if one is specified
 
         It raises the first exception that it finds.
 
         If :attr:`report_file` is specified, it will create a file with all the errors that occur.
 
-        :param element: :class:`hl7apy.core.Element`: The element to validate
+        :param element: :class:`Element <hl7apy.core.Element>`: The element to validate
         :param reference: the reference to use. Usually is None or a message profile object
         :param report_file: the name of the report file to create
 
         :return: The True if everything is ok
-        :raises: :exc:`hl7apy.exceptions.ValidationError`: when errors occur
-        :raises: :exc:`hl7apy.exceptions.ValidationWarning`: errors concerning the values
+        :raises: :exc:`ValidationError <hl7apy.exceptions.ValidationError>`: when errors occur
+        :raises: :exc:`ValidationWarning <hl7apy.exceptions.ValidationWarning>`: errors concerning the values
         """
 
         from hl7apy.core import is_base_datatype
@@ -168,7 +166,9 @@ class Validator(object):
                         # it gets all the occurrences of the children of a type
                         children = el.children.get(child_name)
                     except Exception:
-                        pass  # TODO: it is due to the lack of element in the official reference files...  should we raise an exception here?
+                        # TODO: it is due to the lack of element in the official reference files...  should
+                        # we raise an exception here?
+                        pass
                     else:
                         _check_repetitions(el, children, cardinality, child_name, errs)
                         # calls validation for every children
@@ -227,7 +227,7 @@ class Validator(object):
         Check if the given validation level is strict
 
         :type level: ``int``
-        :param level: validation level (see `hl7apy.consts.VALIDATION_LEVEL`)
+        :param level: validation level (see :class:`VALIDATION_LEVEL <hl7apy.consts.VALIDATION_LEVEL>`)
         :rtype: ``bool``
         :return: ``True`` if validation level is strict
         """
@@ -239,7 +239,7 @@ class Validator(object):
         Check if the given validation level is tolerant
 
         :type level: ``int``
-        :param level: validation level (see `hl7apy.consts.VALIDATION_LEVEL`)
+        :param level: validation level (see :class:`VALIDATION_LEVEL <hl7apy.consts.VALIDATION_LEVEL>`)
         :rtype: ``bool``
         :return: ``True`` if validation level is tolerant
         """
@@ -248,8 +248,9 @@ class Validator(object):
     @staticmethod
     def is_quiet(level):
         """
-        Equal to is_tolerant. Kept for backward compatibility
+        Equal to :func:`is_tolerant <Validator.is_tolerant>`. Kept for backward compatibility
         :param level:
-        :return:
+        :rtype: ``bool``
+        :return: ``True`` if validation level is tolerant
         """
-        return Validator.is_tolerant()
+        return Validator.is_tolerant(level)

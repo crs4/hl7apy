@@ -315,13 +315,13 @@ Message Profiles
 It is possible to create or parse a message using message profiles instead of the standard HL7 structures.
 
 To use a message profile, first you need to create the file that HL7apy can read. The file will be created using
-the utilities script `profile_parser.py` which needs the XML static definition of the profile as input.
+the utilities script `hl7apy_profile_parser` which needs the XML static definition of the profile as input.
 
 The command below will create the file for `message_profile.xml`
 
 .. code-block:: bash
 
-    python profile_parser.py message_profile.xml -o $HOME/message_profile
+    python hl7apy_profile_parser message_profile.xml -o $HOME/message_profile
 
 To create messages according to a message profile, it is necessary to load the profile and pass it ot the
 Message or the parser.
