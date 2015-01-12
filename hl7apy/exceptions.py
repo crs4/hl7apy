@@ -19,9 +19,6 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""
-HL7apy - Exceptions
-"""
 
 class HL7apyException(Exception):
     """
@@ -101,7 +98,7 @@ class ChildNotFound(HL7apyException):
 
 class ChildNotValid(HL7apyException):
     """
-    Raised when you try to assign an unexpected child to an :class:`hl7apy.core.Element`
+    Raised when you try to assign an unexpected child to an :class:`Element <hl7apy.core.Element>`
 
     >>> from hl7apy.core import Segment, Field
     >>> s = Segment('PID', validation_level=1)
@@ -122,7 +119,7 @@ class UnknownValidationLevel(HL7apyException):
     """
     Raised when the validation_level specified is not valid
 
-    It should be one of those defined in :class:`hl7apy.consts.VALIDATION_LEVEL`.
+    It should be one of those defined in :class:`VALIDATION_LEVEL <hl7apy.consts.VALIDATION_LEVEL>`.
 
     >>> from hl7apy import set_default_validation_level
     >>> set_default_validation_level(3)
@@ -146,9 +143,10 @@ class OperationNotAllowed(HL7apyException):
 
 class MaxChildLimitReached(HL7apyException):
     """
-    Raised when a child cannot be added to an instance of :class:`hl7apy.core.Element`
-    since the :class:`hl7apy.core.Element` has already reached the maximum number
-    of children allowed for the given child type (e.g. a :class:`hl7apy.core.Message` should have at most 1 MSH segment)
+    Raised when a child cannot be added to an instance of :class:`Element <hl7apy.core.Element>`
+    since the :class:`Element <hl7apy.core.Element>` has already reached the maximum number
+    of children allowed for the given child type (e.g. a :class:`Message <hl7apy.core.Message>` should have
+    at most 1 MSH segment)
 
     >>> from hl7apy.core import Message, Segment
     >>> m = Message("OML_O33", validation_level=1)
@@ -299,7 +297,8 @@ class InvalidEncodingChars(HL7apyException):
     Raised when the encoding chars specified is not a correct set of HL7 encoding chars
 
     >>> from hl7apy.core import Message
-    >>> encoding_chars = {'GROUP' : '\\r', 'SEGMENT' : '\\r', 'COMPONENT' : '^', 'SUBCOMPONENT' : '&', 'REPETITION' : '~', 'ESCAPE' : '\\\\'}
+    >>> encoding_chars = {'GROUP': '\\r', 'SEGMENT': '\\r', 'COMPONENT': '^', \
+                          'SUBCOMPONENT': '&', 'REPETITION': '~', 'ESCAPE': '\\\\'}
     >>> m = Message('ADT_A01', encoding_chars=encoding_chars)
     Traceback (most recent call last):
     ...

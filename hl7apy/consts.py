@@ -28,13 +28,13 @@ N_SEPS = 4
 
 #: Dictionary with default encoding characters as per standard specifications
 DEFAULT_ENCODING_CHARS = {
-    'GROUP' : '\r',
-    'SEGMENT' : '\r',
-    'FIELD' :  '|',
-    'COMPONENT' : '^',
-    'SUBCOMPONENT' : '&',
-    'REPETITION' : '~',
-    'ESCAPE' : '\\'
+    'GROUP': '\r',
+    'SEGMENT': '\r',
+    'FIELD':  '|',
+    'COMPONENT': '^',
+    'SUBCOMPONENT': '&',
+    'REPETITION': '~',
+    'ESCAPE': '\\'
 }
 
 #: default hl7 version

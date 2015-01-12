@@ -71,7 +71,7 @@ def check_version(version):
     """
     Validate the given version number
 
-    :type version: ``basestring``
+    :type version: ``str``
     :param version: the version to validate (e.g. ``2.6``)
     :raises: :class:`hl7apy.exceptions.UnsupportedVersion` if the given version is unsupported
     """
@@ -94,7 +94,7 @@ def get_default_version():
     """
     Get the default version
 
-    :rtype: ``basestring``
+    :rtype: ``str``
     :returns: the default version
 
     >>> print get_default_version()
@@ -106,7 +106,7 @@ def get_default_validation_level():
     """
     Get the default validation level
 
-    :rtype: ``basestring``
+    :rtype: ``str``
     :returns: the default validation level
 
     >>> print get_default_validation_level()
@@ -140,7 +140,7 @@ def set_default_version(version):
     """
     Set the given version as default
 
-    :type version: ``basestring``
+    :type version: ``str``
     :param version: the new default version (e.g. ``2.6``)
     :raises: :class:`hl7apy.exceptions.UnsupportedVersion` if the given version is unsupported
 
@@ -206,7 +206,7 @@ def load_library(version):
     """
     Load the correct module according to the version
 
-    :type version: ``basestring``
+    :type version: ``str``
     :param version: the version of the library to be loaded (e.g. '2.6')
     :rtype: module object
     """
@@ -221,11 +221,11 @@ def load_reference(name, element_type, version):
     """
     Look for an element of the given type, name and version and return its reference structure
 
-    :type element_type: ``basestring``
+    :type element_type: ``str``
     :param element_type: the element type to look for (e.g. 'Segment')
-    :type name: ``basestring``
+    :type name: ``str``
     :param name: the element name to look for (e.g. 'MSH')
-    :type version: ``basestring``
+    :type version: ``str``
     :param version: the version of the library where to search the element (e.g. '2.6')
     :rtype: ``dict``
     :return: a dictionary describing the element structure
@@ -265,11 +265,11 @@ def find_reference(name, element_types, version):
     """
     Look for an element of the given name and version into the given types and return its reference structure
 
-    :type name: ``basestring``
+    :type name: ``str``
     :param name: the element name to look for (e.g. 'MSH')
     :type types: ``list`` or ``tuple``
     :param types: the element classes where to look for the element (e.g. (Group, Segment))
-    :type version: ``basestring``
+    :type version: ``str``
     :param version: the version of the library where to search the element (e.g. '2.6')
     :rtype: ``dict``
     :return: a dictionary describing the element structure
