@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0.1',
+        VERSION:     '1.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -59,7 +59,7 @@
 <dl class="function">
 <dt id="hl7apy.factories.date_factory">
 <tt class="descclassname">hl7apy.factories.</tt><tt class="descname">date_factory</tt><big>(</big><em>value</em>, <em>datatype_cls</em>, <em>validation_level=None</em><big>)</big><a class="headerlink" href="#hl7apy.factories.date_factory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.DT" title="hl7apy.base_datatypes.DT"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.DT</span></tt></a> object</p>
+<dd><p>Creates a <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.DT" title="hl7apy.base_datatypes.DT"><tt class="xref py py-class docutils literal"><span class="pre">DT</span></tt></a> object</p>
 <p>The value in input must be a string parsable with <tt class="xref py py-meth docutils literal"><span class="pre">datetime.strptime()</span></tt>.
 The date format is chosen according to the length of the value as stated in this table:</p>
 <table border="1" class="docutils">
@@ -100,9 +100,11 @@ The date format is chosen according to the length of the value as stated in this
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>value</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the value to assign the date object</li>
-<li><strong>value</strong> &#8211; the <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.DT" title="hl7apy.base_datatypes.DT"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.DT</span></tt></a> class to use. It has to be one implementation of the different version modules</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; It must be a value from class <tt class="xref py py-attr docutils literal"><span class="pre">validation_level</span></tt> <tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default value</li>
+<li><strong>value</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the value to assign the date object</li>
+<li><strong>value</strong> &#8211; the <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.DT" title="hl7apy.base_datatypes.DT"><tt class="xref py py-class docutils literal"><span class="pre">DT</span></tt></a> class to use. It has to be one implementation of
+the different version modules</li>
+<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; It must be a value from class <tt class="xref py py-attr docutils literal"><span class="pre">validation_level</span></tt>
+<tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span> <span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default value</li>
 </ul>
 </td>
 </tr>
@@ -116,7 +118,7 @@ The date format is chosen according to the length of the value as stated in this
 <dl class="function">
 <dt id="hl7apy.factories.timestamp_factory">
 <tt class="descclassname">hl7apy.factories.</tt><tt class="descname">timestamp_factory</tt><big>(</big><em>value</em>, <em>datatype_cls</em>, <em>validation_level=None</em><big>)</big><a class="headerlink" href="#hl7apy.factories.timestamp_factory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.TM" title="hl7apy.base_datatypes.TM"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.TM</span></tt></a> object</p>
+<dd><p>Creates a <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.TM" title="hl7apy.base_datatypes.TM"><tt class="xref py py-class docutils literal"><span class="pre">TM</span></tt></a> object</p>
 <p>The value in input must be a string parsable with <tt class="xref py py-meth docutils literal"><span class="pre">datetime.strptime()</span></tt>.
 It can also have an offset part specified with the format +/-HHMM.
 The offset can be added with all the allowed format
@@ -166,13 +168,15 @@ The date format is chosen according to the length of the value as stated in this
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>value</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the value to assign the date object</li>
-<li><strong>value</strong> &#8211; the <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.TM" title="hl7apy.base_datatypes.TM"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.TM</span></tt></a> class to use. It has to be one implementation of the different version modules</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; It must be a value from class <tt class="xref py py-attr docutils literal"><span class="pre">validation_level</span></tt> <tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default value</li>
+<li><strong>value</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the value to assign the date object</li>
+<li><strong>value</strong> &#8211; the <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.TM" title="hl7apy.base_datatypes.TM"><tt class="xref py py-class docutils literal"><span class="pre">TM</span></tt></a> class to use. It has to be one implementation
+of the different version modules</li>
+<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; It must be a value from class <tt class="xref py py-attr docutils literal"><span class="pre">validation_level</span></tt>
+<tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span> <span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default value</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.TM" title="hl7apy.base_datatypes.TM"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.TM</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.TM" title="hl7apy.base_datatypes.TM"><tt class="xref py py-class docutils literal"><span class="pre">TM</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -239,13 +243,15 @@ The date format is chosen according to the length of the value as stated in this
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>value</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the value to assign the date object</li>
-<li><strong>value</strong> &#8211; the <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.DTM" title="hl7apy.base_datatypes.DTM"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.DTM</span></tt></a> class to use. It has to be one implementation of the different version modules</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; It must be a value from class <tt class="xref py py-attr docutils literal"><span class="pre">validation_level</span></tt> <tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default value</li>
+<li><strong>value</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the value to assign the date object</li>
+<li><strong>value</strong> &#8211; the <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.DTM" title="hl7apy.base_datatypes.DTM"><tt class="xref py py-class docutils literal"><span class="pre">DTM</span></tt></a> class to use. It has to be one implementation
+of the different version modules</li>
+<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; It must be a value from class <tt class="xref py py-attr docutils literal"><span class="pre">validation_level</span></tt>
+<tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span> <span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default value</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.DTM" title="hl7apy.base_datatypes.DTM"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.DTM</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.DTM" title="hl7apy.base_datatypes.DTM"><tt class="xref py py-class docutils literal"><span class="pre">DTM</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -255,23 +261,25 @@ The date format is chosen according to the length of the value as stated in this
 <dl class="function">
 <dt id="hl7apy.factories.numeric_factory">
 <tt class="descclassname">hl7apy.factories.</tt><tt class="descname">numeric_factory</tt><big>(</big><em>value</em>, <em>datatype_cls</em>, <em>validation_level=None</em><big>)</big><a class="headerlink" href="#hl7apy.factories.numeric_factory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.NM" title="hl7apy.base_datatypes.NM"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.NM</span></tt></a> object</p>
+<dd><p>Creates a <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.NM" title="hl7apy.base_datatypes.NM"><tt class="xref py py-class docutils literal"><span class="pre">NM</span></tt></a> object</p>
 <p>The value in input can be a string representing a decimal number or a <tt class="docutils literal"><span class="pre">float</span></tt>.
 (i.e. a string valid for <tt class="xref py py-class docutils literal"><span class="pre">decimal.Decimal()</span></tt>).
-If it&#8217;s not, a <tt class="xref py py-exc docutils literal"><span class="pre">hl7apy.exceptions.ValueError</span></tt> is raised
+If it&#8217;s not, a <tt class="xref py py-exc docutils literal"><span class="pre">ValueError</span></tt> is raised
 Also an empty string or <tt class="docutils literal"><span class="pre">None</span></tt> are allowed</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>value</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt>) &#8211; the value to assign the numeric object</li>
-<li><strong>value</strong> &#8211; the <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.NM" title="hl7apy.base_datatypes.NM"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.NM</span></tt></a> class to use. It has to be one implementation of the different version modules</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; It must be a value from class <tt class="xref py py-attr docutils literal"><span class="pre">validation_level</span></tt> <tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default value</li>
+<li><strong>value</strong> (<tt class="docutils literal"><span class="pre">str</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt>) &#8211; the value to assign the numeric object</li>
+<li><strong>value</strong> &#8211; the <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.NM" title="hl7apy.base_datatypes.NM"><tt class="xref py py-class docutils literal"><span class="pre">NM</span></tt></a> class to use. It has to be one implementation
+of the different version modules</li>
+<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; It must be a value from class
+<tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span> <span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default value</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.NM" title="hl7apy.base_datatypes.NM"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.NM</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.NM" title="hl7apy.base_datatypes.NM"><tt class="xref py py-class docutils literal"><span class="pre">NM</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -281,7 +289,7 @@ Also an empty string or <tt class="docutils literal"><span class="pre">None</spa
 <dl class="function">
 <dt id="hl7apy.factories.sequence_id_factory">
 <tt class="descclassname">hl7apy.factories.</tt><tt class="descname">sequence_id_factory</tt><big>(</big><em>value</em>, <em>datatype_cls</em>, <em>validation_level=None</em><big>)</big><a class="headerlink" href="#hl7apy.factories.sequence_id_factory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.SI" title="hl7apy.base_datatypes.SI"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.SI</span></tt></a> object</p>
+<dd><p>Creates a <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.SI" title="hl7apy.base_datatypes.SI"><tt class="xref py py-class docutils literal"><span class="pre">SI</span></tt></a> object</p>
 <p>The value in input can be a string representing an integer number or an <tt class="docutils literal"><span class="pre">int</span></tt>.
 (i.e. a string valid for <tt class="docutils literal"><span class="pre">int()</span></tt>  ).
 If it&#8217;s not, a <tt class="xref py py-exc docutils literal"><span class="pre">ValueError</span></tt> is raised
@@ -291,13 +299,15 @@ Also an empty string or <tt class="docutils literal"><span class="pre">None</spa
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>value</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt>) &#8211; the value to assign the date object</li>
-<li><strong>value</strong> &#8211; the SI class to use. It has to be loaded from one implementation of the different version modules</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; It must be a value from class <tt class="xref py py-attr docutils literal"><span class="pre">validation_level</span></tt> <tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default value</li>
+<li><strong>value</strong> (<tt class="docutils literal"><span class="pre">str</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt>) &#8211; the value to assign the date object</li>
+<li><strong>value</strong> &#8211; the SI class to use. It has to be loaded from one implementation of the different version
+modules</li>
+<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; It must be a value from class
+<tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span> <span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default value</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.SI" title="hl7apy.base_datatypes.SI"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.SI</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.SI" title="hl7apy.base_datatypes.SI"><tt class="xref py py-class docutils literal"><span class="pre">SI</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -316,6 +326,7 @@ Also an empty string or <tt class="docutils literal"><span class="pre">None</spa
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Getting started</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API Docs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hl7apy.html">Library helper functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="core.html">Core classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="consts.html">Consts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parser.html">Parser</a></li>
@@ -323,7 +334,8 @@ Also an empty string or <tt class="docutils literal"><span class="pre">None</spa
 <li class="toctree-l2 current"><a class="current reference internal" href="">Datatype factories</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="validation.html">Validation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hl7apy.html">Library helper functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mllp.html">MLLP Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utility functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
@@ -360,7 +372,7 @@ Also an empty string or <tt class="docutils literal"><span class="pre">None</spa
     </div>
 
     <div class="footer">
-        &copy; Copyright 2012-2014, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
+        &copy; Copyright 2012-2015, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
 <script type="text/javascript">

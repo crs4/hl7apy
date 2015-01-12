@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0.1',
+        VERSION:     '1.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -61,10 +61,13 @@
 <li>Support to all simple and complex datatypes</li>
 <li>Encoding chars customization</li>
 <li>Message encoding in ER7 format and compliant with MLLP protocol</li>
+<li>Support to message profile</li>
+<li>Support to Z-Elements</li>
+<li>Simple MLLP server implementation</li>
 </ul>
 </div></blockquote>
 <p>Currently supported HL7 versions are: 2.2, 2.3, 2.3.1, 2.4, 2.5, 2.5.1, 2.6.</p>
-<p>Current version is 1.0.1</p>
+<p>Current version is 1.1.0</p>
 <p>To get started visit the <a class="reference internal" href="tutorial/index.html#tutorial"><em>Getting started</em></a> section</p>
 </div>
 <div class="section" id="installation">
@@ -91,10 +94,13 @@
 <li class="toctree-l2"><a class="reference internal" href="tutorial/index.html#er7-encoding">ER7 encoding</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial/index.html#datatypes">Datatypes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial/index.html#elements-manipulation">Elements manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/index.html#message-profiles">Message Profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial/index.html#validation">Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/index.html#z-elements">Z Elements</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api_docs/index.html">API Docs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api_docs/hl7apy.html">Library helper functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_docs/core.html">Core classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_docs/consts.html">Consts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_docs/parser.html">Parser</a></li>
@@ -102,7 +108,8 @@
 <li class="toctree-l2"><a class="reference internal" href="api_docs/factories.html">Datatype factories</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_docs/exceptions.html">Exceptions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_docs/validation.html">Validation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_docs/hl7apy.html">Library helper functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_docs/mllp.html">MLLP Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_docs/utils.html">Utility functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a></li>
@@ -112,7 +119,7 @@
 <div class="section" id="license">
 <h1>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h1>
 <p>HL7apy is released under the MIT License (MIT)</p>
-<div class="highlight-python"><div class="highlight"><pre>Copyright (c) 2012-2014, CRS4
+<div class="highlight-python"><div class="highlight"><pre>Copyright (c) 2012-2015, CRS4
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the &quot;Software&quot;), to deal in
@@ -171,7 +178,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     </div>
 
     <div class="footer">
-        &copy; Copyright 2012-2014, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
+        &copy; Copyright 2012-2015, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
 <script type="text/javascript">

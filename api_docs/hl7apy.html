@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0.1',
+        VERSION:     '1.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages" href="../index.html" />
     <link rel="up" title="API Docs" href="index.html" />
-    <link rel="next" title="Examples" href="../examples/index.html" />
-    <link rel="prev" title="Validation module" href="validation.html" /> 
+    <link rel="next" title="Core classes" href="core.html" />
+    <link rel="prev" title="API Docs" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -39,10 +39,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../examples/index.html" title="Examples"
+          <a href="core.html" title="Core classes"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="validation.html" title="Validation module"
+          <a href="index.html" title="API Docs"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Docs</a> &raquo;</li> 
@@ -56,22 +56,6 @@
             
   <div class="section" id="module-hl7apy">
 <span id="library-helper-functions"></span><h1>Library helper functions<a class="headerlink" href="#module-hl7apy" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="hl7apy-a-lightweight-python-library-to-parse-create-and-handle-hl7-v2-x-messages">
-<h2>HL7apy: a lightweight Python library to parse, create and handle HL7 v2.x messages<a class="headerlink" href="#hl7apy-a-lightweight-python-library-to-parse-create-and-handle-hl7-v2-x-messages" title="Permalink to this headline">¶</a></h2>
-<p>HL7apy is a lightweight Python package to intuitively handle <a class="reference external" href="http://www.hl7.org">HL7</a> v2 messages according to HL7 specifications.</p>
-<dl class="docutils">
-<dt>The main features includes:</dt>
-<dd><ul class="first last simple">
-<li>Message parsing</li>
-<li>Message creation</li>
-<li>Message validation following the HL7 xsd specifications</li>
-<li>Access to elements by name, long name or position</li>
-<li>Support to all simple and complex datatypes</li>
-<li>Encoding chars customization</li>
-<li>Message encoding in ER7 format and compliant with MLLP protocol</li>
-</ul>
-</dd>
-</dl>
 <dl class="function">
 <dt id="hl7apy.check_encoding_chars">
 <tt class="descclassname">hl7apy.</tt><tt class="descname">check_encoding_chars</tt><big>(</big><em>encoding_chars</em><big>)</big><a class="headerlink" href="#hl7apy.check_encoding_chars" title="Permalink to this definition">¶</a></dt>
@@ -112,7 +96,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the version to validate (e.g. <tt class="docutils literal"><span class="pre">2.6</span></tt>)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>version</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the version to validate (e.g. <tt class="docutils literal"><span class="pre">2.6</span></tt>)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.UnsupportedVersion" title="hl7apy.exceptions.UnsupportedVersion"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.exceptions.UnsupportedVersion</span></tt></a> if the given version is unsupported</td>
 </tr>
@@ -129,9 +113,9 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the element name to look for (e.g. &#8216;MSH&#8217;)</li>
+<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the element name to look for (e.g. &#8216;MSH&#8217;)</li>
 <li><strong>types</strong> (<tt class="docutils literal"><span class="pre">list</span></tt> or <tt class="docutils literal"><span class="pre">tuple</span></tt>) &#8211; the element classes where to look for the element (e.g. (Group, Segment))</li>
-<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the version of the library where to search the element (e.g. &#8216;2.6&#8217;)</li>
+<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the version of the library where to search the element (e.g. &#8216;2.6&#8217;)</li>
 </ul>
 </td>
 </tr>
@@ -148,11 +132,13 @@
 </table>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="kn">import</span> <span class="n">Message</span><span class="p">,</span> <span class="n">Segment</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">find_reference</span><span class="p">(</span><span class="s">&#39;UNKNOWN&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">Segment</span><span class="p">,</span> <span class="p">),</span> <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
-<span class="gp">...</span>
-<span class="go">ChildNotFound: No child named UNKNOWN</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">ChildNotFound</span>: <span class="n">No child named UNKNOWN</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">find_reference</span><span class="p">(</span><span class="s">&#39;ADT_A01&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">Segment</span><span class="p">,),</span>  <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
-<span class="gp">...</span>
-<span class="go">ChildNotFound: No child named ADT_A01</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">ChildNotFound</span>: <span class="n">No child named ADT_A01</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">find_reference</span><span class="p">(</span><span class="s">&#39;ADT_A01&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">Message</span><span class="p">,),</span>  <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">r</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s">&#39;cls&#39;</span><span class="p">]</span>
 <span class="go">ADT_A01 &lt;class &#39;hl7apy.core.Message&#39;&gt;</span>
@@ -188,7 +174,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">basestring</span></tt></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">str</span></tt></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the default validation level</td>
 </tr>
@@ -208,7 +194,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">basestring</span></tt></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">str</span></tt></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the default version</td>
 </tr>
@@ -228,7 +214,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the version of the library to be loaded (e.g. &#8216;2.6&#8217;)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>version</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the version of the library to be loaded (e.g. &#8216;2.6&#8217;)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">module object</td>
 </tr>
@@ -245,9 +231,9 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>element_type</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the element type to look for (e.g. &#8216;Segment&#8217;)</li>
-<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the element name to look for (e.g. &#8216;MSH&#8217;)</li>
-<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the version of the library where to search the element (e.g. &#8216;2.6&#8217;)</li>
+<li><strong>element_type</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the element type to look for (e.g. &#8216;Segment&#8217;)</li>
+<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the element name to look for (e.g. &#8216;MSH&#8217;)</li>
+<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the version of the library where to search the element (e.g. &#8216;2.6&#8217;)</li>
 </ul>
 </td>
 </tr>
@@ -289,8 +275,9 @@
 </tbody>
 </table>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">load_reference</span><span class="p">(</span><span class="s">&#39;UNKNOWN&#39;</span><span class="p">,</span> <span class="s">&#39;Segment&#39;</span><span class="p">,</span> <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
-<span class="gp">...</span>
-<span class="go">KeyError: &#39;UNKNOWN&#39;</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">ChildNotFound</span>: <span class="n">No child named UNKNOWN</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">load_reference</span><span class="p">(</span><span class="s">&#39;ADT_A01&#39;</span><span class="p">,</span> <span class="s">&#39;Message&#39;</span><span class="p">,</span> <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="go">sequence</span>
@@ -353,7 +340,7 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_encoding_chars</span><span class="p">({</span><span class="s">&#39;FIELD&#39;</span><span class="p">:</span> <span class="s">&#39;!&#39;</span><span class="p">})</span>
 <span class="gt">Traceback (most recent call last):</span>
     <span class="o">...</span>
-<span class="nc">InvalidEncodingChars</span>: <span class="n-Identifier">Invalid encoding chars</span>
+<span class="gr">InvalidEncodingChars</span>: <span class="n">Missing required encoding chars</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_encoding_chars</span><span class="p">({</span><span class="s">&#39;FIELD&#39;</span><span class="p">:</span> <span class="s">&#39;!&#39;</span><span class="p">,</span> <span class="s">&#39;COMPONENT&#39;</span><span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="s">&#39;SUBCOMPONENT&#39;</span><span class="p">:</span> <span class="s">&#39;S&#39;</span><span class="p">,</span> <span class="s">&#39;REPETITION&#39;</span><span class="p">:</span> <span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="s">&#39;ESCAPE&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\\</span><span class="s">&#39;</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">get_default_encoding_chars</span><span class="p">()[</span><span class="s">&#39;FIELD&#39;</span><span class="p">]</span>
 <span class="go">!</span>
@@ -378,8 +365,8 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_validation_level</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 <span class="gt">Traceback (most recent call last):</span>
     <span class="o">...</span>
-<span class="nc">UnknownValidationLevel</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_validation_level</span><span class="p">(</span><span class="n">VALIDATION_LEVEL</span><span class="o">.</span><span class="n">QUIET</span><span class="p">)</span>
+<span class="gr">UnknownValidationLevel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_validation_level</span><span class="p">(</span><span class="n">VALIDATION_LEVEL</span><span class="o">.</span><span class="n">TOLERANT</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">get_default_validation_level</span><span class="p">()</span>
 <span class="go">2</span>
 </pre></div>
@@ -394,7 +381,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the new default version (e.g. <tt class="docutils literal"><span class="pre">2.6</span></tt>)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>version</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the new default version (e.g. <tt class="docutils literal"><span class="pre">2.6</span></tt>)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.UnsupportedVersion" title="hl7apy.exceptions.UnsupportedVersion"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.exceptions.UnsupportedVersion</span></tt></a> if the given version is unsupported</td>
 </tr>
@@ -403,7 +390,7 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_version</span><span class="p">(</span><span class="s">&#39;22&#39;</span><span class="p">)</span>
 <span class="gt">Traceback (most recent call last):</span>
     <span class="o">...</span>
-<span class="nc">UnsupportedVersion</span>: <span class="n-Identifier">The version 22 is not supported</span>
+<span class="gr">UnsupportedVersion</span>: <span class="n">The version 22 is not supported</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_version</span><span class="p">(</span><span class="s">&#39;2.3&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">get_default_version</span><span class="p">()</span>
 <span class="go">2.3</span>
@@ -411,7 +398,6 @@
 </div>
 </dd></dl>
 
-</div>
 </div>
 
 
@@ -424,6 +410,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Getting started</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API Docs</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Library helper functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="core.html">Core classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="consts.html">Consts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parser.html">Parser</a></li>
@@ -431,18 +418,19 @@
 <li class="toctree-l2"><a class="reference internal" href="factories.html">Datatype factories</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="validation.html">Validation module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Library helper functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mllp.html">MLLP Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utility functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="validation.html"
-                        title="previous chapter">Validation module</a></p>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">API Docs</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../examples/index.html"
-                        title="next chapter">Examples</a></p>
+  <p class="topless"><a href="core.html"
+                        title="next chapter">Core classes</a></p>
         </div>
       </div>
       <div class="clearer"></div>
@@ -457,10 +445,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../examples/index.html" title="Examples"
+          <a href="core.html" title="Core classes"
              >next</a> |</li>
         <li class="right" >
-          <a href="validation.html" title="Validation module"
+          <a href="index.html" title="API Docs"
              >previous</a> |</li>
         <li><a href="../index.html">HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages</a> &raquo;</li>
           <li><a href="index.html" >API Docs</a> &raquo;</li> 
@@ -468,7 +456,7 @@
     </div>
 
     <div class="footer">
-        &copy; Copyright 2012-2014, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
+        &copy; Copyright 2012-2015, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
 <script type="text/javascript">

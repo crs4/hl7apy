@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Consts &mdash; HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages</title>
+    <title>MLLP Classes &mdash; HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages</title>
     
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages" href="../index.html" />
     <link rel="up" title="API Docs" href="index.html" />
-    <link rel="next" title="Parser" href="parser.html" />
-    <link rel="prev" title="Core classes" href="core.html" /> 
+    <link rel="next" title="Utility functions" href="utils.html" />
+    <link rel="prev" title="Validation module" href="validation.html" /> 
   </head>
   <body>
     <div class="related">
@@ -39,10 +39,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="parser.html" title="Parser"
+          <a href="utils.html" title="Utility functions"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="core.html" title="Core classes"
+          <a href="validation.html" title="Validation module"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Docs</a> &raquo;</li> 
@@ -54,59 +54,49 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-hl7apy.consts">
-<span id="consts"></span><h1>Consts<a class="headerlink" href="#module-hl7apy.consts" title="Permalink to this headline">¶</a></h1>
-<p>HL7apy - Constants</p>
-<dl class="data">
-<dt id="hl7apy.consts.DEFAULT_ENCODING_CHARS">
-<tt class="descclassname">hl7apy.consts.</tt><tt class="descname">DEFAULT_ENCODING_CHARS</tt><em class="property"> = {'GROUP': '\r', 'ESCAPE': '\\', 'COMPONENT': '^', 'FIELD': '|', 'SUBCOMPONENT': '&amp;', 'REPETITION': '~', 'SEGMENT': '\r'}</em><a class="headerlink" href="#hl7apy.consts.DEFAULT_ENCODING_CHARS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Dictionary with default encoding characters as per standard specifications</p>
-</dd></dl>
-
-<dl class="data">
-<dt id="hl7apy.consts.DEFAULT_VERSION">
-<tt class="descclassname">hl7apy.consts.</tt><tt class="descname">DEFAULT_VERSION</tt><em class="property"> = '2.5'</em><a class="headerlink" href="#hl7apy.consts.DEFAULT_VERSION" title="Permalink to this definition">¶</a></dt>
-<dd><p>default hl7 version</p>
+  <div class="section" id="module-hl7apy.mllp">
+<span id="mllp-classes"></span><h1>MLLP Classes<a class="headerlink" href="#module-hl7apy.mllp" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="hl7apy.mllp.MLLPServer">
+<em class="property">class </em><tt class="descclassname">hl7apy.mllp.</tt><tt class="descname">MLLPServer</tt><big>(</big><em>host</em>, <em>port</em>, <em>handlers</em><big>)</big><a class="headerlink" href="#hl7apy.mllp.MLLPServer" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <tt class="xref py py-class docutils literal"><span class="pre">TCPServer</span></tt> subclass that implements an MLLP server
+receives HL7 messages encoded in MLLP and redirects them to the
+correct handler.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>host</strong> &#8211; the address of the listener</li>
+<li><strong>port</strong> &#8211; the port of the listener</li>
+<li><strong>handlers</strong> &#8211; a dictionary that specify the handler classes for every kind of supported message.
+The keys of the dictionary must be the message type and the values the handlers classes.
+The latter must be subclasses of <a class="reference internal" href="#hl7apy.mllp.AbstractTransactionHandler" title="hl7apy.mllp.AbstractTransactionHandler"><tt class="xref py py-class docutils literal"><span class="pre">AbstractTransactionHandler</span></tt></a> that implement the
+<a class="reference internal" href="#hl7apy.mllp.AbstractTransactionHandler.reply" title="hl7apy.mllp.AbstractTransactionHandler.reply"><tt class="xref py py-func docutils literal"><span class="pre">reply()</span></tt></a> method</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="class">
-<dt id="hl7apy.consts.VALIDATION_LEVEL">
-<em class="property">class </em><tt class="descclassname">hl7apy.consts.</tt><tt class="descname">VALIDATION_LEVEL</tt><a class="headerlink" href="#hl7apy.consts.VALIDATION_LEVEL" title="Permalink to this definition">¶</a></dt>
-<dd><p>Allowed validation levels</p>
-<dl class="attribute">
-<dt id="hl7apy.consts.VALIDATION_LEVEL.STRICT">
-<tt class="descname">STRICT</tt><em class="property"> = 1</em><a class="headerlink" href="#hl7apy.consts.VALIDATION_LEVEL.STRICT" title="Permalink to this definition">¶</a></dt>
-<dd><p>Strict validation</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="hl7apy.consts.VALIDATION_LEVEL.TOLERANT">
-<tt class="descname">TOLERANT</tt><em class="property"> = 2</em><a class="headerlink" href="#hl7apy.consts.VALIDATION_LEVEL.TOLERANT" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tolerant validation</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="hl7apy.consts.MLLP_ENCODING_CHARS">
-<em class="property">class </em><tt class="descclassname">hl7apy.consts.</tt><tt class="descname">MLLP_ENCODING_CHARS</tt><a class="headerlink" href="#hl7apy.consts.MLLP_ENCODING_CHARS" title="Permalink to this definition">¶</a></dt>
-<dd><p>MLLP encoding chars</p>
-<dl class="attribute">
-<dt id="hl7apy.consts.MLLP_ENCODING_CHARS.CR">
-<tt class="descname">CR</tt><em class="property"> = '\r'</em><a class="headerlink" href="#hl7apy.consts.MLLP_ENCODING_CHARS.CR" title="Permalink to this definition">¶</a></dt>
-<dd><p>Carriage return</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="hl7apy.consts.MLLP_ENCODING_CHARS.EB">
-<tt class="descname">EB</tt><em class="property"> = '\x1c'</em><a class="headerlink" href="#hl7apy.consts.MLLP_ENCODING_CHARS.EB" title="Permalink to this definition">¶</a></dt>
-<dd><p>End Block</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="hl7apy.consts.MLLP_ENCODING_CHARS.SB">
-<tt class="descname">SB</tt><em class="property"> = '\x0b'</em><a class="headerlink" href="#hl7apy.consts.MLLP_ENCODING_CHARS.SB" title="Permalink to this definition">¶</a></dt>
-<dd><p>Start Block</p>
+<dt id="hl7apy.mllp.AbstractTransactionHandler">
+<em class="property">class </em><tt class="descclassname">hl7apy.mllp.</tt><tt class="descname">AbstractTransactionHandler</tt><big>(</big><em>message</em><big>)</big><a class="headerlink" href="#hl7apy.mllp.AbstractTransactionHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract transaction handler. Handlers should implement the
+<a class="reference internal" href="#hl7apy.mllp.AbstractTransactionHandler.reply" title="hl7apy.mllp.AbstractTransactionHandler.reply"><tt class="xref py py-func docutils literal"><span class="pre">reply()</span></tt></a> method which handle the incoming message.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>message</strong> &#8211; a <a class="reference internal" href="core.html#hl7apy.core.Message" title="hl7apy.core.Message"><tt class="xref py py-obj docutils literal"><span class="pre">Message</span></tt></a> object</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="hl7apy.mllp.AbstractTransactionHandler.reply">
+<tt class="descname">reply</tt><big>(</big><big>)</big><a class="headerlink" href="#hl7apy.mllp.AbstractTransactionHandler.reply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract method. It should implement the handling of the request message and return the response</p>
 </dd></dl>
 
 </dd></dl>
@@ -125,13 +115,13 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API Docs</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="hl7apy.html">Library helper functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="core.html">Core classes</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Consts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="consts.html">Consts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parser.html">Parser</a></li>
 <li class="toctree-l2"><a class="reference internal" href="base_datatypes.html">Base datatypes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="factories.html">Datatype factories</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="validation.html">Validation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mllp.html">MLLP Classes</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">MLLP Classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html">Utility functions</a></li>
 </ul>
 </li>
@@ -139,11 +129,11 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="core.html"
-                        title="previous chapter">Core classes</a></p>
+  <p class="topless"><a href="validation.html"
+                        title="previous chapter">Validation module</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="parser.html"
-                        title="next chapter">Parser</a></p>
+  <p class="topless"><a href="utils.html"
+                        title="next chapter">Utility functions</a></p>
         </div>
       </div>
       <div class="clearer"></div>
@@ -158,10 +148,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="parser.html" title="Parser"
+          <a href="utils.html" title="Utility functions"
              >next</a> |</li>
         <li class="right" >
-          <a href="core.html" title="Core classes"
+          <a href="validation.html" title="Validation module"
              >previous</a> |</li>
         <li><a href="../index.html">HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages</a> &raquo;</li>
           <li><a href="index.html" >API Docs</a> &raquo;</li> 

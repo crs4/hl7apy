@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0.1',
+        VERSION:     '1.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages" href="../index.html" />
     <link rel="up" title="API Docs" href="index.html" />
-    <link rel="next" title="Library helper functions" href="hl7apy.html" />
+    <link rel="next" title="MLLP Classes" href="mllp.html" />
     <link rel="prev" title="Exceptions" href="exceptions.html" /> 
   </head>
   <body>
@@ -39,7 +39,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="hl7apy.html" title="Library helper functions"
+          <a href="mllp.html" title="MLLP Classes"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="exceptions.html" title="Exceptions"
@@ -56,28 +56,18 @@
             
   <div class="section" id="module-hl7apy.validation">
 <span id="validation-module"></span><h1>Validation module<a class="headerlink" href="#module-hl7apy.validation" title="Permalink to this headline">¶</a></h1>
-<p>HL7apy - validation</p>
 <dl class="class">
 <dt id="hl7apy.validation.Validator">
 <em class="property">class </em><tt class="descclassname">hl7apy.validation.</tt><tt class="descname">Validator</tt><big>(</big><em>level</em><big>)</big><a class="headerlink" href="#hl7apy.validation.Validator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class that handles validation. It defines validation levels and validate
-an element using <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL.STRICT" title="hl7apy.consts.VALIDATION_LEVEL.STRICT"><tt class="xref py py-attr docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL.STRICT</span></tt></a> validation level</p>
+an element using <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL.STRICT" title="hl7apy.consts.VALIDATION_LEVEL.STRICT"><tt class="xref py py-attr docutils literal"><span class="pre">VALIDATION.STRICT</span></tt></a> validation level</p>
 <dl class="staticmethod">
 <dt id="hl7apy.validation.Validator.is_quiet">
 <em class="property">static </em><tt class="descname">is_quiet</tt><big>(</big><em>level</em><big>)</big><a class="headerlink" href="#hl7apy.validation.Validator.is_quiet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the given validation level is quiet</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; validation level (see <cite>hl7apy.consts.VALIDATION_LEVEL</cite>)</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">True</span></tt> if validation level is quiet</td>
-</tr>
-</tbody>
-</table>
+<dd><p>Equal to <a class="reference internal" href="#hl7apy.validation.Validator.is_tolerant" title="hl7apy.validation.Validator.is_tolerant"><tt class="xref py py-func docutils literal"><span class="pre">is_tolerant</span></tt></a>. Kept for backward compatibility
+:param level:
+:rtype: <tt class="docutils literal"><span class="pre">bool</span></tt>
+:return: <tt class="docutils literal"><span class="pre">True</span></tt> if validation level is tolerant</p>
 </dd></dl>
 
 <dl class="staticmethod">
@@ -88,7 +78,7 @@ an element using <a class="reference internal" href="consts.html#hl7apy.consts.V
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; validation level (see <cite>hl7apy.consts.VALIDATION_LEVEL</cite>)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; validation level (see <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt></a>)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
 </tr>
@@ -99,18 +89,57 @@ an element using <a class="reference internal" href="consts.html#hl7apy.consts.V
 </dd></dl>
 
 <dl class="staticmethod">
-<dt id="hl7apy.validation.Validator.validate">
-<em class="property">static </em><tt class="descname">validate</tt><big>(</big><em>element</em><big>)</big><a class="headerlink" href="#hl7apy.validation.Validator.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if the <a class="reference internal" href="core.html#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a> is a valid HL7 message according to the official structures.
-It checks if it follows the max and min number of occurrences for every child and if it
-doesn&#8217;t contain children not allowed.</p>
+<dt id="hl7apy.validation.Validator.is_tolerant">
+<em class="property">static </em><tt class="descname">is_tolerant</tt><big>(</big><em>level</em><big>)</big><a class="headerlink" href="#hl7apy.validation.Validator.is_tolerant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the given validation level is tolerant</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>element</strong> &#8211; <a class="reference internal" href="core.html#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; validation level (see <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt></a>)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The element to be validated</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">True</span></tt> if validation level is tolerant</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="hl7apy.validation.Validator.validate">
+<em class="property">static </em><tt class="descname">validate</tt><big>(</big><em>element</em>, <em>reference=None</em>, <em>report_file=None</em><big>)</big><a class="headerlink" href="#hl7apy.validation.Validator.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the <a class="reference internal" href="core.html#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">Element</span></tt></a> is a valid HL7 message according to the reference
+specified. If the reference is not specified, it will be used the official HL7 structures for the
+elements.
+In particular it checks:</p>
+<ul class="simple">
+<li>the maximum and minimum number of occurrences for every child</li>
+<li>that children are all allowed</li>
+<li>the datatype of fields, components and subcomponents</li>
+<li>the values, in particular the length and the adherence with the HL7 table, if one is specified</li>
+</ul>
+<p>It raises the first exception that it finds.</p>
+<p>If <tt class="xref py py-attr docutils literal"><span class="pre">report_file</span></tt> is specified, it will create a file with all the errors that occur.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>element</strong> &#8211; <a class="reference internal" href="core.html#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">Element</span></tt></a>: The element to validate</li>
+<li><strong>reference</strong> &#8211; the reference to use. Usually is None or a message profile object</li>
+<li><strong>report_file</strong> &#8211; the name of the report file to create</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The True if everything is ok</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><tt class="xref py py-exc docutils literal"><span class="pre">ValidationError</span></tt>: when errors occur</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><tt class="xref py py-exc docutils literal"><span class="pre">ValidationWarning</span></tt>: errors concerning the values</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -130,6 +159,7 @@ doesn&#8217;t contain children not allowed.</p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Getting started</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API Docs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hl7apy.html">Library helper functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="core.html">Core classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="consts.html">Consts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parser.html">Parser</a></li>
@@ -137,7 +167,8 @@ doesn&#8217;t contain children not allowed.</p>
 <li class="toctree-l2"><a class="reference internal" href="factories.html">Datatype factories</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="">Validation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hl7apy.html">Library helper functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mllp.html">MLLP Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utility functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
@@ -147,8 +178,8 @@ doesn&#8217;t contain children not allowed.</p>
   <p class="topless"><a href="exceptions.html"
                         title="previous chapter">Exceptions</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="hl7apy.html"
-                        title="next chapter">Library helper functions</a></p>
+  <p class="topless"><a href="mllp.html"
+                        title="next chapter">MLLP Classes</a></p>
         </div>
       </div>
       <div class="clearer"></div>
@@ -163,7 +194,7 @@ doesn&#8217;t contain children not allowed.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="hl7apy.html" title="Library helper functions"
+          <a href="mllp.html" title="MLLP Classes"
              >next</a> |</li>
         <li class="right" >
           <a href="exceptions.html" title="Exceptions"
@@ -174,7 +205,7 @@ doesn&#8217;t contain children not allowed.</p>
     </div>
 
     <div class="footer">
-        &copy; Copyright 2012-2014, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
+        &copy; Copyright 2012-2015, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
 <script type="text/javascript">

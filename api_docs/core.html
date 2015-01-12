@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0.1',
+        VERSION:     '1.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <link rel="top" title="HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages" href="../index.html" />
     <link rel="up" title="API Docs" href="index.html" />
     <link rel="next" title="Consts" href="consts.html" />
-    <link rel="prev" title="API Docs" href="index.html" /> 
+    <link rel="prev" title="Library helper functions" href="hl7apy.html" /> 
   </head>
   <body>
     <div class="related">
@@ -42,7 +42,7 @@
           <a href="consts.html" title="Consts"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="API Docs"
+          <a href="hl7apy.html" title="Library helper functions"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Docs</a> &raquo;</li> 
@@ -72,11 +72,10 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the HL7 name of the message (e.g. OML_O33)</li>
-<li><strong>reference</strong> &#8211; the reference structure (see <a class="reference internal" href="hl7apy.html#hl7apy.load_reference" title="hl7apy.load_reference"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.load_reference()</span></tt></a>)</li>
-<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_version()</span></tt></a>)</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_validation_level()</span></tt></a>)</li>
-<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_encoding_chars()</span></tt></a>)</li>
+<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the HL7 name of the message (e.g. OML_O33)</li>
+<li><strong>name</strong> &#8211; the HL7 name of the segment (e.g. PID)</li>
+<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.get_default_encoding_chars" title="hl7apy.get_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">get_default_encoding_chars</span></tt></a>)</li>
 </ul>
 </td>
 </tr>
@@ -85,7 +84,7 @@
 <dl class="method">
 <dt id="hl7apy.core.Message.add">
 <tt class="descname">add</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#hl7apy.core.Message.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add an instance of <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a> subclass to the list of children</p>
+<dd><p>Add an instance of <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">Element</span></tt></a> subclass to the list of children</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -107,14 +106,14 @@
 <dl class="method">
 <dt id="hl7apy.core.Message.add_group">
 <tt class="descname">add_group</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#hl7apy.core.Message.add_group" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an instance of <a class="reference internal" href="#hl7apy.core.Group" title="hl7apy.core.Group"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Group</span></tt></a> having the given name</p>
+<dd><p>Create an instance of <a class="reference internal" href="#hl7apy.core.Group" title="hl7apy.core.Group"><tt class="xref py py-class docutils literal"><span class="pre">Group</span></tt></a> having the given name</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; the name of the group to be created (e.g. OML_O33_PATIENT)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">an instance of <a class="reference internal" href="#hl7apy.core.Group" title="hl7apy.core.Group"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Group</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">an instance of <a class="reference internal" href="#hl7apy.core.Group" title="hl7apy.core.Group"><tt class="xref py py-class docutils literal"><span class="pre">Group</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -131,14 +130,14 @@
 <dl class="method">
 <dt id="hl7apy.core.Message.add_segment">
 <tt class="descname">add_segment</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#hl7apy.core.Message.add_segment" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an instance of <a class="reference internal" href="#hl7apy.core.Segment" title="hl7apy.core.Segment"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Segment</span></tt></a> having the given name</p>
+<dd><p>Create an instance of <a class="reference internal" href="#hl7apy.core.Segment" title="hl7apy.core.Segment"><tt class="xref py py-class docutils literal"><span class="pre">Segment</span></tt></a> having the given name</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; the name of the segment to be created (e.g. PID)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">an instance of <a class="reference internal" href="#hl7apy.core.Segment" title="hl7apy.core.Segment"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Segment</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">an instance of <a class="reference internal" href="#hl7apy.core.Segment" title="hl7apy.core.Segment"><tt class="xref py py-class docutils literal"><span class="pre">Segment</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -163,11 +162,12 @@ separator at the end if needed</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; The encoding chars to use.
 If it is <tt class="docutils literal"><span class="pre">None</span></tt> it uses <tt class="xref py py-attr docutils literal"><span class="pre">self.encoding_chars</span></tt>,
-which by default is <a class="reference internal" href="consts.html#hl7apy.consts.DEFAULT_ENCODING_CHARS" title="hl7apy.consts.DEFAULT_ENCODING_CHARS"><tt class="xref py py-attr docutils literal"><span class="pre">hl7apy.consts.DEFAULT_ENCODING_CHARS</span></tt></a></td>
+which by default is the ones return by
+<a class="reference internal" href="hl7apy.html#hl7apy.get_default_encoding_chars" title="hl7apy.get_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">get_default_encoding_chars</span></tt></a></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">basestring</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">str</span></tt></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HL7 representation of the <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HL7 representation of the <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">Element</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -182,8 +182,9 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_encoding_chars()</span></tt></a>)</li>
-<li><strong>trailing_children</strong> (<tt class="docutils literal"><span class="pre">bool</span></tt>) &#8211; if True, trailing children will be added even if their value is None</li>
+<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.get_default_encoding_chars" title="hl7apy.get_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">get_default_encoding_chars</span></tt></a>)</li>
+<li><strong>trailing_children</strong> (<tt class="docutils literal"><span class="pre">bool</span></tt>) &#8211; if <tt class="docutils literal"><span class="pre">True</span></tt>, trailing children will be added even if their value is <tt class="docutils literal"><span class="pre">None</span></tt></li>
 </ul>
 </td>
 </tr>
@@ -196,15 +197,15 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 
 <dl class="method">
 <dt id="hl7apy.core.Message.validate">
-<tt class="descname">validate</tt><big>(</big><big>)</big><a class="headerlink" href="#hl7apy.core.Message.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validate the HL7 element using the <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL.STRICT" title="hl7apy.consts.VALIDATION_LEVEL.STRICT"><tt class="xref py py-attr docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL.STRICT</span></tt></a> validation level</p>
+<tt class="descname">validate</tt><big>(</big><em>report_file=None</em><big>)</big><a class="headerlink" href="#hl7apy.core.Message.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate the HL7 element using the <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL.STRICT" title="hl7apy.consts.VALIDATION_LEVEL.STRICT"><tt class="xref py py-attr docutils literal"><span class="pre">STRICT</span></tt></a> validation
+level. It calls the <a class="reference internal" href="validation.html#hl7apy.validation.Validator.validate" title="hl7apy.validation.Validator.validate"><tt class="xref py py-func docutils literal"><span class="pre">Validator.validate</span></tt></a> method passing
+the reference used in the instantiation of the element.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if validation succeeds, False otherwise</td>
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">report_file: the report file to pass to the validator</td>
 </tr>
 </tbody>
 </table>
@@ -221,10 +222,15 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the HL7 name of the message (e.g. OML_O33)</li>
-<li><strong>reference</strong> &#8211; the reference structure (see <a class="reference internal" href="hl7apy.html#hl7apy.load_reference" title="hl7apy.load_reference"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.load_reference()</span></tt></a>)</li>
-<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_version()</span></tt></a>)</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_validation_level()</span></tt></a>)</li>
+<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the HL7 name of the message (e.g. RSP_K21_QUERY_RESPONSE)</li>
+<li><strong>parent</strong> (an instance of <a class="reference internal" href="#hl7apy.core.Message" title="hl7apy.core.Message"><tt class="xref py py-class docutils literal"><span class="pre">Message</span></tt></a>, <a class="reference internal" href="#hl7apy.core.Group" title="hl7apy.core.Group"><tt class="xref py py-class docutils literal"><span class="pre">Group</span></tt></a>
+or None) &#8211; the parent</li>
+<li><strong>reference</strong> &#8211; the reference structure (see <a class="reference internal" href="hl7apy.html#hl7apy.load_reference" title="hl7apy.load_reference"><tt class="xref py py-func docutils literal"><span class="pre">load_reference</span></tt></a>)</li>
+<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.get_default_version" title="hl7apy.get_default_version"><tt class="xref py py-func docutils literal"><span class="pre">get_default_version</span></tt></a>)</li>
+<li><strong>validation_level</strong> &#8211; the validation level. Possible values are those defined in
+<a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt></a> or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default validation
+level (see <a class="reference internal" href="hl7apy.html#hl7apy.get_default_validation_level" title="hl7apy.get_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">get_default_validation_level</span></tt></a>)</li>
 </ul>
 </td>
 </tr>
@@ -233,7 +239,7 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <dl class="method">
 <dt id="hl7apy.core.Group.add">
 <tt class="descname">add</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#hl7apy.core.Group.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add an instance of <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a> subclass to the list of children</p>
+<dd><p>Add an instance of <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">Element</span></tt></a> subclass to the list of children</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -255,14 +261,14 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <dl class="method">
 <dt id="hl7apy.core.Group.add_group">
 <tt class="descname">add_group</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#hl7apy.core.Group.add_group" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an instance of <a class="reference internal" href="#hl7apy.core.Group" title="hl7apy.core.Group"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Group</span></tt></a> having the given name</p>
+<dd><p>Create an instance of <a class="reference internal" href="#hl7apy.core.Group" title="hl7apy.core.Group"><tt class="xref py py-class docutils literal"><span class="pre">Group</span></tt></a> having the given name</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; the name of the group to be created (e.g. OML_O33_PATIENT)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">an instance of <a class="reference internal" href="#hl7apy.core.Group" title="hl7apy.core.Group"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Group</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">an instance of <a class="reference internal" href="#hl7apy.core.Group" title="hl7apy.core.Group"><tt class="xref py py-class docutils literal"><span class="pre">Group</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -279,14 +285,14 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <dl class="method">
 <dt id="hl7apy.core.Group.add_segment">
 <tt class="descname">add_segment</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#hl7apy.core.Group.add_segment" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an instance of <a class="reference internal" href="#hl7apy.core.Segment" title="hl7apy.core.Segment"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Segment</span></tt></a> having the given name</p>
+<dd><p>Create an instance of <a class="reference internal" href="#hl7apy.core.Segment" title="hl7apy.core.Segment"><tt class="xref py py-class docutils literal"><span class="pre">Segment</span></tt></a> having the given name</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; the name of the segment to be created (e.g. PID)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">an instance of <a class="reference internal" href="#hl7apy.core.Segment" title="hl7apy.core.Segment"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Segment</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">an instance of <a class="reference internal" href="#hl7apy.core.Segment" title="hl7apy.core.Segment"><tt class="xref py py-class docutils literal"><span class="pre">Segment</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -311,11 +317,12 @@ separator at the end if needed</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; The encoding chars to use.
 If it is <tt class="docutils literal"><span class="pre">None</span></tt> it uses <tt class="xref py py-attr docutils literal"><span class="pre">self.encoding_chars</span></tt>,
-which by default is <a class="reference internal" href="consts.html#hl7apy.consts.DEFAULT_ENCODING_CHARS" title="hl7apy.consts.DEFAULT_ENCODING_CHARS"><tt class="xref py py-attr docutils literal"><span class="pre">hl7apy.consts.DEFAULT_ENCODING_CHARS</span></tt></a></td>
+which by default is the ones return by
+<a class="reference internal" href="hl7apy.html#hl7apy.get_default_encoding_chars" title="hl7apy.get_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">get_default_encoding_chars</span></tt></a></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">basestring</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">str</span></tt></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HL7 representation of the <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HL7 representation of the <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">Element</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -323,15 +330,15 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 
 <dl class="method">
 <dt id="hl7apy.core.Group.validate">
-<tt class="descname">validate</tt><big>(</big><big>)</big><a class="headerlink" href="#hl7apy.core.Group.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validate the HL7 element using the <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL.STRICT" title="hl7apy.consts.VALIDATION_LEVEL.STRICT"><tt class="xref py py-attr docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL.STRICT</span></tt></a> validation level</p>
+<tt class="descname">validate</tt><big>(</big><em>report_file=None</em><big>)</big><a class="headerlink" href="#hl7apy.core.Group.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate the HL7 element using the <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL.STRICT" title="hl7apy.consts.VALIDATION_LEVEL.STRICT"><tt class="xref py py-attr docutils literal"><span class="pre">STRICT</span></tt></a> validation
+level. It calls the <a class="reference internal" href="validation.html#hl7apy.validation.Validator.validate" title="hl7apy.validation.Validator.validate"><tt class="xref py py-func docutils literal"><span class="pre">Validator.validate</span></tt></a> method passing
+the reference used in the instantiation of the element.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if validation succeeds, False otherwise</td>
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">report_file: the report file to pass to the validator</td>
 </tr>
 </tbody>
 </table>
@@ -348,11 +355,15 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the HL7 name of the segment (e.g. PID)</li>
-<li><strong>parent</strong> (an instance of <a class="reference internal" href="#hl7apy.core.Message" title="hl7apy.core.Message"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Message</span></tt></a>, <a class="reference internal" href="#hl7apy.core.Group" title="hl7apy.core.Group"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Group</span></tt></a> or None) &#8211; the parent</li>
-<li><strong>reference</strong> &#8211; the reference structure (see <a class="reference internal" href="hl7apy.html#hl7apy.load_reference" title="hl7apy.load_reference"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.load_reference()</span></tt></a>)</li>
-<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_version()</span></tt></a>)</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_validation_level()</span></tt></a>)</li>
+<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the HL7 name of the segment (e.g. PID)</li>
+<li><strong>parent</strong> (an instance of <a class="reference internal" href="#hl7apy.core.Message" title="hl7apy.core.Message"><tt class="xref py py-class docutils literal"><span class="pre">Message</span></tt></a>, <a class="reference internal" href="#hl7apy.core.Group" title="hl7apy.core.Group"><tt class="xref py py-class docutils literal"><span class="pre">Group</span></tt></a>
+or None) &#8211; the parent</li>
+<li><strong>reference</strong> &#8211; the reference structure (see <a class="reference internal" href="hl7apy.html#hl7apy.load_reference" title="hl7apy.load_reference"><tt class="xref py py-func docutils literal"><span class="pre">load_reference</span></tt></a>)</li>
+<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.get_default_version" title="hl7apy.get_default_version"><tt class="xref py py-func docutils literal"><span class="pre">get_default_version</span></tt></a>)</li>
+<li><strong>validation_level</strong> &#8211; the validation level. Possible values are those defined in
+<a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt></a> or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default validation
+level (see <a class="reference internal" href="hl7apy.html#hl7apy.get_default_validation_level" title="hl7apy.get_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">get_default_validation_level</span></tt></a>)</li>
 <li><strong>traversal_parent</strong> (an instance of <a class="reference internal" href="#hl7apy.core.Message" title="hl7apy.core.Message"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Message</span></tt></a>, <a class="reference internal" href="#hl7apy.core.Group" title="hl7apy.core.Group"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Group</span></tt></a> or None) &#8211; the temporary parent used during traversal</li>
 </ul>
 </td>
@@ -360,38 +371,16 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 </tbody>
 </table>
 <dl class="method">
-<dt id="hl7apy.core.Segment.add">
-<tt class="descname">add</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#hl7apy.core.Segment.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add an instance of <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a> subclass to the list of children</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> (<a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a>) &#8211; an instance of <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a> subclass</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">(</span><span class="s">&#39;PID&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">&#39;PID_5&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s">&#39;EVERYMAN^ADAM&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">s</span><span class="o">.</span><span class="n">to_er7</span><span class="p">()</span>
-<span class="go">PID|||||EVERYMAN^ADAM</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
 <dt id="hl7apy.core.Segment.add_field">
 <tt class="descname">add_field</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#hl7apy.core.Segment.add_field" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an instance of <a class="reference internal" href="#hl7apy.core.Field" title="hl7apy.core.Field"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Field</span></tt></a> having the given name</p>
+<dd><p>Create an instance of <a class="reference internal" href="#hl7apy.core.Field" title="hl7apy.core.Field"><tt class="xref py py-class docutils literal"><span class="pre">Field</span></tt></a> having the given name</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; the name of the field to be created (e.g. PID_1)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">an instance of <a class="reference internal" href="#hl7apy.core.Field" title="hl7apy.core.Field"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Field</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">an instance of <a class="reference internal" href="#hl7apy.core.Field" title="hl7apy.core.Field"><tt class="xref py py-class docutils literal"><span class="pre">Field</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -411,8 +400,9 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_encoding_chars()</span></tt></a>)</li>
-<li><strong>trailing_children</strong> (<tt class="docutils literal"><span class="pre">bool</span></tt>) &#8211; if True, trailing children will be added even if their value is None</li>
+<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.get_default_encoding_chars" title="hl7apy.get_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">get_default_encoding_chars</span></tt></a>)</li>
+<li><strong>trailing_children</strong> (<tt class="docutils literal"><span class="pre">bool</span></tt>) &#8211; if <tt class="docutils literal"><span class="pre">True</span></tt>, trailing children will be added even if their value is None</li>
 </ul>
 </td>
 </tr>
@@ -432,15 +422,15 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 
 <dl class="method">
 <dt id="hl7apy.core.Segment.validate">
-<tt class="descname">validate</tt><big>(</big><big>)</big><a class="headerlink" href="#hl7apy.core.Segment.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validate the HL7 element using the <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL.STRICT" title="hl7apy.consts.VALIDATION_LEVEL.STRICT"><tt class="xref py py-attr docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL.STRICT</span></tt></a> validation level</p>
+<tt class="descname">validate</tt><big>(</big><em>report_file=None</em><big>)</big><a class="headerlink" href="#hl7apy.core.Segment.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate the HL7 element using the <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL.STRICT" title="hl7apy.consts.VALIDATION_LEVEL.STRICT"><tt class="xref py py-attr docutils literal"><span class="pre">STRICT</span></tt></a> validation
+level. It calls the <a class="reference internal" href="validation.html#hl7apy.validation.Validator.validate" title="hl7apy.validation.Validator.validate"><tt class="xref py py-func docutils literal"><span class="pre">Validator.validate</span></tt></a> method passing
+the reference used in the instantiation of the element.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if validation succeeds, False otherwise</td>
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">report_file: the report file to pass to the validator</td>
 </tr>
 </tbody>
 </table>
@@ -457,13 +447,16 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the HL7 name of the field (e.g. PID_5)</li>
-<li><strong>datatype</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the datatype of the field (e.g. CE)</li>
+<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the HL7 name of the field (e.g. PID_5)</li>
+<li><strong>datatype</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the datatype of the field (e.g. CE)</li>
 <li><strong>parent</strong> (an instance of <a class="reference internal" href="#hl7apy.core.Segment" title="hl7apy.core.Segment"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Segment</span></tt></a> or None) &#8211; the parent</li>
-<li><strong>reference</strong> &#8211; the reference structure (see <a class="reference internal" href="hl7apy.html#hl7apy.load_reference" title="hl7apy.load_reference"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.load_reference()</span></tt></a>)</li>
-<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_version()</span></tt></a>)</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_validation_level()</span></tt></a>)</li>
-<li><strong>traversal_parent</strong> (an instance of <a class="reference internal" href="#hl7apy.core.Message" title="hl7apy.core.Message"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Message</span></tt></a>, <a class="reference internal" href="#hl7apy.core.Group" title="hl7apy.core.Group"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Group</span></tt></a> or None) &#8211; the temporary parent used during traversal</li>
+<li><strong>reference</strong> &#8211; the reference structure (see <a class="reference internal" href="hl7apy.html#hl7apy.load_reference" title="hl7apy.load_reference"><tt class="xref py py-func docutils literal"><span class="pre">load_reference</span></tt></a>)</li>
+<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.get_default_version" title="hl7apy.get_default_version"><tt class="xref py py-func docutils literal"><span class="pre">get_default_version</span></tt></a>)</li>
+<li><strong>validation_level</strong> &#8211; the validation level. Possible values are those defined in
+<a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt></a> or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default validation
+level (see <a class="reference internal" href="hl7apy.html#hl7apy.get_default_validation_level" title="hl7apy.get_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">get_default_validation_level</span></tt></a>)</li>
+<li><strong>traversal_parent</strong> (an instance of <a class="reference internal" href="#hl7apy.core.Segment" title="hl7apy.core.Segment"><tt class="xref py py-class docutils literal"><span class="pre">Segment</span></tt></a> or None) &#8211; the temporary parent used during traversal</li>
 </ul>
 </td>
 </tr>
@@ -472,12 +465,12 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <dl class="method">
 <dt id="hl7apy.core.Field.add">
 <tt class="descname">add</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#hl7apy.core.Field.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add an instance of <a class="reference internal" href="#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Component</span></tt></a> to the list of children</p>
+<dd><p>Add an instance of <a class="reference internal" href="#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">Component</span></tt></a> to the list of children</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> &#8211; an instance of <a class="reference internal" href="#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Component</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> &#8211; an instance of <a class="reference internal" href="#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">Component</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -495,14 +488,14 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <dl class="method">
 <dt id="hl7apy.core.Field.add_component">
 <tt class="descname">add_component</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#hl7apy.core.Field.add_component" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an instance of <a class="reference internal" href="#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Component</span></tt></a> having the given name</p>
+<dd><p>Create an instance of <a class="reference internal" href="#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">Component</span></tt></a> having the given name</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; the name of the component to be created (e.g. XPN_2)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">an instance of <a class="reference internal" href="#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Component</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">an instance of <a class="reference internal" href="#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">Component</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -522,8 +515,9 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_encoding_chars()</span></tt></a>)</li>
-<li><strong>trailing_children</strong> (<tt class="docutils literal"><span class="pre">bool</span></tt>) &#8211; if True, trailing children will be added even if their value is None</li>
+<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.get_default_encoding_chars" title="hl7apy.get_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">get_default_encoding</span></tt></a>)</li>
+<li><strong>trailing_children</strong> (<tt class="docutils literal"><span class="pre">bool</span></tt>) &#8211; if <tt class="docutils literal"><span class="pre">True</span></tt>, trailing children will be added even if their value is None</li>
 </ul>
 </td>
 </tr>
@@ -542,15 +536,15 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 
 <dl class="method">
 <dt id="hl7apy.core.Field.validate">
-<tt class="descname">validate</tt><big>(</big><big>)</big><a class="headerlink" href="#hl7apy.core.Field.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validate the HL7 element using the <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL.STRICT" title="hl7apy.consts.VALIDATION_LEVEL.STRICT"><tt class="xref py py-attr docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL.STRICT</span></tt></a> validation level</p>
+<tt class="descname">validate</tt><big>(</big><em>report_file=None</em><big>)</big><a class="headerlink" href="#hl7apy.core.Field.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate the HL7 element using the <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL.STRICT" title="hl7apy.consts.VALIDATION_LEVEL.STRICT"><tt class="xref py py-attr docutils literal"><span class="pre">STRICT</span></tt></a> validation
+level. It calls the <a class="reference internal" href="validation.html#hl7apy.validation.Validator.validate" title="hl7apy.validation.Validator.validate"><tt class="xref py py-func docutils literal"><span class="pre">Validator.validate</span></tt></a> method passing
+the reference used in the instantiation of the element.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if validation succeeds, False otherwise</td>
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">report_file: the report file to pass to the validator</td>
 </tr>
 </tbody>
 </table>
@@ -567,13 +561,16 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the HL7 name of the component (e.g. XPN_2)</li>
-<li><strong>datatype</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the datatype of the component (e.g. CE)</li>
+<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the HL7 name of the component (e.g. XPN_2)</li>
+<li><strong>datatype</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the datatype of the component (e.g. CE)</li>
 <li><strong>parent</strong> (an instance of <a class="reference internal" href="#hl7apy.core.Field" title="hl7apy.core.Field"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Field</span></tt></a> or None) &#8211; the parent</li>
-<li><strong>reference</strong> &#8211; the reference structure (see <a class="reference internal" href="hl7apy.html#hl7apy.load_reference" title="hl7apy.load_reference"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.load_reference()</span></tt></a>)</li>
-<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_version()</span></tt></a>)</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_validation_level()</span></tt></a>)</li>
-<li><strong>traversal_parent</strong> (an instance of <a class="reference internal" href="#hl7apy.core.Message" title="hl7apy.core.Message"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Message</span></tt></a>, <a class="reference internal" href="#hl7apy.core.Group" title="hl7apy.core.Group"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Group</span></tt></a> or None) &#8211; the temporary parent used during traversal</li>
+<li><strong>reference</strong> &#8211; the reference structure (see <a class="reference internal" href="hl7apy.html#hl7apy.load_reference" title="hl7apy.load_reference"><tt class="xref py py-func docutils literal"><span class="pre">load_reference</span></tt></a>)</li>
+<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.get_default_version" title="hl7apy.get_default_version"><tt class="xref py py-func docutils literal"><span class="pre">get_default_version</span></tt></a>)</li>
+<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in
+<a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt></a> or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default validation
+level (see <a class="reference internal" href="hl7apy.html#hl7apy.get_default_validation_level" title="hl7apy.get_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">get_default_validation_level</span></tt></a>)</li>
+<li><strong>traversal_parent</strong> (an instance of <tt class="xref py py-class docutils literal"><span class="pre">Field</span> <span class="pre">hl7apy.core.Field</span></tt> or None) &#8211; the temporary parent used during traversal</li>
 </ul>
 </td>
 </tr>
@@ -582,12 +579,12 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <dl class="method">
 <dt id="hl7apy.core.Component.add">
 <tt class="descname">add</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#hl7apy.core.Component.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add an instance of <a class="reference internal" href="#hl7apy.core.SubComponent" title="hl7apy.core.SubComponent"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.SubComponent</span></tt></a> to the list of children</p>
+<dd><p>Add an instance of <a class="reference internal" href="#hl7apy.core.SubComponent" title="hl7apy.core.SubComponent"><tt class="xref py py-class docutils literal"><span class="pre">SubComponent</span></tt></a> to the list of children</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> &#8211; an instance of <a class="reference internal" href="#hl7apy.core.SubComponent" title="hl7apy.core.SubComponent"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.SubComponent</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> &#8211; an instance of <a class="reference internal" href="#hl7apy.core.SubComponent" title="hl7apy.core.SubComponent"><tt class="xref py py-class docutils literal"><span class="pre">SubComponent</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -605,14 +602,14 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <dl class="method">
 <dt id="hl7apy.core.Component.add_subcomponent">
 <tt class="descname">add_subcomponent</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#hl7apy.core.Component.add_subcomponent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an instance of <a class="reference internal" href="#hl7apy.core.SubComponent" title="hl7apy.core.SubComponent"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.SubComponent</span></tt></a> having the given name</p>
+<dd><p>Create an instance of <a class="reference internal" href="#hl7apy.core.SubComponent" title="hl7apy.core.SubComponent"><tt class="xref py py-class docutils literal"><span class="pre">SubComponent</span></tt></a> having the given name</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; the name of the subcomponent to be created (e.g. CE_1)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">an instance of <a class="reference internal" href="#hl7apy.core.SubComponent" title="hl7apy.core.SubComponent"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.SubComponent</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">an instance of <a class="reference internal" href="#hl7apy.core.SubComponent" title="hl7apy.core.SubComponent"><tt class="xref py py-class docutils literal"><span class="pre">SubComponent</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -637,11 +634,12 @@ separator at the end if needed</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; The encoding chars to use.
 If it is <tt class="docutils literal"><span class="pre">None</span></tt> it uses <tt class="xref py py-attr docutils literal"><span class="pre">self.encoding_chars</span></tt>,
-which by default is <a class="reference internal" href="consts.html#hl7apy.consts.DEFAULT_ENCODING_CHARS" title="hl7apy.consts.DEFAULT_ENCODING_CHARS"><tt class="xref py py-attr docutils literal"><span class="pre">hl7apy.consts.DEFAULT_ENCODING_CHARS</span></tt></a></td>
+which by default is the ones return by
+<a class="reference internal" href="hl7apy.html#hl7apy.get_default_encoding_chars" title="hl7apy.get_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">get_default_encoding_chars</span></tt></a></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">basestring</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">str</span></tt></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HL7 representation of the <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Element</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HL7 representation of the <a class="reference internal" href="#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">Element</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -649,15 +647,15 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 
 <dl class="method">
 <dt id="hl7apy.core.Component.validate">
-<tt class="descname">validate</tt><big>(</big><big>)</big><a class="headerlink" href="#hl7apy.core.Component.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validate the HL7 element using the <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL.STRICT" title="hl7apy.consts.VALIDATION_LEVEL.STRICT"><tt class="xref py py-attr docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL.STRICT</span></tt></a> validation level</p>
+<tt class="descname">validate</tt><big>(</big><em>report_file=None</em><big>)</big><a class="headerlink" href="#hl7apy.core.Component.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate the HL7 element using the <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL.STRICT" title="hl7apy.consts.VALIDATION_LEVEL.STRICT"><tt class="xref py py-attr docutils literal"><span class="pre">STRICT</span></tt></a> validation
+level. It calls the <a class="reference internal" href="validation.html#hl7apy.validation.Validator.validate" title="hl7apy.validation.Validator.validate"><tt class="xref py py-func docutils literal"><span class="pre">Validator.validate</span></tt></a> method passing
+the reference used in the instantiation of the element.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if validation succeeds, False otherwise</td>
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">report_file: the report file to pass to the validator</td>
 </tr>
 </tbody>
 </table>
@@ -674,14 +672,17 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the HL7 name of the subcomponent (e.g. CWE_1)</li>
-<li><strong>datatype</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the datatype of the component (e.g. ST)</li>
-<li><strong>value</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt> or instance of <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.BaseDataType" title="hl7apy.base_datatypes.BaseDataType"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.BaseDataType</span></tt></a>) &#8211; the value of the subcomponent (e.g. ADT_A01)</li>
-<li><strong>parent</strong> (an instance of <a class="reference internal" href="#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Component</span></tt></a> or None) &#8211; the parent</li>
-<li><strong>reference</strong> &#8211; the reference structure (see <a class="reference internal" href="hl7apy.html#hl7apy.load_reference" title="hl7apy.load_reference"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.load_reference()</span></tt></a>)</li>
-<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_version()</span></tt></a>)</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_validation_level()</span></tt></a>)</li>
-<li><strong>traversal_parent</strong> (an instance of <a class="reference internal" href="#hl7apy.core.Message" title="hl7apy.core.Message"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Message</span></tt></a>, <a class="reference internal" href="#hl7apy.core.Group" title="hl7apy.core.Group"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Group</span></tt></a> or None) &#8211; the temporary parent used during traversal</li>
+<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the HL7 name of the subcomponent (e.g. CWE_1)</li>
+<li><strong>datatype</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the datatype of the component (e.g. ST)</li>
+<li><strong>value</strong> (<tt class="docutils literal"><span class="pre">str</span></tt> or instance of <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.BaseDataType" title="hl7apy.base_datatypes.BaseDataType"><tt class="xref py py-class docutils literal"><span class="pre">BaseDataType</span></tt></a>) &#8211; the value of the subcomponent (e.g. ADT_A01)</li>
+<li><strong>parent</strong> (an instance of <a class="reference internal" href="#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">Component</span></tt></a> or None) &#8211; the parent</li>
+<li><strong>reference</strong> &#8211; the reference structure (see <a class="reference internal" href="hl7apy.html#hl7apy.load_reference" title="hl7apy.load_reference"><tt class="xref py py-func docutils literal"><span class="pre">load_refernce</span></tt></a>)</li>
+<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.get_default_version" title="hl7apy.get_default_version"><tt class="xref py py-func docutils literal"><span class="pre">get_default_version</span></tt></a>)</li>
+<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are defined in
+<a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.get_default_validation_level" title="hl7apy.get_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">get_default_validation_level</span></tt></a>)</li>
+<li><strong>traversal_parent</strong> (an instance of <a class="reference internal" href="#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">Component</span></tt></a> or None) &#8211; the temporary parent used during traversal</li>
 </ul>
 </td>
 </tr>
@@ -696,8 +697,9 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_encoding_chars()</span></tt></a>)</li>
-<li><strong>trailing_children</strong> (<tt class="docutils literal"><span class="pre">bool</span></tt>) &#8211; if True, trailing children will be added even if their value is None</li>
+<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.get_default_encoding_chars" title="hl7apy.get_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">get_default_encoding_chars</span></tt></a>)</li>
+<li><strong>trailing_children</strong> (<tt class="docutils literal"><span class="pre">bool</span></tt>) &#8211; if <tt class="docutils literal"><span class="pre">True</span></tt>, trailing children will be added even if their value is None</li>
 </ul>
 </td>
 </tr>
@@ -716,15 +718,15 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 
 <dl class="method">
 <dt id="hl7apy.core.SubComponent.validate">
-<tt class="descname">validate</tt><big>(</big><big>)</big><a class="headerlink" href="#hl7apy.core.SubComponent.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validate the HL7 element using the <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL.STRICT" title="hl7apy.consts.VALIDATION_LEVEL.STRICT"><tt class="xref py py-attr docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL.STRICT</span></tt></a> validation level</p>
+<tt class="descname">validate</tt><big>(</big><em>report_file=None</em><big>)</big><a class="headerlink" href="#hl7apy.core.SubComponent.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate the HL7 element using the <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL.STRICT" title="hl7apy.consts.VALIDATION_LEVEL.STRICT"><tt class="xref py py-attr docutils literal"><span class="pre">STRICT</span></tt></a> validation
+level. It calls the <a class="reference internal" href="validation.html#hl7apy.validation.Validator.validate" title="hl7apy.validation.Validator.validate"><tt class="xref py py-func docutils literal"><span class="pre">Validator.validate</span></tt></a> method passing
+the reference used in the instantiation of the element.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if validation succeeds, False otherwise</td>
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">report_file: the report file to pass to the validator</td>
 </tr>
 </tbody>
 </table>
@@ -744,6 +746,7 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Getting started</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API Docs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hl7apy.html">Library helper functions</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="">Core classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="consts.html">Consts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parser.html">Parser</a></li>
@@ -751,15 +754,16 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
 <li class="toctree-l2"><a class="reference internal" href="factories.html">Datatype factories</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="validation.html">Validation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hl7apy.html">Library helper functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mllp.html">MLLP Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utility functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">API Docs</a></p>
+  <p class="topless"><a href="hl7apy.html"
+                        title="previous chapter">Library helper functions</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="consts.html"
                         title="next chapter">Consts</a></p>
@@ -780,7 +784,7 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
           <a href="consts.html" title="Consts"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="API Docs"
+          <a href="hl7apy.html" title="Library helper functions"
              >previous</a> |</li>
         <li><a href="../index.html">HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages</a> &raquo;</li>
           <li><a href="index.html" >API Docs</a> &raquo;</li> 
@@ -788,7 +792,7 @@ which by default is <a class="reference internal" href="consts.html#hl7apy.const
     </div>
 
     <div class="footer">
-        &copy; Copyright 2012-2014, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
+        &copy; Copyright 2012-2015, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
 <script type="text/javascript">

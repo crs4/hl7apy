@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0.1',
+        VERSION:     '1.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -58,20 +58,24 @@
 <span id="parser"></span><h1>Parser<a class="headerlink" href="#module-hl7apy.parser" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="hl7apy.parser.parse_message">
-<tt class="descclassname">hl7apy.parser.</tt><tt class="descname">parse_message</tt><big>(</big><em>message</em>, <em>validation_level=None</em>, <em>find_groups=True</em>, <em>reference=None</em><big>)</big><a class="headerlink" href="#hl7apy.parser.parse_message" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse the given ER7-encoded message and return an instance of <a class="reference internal" href="core.html#hl7apy.core.Message" title="hl7apy.core.Message"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Message</span></tt></a>.</p>
+<tt class="descclassname">hl7apy.parser.</tt><tt class="descname">parse_message</tt><big>(</big><em>message</em>, <em>validation_level=None</em>, <em>find_groups=True</em>, <em>message_profile=None</em>, <em>report_file=None</em><big>)</big><a class="headerlink" href="#hl7apy.parser.parse_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the given ER7-encoded message and return an instance of <a class="reference internal" href="core.html#hl7apy.core.Message" title="hl7apy.core.Message"><tt class="xref py py-class docutils literal"><span class="pre">Message</span></tt></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>message</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the ER7-encoded message to be parsed</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_validation_level()</span></tt></a>)</li>
-<li><strong>find_groups</strong> (<tt class="docutils literal"><span class="pre">bool</span></tt>) &#8211; if <tt class="docutils literal"><span class="pre">True</span></tt>, automatically assign the segments found to the appropriate <a class="reference internal" href="core.html#hl7apy.core.Group" title="hl7apy.core.Group"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Group</span></tt></a> instances. If <tt class="docutils literal"><span class="pre">False</span></tt>, the segments found are assigned as children of the <a class="reference internal" href="core.html#hl7apy.core.Message" title="hl7apy.core.Message"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Message</span></tt></a> instance</li>
+<li><strong>message</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the ER7-encoded message to be parsed</li>
+<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in
+<a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">set_default_validation_level</span></tt></a>)</li>
+<li><strong>find_groups</strong> (<tt class="docutils literal"><span class="pre">bool</span></tt>) &#8211; if <tt class="docutils literal"><span class="pre">True</span></tt>, automatically assign the segments found to the appropriate
+<a class="reference internal" href="core.html#hl7apy.core.Group" title="hl7apy.core.Group"><tt class="xref py py-class docutils literal"><span class="pre">Groups</span></tt></a> instances. If <tt class="docutils literal"><span class="pre">False</span></tt>, the segments found are assigned as
+children of the <a class="reference internal" href="core.html#hl7apy.core.Message" title="hl7apy.core.Message"><tt class="xref py py-class docutils literal"><span class="pre">Message</span></tt></a> instance</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">an instance of <a class="reference internal" href="core.html#hl7apy.core.Message" title="hl7apy.core.Message"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Message</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">an instance of <a class="reference internal" href="core.html#hl7apy.core.Message" title="hl7apy.core.Message"><tt class="xref py py-class docutils literal"><span class="pre">Message</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -90,21 +94,26 @@
 
 <dl class="function">
 <dt id="hl7apy.parser.parse_segments">
-<tt class="descclassname">hl7apy.parser.</tt><tt class="descname">parse_segments</tt><big>(</big><em>text</em>, <em>version=None</em>, <em>encoding_chars=None</em>, <em>validation_level=None</em><big>)</big><a class="headerlink" href="#hl7apy.parser.parse_segments" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">hl7apy.parser.</tt><tt class="descname">parse_segments</tt><big>(</big><em>text</em>, <em>version=None</em>, <em>encoding_chars=None</em>, <em>validation_level=None</em>, <em>references=None</em><big>)</big><a class="headerlink" href="#hl7apy.parser.parse_segments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse the given ER7-encoded segments and return a list of <a class="reference internal" href="core.html#hl7apy.core.Segment" title="hl7apy.core.Segment"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Segment</span></tt></a> instances.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>text</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the ER7-encoded string containing the segments to be parsed</li>
-<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_version()</span></tt></a>)</li>
-<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_encoding_chars()</span></tt></a>)</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_validation_level()</span></tt></a>)</li>
+<li><strong>text</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the ER7-encoded string containing the segments to be parsed</li>
+<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">set_default_version</span></tt></a>)</li>
+<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">set_default_encoding_chars</span></tt></a>)</li>
+<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in
+<a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">validation_level</span></tt></a>)</li>
+<li><strong>references</strong> (<tt class="docutils literal"><span class="pre">list</span></tt>) &#8211; A list of the references of the <a class="reference internal" href="core.html#hl7apy.core.Segment" title="hl7apy.core.Segment"><tt class="xref py py-class docutils literal"><span class="pre">Segment</span></tt></a>&#8216;s children</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a list of <a class="reference internal" href="core.html#hl7apy.core.Segment" title="hl7apy.core.Segment"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Segment</span></tt></a> instances</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a list of <a class="reference internal" href="core.html#hl7apy.core.Segment" title="hl7apy.core.Segment"><tt class="xref py py-class docutils literal"><span class="pre">Segment</span></tt></a> instances</p>
 </td>
 </tr>
 </tbody>
@@ -119,21 +128,27 @@
 <dl class="function">
 <dt id="hl7apy.parser.parse_segment">
 <tt class="descclassname">hl7apy.parser.</tt><tt class="descname">parse_segment</tt><big>(</big><em>text</em>, <em>version=None</em>, <em>encoding_chars=None</em>, <em>validation_level=None</em>, <em>reference=None</em><big>)</big><a class="headerlink" href="#hl7apy.parser.parse_segment" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse the given ER7-encoded segment and return an instance of <a class="reference internal" href="core.html#hl7apy.core.Segment" title="hl7apy.core.Segment"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Segment</span></tt></a>.</p>
+<dd><p>Parse the given ER7-encoded segment and return an instance of <a class="reference internal" href="core.html#hl7apy.core.Segment" title="hl7apy.core.Segment"><tt class="xref py py-class docutils literal"><span class="pre">Segment</span></tt></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>text</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the ER7-encoded string containing the segment to be parsed</li>
-<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_version()</span></tt></a>)</li>
-<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_encoding_chars()</span></tt></a>)</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_validation_level()</span></tt></a>)</li>
-<li><strong>reference</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the element structure returned by <a class="reference internal" href="hl7apy.html#hl7apy.load_reference" title="hl7apy.load_reference"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.load_reference()</span></tt></a> or <a class="reference internal" href="hl7apy.html#hl7apy.find_reference" title="hl7apy.find_reference"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.find_reference()</span></tt></a></li>
+<li><strong>text</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the ER7-encoded string containing the segment to be parsed</li>
+<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">set_default_version</span></tt></a>)</li>
+<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">set_default_encoding_chars</span></tt></a>)</li>
+<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in
+<a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">set_default_validation_level</span></tt></a>)</li>
+<li><strong>reference</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the element structure returned by
+<a class="reference internal" href="hl7apy.html#hl7apy.load_reference" title="hl7apy.load_reference"><tt class="xref py py-func docutils literal"><span class="pre">load_reference</span></tt></a>, <a class="reference internal" href="hl7apy.html#hl7apy.find_reference" title="hl7apy.find_reference"><tt class="xref py py-func docutils literal"><span class="pre">find_reference</span></tt></a> or
+belonging to a message profile</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">an instance of <a class="reference internal" href="core.html#hl7apy.core.Segment" title="hl7apy.core.Segment"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Segment</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">an instance of <a class="reference internal" href="core.html#hl7apy.core.Segment" title="hl7apy.core.Segment"><tt class="xref py py-class docutils literal"><span class="pre">Segment</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -150,23 +165,29 @@
 
 <dl class="function">
 <dt id="hl7apy.parser.parse_fields">
-<tt class="descclassname">hl7apy.parser.</tt><tt class="descname">parse_fields</tt><big>(</big><em>text</em>, <em>name_prefix=None</em>, <em>version=None</em>, <em>encoding_chars=None</em>, <em>validation_level=None</em>, <em>force_varies=False</em><big>)</big><a class="headerlink" href="#hl7apy.parser.parse_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">hl7apy.parser.</tt><tt class="descname">parse_fields</tt><big>(</big><em>text</em>, <em>name_prefix=None</em>, <em>version=None</em>, <em>encoding_chars=None</em>, <em>validation_level=None</em>, <em>references=None</em>, <em>force_varies=False</em><big>)</big><a class="headerlink" href="#hl7apy.parser.parse_fields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse the given ER7-encoded fields and return a list of <a class="reference internal" href="core.html#hl7apy.core.Field" title="hl7apy.core.Field"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Field</span></tt></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>text</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the ER7-encoded string containing the fields to be parsed</li>
-<li><strong>name_prefix</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the field prefix (e.g. MSH)</li>
-<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_version()</span></tt></a>)</li>
-<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_encoding_chars()</span></tt></a>)</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_validation_level()</span></tt></a>)</li>
-<li><strong>force_varies</strong> (<tt class="docutils literal"><span class="pre">bool</span></tt>) &#8211; flag that force the fields to use a varies structure when no reference is found. It is used when a segment ends with a field of type varies that thus support infinite children</li>
+<li><strong>text</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the ER7-encoded string containing the fields to be parsed</li>
+<li><strong>name_prefix</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the field prefix (e.g. MSH)</li>
+<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">set_default_version</span></tt></a>)</li>
+<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">set_default_encoding_chars</span></tt></a>)</li>
+<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in
+<a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">set_default_validation_level</span></tt></a>)</li>
+<li><strong>references</strong> (<tt class="docutils literal"><span class="pre">list</span></tt>) &#8211; A list of the references of the <a class="reference internal" href="core.html#hl7apy.core.Field" title="hl7apy.core.Field"><tt class="xref py py-class docutils literal"><span class="pre">Field</span></tt></a>&#8216;s children</li>
+<li><strong>force_varies</strong> (<tt class="docutils literal"><span class="pre">bool</span></tt>) &#8211; flag that force the fields to use a varies structure when no reference is found.
+It is used when a segment ends with a field of type varies that thus support infinite children</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a list of <a class="reference internal" href="core.html#hl7apy.core.Field" title="hl7apy.core.Field"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Field</span></tt></a> instances</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a list of <a class="reference internal" href="core.html#hl7apy.core.Field" title="hl7apy.core.Field"><tt class="xref py py-class docutils literal"><span class="pre">Field</span></tt></a> instances</p>
 </td>
 </tr>
 </tbody>
@@ -190,23 +211,30 @@
 <dl class="function">
 <dt id="hl7apy.parser.parse_field">
 <tt class="descclassname">hl7apy.parser.</tt><tt class="descname">parse_field</tt><big>(</big><em>text</em>, <em>name=None</em>, <em>version=None</em>, <em>encoding_chars=None</em>, <em>validation_level=None</em>, <em>reference=None</em>, <em>force_varies=False</em><big>)</big><a class="headerlink" href="#hl7apy.parser.parse_field" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse the given ER7-encoded field and return an instance of <a class="reference internal" href="core.html#hl7apy.core.Field" title="hl7apy.core.Field"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Field</span></tt></a>.</p>
+<dd><p>Parse the given ER7-encoded field and return an instance of <a class="reference internal" href="core.html#hl7apy.core.Field" title="hl7apy.core.Field"><tt class="xref py py-class docutils literal"><span class="pre">Field</span></tt></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>text</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the ER7-encoded string containing the fields to be parsed</li>
-<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the field name (e.g. MSH_7)</li>
-<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_version()</span></tt></a>)</li>
-<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_encoding_chars()</span></tt></a>)</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_validation_level()</span></tt></a>)</li>
-<li><strong>reference</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the element structure returned by <a class="reference internal" href="hl7apy.html#hl7apy.load_reference" title="hl7apy.load_reference"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.load_reference()</span></tt></a> or <a class="reference internal" href="hl7apy.html#hl7apy.find_reference" title="hl7apy.find_reference"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.find_reference()</span></tt></a></li>
-<li><strong>force_varies</strong> (<tt class="docutils literal"><span class="pre">boolean</span></tt>) &#8211; flag that force the fields to use a varies structure when no reference is found. It is used when a segment ends with a field of type varies that thus support infinite children</li>
+<li><strong>text</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the ER7-encoded string containing the fields to be parsed</li>
+<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the field name (e.g. MSH_7)</li>
+<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">set_default_version</span></tt></a>)</li>
+<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">set_default_encoding_chars</span></tt></a>)</li>
+<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in
+<a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">set_default_validation_level</span></tt></a>)</li>
+<li><strong>reference</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the element structure returned by
+<a class="reference internal" href="hl7apy.html#hl7apy.load_reference" title="hl7apy.load_reference"><tt class="xref py py-func docutils literal"><span class="pre">load_reference</span></tt></a> or <a class="reference internal" href="hl7apy.html#hl7apy.find_reference" title="hl7apy.find_reference"><tt class="xref py py-func docutils literal"><span class="pre">find_reference</span></tt></a>
+or belonging to a message profile</li>
+<li><strong>force_varies</strong> (<tt class="docutils literal"><span class="pre">boolean</span></tt>) &#8211; flag that force the fields to use a varies structure when no reference is found.
+It is used when a segment ends with a field of type varies that thus support infinite children</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">an instance of <a class="reference internal" href="core.html#hl7apy.core.Field" title="hl7apy.core.Field"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Field</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">an instance of <a class="reference internal" href="core.html#hl7apy.core.Field" title="hl7apy.core.Field"><tt class="xref py py-class docutils literal"><span class="pre">Field</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -228,22 +256,28 @@
 
 <dl class="function">
 <dt id="hl7apy.parser.parse_components">
-<tt class="descclassname">hl7apy.parser.</tt><tt class="descname">parse_components</tt><big>(</big><em>text</em>, <em>field_datatype='ST'</em>, <em>version=None</em>, <em>encoding_chars=None</em>, <em>validation_level=None</em><big>)</big><a class="headerlink" href="#hl7apy.parser.parse_components" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse the given ER7-encoded components and return a list of <a class="reference internal" href="core.html#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Component</span></tt></a> instances.</p>
+<tt class="descclassname">hl7apy.parser.</tt><tt class="descname">parse_components</tt><big>(</big><em>text</em>, <em>field_datatype='ST'</em>, <em>version=None</em>, <em>encoding_chars=None</em>, <em>validation_level=None</em>, <em>references=None</em><big>)</big><a class="headerlink" href="#hl7apy.parser.parse_components" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the given ER7-encoded components and return a list of <a class="reference internal" href="core.html#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">Component</span></tt></a>
+instances.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>text</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the ER7-encoded string containing the components to be parsed</li>
-<li><strong>field_datatype</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the datatype of the components (e.g. ST)</li>
-<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_version()</span></tt></a>)</li>
-<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_encoding_chars()</span></tt></a>)</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_validation_level()</span></tt></a>)</li>
+<li><strong>text</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the ER7-encoded string containing the components to be parsed</li>
+<li><strong>field_datatype</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the datatype of the components (e.g. ST)</li>
+<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">set_default_version</span></tt></a>)</li>
+<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">set_default_encoding_chars</span></tt></a>)</li>
+<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in
+<a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">set_default_validation_level</span></tt></a>)</li>
+<li><strong>references</strong> (<tt class="docutils literal"><span class="pre">list</span></tt>) &#8211; A list of the references of the <a class="reference internal" href="core.html#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">Component</span></tt></a>&#8216;s children</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a list of <a class="reference internal" href="core.html#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Component</span></tt></a> instances</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a list of <a class="reference internal" href="core.html#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">Component</span></tt></a> instances</p>
 </td>
 </tr>
 </tbody>
@@ -261,23 +295,30 @@
 <dl class="function">
 <dt id="hl7apy.parser.parse_component">
 <tt class="descclassname">hl7apy.parser.</tt><tt class="descname">parse_component</tt><big>(</big><em>text</em>, <em>name=None</em>, <em>datatype='ST'</em>, <em>version=None</em>, <em>encoding_chars=None</em>, <em>validation_level=None</em>, <em>reference=None</em><big>)</big><a class="headerlink" href="#hl7apy.parser.parse_component" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse the given ER7-encoded component and return an instance of <a class="reference internal" href="core.html#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Component</span></tt></a>.</p>
+<dd><p>Parse the given ER7-encoded component and return an instance of
+<a class="reference internal" href="core.html#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">Component</span></tt></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>text</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the ER7-encoded string containing the components to be parsed</li>
-<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the component&#8217;s name (e.g. XPN_2)</li>
-<li><strong>datatype</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the datatype of the component (e.g. ST)</li>
-<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_version()</span></tt></a>)</li>
-<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_encoding_chars()</span></tt></a>)</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_validation_level()</span></tt></a>)</li>
-<li><strong>reference</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the element structure returned by <a class="reference internal" href="hl7apy.html#hl7apy.load_reference" title="hl7apy.load_reference"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.load_reference()</span></tt></a> or <a class="reference internal" href="hl7apy.html#hl7apy.find_reference" title="hl7apy.find_reference"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.find_reference()</span></tt></a></li>
+<li><strong>text</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the ER7-encoded string containing the components to be parsed</li>
+<li><strong>name</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the component&#8217;s name (e.g. XPN_2)</li>
+<li><strong>datatype</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the datatype of the component (e.g. ST)</li>
+<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">set_default_version</span></tt></a>)</li>
+<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">set_default_encoding_chars</span></tt></a>)</li>
+<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in
+<a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">set_default_validation_level</span></tt></a>)</li>
+<li><strong>reference</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the element structure returned by
+<a class="reference internal" href="hl7apy.html#hl7apy.load_reference" title="hl7apy.load_reference"><tt class="xref py py-func docutils literal"><span class="pre">load_reference</span></tt></a> or <a class="reference internal" href="hl7apy.html#hl7apy.find_reference" title="hl7apy.find_reference"><tt class="xref py py-func docutils literal"><span class="pre">find_reference</span></tt></a>
+or belonging to a message profile</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">an instance of <a class="reference internal" href="core.html#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Component</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">an instance of <a class="reference internal" href="core.html#hl7apy.core.Component" title="hl7apy.core.Component"><tt class="xref py py-class docutils literal"><span class="pre">Component</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -297,21 +338,26 @@
 <dl class="function">
 <dt id="hl7apy.parser.parse_subcomponents">
 <tt class="descclassname">hl7apy.parser.</tt><tt class="descname">parse_subcomponents</tt><big>(</big><em>text</em>, <em>component_datatype='ST'</em>, <em>version=None</em>, <em>encoding_chars=None</em>, <em>validation_level=None</em><big>)</big><a class="headerlink" href="#hl7apy.parser.parse_subcomponents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse the given ER7-encoded subcomponents and return a list of <a class="reference internal" href="core.html#hl7apy.core.SubComponent" title="hl7apy.core.SubComponent"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.SubComponent</span></tt></a> instances.</p>
+<dd><p>Parse the given ER7-encoded subcomponents and return a list of
+<a class="reference internal" href="core.html#hl7apy.core.SubComponent" title="hl7apy.core.SubComponent"><tt class="xref py py-class docutils literal"><span class="pre">SubComponent</span></tt></a> instances.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>text</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the ER7-encoded string containing the components to be parsed</li>
-<li><strong>component_datatype</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the datatype of the subcomponents (e.g. ST)</li>
-<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">basestring</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_version()</span></tt></a>)</li>
-<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_encoding_chars()</span></tt></a>)</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.consts.VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">hl7apy.set_default_validation_level()</span></tt></a>)</li>
+<li><strong>text</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the ER7-encoded string containing the components to be parsed</li>
+<li><strong>component_datatype</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the datatype of the subcomponents (e.g. ST)</li>
+<li><strong>version</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the HL7 version (e.g. &#8220;2.5&#8221;), or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_version" title="hl7apy.set_default_version"><tt class="xref py py-func docutils literal"><span class="pre">set_default_version</span></tt></a>)</li>
+<li><strong>encoding_chars</strong> (<tt class="docutils literal"><span class="pre">dict</span></tt>) &#8211; a dictionary containing the encoding chars or None to use the default
+(see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_encoding_chars" title="hl7apy.set_default_encoding_chars"><tt class="xref py py-func docutils literal"><span class="pre">set_default_encoding_chars</span></tt></a>)</li>
+<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the validation level. Possible values are those defined in
+<a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt></a> class or <tt class="docutils literal"><span class="pre">None</span></tt> to use the default
+validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set_default_validation_level" title="hl7apy.set_default_validation_level"><tt class="xref py py-func docutils literal"><span class="pre">set_default_validation_level</span></tt></a>)</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a list of <a class="reference internal" href="core.html#hl7apy.core.SubComponent" title="hl7apy.core.SubComponent"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.core.SubComponent</span></tt></a> instances</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a list of <a class="reference internal" href="core.html#hl7apy.core.SubComponent" title="hl7apy.core.SubComponent"><tt class="xref py py-class docutils literal"><span class="pre">SubComponent</span></tt></a> instances</p>
 </td>
 </tr>
 </tbody>
@@ -346,6 +392,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Getting started</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API Docs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hl7apy.html">Library helper functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="core.html">Core classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="consts.html">Consts</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="">Parser</a></li>
@@ -353,7 +400,8 @@
 <li class="toctree-l2"><a class="reference internal" href="factories.html">Datatype factories</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="validation.html">Validation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hl7apy.html">Library helper functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mllp.html">MLLP Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utility functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
@@ -390,7 +438,7 @@
     </div>
 
     <div class="footer">
-        &copy; Copyright 2012-2014, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
+        &copy; Copyright 2012-2015, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
 <script type="text/javascript">
