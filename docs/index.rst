@@ -1,7 +1,3 @@
-.. HL7apy documentation master file, created by
-   sphinx-quickstart on Thu May  2 14:54:43 2013.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
 HL7apy
 ======
@@ -27,18 +23,22 @@ Current version is 1.1.0
 
 To get started visit the :ref:`Getting started <tutorial>` section
 
+This project is not affiliated with the HL7 organization: the library is just consistent with their specification.
+
 Installation
 ============
 
-HL7apy is platform independent and supports Python 2.7
+HL7apy is platform independent and supports Python 2.7.
 
-To install it get the latest release from `here <https://github.com/crs4/hl7apy>`_, extract it and launch the following command from the extracted directory
+Get the latest release from GitHub: `https://github.com/crs4/hl7apy <https://github.com/crs4/hl7apy>`_
+
+Launch the following command:
 
 .. code-block:: bash
 
   python setup.py install
 
-Alernatively you can use pip to install it from `PyPI <https://pypi.python.org/pypi/hl7apy/>`_
+Alternatively you can use pip to install it from `PyPI <https://pypi.python.org/pypi/hl7apy/>`_
 
 .. code-block:: bash
 

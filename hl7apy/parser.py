@@ -693,7 +693,8 @@ def _find_group(segment, search_data, validation_level=None):
                   if structure['structure_by_name'][k]['cls'] == Group]
         # for any group found, create the group and check if the segment is one of its children
         for g in groups:
-            group = Group(g, version=segment.version, validation_level=validation_level)
+            group = Group(g, version=segment.version, reference=structure['structure_by_name'][g]['ref'],
+                          validation_level=validation_level)
             p_structure = {'structure_by_name':  group.structure_by_name,
                            'ordered_children': group.ordered_children,
                            'repetitions': group.repetitions}
