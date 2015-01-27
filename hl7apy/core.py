@@ -295,7 +295,7 @@ class ElementList(collections.MutableSequence):
         elif isinstance(value, Element):  # it is already an instance of Element
             child = value
         elif isinstance(value, BaseDataType):
-            child = self.create_element(name, True, reference)
+            child = self.create_element(name, False, reference)
             child.value = value
         else:
             raise ChildNotValid(value, child_name)

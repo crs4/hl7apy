@@ -1144,6 +1144,7 @@ class TestField(unittest.TestCase):
         s = Segment('MSH')
         s.msh_10.value = ST('aaa')
         self.assertEqual(s.msh_10.to_er7(), 'aaa')
+        self.assertEqual(s.to_er7(), 'MSH|||||||||aaa')
 
         # assigns base datatype
         s = Segment('MSH')
