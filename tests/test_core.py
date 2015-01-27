@@ -349,6 +349,24 @@ class TestMessage(unittest.TestCase):
     #    children = m.children.get_children()
     #    self.assertEqual(len(children), 2)
 
+    def test_bug_13(self):
+        m = Message("RSP_K21")
+        g = m.rsp_k21_query_response
+        self.assertEqual(id(m.rsp_k21_query_response), id(g))  # test that the ElementProxy is the same
+
+        # tests the creation of traversal_indexes item
+        pid1 = m.rsp_k21_query_response.pid
+        self.assertIn("RSP_K21_QUERY_RESPONSE", m.children.traversal_indexes)
+
+        pid2 = m.rsp_k21_query_response.pid
+        pid1.value = 'PID|a|b|'
+        # tests that assigning a child to one occurrence affect also the others
+        self.assertEqual(pid1.children, pid2.children)
+        self.assertEqual(pid1.children, m.rsp_k21_query_response.pid.children)
+        self.assertNotIn("RSP_K21_QUERY_RESPONSE", m.children.traversal_indexes)
+
+        sub = m.rsp_k21_query_response.pid.pid_3.cx_10.cwe_1
+
 
 class TestGroup(unittest.TestCase):
 
@@ -485,6 +503,20 @@ class TestGroup(unittest.TestCase):
         m2.rsp_k21_query_response = self.rsp_k21_query_response
         self.assertEqual(m1.to_er7(), m2.to_er7())
         self.assertEqual(m1.to_er7(), m2.to_er7())
+
+    def test_bug_13(self):
+        g = Group('RSP_K21_QUERY_RESPONSE')
+        pid = g.pid
+        self.assertEqual(id(g.pid), id(pid))
+
+        pid_31 = g.pid.pid_3
+        self.assertIn('PID', g.children.traversal_indexes)
+
+        pid_32 = pid.pid_3
+        pid_31.value = 'a'
+        self.assertNotIn('PID', g.children.traversal_indexes)
+        self.assertEqual(pid_31.children, pid_32.children)
+        self.assertEqual(pid_31.children, g.pid.pid_3.children)
 
     def test_assign_value_unknown_group(self):
         g = Group()
@@ -632,9 +664,9 @@ class TestSegment(unittest.TestCase):
         s = m.qpd
         s.add(Field())
 
-    #def test_add_known_fields_to_empty_segment(self):
-    #   s = Segment()
-    #    #self.assertRaises(ChildNotFound, s.add, Field('spm_10')) #This one is not raised!!!!
+    # def test_add_known_fields_to_empty_segment(self):
+    #     s = Segment()
+    #     self.assertRaises(ChildNotFound, s.add, Field('spm_10'))  # This one is not raised!!!!
 
     def test_add_not_allowed_fields_to_known_segments(self):
         s = Segment('PID', validation_level=VALIDATION_LEVEL.STRICT)
@@ -734,6 +766,24 @@ class TestSegment(unittest.TestCase):
         m1.qpd.value = segment_str
         m2.qpd.value = segment_str
         self.assertEqual(m1.to_er7(), m2.to_er7())
+
+    def test_bug_13(self):
+        p = Segment('PID')
+        f = p.pid_3
+        self.assertEqual(id(p.pid_3), id(f))
+        self.assertEqual(id(p.patient_identifier_list), id(f))
+
+        c1 = p.pid_3.cx_10
+        self.assertIn('PID_3', p.children.traversal_indexes)
+
+        p.ALTERNATE_PATIENT_ID_PID.cx_10
+        self.assertIn('PID_4', p.children.traversal_indexes)
+
+        c2 = f.cx_10
+        c1.value = 'a'
+        self.assertNotIn('PID_3', p.children.traversal_indexes)
+        self.assertEqual(c1.children, c2.children)
+        self.assertEqual(c1.children, p.pid_3.cx_10.children)
 
     def test_assign_wrong_value(self):
         s = Segment('PID')
@@ -1118,6 +1168,24 @@ class TestField(unittest.TestCase):
         m.msh.msh_10 = ST('aaa')
         self.assertEqual(m.msh.msh_10.to_er7(), 'aaa')
 
+    def test_bug_13(self):
+        f = Field('PID_3')
+        c = f.cx_10
+        self.assertEqual(id(f.cx_10), id(c))
+        self.assertEqual(id(f.ASSIGNING_AGENCY_OR_DEPARTMENT), id(c))
+
+        s1 = f.cx_10.cwe_1
+        self.assertIn('CX_10', f.children.traversal_indexes)
+
+        s2 = f.ASSIGNING_AUTHORITY.HD_1
+        self.assertIn('CX_4', f.children.traversal_indexes)
+
+        s2 = c.cwe_1
+        s2.value = 'a'
+        self.assertNotIn('CX_10', f.children.traversal_indexes)
+        self.assertEqual(s1.children, s2.children)
+        self.assertEqual(s1.children, f.cx_10.cwe_1.children)
+
     def test_assign_value_traversal_message_profile(self):
         field_str = '1010110909194822^^^AUTH&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK'
 
@@ -1387,17 +1455,17 @@ class TestComponent(unittest.TestCase):
     def test_delete_component(self):
         m = Message('OML_O33')
         m.pid = 'PID|||||bianchi^mario|||'
-        pid_5_1 = m.pid.pid_5.pid_5_1
-        self.assertIn(pid_5_1[0], m.pid.pid_5.children)
+        pid_5_1 = m.pid.pid_5.pid_5_1[0]
+        self.assertIn(pid_5_1, m.pid.pid_5.children)
         del m.pid.pid_5.pid_5_1
-        self.assertNotIn(pid_5_1[0], m.pid.pid_5.children)
+        self.assertNotIn(pid_5_1, m.pid.pid_5.children)
 
         m = Message('RSP_K21', reference=self.rsp_k21_mp)
         m.qpd = 'QPD|IHE PDQ Query|222222222|@PID.3.1.1^3333333|||||^^^IHEFACILITY&1.3.6.1.4.1.21367.3000.1.6&ISO|'
-        qpd_3_1 = m.qpd.qpd_3.qpd_3_1
-        self.assertIn(qpd_3_1[0], m.qpd.qpd_3.children)
+        qpd_3_1 = m.qpd.qpd_3.qpd_3_1[0]
+        self.assertIn(qpd_3_1, m.qpd.qpd_3.children)
         del m.qpd.qpd_3.qpd_3_1
-        self.assertNotIn(qpd_3_1[0], m.qpd.qpd_3.children)
+        self.assertNotIn(qpd_3_1, m.qpd.qpd_3.children)
 
     def test_assign_complex_field_datatype_by_get(self):
         p = Segment('PID')
@@ -1801,6 +1869,15 @@ class TestComponent(unittest.TestCase):
         c = Component('CWE_1', validation_level=VALIDATION_LEVEL.STRICT)
         c.value = cmp_str
         self.assertEqual(c.to_er7(), 'xxx\S\yyy')
+
+    def test_bug_13(self):
+        c = Component('CX_10')
+        s = c.cwe_1
+
+        self.assertEqual(id(c.cwe_1), id(s))
+        c.cwe_1 = 'b'
+
+        self.assertEqual(s.children, c.cwe_1.children)
 
 
 class TestSubComponent(unittest.TestCase):

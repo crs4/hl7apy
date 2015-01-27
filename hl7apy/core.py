@@ -115,10 +115,17 @@ class ElementProxy(collections.Sequence):
     """
     cls_attrs = ('element_list', 'list', 'element_name')
 
-    def __init__(self, element_list, element_name, elements):
-        self.element_name = element_name
+    def __init__(self, element_list, element_name):
+        self.element_name = element_name.upper()
         self.element_list = element_list
-        self.list = list(elements)
+
+    @property
+    def list(self):
+        return self.element_list.indexes.get(self.element_name, [])
+
+    @property
+    def traversal_list(self):
+        return self.element_list.traversal_indexes.get(self.element_name, [])
 
     def __len__(self):
         return len(self.list)
@@ -133,7 +140,10 @@ class ElementProxy(collections.Sequence):
         try:
             element = self.list[0]
         except IndexError:  # first child not found, create the element
-            element = self.element_list.create_element(self.element_name, traversal_parent=True)
+            try:
+                element = self.traversal_list[0]
+            except IndexError:
+                element = self.element_list.create_element(self.element_name, traversal_parent=True)
         return getattr(element, name)
 
     def __setattr__(self, name, value):
@@ -143,7 +153,10 @@ class ElementProxy(collections.Sequence):
             try:
                 element = self.list[0]
             except IndexError:  # first child not found, create the element
-                element = self.element_list.create_element(self.element_name, traversal_parent=True)
+                try:
+                    element = self.traversal_list[0]
+                except IndexError:
+                    element = self.element_list.create_element(self.element_name, traversal_parent=True)
             if name == 'value':
                 element.set_parent_to_traversal()
             setattr(element, name, value)
@@ -156,7 +169,6 @@ class ElementProxy(collections.Sequence):
 
     def __delitem__(self, index):
         self.element_list.remove(self.list[index])
-        del self.list[index]
 
     def __delattr__(self, name):
         delattr(self.list[0], name)
@@ -177,6 +189,8 @@ class ElementList(collections.MutableSequence):
         self.element = element
         self.list = []
         self.indexes = {}
+        self.traversal_indexes = {}
+        self.proxies = {}
 
     def get_ordered_children(self):
         """
@@ -224,11 +238,18 @@ class ElementList(collections.MutableSequence):
         :param child: an instance of an :class:`Element <hl7apy.core.Element>` subclass
         """
         if self._can_add_child(child):
-            self.list.append(child)
-            try:
-                self.indexes[child.name].append(child)
-            except KeyError:
-                self.indexes[child.name] = [child]
+            if self.element == child.parent:
+                self._remove_from_traversal_index(child)
+                self.list.append(child)
+                try:
+                    self.indexes[child.name].append(child)
+                except KeyError:
+                    self.indexes[child.name] = [child]
+            elif self.element == child.traversal_parent:
+                try:
+                    self.traversal_indexes[child.name].append(child)
+                except KeyError:
+                    self.traversal_indexes[child.name] = [child]
 
     def pop(self, index=0):
         child = super(ElementList, self).pop(index)
@@ -299,8 +320,11 @@ class ElementList(collections.MutableSequence):
         :type child: :class:`Element <hl7apy.core.Element>`
         :param child: an instance of :class:`Element <hl7apy.core.Element>` subclass
         """
-        self._remove_from_index(child)
-        self.list.remove(child)
+        if self.element == child.traversal_parent:
+            self._remove_from_traversal_index(child)
+        else:
+            self._remove_from_index(child)
+            self.list.remove(child)
 
     def remove_by_name(self, name, index=0):
         """
@@ -334,14 +358,23 @@ class ElementList(collections.MutableSequence):
         try:
             child = self.indexes[child_name][index]
         except (KeyError, IndexError):
-            child = None
+            try:
+                child = self.traversal_indexes[child_name][index]
+            except (KeyError, IndexError):
+                child = None
         return child
 
     def replace_child(self, old_child, new_child):
-        list_index = self.list.index(old_child)
-        by_name_index = self.indexes[old_child.name].index(old_child)
-        self.remove(old_child)
-        self.insert(list_index, new_child, by_name_index)
+        # in case it was a traversal child we just remove it from traversal children and append
+        # the new child to children
+        if old_child.traversal_parent == self.element:
+            self.remove(old_child)
+            self.append(new_child)
+        else:
+            list_index = self.list.index(old_child)
+            by_name_index = self.indexes[old_child.name].index(old_child)
+            self.remove(old_child)
+            self.insert(list_index, new_child, by_name_index)
 
     def create_element(self, name, traversal_parent=False, reference=None):
         """
@@ -399,18 +432,24 @@ class ElementList(collections.MutableSequence):
 
         :return: an instance of :class:`ElementProxy <hl7apy.core.ElementProxy>` containing the results
         """
-        if name in self.indexes:  # use the indexes to find the children faster
-            results = ElementProxy(self, name, (c for c in self.indexes[name]))
-            return results
+        if name in self.indexes or name in self.traversal_indexes:
+            try:
+                return self.proxies[name]
+            except KeyError:
+                self.proxies[name] = ElementProxy(self, name)
+                return self.proxies[name]
         else:  # child not found in the indexes dictionary (e.g. msh_9.message_code, msh_9.msh_9_1)
             child_name = self._find_name(name)
             if child_name is not None:
-                results = ElementProxy(self, name, (c for c in self.indexes.get(child_name, [])))
-                return results
+                try:
+                    return self.proxies[child_name]
+                except KeyError:
+                    self.proxies[child_name] = ElementProxy(self, child_name)
+                    return self.proxies[child_name]
 
     def _can_add_child(self, child):
         if self.element._is_valid_child(child):
-            if child.parent != self.element:  # avoid infinite recursion
+            if child.parent != self.element and child.traversal_parent != self.element:  # avoid infinite recursion
                 child.parent = self.element
             else:
                 # if validation is strict, check the child cardinality
@@ -423,7 +462,6 @@ class ElementList(collections.MutableSequence):
                 if self.element.version != child.version:
                     raise OperationNotAllowed('Cannot add a child with a different HL7 version')
                 return True
-
         else:
             raise ChildNotValid(child, self.element)
         return False
@@ -432,6 +470,14 @@ class ElementList(collections.MutableSequence):
         try:
             self.indexes[child.name].remove(child)
         except (KeyError, ValueError):
+            pass
+
+    def _remove_from_traversal_index(self, child):
+        try:
+            self.traversal_indexes[child.name].remove(child)
+            if len(self.traversal_indexes[child.name]) == 0:
+                del self.traversal_indexes[child.name]
+        except (KeyError, ValueError) as e:
             pass
 
     def __len__(self):
@@ -554,9 +600,9 @@ class Element(object):
     """
 
     cls_attrs = ['name', 'validation_level', 'version', 'children', 'ordered_children',
-                 'table', 'long_name', 'value', '_value', 'parent',  '_parent', 'traversal_parent',
-                 'child_classes', 'encoding_chars', 'structure_by_name', 'structure_by_longname',
-                 'repetitions', 'reference']
+                 'table', 'long_name', 'value', '_value', 'parent',  '_parent', '_traversal_parent',
+                 'traversal_parent', 'child_classes', 'encoding_chars', 'structure_by_name',
+                 'structure_by_longname', 'repetitions', 'reference']
 
     def __init__(self, name=None, parent=None, reference=None, version=None,
                  validation_level=None, traversal_parent=None):
@@ -701,12 +747,22 @@ class Element(object):
 
     def _set_parent(self, parent):
         self._parent = parent
-        self.traversal_parent = None
         if parent is not None:
+            self.traversal_parent = None
             self.parent.add(self)
 
     parent = property(_get_parent, _set_parent,
                       doc="The parent :class:`Element <hl7apy.core.Element>` of this one")
+
+    def _get_traversal_parent(self):
+        return self._traversal_parent
+
+    def _set_traversal_parent(self, parent):
+        self._traversal_parent = parent
+        if parent is not None:
+            parent.add(self)
+
+    traversal_parent = property(_get_traversal_parent, _set_traversal_parent)
 
     def _set_value(self, value):
         self.children = self.parse_children(value)
