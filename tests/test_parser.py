@@ -24,7 +24,7 @@ import unittest
 
 import hl7apy
 from hl7apy.parser import parse_message, parse_segments, parse_segment, parse_fields, parse_field, \
-    parse_components, parse_component, parse_subcomponent, parse_subcomponents
+    parse_components, parse_component, parse_subcomponents, get_message_type
 from hl7apy.validation import VALIDATION_LEVEL
 from hl7apy.exceptions import ParserError, OperationNotAllowed, InvalidEncodingChars, InvalidName, \
     ValidationError
@@ -389,7 +389,16 @@ class TestParser(unittest.TestCase):
 
     def test_message_profile_invalid_message(self):
         with self.assertRaises(ValidationError):
-            m = parse_message(self.invalid_rsp_k21, message_profile=self.rsp_k21_mp, validation_level=VALIDATION_LEVEL.STRICT)
+            parse_message(self.invalid_rsp_k21, message_profile=self.rsp_k21_mp,
+                          validation_level=VALIDATION_LEVEL.STRICT)
+
+    def test_get_message_type(self):
+        msh = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||{}|0123456789|P|2.5||||AL\r'
+
+        for mt in ("ADT^A01^ADT_A01", "ADT^A01", "^^^", "^^ADT_A01"):
+            self.assertEqual(get_message_type(msh.format(mt)), mt)
+
+
 
 if __name__ == '__main__':
     unittest.main()

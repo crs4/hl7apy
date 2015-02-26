@@ -559,16 +559,8 @@ def parse_subcomponent(text, name=None, datatype='ST', version=None, validation_
                         validation_level=validation_level)
 
 
-def get_message_info(content):
-    """
-    Parse the given ER7-encoded message to find its version, structure and encoding chars
-
-    :param content: the ER7-encoded message
-
-    :return: a tuple containing (encoding_chars, message_structure, version)
-    """
-    regex = re.compile("^MSH(?P<field_sep>\S)")
-    m = regex.match(content)
+def _split_msh(content):
+    m = re.match("^MSH(?P<field_sep>\S)", content)
     if m is not None:  # if the regular expression matches, it is an HL7 message
         field_sep = m.group('field_sep')  # get the field separator (first char after MSH)
         msh = content.split("\r", 1)[0]  # get the first segment
@@ -595,6 +587,23 @@ def get_message_info(content):
             }
     else:
         raise ParserError("Invalid message")
+
+    return fields, encoding_chars
+
+
+def get_message_type(content):
+    fields, enc_chars = _split_msh(content)
+
+    try:
+        msh_9 = fields[8].strip()
+    except IndexError:
+        msh_9 = None
+
+    return msh_9
+
+
+def get_message_info(content):
+    fields, encoding_chars = _split_msh(content)
 
     # look for MSH.9 field (e.g. ADT^A01^ADT_A01) containing the message structure
     try:
