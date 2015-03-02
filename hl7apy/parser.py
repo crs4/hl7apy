@@ -29,7 +29,7 @@ from hl7apy.exceptions import InvalidName, ParserError, InvalidEncodingChars, Me
 from hl7apy.validation import Validator
 
 
-def parse_message(message, validation_level=None, find_groups=True, message_profile=None, report_file=None):
+def parse_message(message, validation_level=None, find_groups=True, message_profile=None, report_file=None, force_validation=False):
     """
     Parse the given ER7-encoded message and return an instance of :class:`Message <hl7apy.core.Message>`.
 
@@ -45,6 +45,9 @@ def parse_message(message, validation_level=None, find_groups=True, message_prof
     :param find_groups: if ``True``, automatically assign the segments found to the appropriate
         :class:`Groups <hl7apy.core.Group>` instances. If ``False``, the segments found are assigned as
         children of the :class:`Message <hl7apy.core.Message>` instance
+        
+    :type force_validation: ``bool``
+    :type force_validation: if ``True``, automatically forces the message validation after the end of the parsing
 
     :return: an instance of :class:`Message <hl7apy.core.Message>`
 
@@ -80,7 +83,8 @@ def parse_message(message, validation_level=None, find_groups=True, message_prof
         create_groups(m, children, validation_level)
     else:
         m.children = children
-    if Validator.is_strict(validation_level):
+    #if Validator.is_strict(validation_level):
+    if force_validation:
         if message_profile is None:
             Validator.validate(m, report_file=report_file)
         else:
