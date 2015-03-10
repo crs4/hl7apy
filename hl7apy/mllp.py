@@ -20,14 +20,71 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import re
+import socket
 from SocketServer import StreamRequestHandler, TCPServer
 
-from hl7apy.parser import get_message_info
+from hl7apy.parser import get_message_type
+from hl7apy.exceptions import HL7apyException, ParserError
+
+
+class UnsupportedMessageType(HL7apyException):
+    def __init__(self, msg_type):
+        self.msg_type = msg_type
+
+    def __str__(self):
+        return 'Unsupported message type %s' % self.msg_type
+
+
+class InvalidHL7Message(HL7apyException):
+    def __str__(self):
+        return 'The string received is not a valid HL7 message'
 
 
 class _MLLPRequestHandler(StreamRequestHandler):
     def __init__(self, *args, **kwargs):
         StreamRequestHandler.__init__(self, *args, **kwargs)
+
+    def setup(self):
+        self.sb = "\x0b"
+        self.eb = "\x1c"
+        self.cr = "\x0d"
+        self.validator = re.compile(self.sb + "(([^\r]+\r)+)" + self.eb + self.cr)
+        self.handlers = self.server.handlers
+        self.timeout = self.server.timeout
+
+        StreamRequestHandler.setup(self)
+
+    def handle(self):
+        end_seq = "{}{}".format(self.eb, self.cr)
+        try:
+            line = self.request.recv(3)
+        except socket.timeout:
+            self.request.close()
+            return
+
+        if line[0] != self.sb:  # First MLLP char
+            self.request.close()
+            return
+
+        while line[-2:] != end_seq:
+            try:
+                char = self.rfile.read(1)
+                if not char:
+                    break
+                line += char
+            except socket.timeout:
+                self.request.close()
+                return
+
+        message = self._extract_hl7_message(line)
+        if message is not None:
+            try:
+                response = self._route_message(message)
+            except Exception as e:
+                print "An error occurred during message handling: %s" % e
+            else:
+                # encode the response
+                self.wfile.write(response)
 
     def _extract_hl7_message(self, msg):
         message = None
@@ -38,37 +95,26 @@ class _MLLPRequestHandler(StreamRequestHandler):
 
     def _route_message(self, msg):
         try:
-            seps, msg_type, version = get_message_info(msg)
             try:
-                h = self.server.handlers[msg_type](msg)
-                return h.reply()
+                msg_type = get_message_type(msg)
+            except ParserError:
+                raise InvalidHL7Message
+
+            try:
+                handler, args = self.handlers[msg_type][0], self.handlers[msg_type][1:]
             except KeyError:
-                raise Exception('Cannot handle this message type')
+                raise UnsupportedMessageType(msg_type)
+
+            h = handler(msg, *args)
+            return h.reply()
         except Exception as e:
-            raise Exception('An error occurred parsing message: %s' % e)
-
-    def setup(self):
-        sb = "\x0b"
-        eb = "\x1c"
-        cr = "\x0d"
-
-        self.validator = re.compile(sb + "(([^\r]+\r)+)" + eb + cr)
-        StreamRequestHandler.setup(self)
-
-    def handle(self):
-        line = ''
-        while True:
-            char = self.rfile.read(1)
-            if not char:
-                break
-            line += char
-            # check if incoming buffer contains an HL7 message
-            message = self._extract_hl7_message(line)
-            if message is not None:
-                response = self._route_message(message)
-                # encode the response
-                self.wfile.write(response)
-                line = ''
+            try:
+                err_handler, args = self.handlers['ERR'][0], self.handlers['ERR'][1:]
+            except KeyError:
+                raise e
+            else:
+                h = err_handler(e, msg, *args)
+                return h.reply()
 
 
 class MLLPServer(TCPServer):
@@ -84,11 +130,13 @@ class MLLPServer(TCPServer):
             The latter must be subclasses of :class:`AbstractTransactionHandler` that implement the
             :func:`reply() <AbstractTransactionHandler.reply>` method
     """
-    def __init__(self, host, port, handlers):
+    allow_reuse_address = True
+
+    def __init__(self, host, port, handlers, timeout=10):
         self.host = host
         self.port = port
         self.handlers = handlers
-
+        self.timeout = timeout
         TCPServer.__init__(self, (host, port), _MLLPRequestHandler)
 
     def add_handler(self, name, fun):
@@ -100,11 +148,10 @@ class AbstractTransactionHandler(object):
         Abstract transaction handler. Handlers should implement the
         :func:`reply() <AbstractTransactionHandler.reply>` method which handle the incoming message.
 
-        :param message: a :obj:`Message <hl7apy.core.Message>` object
+        :param message: an er7-formatted hl7 message
     """
     def __init__(self, message):
-
-        self.msg = message
+        self.incoming_message = message
 
     def reply(self):
         """
