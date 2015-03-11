@@ -21,7 +21,7 @@
 
 import re
 import socket
-from SocketServer import StreamRequestHandler, TCPServer
+from SocketServer import StreamRequestHandler, TCPServer, ThreadingMixIn
 
 from hl7apy.parser import get_message_type
 from hl7apy.exceptions import HL7apyException, ParserError
@@ -48,7 +48,7 @@ class _MLLPRequestHandler(StreamRequestHandler):
         self.sb = "\x0b"
         self.eb = "\x1c"
         self.cr = "\x0d"
-        self.validator = re.compile(self.sb + "(([^\r]+\r)+)" + self.eb + self.cr)
+        self.validator = re.compile(self.sb + "(([^\r]+\r)*([^\r]+\r?))" + self.eb + self.cr)
         self.handlers = self.server.handlers
         self.timeout = self.server.timeout
 
@@ -81,10 +81,11 @@ class _MLLPRequestHandler(StreamRequestHandler):
             try:
                 response = self._route_message(message)
             except Exception as e:
-                print "An error occurred during message handling: %s" % e
+                self.request.close()
             else:
                 # encode the response
                 self.wfile.write(response)
+        self.request.close()
 
     def _extract_hl7_message(self, msg):
         message = None

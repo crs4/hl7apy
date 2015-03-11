@@ -2091,10 +2091,5 @@ class TestSubComponent(unittest.TestCase):
         with self.assertRaises(ChildNotFound):
             f.stf_2_10_100 = 'subcomponent'
 
-
-
-
-
-
 if __name__ == '__main__':
     unittest.main()

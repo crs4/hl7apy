@@ -171,7 +171,8 @@ class TestParser(unittest.TestCase):
 
     def test_parse_unknown_message_strict(self):
         message = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.6||||AL\r'
-        self.assertRaises(ValidationError, parse_message, message, validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(ValidationError, parse_message, message,
+                          validation_level=VALIDATION_LEVEL.STRICT, force_validation=True)
         message = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000|||0123456789|P|2.6||||AL\r'
         self.assertRaises(OperationNotAllowed, parse_message, message, validation_level=VALIDATION_LEVEL.STRICT)
 
@@ -239,7 +240,7 @@ class TestParser(unittest.TestCase):
         segment = 'QPD|||@PID.3.1^aaaa~@PID.8^F'
         s = parse_segment(segment)
         self.assertEqual(len(s.qpd_3), 2)
-        #check single PID_3 instances
+        # check single PID_3 instances
         self.assertEqual(s.qpd_3[0].qpd_3_1.to_er7(), '@PID.3.1' )
         self.assertEqual(s.qpd_3[0].qpd_3_2.to_er7(), 'aaaa')
         self.assertEqual(s.qpd_3[1].qpd_3_1.to_er7(), '@PID.8' )
@@ -261,7 +262,7 @@ class TestParser(unittest.TestCase):
         self.assertNotEqual(s.obx_6.datatype, 'varies')
 
     def test_parse_fields(self):
-        #note: this method seems not to work without segment definition, and also for MSH segment
+        # note: this method seems not to work without segment definition, and also for MSH segment
         field = 'PID|xxx|yyy^zz'
         fields = parse_fields(field)
         for field in fields:
@@ -272,7 +273,7 @@ class TestParser(unittest.TestCase):
     def test_parse_fields_multiple_instances(self):
         field = '||@PID.3.1^aaaa^~@PID.8^F'
         f = parse_fields(field, name_prefix='PID')
-        self.assertEqual(len(f), 2) #only the valued field is recognized
+        self.assertEqual(len(f), 2)  # only the valued field is recognized
         self.assertEqual(f[0].cx_1.to_er7(), '@PID.3.1')
 
     def test_parse_null_fields(self):
@@ -294,7 +295,7 @@ class TestParser(unittest.TestCase):
 
     def test_parse_field(self):
         field = 'xxx^yyy^zzz'
-        f = parse_field(field) #exception thrown here
+        f = parse_field(field)  # exception thrown here
 
     def test_parse_field_invalid_encoding_chars(self):
         field = 'xxx^yyy^zzz'
@@ -388,17 +389,14 @@ class TestParser(unittest.TestCase):
         self.assertFalse(m.qpd.allow_infinite_children)
 
     def test_message_profile_invalid_message(self):
-        with self.assertRaises(ValidationError):
-            parse_message(self.invalid_rsp_k21, message_profile=self.rsp_k21_mp,
-                          validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(ValidationError, parse_message, self.invalid_rsp_k21, message_profile=self.rsp_k21_mp,
+                          validation_level=VALIDATION_LEVEL.STRICT, force_validation=True)
 
     def test_get_message_type(self):
         msh = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||{}|0123456789|P|2.5||||AL\r'
 
         for mt in ("ADT^A01^ADT_A01", "ADT^A01", "^^^", "^^ADT_A01"):
             self.assertEqual(get_message_type(msh.format(mt)), mt)
-
-
 
 if __name__ == '__main__':
     unittest.main()
