@@ -7,5 +7,8 @@ MLLP Classes
 .. autoclass:: MLLPServer
     :members:
 
-.. autoclass:: AbstractTransactionHandler
+.. autoclass:: AbstractHandler
+    :members:
+
+.. autoclass:: AbstractErrorHandler
     :members:

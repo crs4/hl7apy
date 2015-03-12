@@ -24,7 +24,7 @@ import unittest
 from multiprocessing import Process
 from threading import Thread
 
-from hl7apy.mllp import MLLPServer, AbstractTransactionHandler
+from hl7apy.mllp import MLLPServer, AbstractHandler
 from hl7apy.mllp import InvalidHL7Message, UnsupportedMessageType
 
 
@@ -54,13 +54,13 @@ PDQ_RES = PDQ_RES_TPL.format('RSP^K22^RSP_K21')
 PDQV_RES = PDQ_RES_TPL.format('RSP^ZV2^RSP_ZV2')
 
 
-class PDQHandler(AbstractTransactionHandler):
+class PDQHandler(AbstractHandler):
 
     def reply(self):
         return PDQ_RES
 
 
-class ErrorHandler(AbstractTransactionHandler):
+class ErrorHandler(AbstractHandler):
     def __init__(self, exc, msg):
         super(ErrorHandler, self).__init__(msg)
         self.exc = exc
@@ -72,7 +72,7 @@ class ErrorHandler(AbstractTransactionHandler):
             return UNSUPPORTED_MESSAGE
 
 
-class CustomArgsPDQHandler(AbstractTransactionHandler):
+class CustomArgsPDQHandler(AbstractHandler):
 
     def __init__(self, msg, is_pdqv):
         super(CustomArgsPDQHandler, self).__init__(msg)
@@ -111,7 +111,6 @@ class TestMLLPWithErrorHandler(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        print cls.server
         stop_server(cls.server, cls.thread)
 
     def _client(self, msg):

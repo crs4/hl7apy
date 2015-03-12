@@ -18,6 +18,9 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 # sys.path.insert(0, os.path.abspath('.'))
 
+import sys
+sys.path.append('..')
+
 import datetime
 FIRST_RELEASE_YEAR = 2012
 CURRENT_YEAR = datetime.datetime.now().year

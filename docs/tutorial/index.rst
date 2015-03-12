@@ -305,7 +305,7 @@ During children traversal if you try to access to an element which has not been 
 
     f = Field('PID_3')
     f.cx_10 # it returns []
-    f.cx_30 # it raise an exception since cx_30 does not exist
+    f.cx_30 # it raises an exception since cx_30 does not exist
     f.cx_10 = Component('CX_10')
     f.cx_10 # it returns [<Component CX_10>]
 
@@ -314,51 +314,56 @@ Message Profiles
 
 It is possible to create or parse a message using message profiles instead of the standard HL7 structures.
 
-To use a message profile, first you need to create the file that HL7apy can read. The file will be created using
-the utilities script `hl7apy_profile_parser` which needs the XML static definition of the profile as input.
+To use a message profile, first you need to create a file that HL7apy can interpret. The file must be created using
+the utility script ``hl7apy_profile_parser`` which needs the XML static definition of the profile as input.
 
-The command below will create the file for `message_profile.xml`
+The command below will create the file for ``message_profile.xml``
 
 .. code-block:: bash
 
     python hl7apy_profile_parser message_profile.xml -o $HOME/message_profile
 
-To create messages according to a message profile, it is necessary to load the profile and pass it ot the
-Message or the parser.
+To create messages according to a message profile, it is necessary to load the corresponding file and pass it when
+instantiating of parsing a :class:`Message <hl7apy.core.Message>`
 
 .. code-block:: python
 
     from hl7apy import load_message_profile
     mp = load_message_profile('$HOME/message_profile')
-    m = Message('RSP_K21', mp)
+    m1 = Message('RSP_K21', reference=mp)
+    m2 = parse_message(er7_str, message_profile=mp)
 
 Now the children will be created using the profile specification
 
-.. warning::
+.. important::
 
-    The message profile can be specified just for the message and not for other elements. This means that
-    when populating the message is better to create the children using element's navigation, since in this way
-    the library will get the correct structure from the message.
-    For example, let's use a message profile that specify the datatype of the PID.3 to be CWE (the official
+    The message profile can be specified just for the message and not for other elements. The structures of the children
+    will be kept internally by the :class:`Message <hl7apy.core.Message>`.
+    This means that when populating the message, in case of message profile, in order to guarantee that the correct
+    children references will be used, it is necessary to create each child using element's traversal or the specific
+    :class:`Element <hl7apy.core.Element>`'s methods (``add_group``, ``add_segment``, ecc) instead of the ``add()``
+    method.
+
+    For example, let's consider a message profile that specifies the datatype of the PID.3 to be CWE (the official
     one is CX).
 
     .. code-block:: python
 
-        m.pid_3.cwe_1 = 'aaa'
+        mp = load_message_profile('$HOME/message_profile')
+        m = Message('RSP_K21', reference=mp)
+        m.pid.pid_3.cwe_1 = 'aaa'  # populate the first occurrence of pid_3.
+        pid_3 = m.pid.add_field('PID_3')  # create a second occurrence
+        pid_3.cwe_1 = 'bbb'
 
-        f = Field('PID_3', datatype="CWE")
-        f.cwe_1 = 'aaa'
-        m.pid_3 = f
+    In this example, since we are using traversal and ``add_field()`` method, the library will use the PID.3 structure
+    specified in the message profile.
+    If we create the children separately the library will use the official HL7 structures.
 
-    In the first example the PID.3 field will be created automatically as CWE, in the second the developer
-    must specify the different dataype.
-    Notice that the datatype redefinition cannot be done using ``STRICT`` validation.
+    .. code-block:: python
 
-The message profile can be used also parsing messages
-
-.. code-block:: python
-
-    parse_message(er7_str, message_profile=mp)
+        m = Message('RSP_K21', reference=mp)
+        pid_3 = Field('PID_3')
+        pid_3.cwe_1  #  this will raise an error, since the official datatype is 'CX'
 
 Validation
 ----------
@@ -488,3 +493,86 @@ Validation of Z elements follow the same rules of the other elements. So for exa
   f = Field('ZIN_1')
   f.value = 'abc^def'
   f.validate() # False
+
+MLLP Server implementation
+--------------------------
+
+HL7apy provides an implementation of MLLP server that can be found in the module :mod:`hl7apy.mllp`.
+To manage different types of incoming messages, it is necessary to implement a specific handler for every kind of
+message. All handlers must be passed to :class:`MLLPServer <hl7apy.mllp.MLLPServer>` in the :attr:`handlers` dictionary
+(see the :class:`MLLPServer <hl7apy.mllp.MLLPServer>` documentation for details about :attr:`handlers`).
+
+For example, let's consider a situation where we need to handle QBP^Q21^QBP_Q21 messages. We will create a class
+for this kind of message, subclassing :class:`AbstractHandler <hl7apy.mllp.AbstractHandler>`.
+
+.. code-block:: python
+
+  from hl7apy.parser import parse_message
+  from hl7apy.mllp import AbstractHandler
+
+  class PDQHandler(AbstractHandler):
+      def reply(self):
+          msg = parse_message(self.incoming_message)
+          # do something with the message
+
+          res = Message('RSP_K21')
+          # populate the message
+          return res.to_mllp()
+
+Then we instantiate the server with the correct :attr:`handlers`.
+
+.. code-block:: python
+
+  from hl7apy.mllp import MLLPServer
+
+  handlers = {
+      'QBP^Q22^QBP_Q21': (PDQHandler,) # value is a tuple
+  }
+
+  server = MLLPServer('localhost', 2575, handlers)
+
+We can also implement a handler that accepts custom arguments. In the example below, the handler is provided
+with the name of the demographic database to retrieve the patients information from.
+
+.. code-block:: python
+
+  from hl7apy.parser import parse_message
+  from hl7apy.mllp import AbstractHandler
+
+  class PDQHandler(AbstractHandler):
+      def __init__(self, msg, database_name):
+          super(PDQHandler, self).__init__(msg)
+          self.database_name = database_name
+
+      def reply(self):
+          msg = parse_message(self.incoming_message)
+          # do something with the message
+          res = Message('RSP_K21')
+          # populate the message
+          return res.to_mllp()
+
+  handlers = {
+      'QBP^Q22^QBP_Q21': (PDQHandler, 'db_name')
+  }
+
+It is also possible to implement a subclass of
+:class:`AbstractErrorHandler <hl7apy.mllp.AbstractErrorHandler>` to handle exceptions that may
+occur (e.g., the reception of an unsupported message). The instance of the :exc:`Exception` can be accessed through
+the attribute :attr:`exc`.
+
+.. code-block:: python
+
+  from hl7apy.mllp import UnsupportedMessageType
+
+  class ErrorHandler(AbstractErrorHandler):
+      def reply(self):
+          if isinstance(self.exc, UnsupportedMessageType):
+              # return your custom response for unsupported message
+          else:
+              # return your custom response for general errors
+
+
+  handlers = {
+      'QBP^Q22^QBP_Q21': (PDQHandler, 'demographic_db'),
+      'ERR': (ErrorHandler,)
+  }

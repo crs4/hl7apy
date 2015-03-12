@@ -28,6 +28,9 @@ from hl7apy.exceptions import HL7apyException, ParserError
 
 
 class UnsupportedMessageType(HL7apyException):
+    """
+    Error that occurs when the :class:`MLLPServer` receives a message without an associated handler
+    """
     def __init__(self, msg_type):
         self.msg_type = msg_type
 
@@ -36,6 +39,9 @@ class UnsupportedMessageType(HL7apyException):
 
 
 class InvalidHL7Message(HL7apyException):
+    """
+    Error that occurs when the :class:`MLLPServer` receives a string which doesn't represent an ER7-encoded HL7 message
+    """
     def __str__(self):
         return 'The string received is not a valid HL7 message'
 
@@ -118,18 +124,28 @@ class _MLLPRequestHandler(StreamRequestHandler):
                 return h.reply()
 
 
-class MLLPServer(TCPServer):
+class MLLPServer(ThreadingMixIn, TCPServer):
     """
-        A :class:`TCPServer <SocketServer.TCPServer>` subclass that implements an MLLP server
-        receives HL7 messages encoded in MLLP and redirects them to the
-        correct handler.
+        A :class:`TCPServer <SocketServer.TCPServer>` subclass that implements an MLLP server.
+        It receives MLLP-encoded HL7 and redirects them to the correct handler, according to the
+        :attr:`handlers` dictionary passed in.
+
+        The :attr:`handlers` dictionary is structured as follows. Every key represents a message type (i.e.,
+        the MSH.9) to handle, and the associated value is a tuple containing a subclass of
+        :class:`AbstractHandler` for that message type and additional arguments to pass to its
+        constructor.
+
+        It is possible to specify a special handler for errors using the ``ERR`` key.
+        In this case the handler should subclass :class:`AbstractErrorHandler`,
+        which receives, in addition to other parameters, the raised exception as the first argument.
+        If the special handler is not specified the server will just close the connection.
+
+        The class allows to specify the timeout to wait before closing the connection.
 
         :param host: the address of the listener
         :param port: the port of the listener
-        :param handlers: a dictionary that specify the handler classes for every kind of supported message.
-            The keys of the dictionary must be the message type and the values the handlers classes.
-            The latter must be subclasses of :class:`AbstractTransactionHandler` that implement the
-            :func:`reply() <AbstractTransactionHandler.reply>` method
+        :param handlers: the dictionary that specifies the handler classes for every kind of supported message.
+        :param timeout: the timeout for the requests
     """
     allow_reuse_address = True
 
@@ -140,22 +156,36 @@ class MLLPServer(TCPServer):
         self.timeout = timeout
         TCPServer.__init__(self, (host, port), _MLLPRequestHandler)
 
-    def add_handler(self, name, fun):
-        self.handlers[name] = fun
 
-
-class AbstractTransactionHandler(object):
+class AbstractHandler(object):
     """
         Abstract transaction handler. Handlers should implement the
-        :func:`reply() <AbstractTransactionHandler.reply>` method which handle the incoming message.
+        :func:`reply() <AbstractHandler.reply>` method which handle the incoming message.
+        The incoming message is accessible using the attribute :attr:`incoming_message`
 
-        :param message: an er7-formatted hl7 message
+        :param message: the ER7-formatted HL7 message to handle
     """
     def __init__(self, message):
         self.incoming_message = message
 
     def reply(self):
         """
-            Abstract method. It should implement the handling of the request message and return the response
+            Abstract method. It should implement the handling of the request message and return the response.
         """
         raise NotImplementedError("The method reply() must be implemented in subclasses")
+
+
+class AbstractErrorHandler(AbstractHandler):
+    """
+    Abstract transaction handler for errors. It receives also the instance of the exception occurred, which will be
+    accessible through the :attr:`exc` attribute.
+    Specific exceptions that can be handled are :exc:`UnsupportedMessageType` and :exc:`InvalidHL7Message`
+
+    :param exc: the :exc:`Exception` occurred
+    """
+    def __init__(self, exc, message):
+        super(AbstractErrorHandler, self).__init__(message)
+        self.exc = exc
+
+    def reply(self):
+        super(AbstractErrorHandler, self).reply()
