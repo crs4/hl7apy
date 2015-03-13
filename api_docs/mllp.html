@@ -1,117 +1,83 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>MLLP Classes &mdash; HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/crs4_favicon.ico"/>
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
     
-    <title>MLLP Classes &mdash; HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages</title>
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages" href="../index.html"/>
+        <link rel="up" title="API Docs" href="index.html"/>
+        <link rel="next" title="Utility functions" href="utils.html"/>
+        <link rel="prev" title="Validation module" href="validation.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
     
-    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '1.1.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages" href="../index.html" />
-    <link rel="up" title="API Docs" href="index.html" />
-    <link rel="next" title="Utility functions" href="utils.html" />
-    <link rel="prev" title="Validation module" href="validation.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="utils.html" title="Utility functions"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="validation.html" title="Validation module"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages</a> &raquo;</li>
-          <li><a href="index.html" accesskey="U">API Docs</a> &raquo;</li> 
-      </ul>
-    </div>  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
-            
-  <div class="section" id="module-hl7apy.mllp">
-<span id="mllp-classes"></span><h1>MLLP Classes<a class="headerlink" href="#module-hl7apy.mllp" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="hl7apy.mllp.MLLPServer">
-<em class="property">class </em><tt class="descclassname">hl7apy.mllp.</tt><tt class="descname">MLLPServer</tt><big>(</big><em>host</em>, <em>port</em>, <em>handlers</em><big>)</big><a class="headerlink" href="#hl7apy.mllp.MLLPServer" title="Permalink to this definition">¶</a></dt>
-<dd><p>A <tt class="xref py py-class docutils literal"><span class="pre">TCPServer</span></tt> subclass that implements an MLLP server
-receives HL7 messages encoded in MLLP and redirects them to the
-correct handler.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>host</strong> &#8211; the address of the listener</li>
-<li><strong>port</strong> &#8211; the port of the listener</li>
-<li><strong>handlers</strong> &#8211; a dictionary that specify the handler classes for every kind of supported message.
-The keys of the dictionary must be the message type and the values the handlers classes.
-The latter must be subclasses of <a class="reference internal" href="#hl7apy.mllp.AbstractTransactionHandler" title="hl7apy.mllp.AbstractTransactionHandler"><tt class="xref py py-class docutils literal"><span class="pre">AbstractTransactionHandler</span></tt></a> that implement the
-<a class="reference internal" href="#hl7apy.mllp.AbstractTransactionHandler.reply" title="hl7apy.mllp.AbstractTransactionHandler.reply"><tt class="xref py py-func docutils literal"><span class="pre">reply()</span></tt></a> method</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="class">
-<dt id="hl7apy.mllp.AbstractTransactionHandler">
-<em class="property">class </em><tt class="descclassname">hl7apy.mllp.</tt><tt class="descname">AbstractTransactionHandler</tt><big>(</big><em>message</em><big>)</big><a class="headerlink" href="#hl7apy.mllp.AbstractTransactionHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract transaction handler. Handlers should implement the
-<a class="reference internal" href="#hl7apy.mllp.AbstractTransactionHandler.reply" title="hl7apy.mllp.AbstractTransactionHandler.reply"><tt class="xref py py-func docutils literal"><span class="pre">reply()</span></tt></a> method which handle the incoming message.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>message</strong> &#8211; a <a class="reference internal" href="core.html#hl7apy.core.Message" title="hl7apy.core.Message"><tt class="xref py py-obj docutils literal"><span class="pre">Message</span></tt></a> object</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="hl7apy.mllp.AbstractTransactionHandler.reply">
-<tt class="descname">reply</tt><big>(</big><big>)</big><a class="headerlink" href="#hl7apy.mllp.AbstractTransactionHandler.reply" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract method. It should implement the handling of the request message and return the response</p>
-</dd></dl>
-
-</dd></dl>
-
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../index.html" class="fa fa-home"> HL7apy</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
 </div>
-
-
-          </div>
-        </div>
       </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-<h3><a href="../index.html">Table Of Contents</a></h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Getting started</a></li>
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#create-a-message-from-scratch">Create a message from scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#adt-a01-example">ADT_A01 example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#parsing">Parsing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#er7-encoding">ER7 encoding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#datatypes">Datatypes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#elements-manipulation">Elements manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#message-profiles">Message Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#validation">Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#z-elements">Z Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#mllp-server-implementation">MLLP Server implementation</a></li>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API Docs</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="hl7apy.html">Library helper functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="core.html">Core classes</a></li>
@@ -129,40 +95,187 @@ The latter must be subclasses of <a class="reference internal" href="#hl7apy.mll
 <li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a></li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="validation.html"
-                        title="previous chapter">Validation module</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="utils.html"
-                        title="next chapter">Utility functions</a></p>
+          
+        
+      </div>
+      <!--<div class="wy-menu wy-menu-vertical" style="margin-top: 100%">-->
+        <!---->
+      <!--</div>-->
+      &nbsp;
+    </nav>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">HL7apy</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">API Docs</a> &raquo;</li>
+      
+    <li>MLLP Classes</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/api_docs/mllp.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="module-hl7apy.mllp">
+<span id="mllp-classes"></span><h1>MLLP Classes<a class="headerlink" href="#module-hl7apy.mllp" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="hl7apy.mllp.MLLPServer">
+<em class="property">class </em><tt class="descclassname">hl7apy.mllp.</tt><tt class="descname">MLLPServer</tt><big>(</big><em>host</em>, <em>port</em>, <em>handlers</em>, <em>timeout=10</em><big>)</big><a class="headerlink" href="#hl7apy.mllp.MLLPServer" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <tt class="xref py py-class docutils literal"><span class="pre">TCPServer</span></tt> subclass that implements an MLLP server.
+It receives MLLP-encoded HL7 and redirects them to the correct handler, according to the
+<tt class="xref py py-attr docutils literal"><span class="pre">handlers</span></tt> dictionary passed in.</p>
+<p>The <tt class="xref py py-attr docutils literal"><span class="pre">handlers</span></tt> dictionary is structured as follows. Every key represents a message type (i.e.,
+the MSH.9) to handle, and the associated value is a tuple containing a subclass of
+<a class="reference internal" href="#hl7apy.mllp.AbstractHandler" title="hl7apy.mllp.AbstractHandler"><tt class="xref py py-class docutils literal"><span class="pre">AbstractHandler</span></tt></a> for that message type and additional arguments to pass to its
+constructor.</p>
+<p>It is possible to specify a special handler for errors using the <tt class="docutils literal"><span class="pre">ERR</span></tt> key.
+In this case the handler should subclass <a class="reference internal" href="#hl7apy.mllp.AbstractErrorHandler" title="hl7apy.mllp.AbstractErrorHandler"><tt class="xref py py-class docutils literal"><span class="pre">AbstractErrorHandler</span></tt></a>,
+which receives, in addition to other parameters, the raised exception as the first argument.
+If the special handler is not specified the server will just close the connection.</p>
+<p>The class allows to specify the timeout to wait before closing the connection.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>host</strong> &#8211; the address of the listener</li>
+<li><strong>port</strong> &#8211; the port of the listener</li>
+<li><strong>handlers</strong> &#8211; the dictionary that specifies the handler classes for every kind of supported message.</li>
+<li><strong>timeout</strong> &#8211; the timeout for the requests</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="hl7apy.mllp.AbstractHandler">
+<em class="property">class </em><tt class="descclassname">hl7apy.mllp.</tt><tt class="descname">AbstractHandler</tt><big>(</big><em>message</em><big>)</big><a class="headerlink" href="#hl7apy.mllp.AbstractHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract transaction handler. Handlers should implement the
+<a class="reference internal" href="#hl7apy.mllp.AbstractHandler.reply" title="hl7apy.mllp.AbstractHandler.reply"><tt class="xref py py-func docutils literal"><span class="pre">reply()</span></tt></a> method which handle the incoming message.
+The incoming message is accessible using the attribute <tt class="xref py py-attr docutils literal"><span class="pre">incoming_message</span></tt></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>message</strong> &#8211; the ER7-formatted HL7 message to handle</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="hl7apy.mllp.AbstractHandler.reply">
+<tt class="descname">reply</tt><big>(</big><big>)</big><a class="headerlink" href="#hl7apy.mllp.AbstractHandler.reply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract method. It should implement the handling of the request message and return the response.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="hl7apy.mllp.AbstractErrorHandler">
+<em class="property">class </em><tt class="descclassname">hl7apy.mllp.</tt><tt class="descname">AbstractErrorHandler</tt><big>(</big><em>exc</em>, <em>message</em><big>)</big><a class="headerlink" href="#hl7apy.mllp.AbstractErrorHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract transaction handler for errors. It receives also the instance of the exception occurred, which will be
+accessible through the <tt class="xref py py-attr docutils literal"><span class="pre">exc</span></tt> attribute.
+Specific exceptions that can be handled are <tt class="xref py py-exc docutils literal"><span class="pre">UnsupportedMessageType</span></tt> and <tt class="xref py py-exc docutils literal"><span class="pre">InvalidHL7Message</span></tt></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exc</strong> &#8211; the <tt class="xref py py-exc docutils literal"><span class="pre">Exception</span></tt> occurred</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="utils.html" class="btn btn-neutral float-right" title="Utility functions">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="validation.html" class="btn btn-neutral" title="Validation module"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo" class="footer-font footer-div">
+        &copy; Copyright 2012-2015, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
+  </div>
+
+  <div class="footer-font footer-div">
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  </div>
+
+  <div class="footer-div">
+    <a href="https://www.jetbrains.com/pycharm/" class="footer-font">
+      Developed using <img src="../_static/pycharm_logo.png" class="pycharm-img"/>
+    </a>
+  </div>
+
+</footer>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="utils.html" title="Utility functions"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="validation.html" title="Validation module"
-             >previous</a> |</li>
-        <li><a href="../index.html">HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages</a> &raquo;</li>
-          <li><a href="index.html" >API Docs</a> &raquo;</li> 
-      </ul>
-    </div>
 
-    <div class="footer">
-        &copy; Copyright 2012-2015, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
-    </div>
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.1.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+ 
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -178,5 +291,6 @@ The latter must be subclasses of <a class="reference internal" href="#hl7apy.mll
 
 </script>
 
-  </body>
+
+</body>
 </html>

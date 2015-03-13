@@ -1,56 +1,133 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>API Docs &mdash; HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages</title>
-    
-    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '1.1.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages" href="../index.html" />
-    <link rel="next" title="Library helper functions" href="hl7apy.html" />
-    <link rel="prev" title="Getting started" href="../tutorial/index.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="hl7apy.html" title="Library helper functions"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="../tutorial/index.html" title="Getting started"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages</a> &raquo;</li> 
-      </ul>
-    </div>  
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>API Docs &mdash; HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages</title>
+  
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+  
+  
+    <link rel="shortcut icon" href="../_static/crs4_favicon.ico"/>
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages" href="../index.html"/>
+        <link rel="next" title="Library helper functions" href="hl7apy.html"/>
+        <link rel="prev" title="Getting started" href="../tutorial/index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../index.html" class="fa fa-home"> HL7apy</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#create-a-message-from-scratch">Create a message from scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#adt-a01-example">ADT_A01 example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#parsing">Parsing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#er7-encoding">ER7 encoding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#datatypes">Datatypes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#elements-manipulation">Elements manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#message-profiles">Message Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#validation">Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#z-elements">Z Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#mllp-server-implementation">MLLP Server implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">API Docs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hl7apy.html">Library helper functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="consts.html">Consts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parser.html">Parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base_datatypes.html">Base datatypes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="factories.html">Datatype factories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="validation.html">Validation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mllp.html">MLLP Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utility functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a></li>
+</ul>
+
+          
+        
+      </div>
+      <!--<div class="wy-menu wy-menu-vertical" style="margin-top: 100%">-->
+        <!---->
+      <!--</div>-->
+      &nbsp;
+    </nav>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">HL7apy</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>API Docs</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/api_docs/index.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
             
   <div class="section" id="api-docs">
 <span id="id1"></span><h1>API Docs<a class="headerlink" href="#api-docs" title="Permalink to this headline">¶</a></h1>
@@ -73,63 +150,75 @@
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-<h3><a href="../index.html">Table Of Contents</a></h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Getting started</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">API Docs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="hl7apy.html">Library helper functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html">Core classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="consts.html">Consts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parser.html">Parser</a></li>
-<li class="toctree-l2"><a class="reference internal" href="base_datatypes.html">Base datatypes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="factories.html">Datatype factories</a></li>
-<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="validation.html">Validation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mllp.html">MLLP Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html">Utility functions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a></li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="../tutorial/index.html"
-                        title="previous chapter">Getting started</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="hl7apy.html"
-                        title="next chapter">Library helper functions</a></p>
-        </div>
-      </div>
-      <div class="clearer"></div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="hl7apy.html" class="btn btn-neutral float-right" title="Library helper functions">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../tutorial/index.html" class="btn btn-neutral" title="Getting started"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="hl7apy.html" title="Library helper functions"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="../tutorial/index.html" title="Getting started"
-             >previous</a> |</li>
-        <li><a href="../index.html">HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages</a> &raquo;</li> 
-      </ul>
-    </div>
+  
 
-    <div class="footer">
+  <hr/>
+
+  <div role="contentinfo" class="footer-font footer-div">
         &copy; Copyright 2012-2015, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
-    </div>
+  </div>
+
+  <div class="footer-font footer-div">
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  </div>
+
+  <div class="footer-div">
+    <a href="https://www.jetbrains.com/pycharm/" class="footer-font">
+      Developed using <img src="../_static/pycharm_logo.png" class="pycharm-img"/>
+    </a>
+  </div>
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.1.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+ 
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -145,5 +234,6 @@
 
 </script>
 
-  </body>
+
+</body>
 </html>
