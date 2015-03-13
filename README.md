@@ -15,7 +15,7 @@ The main features includes:
 
 Currently supported HL7 versions are: 2.2, 2.3, 2.3.1, 2.4, 2.5, 2.5.1, 2.6.
 
-Current version is __1.1.1__
+Current version is __1.1.2__
 
 This project is not affiliated with the HL7 organization: the library is just consistent with their specification.
 
