@@ -35,7 +35,6 @@
 import re
 import numbers
 from datetime import datetime
-
 from decimal import Decimal
 
 from hl7apy import get_default_encoding_chars, get_default_validation_level
@@ -338,9 +337,9 @@ class ID(TextualDataType):
     """
     def __init__(self, value, highlights=None,
                  validation_level=None):
-        #max_length is None bacause it depends from the HL7 table
+        # max_length is None bacause it depends from the HL7 table
         super(ID, self).__init__(value, None, highlights, validation_level)
-        #TODO: check for tables of allowed values: are we strict or not?
+        # TODO: check for tables of allowed values: are we strict or not?
 
 
 class IS(TextualDataType):
@@ -437,4 +436,3 @@ class TN(TextualDataType):
             raise ValueError('Invalid value for TN data')
 
         super(TN, self).__init__(value, 199, None, validation_level)
-

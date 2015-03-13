@@ -86,7 +86,7 @@ class _MLLPRequestHandler(StreamRequestHandler):
         if message is not None:
             try:
                 response = self._route_message(message)
-            except Exception as e:
+            except Exception:
                 self.request.close()
             else:
                 # encode the response

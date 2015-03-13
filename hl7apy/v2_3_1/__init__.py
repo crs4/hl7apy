@@ -34,11 +34,13 @@ ELEMENTS = {'Message': MESSAGES, 'Segment': SEGMENTS, 'Field': FIELDS,
             'Component': DATATYPES, 'Group': GROUPS, 'SubComponent': DATATYPES,
             'Table': TABLES}
 
+
 def get(name, element_type):
     try:
         return ELEMENTS[element_type][name]
     except KeyError:
         raise ChildNotFound(name)
+
 
 def find(name, where):
     for cls in where:
@@ -48,20 +50,23 @@ def find(name, where):
             pass
     raise ChildNotFound(name)
 
+
 def is_base_datatype(datatype):
     return datatype in BASE_DATATYPES
+
 
 def get_base_datatypes():
     return BASE_DATATYPES
 
+
 def _load_base_datatypes():
     base_datatypes = ('ST', 'ID', 'DT', 'FT', 'IS', 'NM', 'SI', 'TM', 'TX', 'TN')
     module = importlib.import_module("hl7apy.base_datatypes")
-    datatypes = {}
+    dts = {}
     for cls in base_datatypes:
         cls = getattr(module, cls)
-        datatypes[cls.__name__] = cls
-    return datatypes
+        dts[cls.__name__] = cls
+    return dts
 
 BASE_DATATYPES = _load_base_datatypes()
 

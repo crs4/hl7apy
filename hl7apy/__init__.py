@@ -19,7 +19,6 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
 import os
 import sys
 import collections
@@ -54,7 +53,7 @@ def check_encoding_chars(encoding_chars):
     if missing:
         raise InvalidEncodingChars('Missing required encoding chars')
 
-    values = [ v for k, v in encoding_chars.items() if k in required ]
+    values = [v for k, v in encoding_chars.items() if k in required]
     if len(values) > len(set(values)):
         raise InvalidEncodingChars('Found duplicate encoding chars')
 
@@ -69,6 +68,7 @@ def check_validation_level(validation_level):
     """
     if validation_level not in (VALIDATION_LEVEL.QUIET, VALIDATION_LEVEL.STRICT, VALIDATION_LEVEL.TOLERANT):
         raise UnknownValidationLevel
+
 
 def check_version(version):
     """
@@ -106,6 +106,7 @@ def get_default_version():
     2.5
     """
     return _DEFAULT_VERSION
+
 
 def get_default_validation_level():
     """
@@ -198,13 +199,14 @@ def set_default_encoding_chars(encoding_chars):
     Traceback (most recent call last):
         ...
     InvalidEncodingChars: Missing required encoding chars
-    >>> set_default_encoding_chars({'FIELD': '!', 'COMPONENT': 'C', 'SUBCOMPONENT': 'S', 'REPETITION': 'R', 'ESCAPE': '\\\\'})
+    >>> set_default_encoding_chars({'FIELD': '!', 'COMPONENT': 'C', 'SUBCOMPONENT': 'S', \
+                                    'REPETITION': 'R', 'ESCAPE': '\\\\'})
     >>> print get_default_encoding_chars()['FIELD']
     !
     """
     check_encoding_chars(encoding_chars)
 
-    encoding_chars.update({'GROUP' : '\r', 'SEGMENT' : '\r'})
+    encoding_chars.update({'GROUP': '\r', 'SEGMENT': '\r'})
 
     global _DEFAULT_ENCODING_CHARS
 

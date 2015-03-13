@@ -35,11 +35,13 @@ ELEMENTS = {'Message': MESSAGES, 'Segment': SEGMENTS, 'Field': FIELDS,
             'Component': DATATYPES, 'Group': GROUPS, 'SubComponent': DATATYPES,
             'Table': TABLES}
 
+
 def get(name, element_type):
     try:
         return ELEMENTS[element_type][name]
     except KeyError:
         raise ChildNotFound(name)
+
 
 def find(name, where):
     for cls in where:
@@ -49,11 +51,14 @@ def find(name, where):
             pass
     raise ChildNotFound(name)
 
+
 def is_base_datatype(datatype):
     return datatype in BASE_DATATYPES
 
+
 def get_base_datatypes():
     return BASE_DATATYPES
+
 
 def _load_base_datatypes():
     base_datatypes = ('ID', 'DT', 'DTM', 'FT', 'GTS', 'IS', 'NM', 'SI', 'TM', 'TX')

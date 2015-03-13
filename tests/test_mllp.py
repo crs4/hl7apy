@@ -21,7 +21,6 @@
 
 import socket
 import unittest
-from multiprocessing import Process
 from threading import Thread
 
 from hl7apy.mllp import MLLPServer, AbstractHandler
