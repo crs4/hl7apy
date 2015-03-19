@@ -38,10 +38,9 @@ Alternatively you can use pip to install it from [PyPI](https://pypi.python.org/
   pip install hl7apy
 ```
 
-Build status
-------------
-
 [![Build Status](https://travis-ci.org/crs4/hl7apy.png)](https://travis-ci.org/crs4/hl7apy)
+
+[![Code Health](https://landscape.io/github/crs4/hl7apy/develop/landscape.svg?style=flat-square)](https://landscape.io/github/crs4/hl7apy/develop)
 
 License
 -------
