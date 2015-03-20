@@ -40,7 +40,9 @@ Alternatively you can use pip to install it from [PyPI](https://pypi.python.org/
 
 [![Build Status](https://travis-ci.org/crs4/hl7apy.png)](https://travis-ci.org/crs4/hl7apy)
 
-[![Code Health](https://landscape.io/github/crs4/hl7apy/develop/landscape.svg?style=flat-square)](https://landscape.io/github/crs4/hl7apy/develop)
+[![Code Health](https://landscape.io/github/crs4/hl7apy/develop/landscape.svg?style=flat)](https://landscape.io/github/crs4/hl7apy/develop)
+
+[![Coverage Status](https://coveralls.io/repos/crs4/hl7apy/badge.svg)](https://coveralls.io/r/crs4/hl7apy)
 
 License
 -------
