@@ -108,10 +108,10 @@ class ElementProxy(collections.Sequence):
     >>> m = Message("OML_O33")
     >>> print m.msh
     [<Segment MSH>]
-    >>> print m.msh.__class__
-    <class '__main__.ElementProxy'>
-    >>> print m.msh.msh_7.__class__
-    <class '__main__.ElementProxy'>
+    >>> print isinstance(m.msh, ElementProxy)
+    True
+    >>> print isinstance(m.msh.msh_7, ElementProxy)
+    True
     """
     cls_attrs = ('element_list', 'list', 'element_name')
 

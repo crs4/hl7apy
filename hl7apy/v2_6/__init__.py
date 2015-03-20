@@ -47,7 +47,7 @@ def find(name, where):
     for cls in where:
         try:
             return {'ref': get(name, cls.__name__), 'name': name, 'cls': cls}
-        except:
+        except ChildNotFound:
             pass
     raise ChildNotFound(name)
 
