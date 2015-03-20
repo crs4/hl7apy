@@ -21,6 +21,7 @@
 
 from hl7apy.base_datatypes import TextualDataType
 
+
 class ST(TextualDataType):
     """
     :attr:`max_length` is 199

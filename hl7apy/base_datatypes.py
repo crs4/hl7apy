@@ -202,8 +202,8 @@ class DateTimeDataType(BaseDataType):
     :type value datetime: datetime.datetime
     :param value: a `datetime` date object. Default is ``None``
 
-    :type format: str
-    :param format: the format that will be used converting the object to string.
+    :type out_format: str
+    :param out_format: the format that will be used converting the object to string.
         It must be an item of the :attr:`allowed_formats` tuple
 
     :raise: :exc:``InvalidDateFormat <hl7apy.exceptions.InvalidDateFormat>` if the ``format`` is not in
@@ -212,11 +212,11 @@ class DateTimeDataType(BaseDataType):
 
     allowed_formats = ()
 
-    def __init__(self, value=None, format=''):
-        if format not in self.allowed_formats:
-            raise InvalidDateFormat(format)
+    def __init__(self, value=None, out_format=''):
+        if out_format not in self.allowed_formats:
+            raise InvalidDateFormat(out_format)
         self.value = value
-        self.format = format
+        self.format = out_format
 
     def to_er7(self, encoding_chars=None):
         return datetime.strftime(self.value, self.format)
@@ -232,8 +232,8 @@ class DT(DateTimeDataType):
 
     allowed_formats = ('%Y', '%Y%m', '%Y%m%d')
 
-    def __init__(self, value=None, format='%Y%m%d'):
-        super(DT, self).__init__(value, format)
+    def __init__(self, value=None, out_format='%Y%m%d'):
+        super(DT, self).__init__(value, out_format)
 
 
 class TM(DateTimeDataType):
@@ -256,8 +256,8 @@ class TM(DateTimeDataType):
 
     allowed_formats = ('%H', '%H%M', '%H%M%S', '%H%M%S.%f')
 
-    def __init__(self, value=None, format='%H%M%S.%f', offset='', microsec_precision=4):
-        super(TM, self).__init__(value, format)
+    def __init__(self, value=None, out_format='%H%M%S.%f', offset='', microsec_precision=4):
+        super(TM, self).__init__(value, out_format)
 
         if not (1 <= microsec_precision <= 4):
             raise InvalidMicrosecondsPrecision()
@@ -300,8 +300,8 @@ class DTM(TM):
     allowed_formats = ('%Y', '%Y%m', '%Y%m%d', '%Y%m%d%H', '%Y%m%d%H%M',
                        '%Y%m%d%H%M%S', '%Y%m%d%H%M%S.%f')
 
-    def __init__(self, value=None, format='%Y%m%d%H%M%S.%f', offset='', microsec_precision=4):
-        super(DTM, self).__init__(value, format, offset, microsec_precision)
+    def __init__(self, value=None, out_format='%Y%m%d%H%M%S.%f', offset='', microsec_precision=4):
+        super(DTM, self).__init__(value, out_format, offset, microsec_precision)
 
 
 class ST(TextualDataType):

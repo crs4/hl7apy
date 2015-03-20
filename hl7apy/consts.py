@@ -41,7 +41,7 @@ DEFAULT_ENCODING_CHARS = {
 DEFAULT_VERSION = "2.5"
 
 
-class MLLP_ENCODING_CHARS:
+class MLLP_ENCODING_CHARS(object):
     """
     MLLP encoding chars
     """
@@ -53,7 +53,7 @@ class MLLP_ENCODING_CHARS:
     CR = '\x0d'
 
 
-class VALIDATION_LEVEL:
+class VALIDATION_LEVEL(object):
     """
     Allowed validation levels
     """

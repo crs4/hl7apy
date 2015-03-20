@@ -44,11 +44,13 @@ class ValidationError(HL7apyException):
 
     >>> from hl7apy.parser import parse_message
     >>> from hl7apy.validation import VALIDATION_LEVEL
-    >>> msh = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.5||||AL\\r'
+    >>> msh = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|' \
+    '0123456789|P|2.5||||AL\\r'
     >>> evn = 'EVN||20080115153000||AAA|AAA|20080114003000\\r'
-    >>> pid = 'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\\r'
+    >>> pid = 'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||' \
+    '555-555-2004~444-333-222|||M\\r'
     >>> message = msh + evn + pid
-    >>> parse_message(message, validation_level=VALIDATION_LEVEL.STRICT)
+    >>> parse_message(message, validation_level=VALIDATION_LEVEL.STRICT, force_validation=True)
     Traceback (most recent call last):
     ...
     ValidationError: Missing required child ADT_A01.PV1
@@ -247,13 +249,13 @@ class InvalidDateFormat(HL7apyException):
     Raised when the output format for a :class:`hl7apy.base_datatypes.DateTimeDataType` is not valid
 
     >>> from hl7apy.v2_5 import DTM
-    >>> DTM(value='10102013', format="%d%m%Y")
+    >>> DTM(value='10102013', out_format="%d%m%Y")
     Traceback (most recent call last):
     ...
     InvalidDateFormat: Invalid date format: %d%m%Y
     """
-    def __init__(self, format):
-        self.format = format
+    def __init__(self, out_format):
+        self.format = out_format
 
     def __str__(self):
         return 'Invalid date format: {0}'.format(self.format)
@@ -264,7 +266,7 @@ class InvalidDateOffset(HL7apyException):
     Raised when the offset for a :class:`TM` or :class:`hl7apy.base_datatypes.DTM` is not valid
 
     >>> from hl7apy.v2_5 import DTM
-    >>> DTM(value='20131010', format="%Y%m%d", offset='+1300')
+    >>> DTM(value='20131010', out_format="%Y%m%d", offset='+1300')
     Traceback (most recent call last):
     ...
     InvalidDateOffset: Invalid date offset: +1300

@@ -45,7 +45,7 @@ class XSDParser(object):
         Parses the segments.xsd file found in the input_path and stores
         the results in the segments.py module.
         """
-        content, includes, types = self.parse_schema("segments.xsd")
+        content = self.parse_schema("segments.xsd")[0]
         self.generate_module("segments.py", content)
 
     def parse_fields(self):
@@ -53,7 +53,7 @@ class XSDParser(object):
         Parses the fields.xsd file found in the input_path and stores
         the results in the fields.py module.
         """
-        content, includes, types = self.parse_schema("fields.xsd")
+        content = self.parse_schema("fields.xsd")[0]
         self.generate_module("fields.py", content)
 
     def parse_datatypes(self):
@@ -61,9 +61,10 @@ class XSDParser(object):
         Parses the datatypes.xsd file found in the input_path and stores
         the results in the datatypes.py module.
         """
-        content, includes, types = self.parse_schema("datatypes.xsd")
+        parse_res = self.parse_schema("datatypes.xsd")
+        content, types = parse_res[0], parse_res[2]
         content.update(types)
-        content = {k:v for k, v in content.iteritems() if not k.endswith("_CONTENT")}
+        content = {k: v for k, v in content.iteritems() if not k.endswith("_CONTENT")}
         self.generate_module("datatypes.py", content)
 
     def parse_messages(self):
@@ -71,7 +72,8 @@ class XSDParser(object):
         Retrieves XSD files list from messages.xsd for parsing and stores
         all the results in the messages.py module.
         """
-        content, includes, types = self.parse_schema("messages.xsd")
+        parse_res = self.parse_schema("messages.xsd")
+        content, includes = parse_res[0], parse_res[1]
         message_files = includes
         message_def = {}
         groups = {}
@@ -88,7 +90,7 @@ class XSDParser(object):
         Parses the given XSD file using the lxml library then returns a dictionary
         containing parsing results.
         """
-        elements = {}
+
         try:
             schema_path = os.path.join(self.input_path, schema_file)
             with open(schema_path) as xml_file:
@@ -133,7 +135,8 @@ class XSDParser(object):
             if value is not None:
                 if value['type'] in ('sequence', 'choice') and value.get('content'):
                     try:
-                        new_value = (value['type'], tuple((x['ref'], (x.get('min', 0), x.get('max', -1))) for x in value['content']))
+                        new_value = (value['type'],
+                                     tuple((x['ref'], (x.get('min', 0), x.get('max', -1))) for x in value['content']))
                     except:
                         new_value = None
                 elif value['type'] == 'annotation':
@@ -152,7 +155,7 @@ class XSDParser(object):
         Stores parsing results in a python module.
         """
         module_path = os.path.join(self.output_path, module_name)
-        constant_name, ext = os.path.splitext(module_name)
+        constant_name = os.path.splitext(module_name)[0]
         self.reduce_content_size(module_content)
         try:
             if not os.path.exists(self.output_path):
@@ -167,13 +170,13 @@ class XSDParser(object):
 
 class Node(object):
 
-    def __init__(self, xml_node, types=[]):
+    def __init__(self, xml_node, types=None):
         """"
         Simpler representation of an XML node for storing relevant information
         from the HL7.org XSD files.
         """
         self.node = xml_node
-        self.types = types
+        self.types = types if types is not None else []
         self.tag = xml_node.tag.replace("{http://www.w3.org/2001/XMLSchema}", "")
         self.name = self._sanitize(self.node.get('name'))
         self.type = self._sanitize(self.node.get('type'))

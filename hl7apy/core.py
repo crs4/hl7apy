@@ -454,9 +454,9 @@ class ElementList(collections.MutableSequence):
             else:
                 # if validation is strict, check the child cardinality
                 if Validator.is_strict(self.element.validation_level):
-                    min, max = self.element.repetitions.get(child.name, (0, -1))
-                    if len(self.indexes.get(child.name, [])) + 1 > int(max) and max > -1:
-                        raise MaxChildLimitReached(self.element, child, max)
+                    min_rep, max_rep = self.element.repetitions.get(child.name, (0, -1))
+                    if len(self.indexes.get(child.name, [])) + 1 > int(max_rep) and max_rep > -1:
+                        raise MaxChildLimitReached(self.element, child, max_rep)
                 if self.element.validation_level != child.validation_level:
                     raise OperationNotAllowed('Cannot add a child with a different validation_level')
                 if self.element.version != child.version:
@@ -477,7 +477,7 @@ class ElementList(collections.MutableSequence):
             self.traversal_indexes[child.name].remove(child)
             if len(self.traversal_indexes[child.name]) == 0:
                 del self.traversal_indexes[child.name]
-        except (KeyError, ValueError) as e:
+        except (KeyError, ValueError):
             pass
 
     def __len__(self):
@@ -1198,7 +1198,8 @@ class Component(SupportComplexDataType, CanBeVaries):
             raise OperationNotAllowed("Cannot instantiate an unknown Element with strict validation")
 
         # TODO: This control should be deleted (see CanBeVaries)
-        if datatype is not None and Validator.is_strict(validation_level) and self.datatype != 'varies' and self.datatype != datatype:
+        if datatype is not None and Validator.is_strict(validation_level) and \
+                self.datatype != 'varies' and self.datatype != datatype:
             raise OperationNotAllowed("Cannot assign a different datatype with strict validation")
 
     def add_subcomponent(self, name):

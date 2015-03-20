@@ -52,18 +52,18 @@ class ProfileParser(object):
         return s
 
     def _get_cardinality(self, obj):
-        min = obj.get('Min') if obj.get('Min') is not None else 0
-        max = obj.get('Max') if obj.get('Max') is not None else -1
-        if max == "*":
-            max = -1
+        min_card = obj.get('Min') if obj.get('Min') is not None else 0
+        max_card = obj.get('Max') if obj.get('Max') is not None else -1
+        if max_card == "*":
+            max_card = -1
         if obj.get('Usage') == "X":
-            min = max = 0
+            min_card = max_card = 0
         elif obj.get('Usage') == "R":
-            min = 1
-        min = int(min)
-        max = int(max)
+            min_card = 1
+        min_card = int(min_card)
+        max_card = int(max_card)
 
-        return min, max
+        return min_card, max_card
 
     def _parse_children(self, parent, parent_name):
         children = []
@@ -103,10 +103,10 @@ class ProfileParser(object):
         components = []
         # length = int(field.get('Length')) if field.get('Length') else 0
         # table = "HL7{}".format(field.get('Table')) if field.get('Table') else None
-        datatype =  parent.get('Datatype')
-        for type in ['Component', 'SubComponent']:
+        datatype = parent.get('Datatype')
+        for el_type in ['Component', 'SubComponent']:
             try:
-                for c_index, component in enumerate(getattr(parent, type)):
+                for c_index, component in enumerate(getattr(parent, el_type)):
                     comp_name = "{}_{}".format(datatype, c_index+1)
                     comp_long_name = self._sanitize(component.get('Name'))
                     comp_cardinality = (1,1) if component.get('Usage') in ('R',) else (0, 1)
@@ -117,7 +117,7 @@ class ProfileParser(object):
                     comp_type = 'sequence' if len(comp_children) > 1 else 'leaf'
                     comp_datatype = comp_datatype.upper() if comp_datatype.upper() != "VARIES" else "varies"
                     component_data = ('mp', comp_type, comp_name, comp_children, comp_cardinality,
-                                      type, comp_datatype, comp_long_name, comp_table, comp_length)
+                                      el_type, comp_datatype, comp_long_name, comp_table, comp_length)
                     # component_data = (comp_name, cardinality, self._parse_field(component), type)
                     components.append(component_data)
             except:
@@ -182,8 +182,8 @@ if __name__ == '__main__':
     example = "Example: python profile_parser.py /home/user/ihe_2_3_folder"
     parser = OptionParser(usage=usage, epilog=example)
     parser.add_option("-o", "--output_dir",
-                        action="store", dest="output_dir", default="./profile",
-                        help="output path [%default]")
+                      action="store", dest="output_dir", default="./profile",
+                      help="output path [%default]")
     (options, args) = parser.parse_args()
     try:
         path = args[0]

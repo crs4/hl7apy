@@ -132,9 +132,9 @@ class TestDT(unittest.TestCase):
         date = datetime.strptime('2013', '%Y')
         date1 = datetime.strptime('201307', '%Y%m')
         date2 = datetime.strptime('20130715', '%Y%m%d')
-        dt = DT(date, format='%Y')
-        dt1 = DT(date1, format='%Y%m')
-        dt2 = DT(date2, format='%Y%m%d')
+        dt = DT(date, out_format='%Y')
+        dt1 = DT(date1, out_format='%Y%m')
+        dt2 = DT(date2, out_format='%Y%m%d')
         self.assertEqual(dt.classname, 'DT')
         self.assertEqual(dt.to_er7(), datetime.strftime(date, dt.format))
         self.assertEqual(dt1.to_er7(), datetime.strftime(date1, dt1.format))
@@ -142,10 +142,10 @@ class TestDT(unittest.TestCase):
 
 
     def test_DT_wrong_format(self):
-        self.assertRaises(InvalidDateFormat, DT,datetime.strptime('13', '%y'), format='%y')
-        self.assertRaises(InvalidDateFormat, DT,datetime.strptime('12', '%m'), format='%m')
-        self.assertRaises(InvalidDateFormat, DT,datetime.strptime('1202', '%m%d'), format='%m%d')
-        self.assertRaises(InvalidDateFormat, DT,datetime.strptime('02', '%d'), format='%d')
+        self.assertRaises(InvalidDateFormat, DT,datetime.strptime('13', '%y'), out_format='%y')
+        self.assertRaises(InvalidDateFormat, DT,datetime.strptime('12', '%m'), out_format='%m')
+        self.assertRaises(InvalidDateFormat, DT,datetime.strptime('1202', '%m%d'), out_format='%m%d')
+        self.assertRaises(InvalidDateFormat, DT,datetime.strptime('02', '%d'), out_format='%d')
 
     def test_DT_default_format(self):
         date = datetime.strptime('20130715', '%Y%m%d')
@@ -154,7 +154,7 @@ class TestDT(unittest.TestCase):
 
     def test_DT_wrong_default_format_strict(self):
         date = datetime.strptime('20', '%H')
-        self.assertRaises(InvalidDateFormat, DT, date, format='%H', )
+        self.assertRaises(InvalidDateFormat, DT, date, out_format='%H', )
 
 
 class TestTM(unittest.TestCase):
@@ -166,10 +166,10 @@ class TestTM(unittest.TestCase):
         time1 = datetime.strptime('0101', '%H%M')
         time2 = datetime.strptime('010111', '%H%M%S')
         time3 = datetime.strptime('010111.1110', '%H%M%S.%f')
-        tm = TM(time, format='%H')
-        tm1 = TM(time1, format='%H%M')
-        tm2 = TM(time2, format='%H%M%S')
-        tm3 = TM(time3, format='%H%M%S.%f')
+        tm = TM(time, out_format='%H')
+        tm1 = TM(time1, out_format='%H%M')
+        tm2 = TM(time2, out_format='%H%M%S')
+        tm3 = TM(time3, out_format='%H%M%S.%f')
         self.assertEqual(tm.classname, 'TM')
         self.assertEqual(tm.to_er7(), '01')
         self.assertEqual(tm1.to_er7(), '0101')
@@ -178,9 +178,9 @@ class TestTM(unittest.TestCase):
 
     def test_TM_wrong_format(self):
         tm = datetime.strptime('01', '%I')
-        self.assertRaises(InvalidDateFormat, TM, tm, format='%I')
-        self.assertRaises(InvalidDateFormat, TM,datetime.strptime('12', '%M'), format='%M')
-        self.assertRaises(InvalidDateFormat, TM,datetime.strptime('1212', '%M%S'), format='%M%S')
+        self.assertRaises(InvalidDateFormat, TM, tm, out_format='%I')
+        self.assertRaises(InvalidDateFormat, TM, datetime.strptime('12', '%M'), out_format='%M')
+        self.assertRaises(InvalidDateFormat, TM, datetime.strptime('1212', '%M%S'), out_format='%M%S')
 
     def test_TM_default_format(self):
         time = datetime.strptime('010111.1110', '%H%M%S.%f')
@@ -190,8 +190,8 @@ class TestTM(unittest.TestCase):
     def test_TM_offset(self):
         time = datetime.strptime('0101', '%H%M')
         time2 = datetime.strptime('010111.1110', '%H%M%S.%f')
-        tm = TM(time, format='%H%M', offset='+0100')
-        tm2 = TM(time2, format='%H%M%S.%f', offset='-0300')
+        tm = TM(time, out_format='%H%M', offset='+0100')
+        tm2 = TM(time2, out_format='%H%M%S.%f', offset='-0300')
         TM(time, offset='+0000')
         TM(time, offset='-0000')
         TM(time, offset='+1200')
@@ -236,14 +236,14 @@ class TestDTM(unittest.TestCase):
         dtime6 = datetime.strptime('010111.1110', '%H%M%S.%f')
         dtime7 = datetime.strptime('20130715010111.1110', '%Y%m%d%H%M%S.%f')
 
-        dtm  = DTM(dtime, format='%Y')
-        dtm1 = DTM(dtime1, format='%Y%m')
-        dtm2 = DTM(dtime2, format='%Y%m%d')
-        dtm3 = TM(dtime3, format='%H')
-        dtm4 = TM(dtime4, format='%H%M')
-        dtm5 = TM(dtime5, format='%H%M%S')
-        dtm6 = TM(dtime6, format='%H%M%S.%f')
-        dtm7 = DTM(dtime7, format='%Y%m%d%H%M%S.%f')
+        dtm  = DTM(dtime, out_format='%Y')
+        dtm1 = DTM(dtime1, out_format='%Y%m')
+        dtm2 = DTM(dtime2, out_format='%Y%m%d')
+        dtm3 = TM(dtime3, out_format='%H')
+        dtm4 = TM(dtime4, out_format='%H%M')
+        dtm5 = TM(dtime5, out_format='%H%M%S')
+        dtm6 = TM(dtime6, out_format='%H%M%S.%f')
+        dtm7 = DTM(dtime7, out_format='%Y%m%d%H%M%S.%f')
 
         self.assertEqual(dtm.classname, 'DTM')
         self.assertEqual(dtm.to_er7(), '2013')
@@ -262,7 +262,7 @@ class TestDTM(unittest.TestCase):
 
     def test_DTM_wrong_format(self):
         dtime = datetime.strptime('0715010111.111', '%m%d%H%M%S.%f')
-        self.assertRaises(InvalidDateFormat, DTM, dtime, format='%m%d%H%M%S.%f')
+        self.assertRaises(InvalidDateFormat, DTM, dtime, out_format='%m%d%H%M%S.%f')
 
     def test_DTM_offset(self):
         dtime = datetime.strptime('20130715 010111.1110', '%Y%m%d %H%M%S.%f')

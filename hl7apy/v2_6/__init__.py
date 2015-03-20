@@ -28,7 +28,7 @@ from datatypes import DATATYPES
 from groups import GROUPS
 from tables import TABLES
 
-from hl7apy.v2_6.base_datatypes import ST
+from hl7apy.v2_6.base_datatypes import ST as _ST26
 from hl7apy.exceptions import ChildNotFound
 
 ELEMENTS = {'Message': MESSAGES, 'Segment': SEGMENTS, 'Field': FIELDS,
@@ -61,14 +61,14 @@ def get_base_datatypes():
 
 
 def _load_base_datatypes():
-    base_datatypes = ('ID', 'DT', 'DTM', 'FT', 'GTS', 'IS', 'NM', 'SI', 'TM', 'TX')
+    base_dts = ('ID', 'DT', 'DTM', 'FT', 'GTS', 'IS', 'NM', 'SI', 'TM', 'TX')
     module = importlib.import_module("hl7apy.base_datatypes")
-    datatypes = {}
-    for cls in base_datatypes:
+    dts = {}
+    for cls in base_dts:
         cls = getattr(module, cls)
-        datatypes[cls.__name__] = cls
-    datatypes.update({'ST' : ST})
-    return datatypes
+        dts[cls.__name__] = cls
+    dts.update({'ST': _ST26})
+    return dts
 
 BASE_DATATYPES = _load_base_datatypes()
 

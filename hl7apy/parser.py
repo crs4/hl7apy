@@ -52,7 +52,8 @@ def parse_message(message, validation_level=None, find_groups=True, message_prof
 
     :return: an instance of :class:`Message <hl7apy.core.Message>`
 
-    >>> message = "MSH|^~\&|GHH_ADT||||20080115153000||OML^O33^OML_O33|0123456789|P|2.5||||AL\\rPID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004|||M\\r"
+    >>> message = "MSH|^~\&|GHH_ADT||||20080115153000||OML^O33^OML_O33|0123456789|P|2.5||||AL\\rPID|1||" \
+    "566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004|||M\\r"
     >>> m = parse_message(message)
     >>> print m
     <Message OML_O33>
@@ -119,7 +120,8 @@ def parse_segments(text, version=None, encoding_chars=None, validation_level=Non
 
     :return: a list of :class:`Segment <hl7apy.core.Segment>` instances
 
-    >>> segments = "EVN||20080115153000||||20080114003000\\rPID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004|||M\\r"
+    >>> segments = "EVN||20080115153000||||20080114003000\\rPID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||" \
+    "2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004|||M\\r"
     >>> print parse_segments(segments)
     [<Segment EVN>, <Segment PID>]
     """
@@ -226,7 +228,8 @@ def parse_fields(text, name_prefix=None, version=None, encoding_chars=None, vali
     >>> fields = "1|NUCLEAR^NELDA^W|SPO|2222 HOME STREET^^ANN ARBOR^MI^^USA"
     >>> nk1_fields = parse_fields(fields, name_prefix="NK1")
     >>> print nk1_fields
-    [<Field NK1_1 (SET_ID_NK1) of type SI>, <Field NK1_2 (NAME) of type XPN>, <Field NK1_3 (RELATIONSHIP) of type CE>, <Field NK1_4 (ADDRESS) of type XAD>]
+    [<Field NK1_1 (SET_ID_NK1) of type SI>, <Field NK1_2 (NAME) of type XPN>, <Field NK1_3 (RELATIONSHIP) of type CE>, \
+<Field NK1_4 (ADDRESS) of type XAD>]
     >>> s = Segment("NK1")
     >>> s.children = nk1_fields
     >>> print s.to_er7()
@@ -374,9 +377,12 @@ def parse_components(text, field_datatype='ST', version=None, encoding_chars=Non
     >>> components = "NUCLEAR^NELDA^W^^TEST"
     >>> xpn = parse_components(components, field_datatype="XPN")
     >>> print xpn
-    [<Component XPN_1 (FAMILY_NAME) of type FN>, <Component XPN_2 (GIVEN_NAME) of type ST>, <Component XPN_3 (SECOND_AND_FURTHER_GIVEN_NAMES_OR_INITIALS_THEREOF) of type ST>, <Component XPN_5 (PREFIX_E_G_DR) of type ST>]
+    [<Component XPN_1 (FAMILY_NAME) of type FN>, <Component XPN_2 (GIVEN_NAME) of type ST>, \
+<Component XPN_3 (SECOND_AND_FURTHER_GIVEN_NAMES_OR_INITIALS_THEREOF) of type ST>, \
+<Component XPN_5 (PREFIX_E_G_DR) of type ST>]
     >>> print parse_components(components)
-    [<Component ST (None) of type ST>, <Component ST (None) of type ST>, <Component ST (None) of type ST>, <Component ST (None) of type ST>, <Component ST (None) of type ST>]
+    [<Component ST (None) of type ST>, <Component ST (None) of type ST>, <Component ST (None) of type ST>, \
+<Component ST (None) of type ST>, <Component ST (None) of type ST>]
     """
     version = _get_version(version)
     encoding_chars = _get_encoding_chars(encoding_chars)
