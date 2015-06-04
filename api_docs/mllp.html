@@ -136,16 +136,16 @@
 <span id="mllp-classes"></span><h1>MLLP Classes<a class="headerlink" href="#module-hl7apy.mllp" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="hl7apy.mllp.MLLPServer">
-<em class="property">class </em><tt class="descclassname">hl7apy.mllp.</tt><tt class="descname">MLLPServer</tt><big>(</big><em>host</em>, <em>port</em>, <em>handlers</em>, <em>timeout=10</em><big>)</big><a class="headerlink" href="#hl7apy.mllp.MLLPServer" title="Permalink to this definition">¶</a></dt>
-<dd><p>A <tt class="xref py py-class docutils literal"><span class="pre">TCPServer</span></tt> subclass that implements an MLLP server.
+<em class="property">class </em><code class="descclassname">hl7apy.mllp.</code><code class="descname">MLLPServer</code><span class="sig-paren">(</span><em>host</em>, <em>port</em>, <em>handlers</em>, <em>timeout=10</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.mllp.MLLPServer" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <code class="xref py py-class docutils literal"><span class="pre">TCPServer</span></code> subclass that implements an MLLP server.
 It receives MLLP-encoded HL7 and redirects them to the correct handler, according to the
-<tt class="xref py py-attr docutils literal"><span class="pre">handlers</span></tt> dictionary passed in.</p>
-<p>The <tt class="xref py py-attr docutils literal"><span class="pre">handlers</span></tt> dictionary is structured as follows. Every key represents a message type (i.e.,
+<code class="xref py py-attr docutils literal"><span class="pre">handlers</span></code> dictionary passed in.</p>
+<p>The <code class="xref py py-attr docutils literal"><span class="pre">handlers</span></code> dictionary is structured as follows. Every key represents a message type (i.e.,
 the MSH.9) to handle, and the associated value is a tuple containing a subclass of
-<a class="reference internal" href="#hl7apy.mllp.AbstractHandler" title="hl7apy.mllp.AbstractHandler"><tt class="xref py py-class docutils literal"><span class="pre">AbstractHandler</span></tt></a> for that message type and additional arguments to pass to its
+<a class="reference internal" href="#hl7apy.mllp.AbstractHandler" title="hl7apy.mllp.AbstractHandler"><code class="xref py py-class docutils literal"><span class="pre">AbstractHandler</span></code></a> for that message type and additional arguments to pass to its
 constructor.</p>
-<p>It is possible to specify a special handler for errors using the <tt class="docutils literal"><span class="pre">ERR</span></tt> key.
-In this case the handler should subclass <a class="reference internal" href="#hl7apy.mllp.AbstractErrorHandler" title="hl7apy.mllp.AbstractErrorHandler"><tt class="xref py py-class docutils literal"><span class="pre">AbstractErrorHandler</span></tt></a>,
+<p>It is possible to specify a special handler for errors using the <code class="docutils literal"><span class="pre">ERR</span></code> key.
+In this case the handler should subclass <a class="reference internal" href="#hl7apy.mllp.AbstractErrorHandler" title="hl7apy.mllp.AbstractErrorHandler"><code class="xref py py-class docutils literal"><span class="pre">AbstractErrorHandler</span></code></a>,
 which receives, in addition to other parameters, the raised exception as the first argument.
 If the special handler is not specified the server will just close the connection.</p>
 <p>The class allows to specify the timeout to wait before closing the connection.</p>
@@ -167,10 +167,10 @@ If the special handler is not specified the server will just close the connectio
 
 <dl class="class">
 <dt id="hl7apy.mllp.AbstractHandler">
-<em class="property">class </em><tt class="descclassname">hl7apy.mllp.</tt><tt class="descname">AbstractHandler</tt><big>(</big><em>message</em><big>)</big><a class="headerlink" href="#hl7apy.mllp.AbstractHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hl7apy.mllp.</code><code class="descname">AbstractHandler</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.mllp.AbstractHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract transaction handler. Handlers should implement the
-<a class="reference internal" href="#hl7apy.mllp.AbstractHandler.reply" title="hl7apy.mllp.AbstractHandler.reply"><tt class="xref py py-func docutils literal"><span class="pre">reply()</span></tt></a> method which handle the incoming message.
-The incoming message is accessible using the attribute <tt class="xref py py-attr docutils literal"><span class="pre">incoming_message</span></tt></p>
+<a class="reference internal" href="#hl7apy.mllp.AbstractHandler.reply" title="hl7apy.mllp.AbstractHandler.reply"><code class="xref py py-func docutils literal"><span class="pre">reply()</span></code></a> method which handle the incoming message.
+The incoming message is accessible using the attribute <code class="xref py py-attr docutils literal"><span class="pre">incoming_message</span></code></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -181,7 +181,7 @@ The incoming message is accessible using the attribute <tt class="xref py py-att
 </table>
 <dl class="method">
 <dt id="hl7apy.mllp.AbstractHandler.reply">
-<tt class="descname">reply</tt><big>(</big><big>)</big><a class="headerlink" href="#hl7apy.mllp.AbstractHandler.reply" title="Permalink to this definition">¶</a></dt>
+<code class="descname">reply</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.mllp.AbstractHandler.reply" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract method. It should implement the handling of the request message and return the response.</p>
 </dd></dl>
 
@@ -189,15 +189,15 @@ The incoming message is accessible using the attribute <tt class="xref py py-att
 
 <dl class="class">
 <dt id="hl7apy.mllp.AbstractErrorHandler">
-<em class="property">class </em><tt class="descclassname">hl7apy.mllp.</tt><tt class="descname">AbstractErrorHandler</tt><big>(</big><em>exc</em>, <em>message</em><big>)</big><a class="headerlink" href="#hl7apy.mllp.AbstractErrorHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hl7apy.mllp.</code><code class="descname">AbstractErrorHandler</code><span class="sig-paren">(</span><em>exc</em>, <em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.mllp.AbstractErrorHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract transaction handler for errors. It receives also the instance of the exception occurred, which will be
-accessible through the <tt class="xref py py-attr docutils literal"><span class="pre">exc</span></tt> attribute.
-Specific exceptions that can be handled are <tt class="xref py py-exc docutils literal"><span class="pre">UnsupportedMessageType</span></tt> and <tt class="xref py py-exc docutils literal"><span class="pre">InvalidHL7Message</span></tt></p>
+accessible through the <code class="xref py py-attr docutils literal"><span class="pre">exc</span></code> attribute.
+Specific exceptions that can be handled are <code class="xref py py-exc docutils literal"><span class="pre">UnsupportedMessageType</span></code> and <code class="xref py py-exc docutils literal"><span class="pre">InvalidHL7Message</span></code></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exc</strong> &#8211; the <tt class="xref py py-exc docutils literal"><span class="pre">Exception</span></tt> occurred</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exc</strong> &#8211; the <code class="xref py py-exc docutils literal"><span class="pre">Exception</span></code> occurred</td>
 </tr>
 </tbody>
 </table>
@@ -274,23 +274,7 @@ Specific exceptions that can be handled are <tt class="xref py py-exc docutils l
           SphinxRtdTheme.StickyNav.enable();
       });
   </script>
-  
- 
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-9129954-3']);
-  _gaq.push(['_setDomainName', 'hl7apy.org']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-
+   
 
 </body>
 </html>

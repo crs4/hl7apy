@@ -136,31 +136,31 @@
 <span id="validation-module"></span><h1>Validation module<a class="headerlink" href="#module-hl7apy.validation" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="hl7apy.validation.Validator">
-<em class="property">class </em><tt class="descclassname">hl7apy.validation.</tt><tt class="descname">Validator</tt><big>(</big><em>level</em><big>)</big><a class="headerlink" href="#hl7apy.validation.Validator" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hl7apy.validation.</code><code class="descname">Validator</code><span class="sig-paren">(</span><em>level</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.validation.Validator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class that handles validation. It defines validation levels and validate
-an element using <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL.STRICT" title="hl7apy.consts.VALIDATION_LEVEL.STRICT"><tt class="xref py py-attr docutils literal"><span class="pre">VALIDATION.STRICT</span></tt></a> validation level</p>
+an element using <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL.STRICT" title="hl7apy.consts.VALIDATION_LEVEL.STRICT"><code class="xref py py-attr docutils literal"><span class="pre">VALIDATION.STRICT</span></code></a> validation level</p>
 <dl class="staticmethod">
 <dt id="hl7apy.validation.Validator.is_quiet">
-<em class="property">static </em><tt class="descname">is_quiet</tt><big>(</big><em>level</em><big>)</big><a class="headerlink" href="#hl7apy.validation.Validator.is_quiet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Equal to <a class="reference internal" href="#hl7apy.validation.Validator.is_tolerant" title="hl7apy.validation.Validator.is_tolerant"><tt class="xref py py-func docutils literal"><span class="pre">is_tolerant</span></tt></a>. Kept for backward compatibility
+<em class="property">static </em><code class="descname">is_quiet</code><span class="sig-paren">(</span><em>level</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.validation.Validator.is_quiet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equal to <a class="reference internal" href="#hl7apy.validation.Validator.is_tolerant" title="hl7apy.validation.Validator.is_tolerant"><code class="xref py py-func docutils literal"><span class="pre">is_tolerant</span></code></a>. Kept for backward compatibility
 :param level:
-:rtype: <tt class="docutils literal"><span class="pre">bool</span></tt>
-:return: <tt class="docutils literal"><span class="pre">True</span></tt> if validation level is tolerant</p>
+:rtype: <code class="docutils literal"><span class="pre">bool</span></code>
+:return: <code class="docutils literal"><span class="pre">True</span></code> if validation level is tolerant</p>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="hl7apy.validation.Validator.is_strict">
-<em class="property">static </em><tt class="descname">is_strict</tt><big>(</big><em>level</em><big>)</big><a class="headerlink" href="#hl7apy.validation.Validator.is_strict" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">is_strict</code><span class="sig-paren">(</span><em>level</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.validation.Validator.is_strict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the given validation level is strict</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; validation level (see <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt></a>)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>level</strong> (<code class="docutils literal"><span class="pre">int</span></code>) &#8211; validation level (see <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><code class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></code></a>)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="docutils literal"><span class="pre">bool</span></code></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">True</span></tt> if validation level is strict</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">True</span></code> if validation level is strict</td>
 </tr>
 </tbody>
 </table>
@@ -168,17 +168,17 @@ an element using <a class="reference internal" href="consts.html#hl7apy.consts.V
 
 <dl class="staticmethod">
 <dt id="hl7apy.validation.Validator.is_tolerant">
-<em class="property">static </em><tt class="descname">is_tolerant</tt><big>(</big><em>level</em><big>)</big><a class="headerlink" href="#hl7apy.validation.Validator.is_tolerant" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">is_tolerant</code><span class="sig-paren">(</span><em>level</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.validation.Validator.is_tolerant" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the given validation level is tolerant</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; validation level (see <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt></a>)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>level</strong> (<code class="docutils literal"><span class="pre">int</span></code>) &#8211; validation level (see <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><code class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></code></a>)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="docutils literal"><span class="pre">bool</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="docutils literal"><span class="pre">bool</span></code></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">True</span></tt> if validation level is tolerant</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">True</span></code> if validation level is tolerant</td>
 </tr>
 </tbody>
 </table>
@@ -186,8 +186,8 @@ an element using <a class="reference internal" href="consts.html#hl7apy.consts.V
 
 <dl class="staticmethod">
 <dt id="hl7apy.validation.Validator.validate">
-<em class="property">static </em><tt class="descname">validate</tt><big>(</big><em>element</em>, <em>reference=None</em>, <em>report_file=None</em><big>)</big><a class="headerlink" href="#hl7apy.validation.Validator.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if the <a class="reference internal" href="core.html#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">Element</span></tt></a> is a valid HL7 message according to the reference
+<em class="property">static </em><code class="descname">validate</code><span class="sig-paren">(</span><em>element</em>, <em>reference=None</em>, <em>report_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.validation.Validator.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the <a class="reference internal" href="core.html#hl7apy.core.Element" title="hl7apy.core.Element"><code class="xref py py-class docutils literal"><span class="pre">Element</span></code></a> is a valid HL7 message according to the reference
 specified. If the reference is not specified, it will be used the official HL7 structures for the
 elements.
 In particular it checks:</p>
@@ -198,13 +198,13 @@ In particular it checks:</p>
 <li>the values, in particular the length and the adherence with the HL7 table, if one is specified</li>
 </ul>
 <p>It raises the first exception that it finds.</p>
-<p>If <tt class="xref py py-attr docutils literal"><span class="pre">report_file</span></tt> is specified, it will create a file with all the errors that occur.</p>
+<p>If <code class="xref py py-attr docutils literal"><span class="pre">report_file</span></code> is specified, it will create a file with all the errors that occur.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>element</strong> &#8211; <a class="reference internal" href="core.html#hl7apy.core.Element" title="hl7apy.core.Element"><tt class="xref py py-class docutils literal"><span class="pre">Element</span></tt></a>: The element to validate</li>
+<li><strong>element</strong> &#8211; <a class="reference internal" href="core.html#hl7apy.core.Element" title="hl7apy.core.Element"><code class="xref py py-class docutils literal"><span class="pre">Element</span></code></a>: The element to validate</li>
 <li><strong>reference</strong> &#8211; the reference to use. Usually is None or a message profile object</li>
 <li><strong>report_file</strong> &#8211; the name of the report file to create</li>
 </ul>
@@ -213,10 +213,10 @@ In particular it checks:</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The True if everything is ok</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><tt class="xref py py-exc docutils literal"><span class="pre">ValidationError</span></tt>: when errors occur</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><code class="xref py py-exc docutils literal"><span class="pre">ValidationError</span></code>: when errors occur</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><tt class="xref py py-exc docutils literal"><span class="pre">ValidationWarning</span></tt>: errors concerning the values</p>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">ValidationWarning</span></code>: errors concerning the values</p>
 </td>
 </tr>
 </tbody>
@@ -296,23 +296,7 @@ In particular it checks:</p>
           SphinxRtdTheme.StickyNav.enable();
       });
   </script>
-  
- 
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-9129954-3']);
-  _gaq.push(['_setDomainName', 'hl7apy.org']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-
+   
 
 </body>
 </html>

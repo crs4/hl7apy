@@ -139,7 +139,7 @@
 <p>The HL7 versions can have different implementation of base datatypes; for example the ST base datatype
 of HL7 v2.6 is different from the v2.5 one. This module contains reference classes for all base datatypes
 but you should not import them directly from here. If you need an implementation for a particular version
-use the <tt class="xref py py-func docutils literal"><span class="pre">get_base_datatypes()</span></tt> function from a specific version&#8217;s module
+use the <code class="xref py py-func docutils literal"><span class="pre">get_base_datatypes()</span></code> function from a specific version&#8217;s module
 For example if you&#8217;re using version 2.4 and you need an <cite>FT</cite> base datatype do the following:</p>
 <div class="last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.v2_4</span> <span class="kn">import</span> <span class="n">FT</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">FT</span><span class="p">(</span><span class="s">&#39;some useful information&#39;</span><span class="p">)</span>
@@ -148,7 +148,7 @@ For example if you&#8217;re using version 2.4 and you need an <cite>FT</cite> ba
 </div>
 <dl class="class">
 <dt id="hl7apy.base_datatypes.BaseDataType">
-<em class="property">class </em><tt class="descclassname">hl7apy.base_datatypes.</tt><tt class="descname">BaseDataType</tt><big>(</big><em>value</em>, <em>max_length=None</em>, <em>validation_level=None</em><big>)</big><a class="headerlink" href="#hl7apy.base_datatypes.BaseDataType" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">BaseDataType</code><span class="sig-paren">(</span><em>value</em>, <em>max_length=None</em>, <em>validation_level=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.BaseDataType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generic datatype base class. It handles the value of the data type and its
 maximum length. It is meant to be extended and it should not be used directly</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -157,30 +157,30 @@ maximum length. It is meant to be extended and it should not be used directly</p
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>value</strong> &#8211; the value of the data type</li>
-<li><strong>max_length</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; The maximum length of the value. Default to None</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; It must be a value from class
-<a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><tt class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></tt></a>
-If it is <tt class="xref py py-attr docutils literal"><span class="pre">STRICT</span></tt> it checks that <tt class="xref py py-attr docutils literal"><span class="pre">value</span></tt> doesn&#8217;t exceed the
+<li><strong>max_length</strong> (<code class="docutils literal"><span class="pre">int</span></code>) &#8211; The maximum length of the value. Default to None</li>
+<li><strong>validation_level</strong> (<code class="docutils literal"><span class="pre">int</span></code>) &#8211; It must be a value from class
+<a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><code class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></code></a>
+If it is <code class="xref py py-attr docutils literal"><span class="pre">STRICT</span></code> it checks that <code class="xref py py-attr docutils literal"><span class="pre">value</span></code> doesn&#8217;t exceed the
 attr:<cite>max_length</cite></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raise:</th><td class="field-body"><p class="first last"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.MaxLengthReached" title="hl7apy.exceptions.MaxLengthReached"><tt class="xref py py-exc docutils literal"><span class="pre">MaxLengthReached</span></tt></a> When the <tt class="xref py py-attr docutils literal"><span class="pre">value</span></tt>&#8216;s length is
-greater than the <tt class="xref py py-attr docutils literal"><span class="pre">max_length</span></tt>. Only if <tt class="xref py py-attr docutils literal"><span class="pre">validation_level</span></tt> is
-<tt class="xref py py-attr docutils literal"><span class="pre">STRICT</span></tt></p>
+<tr class="field-even field"><th class="field-name">Raise:</th><td class="field-body"><p class="first last"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.MaxLengthReached" title="hl7apy.exceptions.MaxLengthReached"><code class="xref py py-exc docutils literal"><span class="pre">MaxLengthReached</span></code></a> When the <code class="xref py py-attr docutils literal"><span class="pre">value</span></code>&#8216;s length is
+greater than the <code class="xref py py-attr docutils literal"><span class="pre">max_length</span></code>. Only if <code class="xref py py-attr docutils literal"><span class="pre">validation_level</span></code> is
+<code class="xref py py-attr docutils literal"><span class="pre">STRICT</span></code></p>
 </td>
 </tr>
 </tbody>
 </table>
 <dl class="attribute">
 <dt id="hl7apy.base_datatypes.BaseDataType.classname">
-<tt class="descname">classname</tt><a class="headerlink" href="#hl7apy.base_datatypes.BaseDataType.classname" title="Permalink to this definition">¶</a></dt>
+<code class="descname">classname</code><a class="headerlink" href="#hl7apy.base_datatypes.BaseDataType.classname" title="Permalink to this definition">¶</a></dt>
 <dd><p>The name of the class</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="hl7apy.base_datatypes.BaseDataType.to_er7">
-<tt class="descname">to_er7</tt><big>(</big><em>encoding_chars=None</em><big>)</big><a class="headerlink" href="#hl7apy.base_datatypes.BaseDataType.to_er7" title="Permalink to this definition">¶</a></dt>
+<code class="descname">to_er7</code><span class="sig-paren">(</span><em>encoding_chars=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.BaseDataType.to_er7" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encode to ER7 format</p>
 </dd></dl>
 
@@ -189,7 +189,7 @@ greater than the <tt class="xref py py-attr docutils literal"><span class="pre">
 <hr class="docutils" />
 <dl class="class">
 <dt id="hl7apy.base_datatypes.TextualDataType">
-<em class="property">class </em><tt class="descclassname">hl7apy.base_datatypes.</tt><tt class="descname">TextualDataType</tt><big>(</big><em>value</em>, <em>max_length=32</em>, <em>highlights=None</em>, <em>validation_level=None</em><big>)</big><a class="headerlink" href="#hl7apy.base_datatypes.TextualDataType" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">TextualDataType</code><span class="sig-paren">(</span><em>value</em>, <em>max_length=32</em>, <em>highlights=None</em>, <em>validation_level=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.TextualDataType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for textual data types.
 It is meant to be extended and it should not be used directly</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -197,19 +197,19 @@ It is meant to be extended and it should not be used directly</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>value</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the value of the data type</li>
-<li><strong>max_length</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; the max length of the value (default to 32)</li>
-<li><strong>highlights</strong> (<tt class="docutils literal"><span class="pre">tuple</span></tt>, <tt class="docutils literal"><span class="pre">list</span></tt>) &#8211; a list of ranges indicating the part
+<li><strong>value</strong> (<code class="docutils literal"><span class="pre">str</span></code>) &#8211; the value of the data type</li>
+<li><strong>max_length</strong> (<code class="docutils literal"><span class="pre">int</span></code>) &#8211; the max length of the value (default to 32)</li>
+<li><strong>highlights</strong> (<code class="docutils literal"><span class="pre">tuple</span></code>, <code class="docutils literal"><span class="pre">list</span></code>) &#8211; a list of ranges indicating the part
 of the value to be highlighted. e.g. ((0,5), (6,7))
 The highlights cannot overlap, if they do an HL7Exception will be
 thrown when to_er7 method is called</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; It has the same meaning as in
-<tt class="xref py py-class docutils literal"><span class="pre">BaseDatatype</span></tt></li>
+<li><strong>validation_level</strong> (<code class="docutils literal"><span class="pre">int</span></code>) &#8211; It has the same meaning as in
+<code class="xref py py-class docutils literal"><span class="pre">BaseDatatype</span></code></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raise:</th><td class="field-body"><p class="first last"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.MaxLengthReached" title="hl7apy.exceptions.MaxLengthReached"><tt class="xref py py-exc docutils literal"><span class="pre">MaxLengthReached</span></tt></a> When the <tt class="xref py py-attr docutils literal"><span class="pre">value</span></tt>&#8216;s length is
-greater than <tt class="xref py py-attr docutils literal"><span class="pre">max_length</span></tt></p>
+<tr class="field-even field"><th class="field-name">Raise:</th><td class="field-body"><p class="first last"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.MaxLengthReached" title="hl7apy.exceptions.MaxLengthReached"><code class="xref py py-exc docutils literal"><span class="pre">MaxLengthReached</span></code></a> When the <code class="xref py py-attr docutils literal"><span class="pre">value</span></code>&#8216;s length is
+greater than <code class="xref py py-attr docutils literal"><span class="pre">max_length</span></code></p>
 </td>
 </tr>
 </tbody>
@@ -219,56 +219,56 @@ greater than <tt class="xref py py-attr docutils literal"><span class="pre">max_
 <p>Classes representing textual datatypes are:</p>
 <dl class="class">
 <dt id="hl7apy.base_datatypes.ST">
-<em class="property">class </em><tt class="descclassname">hl7apy.base_datatypes.</tt><tt class="descname">ST</tt><big>(</big><em>value</em>, <em>highlights=None</em>, <em>validation_level=None</em><big>)</big><a class="headerlink" href="#hl7apy.base_datatypes.ST" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class for ST datatype. It extends <tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.TextualDatatype</span></tt> and the parameters are
+<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">ST</code><span class="sig-paren">(</span><em>value</em>, <em>highlights=None</em>, <em>validation_level=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.ST" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for ST datatype. It extends <code class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.TextualDatatype</span></code> and the parameters are
 the same of the superclass</p>
-<p><tt class="xref py py-attr docutils literal"><span class="pre">max_length</span></tt> is 199</p>
+<p><code class="xref py py-attr docutils literal"><span class="pre">max_length</span></code> is 199</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="hl7apy.base_datatypes.FT">
-<em class="property">class </em><tt class="descclassname">hl7apy.base_datatypes.</tt><tt class="descname">FT</tt><big>(</big><em>value</em>, <em>highlights=None</em>, <em>validation_level=None</em><big>)</big><a class="headerlink" href="#hl7apy.base_datatypes.FT" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class for FT datatype. It extends <a class="reference internal" href="#hl7apy.base_datatypes.TextualDataType" title="hl7apy.base_datatypes.TextualDataType"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.TextualDataType</span></tt></a> and the parameters are
+<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">FT</code><span class="sig-paren">(</span><em>value</em>, <em>highlights=None</em>, <em>validation_level=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.FT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for FT datatype. It extends <a class="reference internal" href="#hl7apy.base_datatypes.TextualDataType" title="hl7apy.base_datatypes.TextualDataType"><code class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.TextualDataType</span></code></a> and the parameters are
 the same of the superclass</p>
-<p><tt class="xref py py-attr docutils literal"><span class="pre">max_length</span></tt> is 65536</p>
+<p><code class="xref py py-attr docutils literal"><span class="pre">max_length</span></code> is 65536</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="hl7apy.base_datatypes.ID">
-<em class="property">class </em><tt class="descclassname">hl7apy.base_datatypes.</tt><tt class="descname">ID</tt><big>(</big><em>value</em>, <em>highlights=None</em>, <em>validation_level=None</em><big>)</big><a class="headerlink" href="#hl7apy.base_datatypes.ID" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class for ID datatype. It extends <a class="reference internal" href="#hl7apy.base_datatypes.TextualDataType" title="hl7apy.base_datatypes.TextualDataType"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.TextualDataType</span></tt></a> and the parameters are
+<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">ID</code><span class="sig-paren">(</span><em>value</em>, <em>highlights=None</em>, <em>validation_level=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.ID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for ID datatype. It extends <a class="reference internal" href="#hl7apy.base_datatypes.TextualDataType" title="hl7apy.base_datatypes.TextualDataType"><code class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.TextualDataType</span></code></a> and the parameters are
 the same of the superclass</p>
-<p><tt class="xref py py-attr docutils literal"><span class="pre">max_length</span></tt> None</p>
+<p><code class="xref py py-attr docutils literal"><span class="pre">max_length</span></code> None</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="hl7apy.base_datatypes.IS">
-<em class="property">class </em><tt class="descclassname">hl7apy.base_datatypes.</tt><tt class="descname">IS</tt><big>(</big><em>value</em>, <em>highlights=None</em>, <em>validation_level=None</em><big>)</big><a class="headerlink" href="#hl7apy.base_datatypes.IS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class for IS datatype. It extends <a class="reference internal" href="#hl7apy.base_datatypes.TextualDataType" title="hl7apy.base_datatypes.TextualDataType"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.TextualDataType</span></tt></a> and the parameters are
+<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">IS</code><span class="sig-paren">(</span><em>value</em>, <em>highlights=None</em>, <em>validation_level=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.IS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for IS datatype. It extends <a class="reference internal" href="#hl7apy.base_datatypes.TextualDataType" title="hl7apy.base_datatypes.TextualDataType"><code class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.TextualDataType</span></code></a> and the parameters are
 the same of the superclass</p>
-<p><tt class="xref py py-attr docutils literal"><span class="pre">max_length</span></tt> is 20</p>
+<p><code class="xref py py-attr docutils literal"><span class="pre">max_length</span></code> is 20</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="hl7apy.base_datatypes.TX">
-<em class="property">class </em><tt class="descclassname">hl7apy.base_datatypes.</tt><tt class="descname">TX</tt><big>(</big><em>value</em>, <em>highlights=None</em>, <em>validation_level=None</em><big>)</big><a class="headerlink" href="#hl7apy.base_datatypes.TX" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class for TX datatype. It extends <a class="reference internal" href="#hl7apy.base_datatypes.TextualDataType" title="hl7apy.base_datatypes.TextualDataType"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.TextualDataType</span></tt></a> and the parameters are
+<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">TX</code><span class="sig-paren">(</span><em>value</em>, <em>highlights=None</em>, <em>validation_level=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.TX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for TX datatype. It extends <a class="reference internal" href="#hl7apy.base_datatypes.TextualDataType" title="hl7apy.base_datatypes.TextualDataType"><code class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.TextualDataType</span></code></a> and the parameters are
 the same of the superclass</p>
-<p><tt class="xref py py-attr docutils literal"><span class="pre">max_length</span></tt> is 65536</p>
+<p><code class="xref py py-attr docutils literal"><span class="pre">max_length</span></code> is 65536</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="hl7apy.base_datatypes.GTS">
-<em class="property">class </em><tt class="descclassname">hl7apy.base_datatypes.</tt><tt class="descname">GTS</tt><big>(</big><em>value</em>, <em>highlights=None</em>, <em>validation_level=None</em><big>)</big><a class="headerlink" href="#hl7apy.base_datatypes.GTS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class for GTS datatype. It extends <a class="reference internal" href="#hl7apy.base_datatypes.TextualDataType" title="hl7apy.base_datatypes.TextualDataType"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.TextualDataType</span></tt></a> and the parameters are
+<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">GTS</code><span class="sig-paren">(</span><em>value</em>, <em>highlights=None</em>, <em>validation_level=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.GTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for GTS datatype. It extends <a class="reference internal" href="#hl7apy.base_datatypes.TextualDataType" title="hl7apy.base_datatypes.TextualDataType"><code class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.TextualDataType</span></code></a> and the parameters are
 the same of the superclass</p>
-<p><tt class="xref py py-attr docutils literal"><span class="pre">max_length</span></tt> is 199</p>
+<p><code class="xref py py-attr docutils literal"><span class="pre">max_length</span></code> is 199</p>
 </dd></dl>
 
 <hr class="docutils" />
 <dl class="class">
 <dt id="hl7apy.base_datatypes.NumericDataType">
-<em class="property">class </em><tt class="descclassname">hl7apy.base_datatypes.</tt><tt class="descname">NumericDataType</tt><big>(</big><em>value=None</em>, <em>max_length=16</em>, <em>validation_level=None</em><big>)</big><a class="headerlink" href="#hl7apy.base_datatypes.NumericDataType" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">NumericDataType</code><span class="sig-paren">(</span><em>value=None</em>, <em>max_length=16</em>, <em>validation_level=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.NumericDataType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for numeric data types.
 It is meant to be extended and it should not be used directly</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -276,13 +276,13 @@ It is meant to be extended and it should not be used directly</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>value</strong> &#8211; the value of the data type. Default is <tt class="docutils literal"><span class="pre">None</span></tt></li>
+<li><strong>value</strong> &#8211; the value of the data type. Default is <code class="docutils literal"><span class="pre">None</span></code></li>
 <li><strong>max_length</strong> (<em>int</em>) &#8211; The maximum number of digit in the value. Default is 16</li>
-<li><strong>validation_level</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; It has the same meaning as in <a class="reference internal" href="#hl7apy.base_datatypes.BaseDataType" title="hl7apy.base_datatypes.BaseDataType"><tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.BaseDataType</span></tt></a></li>
+<li><strong>validation_level</strong> (<code class="docutils literal"><span class="pre">int</span></code>) &#8211; It has the same meaning as in <a class="reference internal" href="#hl7apy.base_datatypes.BaseDataType" title="hl7apy.base_datatypes.BaseDataType"><code class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.BaseDataType</span></code></a></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raise:</th><td class="field-body"><p class="first last"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.MaxLengthReached" title="hl7apy.exceptions.MaxLengthReached"><tt class="xref py py-exc docutils literal"><span class="pre">hl7apy.exceptions.MaxLengthReached</span></tt></a> When the <cite>value</cite>&#8216;s length is greater than <cite>max_length</cite></p>
+<tr class="field-even field"><th class="field-name">Raise:</th><td class="field-body"><p class="first last"><a class="reference internal" href="exceptions.html#hl7apy.exceptions.MaxLengthReached" title="hl7apy.exceptions.MaxLengthReached"><code class="xref py py-exc docutils literal"><span class="pre">hl7apy.exceptions.MaxLengthReached</span></code></a> When the <cite>value</cite>&#8216;s length is greater than <cite>max_length</cite></p>
 </td>
 </tr>
 </tbody>
@@ -292,16 +292,16 @@ It is meant to be extended and it should not be used directly</p>
 <p>Classes representing numeric datatypes are:</p>
 <dl class="class">
 <dt id="hl7apy.base_datatypes.NM">
-<em class="property">class </em><tt class="descclassname">hl7apy.base_datatypes.</tt><tt class="descname">NM</tt><big>(</big><em>value=None</em>, <em>validation_level=None</em><big>)</big><a class="headerlink" href="#hl7apy.base_datatypes.NM" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class for NM datatype. It extends <tt class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.NumericDatatype</span></tt> and the parameters are
+<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">NM</code><span class="sig-paren">(</span><em>value=None</em>, <em>validation_level=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.NM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for NM datatype. It extends <code class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.NumericDatatype</span></code> and the parameters are
 the same of the superclass</p>
-<p><tt class="xref py py-attr docutils literal"><span class="pre">max_length</span></tt> is 16.</p>
-<p>The type of <tt class="docutils literal"><span class="pre">value</span></tt> must be <tt class="xref py py-class docutils literal"><span class="pre">decimal.Decimal</span></tt> or <tt class="xref py py-class docutils literal"><span class="pre">Real</span></tt></p>
+<p><code class="xref py py-attr docutils literal"><span class="pre">max_length</span></code> is 16.</p>
+<p>The type of <code class="docutils literal"><span class="pre">value</span></code> must be <code class="xref py py-class docutils literal"><span class="pre">decimal.Decimal</span></code> or <code class="xref py py-class docutils literal"><span class="pre">Real</span></code></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Raise:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">ValueError</span></tt> raised when the value is not of one of the correct type</td>
+<tr class="field-odd field"><th class="field-name">Raise:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> raised when the value is not of one of the correct type</td>
 </tr>
 </tbody>
 </table>
@@ -309,15 +309,15 @@ the same of the superclass</p>
 
 <dl class="class">
 <dt id="hl7apy.base_datatypes.SI">
-<em class="property">class </em><tt class="descclassname">hl7apy.base_datatypes.</tt><tt class="descname">SI</tt><big>(</big><em>value=None</em>, <em>validation_level=None</em><big>)</big><a class="headerlink" href="#hl7apy.base_datatypes.SI" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">SI</code><span class="sig-paren">(</span><em>value=None</em>, <em>validation_level=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.SI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for NM datatype. It extends NumericDatatype and the parameters are the same of the superclass</p>
-<p><tt class="xref py py-attr docutils literal"><span class="pre">max_length</span></tt> is 4.</p>
-<p>The type of <tt class="docutils literal"><span class="pre">value</span></tt> must be <cite>int</cite> or <tt class="xref py py-class docutils literal"><span class="pre">numbers.Integral</span></tt></p>
+<p><code class="xref py py-attr docutils literal"><span class="pre">max_length</span></code> is 4.</p>
+<p>The type of <code class="docutils literal"><span class="pre">value</span></code> must be <cite>int</cite> or <code class="xref py py-class docutils literal"><span class="pre">numbers.Integral</span></code></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Raise:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">ValueError</span></tt> raised when the value is not of one of the correct type</td>
+<tr class="field-odd field"><th class="field-name">Raise:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> raised when the value is not of one of the correct type</td>
 </tr>
 </tbody>
 </table>
@@ -326,23 +326,23 @@ the same of the superclass</p>
 <hr class="docutils" />
 <dl class="class">
 <dt id="hl7apy.base_datatypes.DateTimeDataType">
-<em class="property">class </em><tt class="descclassname">hl7apy.base_datatypes.</tt><tt class="descname">DateTimeDataType</tt><big>(</big><em>value=None</em>, <em>format=''</em><big>)</big><a class="headerlink" href="#hl7apy.base_datatypes.DateTimeDataType" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">DateTimeDataType</code><span class="sig-paren">(</span><em>value=None</em>, <em>out_format=''</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.DateTimeDataType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for datetime data types.
 It is meant to be extended and it should not be used directly.
-Children classes should at least override the <tt class="xref py py-attr docutils literal"><span class="pre">allowed_formats</span></tt> tuple</p>
+Children classes should at least override the <code class="xref py py-attr docutils literal"><span class="pre">allowed_formats</span></code> tuple</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>value</strong> &#8211; a <cite>datetime</cite> date object. Default is <tt class="docutils literal"><span class="pre">None</span></tt></li>
-<li><strong>format</strong> (<em>str</em>) &#8211; the format that will be used converting the object to string.
-It must be an item of the <tt class="xref py py-attr docutils literal"><span class="pre">allowed_formats</span></tt> tuple</li>
+<li><strong>value</strong> &#8211; a <cite>datetime</cite> date object. Default is <code class="docutils literal"><span class="pre">None</span></code></li>
+<li><strong>out_format</strong> (<em>str</em>) &#8211; the format that will be used converting the object to string.
+It must be an item of the <code class="xref py py-attr docutils literal"><span class="pre">allowed_formats</span></code> tuple</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raise:</th><td class="field-body"><p class="first last">:exc:<tt class="docutils literal"><span class="pre">InvalidDateFormat</span> <span class="pre">&lt;hl7apy.exceptions.InvalidDateFormat&gt;`</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">``format</span></tt> is not in
-the <tt class="xref py py-attr docutils literal"><span class="pre">allowed_formats</span></tt> member</p>
+<tr class="field-even field"><th class="field-name">Raise:</th><td class="field-body"><p class="first last">:exc:<code class="docutils literal"><span class="pre">InvalidDateFormat</span> <span class="pre">&lt;hl7apy.exceptions.InvalidDateFormat&gt;`</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">``format</span></code> is not in
+the <code class="xref py py-attr docutils literal"><span class="pre">allowed_formats</span></code> member</p>
 </td>
 </tr>
 </tbody>
@@ -352,28 +352,28 @@ the <tt class="xref py py-attr docutils literal"><span class="pre">allowed_forma
 <p>Classes representing datetime datatypes are:</p>
 <dl class="class">
 <dt id="hl7apy.base_datatypes.DT">
-<em class="property">class </em><tt class="descclassname">hl7apy.base_datatypes.</tt><tt class="descname">DT</tt><big>(</big><em>value=None</em>, <em>format='%Y%m%d'</em><big>)</big><a class="headerlink" href="#hl7apy.base_datatypes.DT" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">DT</code><span class="sig-paren">(</span><em>value=None</em>, <em>out_format='%Y%m%d'</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.DT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for DT base datatype. It extends DatetimeDatatype and it represents a time value with
 year, month and day. Parameters are the same of the superclass.</p>
-<p>The <tt class="xref py py-attr docutils literal"><span class="pre">allowed_formats</span></tt> tuple is <tt class="docutils literal"><span class="pre">('%Y',</span> <span class="pre">'%Y%m',</span> <span class="pre">'%Y%m%d')</span></tt></p>
+<p>The <code class="xref py py-attr docutils literal"><span class="pre">allowed_formats</span></code> tuple is <code class="docutils literal"><span class="pre">('%Y',</span> <span class="pre">'%Y%m',</span> <span class="pre">'%Y%m%d')</span></code></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="hl7apy.base_datatypes.TM">
-<em class="property">class </em><tt class="descclassname">hl7apy.base_datatypes.</tt><tt class="descname">TM</tt><big>(</big><em>value=None</em>, <em>format='%H%M%S.%f'</em>, <em>offset=''</em>, <em>microsec_precision=4</em><big>)</big><a class="headerlink" href="#hl7apy.base_datatypes.TM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">TM</code><span class="sig-paren">(</span><em>value=None</em>, <em>out_format='%H%M%S.%f'</em>, <em>offset=''</em>, <em>microsec_precision=4</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.TM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for TM base datatype. It extends DateTimeDatatype and it represents a time value with
-hours, minutes, seconds and microseconds. Parameters are the same of the superclass plus <tt class="docutils literal"><span class="pre">offset</span></tt>.
+hours, minutes, seconds and microseconds. Parameters are the same of the superclass plus <code class="docutils literal"><span class="pre">offset</span></code>.
 Since HL7 supports only four digits for microseconds, and Python datetime uses 6 digits, the wanted
 precision must be specified.</p>
-<p>The <tt class="xref py py-attr docutils literal"><span class="pre">allowed_formats</span></tt> tuple is <tt class="docutils literal"><span class="pre">('%H',</span> <span class="pre">'%H%M',</span> <span class="pre">'%H%M%S',</span> <span class="pre">'%H%M%S.%f')</span></tt>.
-It needs also the <tt class="docutils literal"><span class="pre">offset</span></tt> parameter which represents the UTC offset</p>
+<p>The <code class="xref py py-attr docutils literal"><span class="pre">allowed_formats</span></code> tuple is <code class="docutils literal"><span class="pre">('%H',</span> <span class="pre">'%H%M',</span> <span class="pre">'%H%M%S',</span> <span class="pre">'%H%M%S.%f')</span></code>.
+It needs also the <code class="docutils literal"><span class="pre">offset</span></code> parameter which represents the UTC offset</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>offset</strong> (<tt class="docutils literal"><span class="pre">str</span></tt>) &#8211; the UTC offset. By default it is &#8216;&#8217;. It must be in the form <tt class="docutils literal"><span class="pre">'+/-HHMM'</span></tt></li>
-<li><strong>microsec_precision</strong> (<tt class="docutils literal"><span class="pre">int</span></tt>) &#8211; Number of digit of the microseconds part of the value.
+<li><strong>offset</strong> (<code class="docutils literal"><span class="pre">str</span></code>) &#8211; the UTC offset. By default it is &#8216;&#8217;. It must be in the form <code class="docutils literal"><span class="pre">'+/-HHMM'</span></code></li>
+<li><strong>microsec_precision</strong> (<code class="docutils literal"><span class="pre">int</span></code>) &#8211; Number of digit of the microseconds part of the value.
 It must be between 1 and 4</li>
 </ul>
 </td>
@@ -384,12 +384,12 @@ It must be between 1 and 4</li>
 
 <dl class="class">
 <dt id="hl7apy.base_datatypes.DTM">
-<em class="property">class </em><tt class="descclassname">hl7apy.base_datatypes.</tt><tt class="descname">DTM</tt><big>(</big><em>value=None</em>, <em>format='%Y%m%d%H%M%S.%f'</em>, <em>offset=''</em>, <em>microsec_precision=4</em><big>)</big><a class="headerlink" href="#hl7apy.base_datatypes.DTM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">DTM</code><span class="sig-paren">(</span><em>value=None</em>, <em>out_format='%Y%m%d%H%M%S.%f'</em>, <em>offset=''</em>, <em>microsec_precision=4</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.DTM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for DTM base datatype. It extends TM and it represents classes DT and DTM combined.
 Thus it represents year, month, day, hours, minutes, seconds and microseconds.
 Parameters are the same of the superclass.</p>
-<p>The <tt class="xref py py-attr docutils literal"><span class="pre">allowed_formats</span></tt> tuple is
-<tt class="docutils literal"><span class="pre">('%Y',</span> <span class="pre">'%Y%m',</span> <span class="pre">'%Y%m%d',</span> <span class="pre">'%Y%m%d%H',</span> <span class="pre">'%Y%m%d%H%M',</span> <span class="pre">'%Y%m%d%H%M%S',</span> <span class="pre">'%Y%m%d%H%M%S.%f')</span></tt></p>
+<p>The <code class="xref py py-attr docutils literal"><span class="pre">allowed_formats</span></code> tuple is
+<code class="docutils literal"><span class="pre">('%Y',</span> <span class="pre">'%Y%m',</span> <span class="pre">'%Y%m%d',</span> <span class="pre">'%Y%m%d%H',</span> <span class="pre">'%Y%m%d%H%M',</span> <span class="pre">'%Y%m%d%H%M%S',</span> <span class="pre">'%Y%m%d%H%M%S.%f')</span></code></p>
 </dd></dl>
 
 </div>
@@ -463,23 +463,7 @@ Parameters are the same of the superclass.</p>
           SphinxRtdTheme.StickyNav.enable();
       });
   </script>
-  
- 
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-9129954-3']);
-  _gaq.push(['_setDomainName', 'hl7apy.org']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-
+   
 
 </body>
 </html>
