@@ -2,12 +2,12 @@ language: python
 python:
   - "2.7"
 before_install:
-  pip install coveralls
+  pip install coveralls future six
 # command to install dependencies
 install:
   - python setup.py install
 # command to run tests
-script: 
+script:
   - nosetests tests hl7apy --with-doctest --with-coverage --cover-package hl7apy
 after_success:
   - coveralls
