@@ -22,9 +22,17 @@
 """
 HL7apy - core classes
 """
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import *
 from builtins import str
 from builtins import range
 from builtins import object
+from six import string_types
 
 import re
 import collections
@@ -293,7 +301,7 @@ class ElementList(collections.MutableSequence):
         reference = None if name is None else self.element.find_child_reference(name)
         child_ref, child_name = (None, None) if reference is None else (reference['ref'], reference['name'])
 
-        if isinstance(value, str):  # if the value is a basestring, parse it
+        if isinstance(value, string_types):  # if the value is a basestring, parse it
             child = self.element.parse_child(value, child_name=child_name, reference=child_ref)
         elif isinstance(value, Element):  # it is already an instance of Element
             child = value
@@ -301,6 +309,7 @@ class ElementList(collections.MutableSequence):
             child = self.create_element(name, False, reference)
             child.value = value
         else:
+            print(type(value))
             raise ChildNotValid(value, child_name)
 
         if child.name != child_name:  # e.g. message.pid = Segment('SPM') is forbidden
@@ -621,7 +630,7 @@ class Element(object):
 
         check_validation_level(validation_level)
         check_version(version)
-        
+
         self.validation_level = validation_level
         self.name = name.upper() if name is not None else None
         self.version = version
@@ -809,7 +818,7 @@ class Element(object):
     def _find_structure(self, reference=None):
         if self.name is not None:
             structure = ElementFinder.get_structure(self, reference)
-            for k, v in structure.items():
+            for k, v in list(structure.items()):
                 setattr(self, k, v)
 
     def _is_valid_child(self, child):
@@ -906,7 +915,7 @@ class SupportComplexDataType(Element):
                 datatype not in ('varies', None, self.datatype):
             reference = load_reference(datatype, 'Component', self.version)
             structure = ElementFinder.get_structure(self, reference)
-            for k, v in structure.items():
+            for k, v in list(structure.items()):
                 setattr(self, k, v)
 
         if hasattr(self, 'children') and len(self.children) >= 1:

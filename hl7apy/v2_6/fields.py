@@ -19,6 +19,13 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import *
 FIELDS = {'ABS_1': ('leaf', 'XCN', 'DISCHARGE_CARE_PROVIDER', 'HL70010'),
           'ABS_10': ('leaf', 'ID', 'CAESARIAN_SECTION_INDICATOR', 'HL70136'),
           'ABS_11': ('leaf', 'CWE', 'GESTATION_CATEGORY_CODE', 'HL70424'),

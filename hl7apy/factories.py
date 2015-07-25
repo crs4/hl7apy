@@ -23,6 +23,13 @@
 This module contains factory functions for hl7apy base data types.
 The functions get the value of the data type as string and return the correct object
 """
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import *
 
 from decimal import Decimal, InvalidOperation
 from types import FunctionType

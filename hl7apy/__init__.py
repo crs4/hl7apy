@@ -1,3 +1,8 @@
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+from builtins import *
 from future import standard_library
 standard_library.install_aliases()
 # -*- coding: utf-8 -*-
@@ -309,7 +314,7 @@ def find_reference(name, element_types, version):
 
 
 def load_message_profile(path):
-    with open(path) as f:
+    with open(path, 'rb') as f:
         mp = pickle.load(f)
 
     return mp
