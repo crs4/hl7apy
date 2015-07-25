@@ -19,6 +19,7 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import print_function
 import SocketServer
 import re
 
@@ -59,7 +60,7 @@ class MLLPServer(SocketServer.StreamRequestHandler):
         while True:
             char = self.rfile.read(1)
             if not char:
-                print 'client disconnected'
+                print('client disconnected')
                 break
             line += char
             # check if incoming buffer contains a HL7 message
