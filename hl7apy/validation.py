@@ -1,3 +1,4 @@
+from builtins import object
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2015, CRS4

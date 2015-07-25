@@ -22,6 +22,7 @@
 """
 HL7apy - Constants
 """
+from builtins import object
 
 #: number of expected separators
 N_SEPS = 4

@@ -93,7 +93,7 @@ def print_report(n_messages, msg_per_version, msg_per_type, exceptions,
                 output.write("{0}: {1}\n".format(version, msg_per_version[vl][version]))
 
             output.write("\n\nMessage types details:\n\n")
-            for k, v in msg_per_type[vl].items():
+            for k, v in list(msg_per_type[vl].items()):
                 output.write("{0}: {1}\n".format(k, v))
 
             output.write("\n\nProblems occurred:\n\n")

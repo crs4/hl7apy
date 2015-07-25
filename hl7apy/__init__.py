@@ -1,3 +1,5 @@
+from future import standard_library
+standard_library.install_aliases()
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2015, CRS4
@@ -23,7 +25,7 @@ import os
 import sys
 import collections
 import importlib
-import cPickle
+import pickle
 
 from hl7apy.exceptions import UnsupportedVersion, InvalidEncodingChars, UnknownValidationLevel
 from hl7apy.consts import DEFAULT_ENCODING_CHARS, DEFAULT_VERSION, VALIDATION_LEVEL
@@ -53,7 +55,7 @@ def check_encoding_chars(encoding_chars):
     if missing:
         raise InvalidEncodingChars('Missing required encoding chars')
 
-    values = [v for k, v in encoding_chars.items() if k in required]
+    values = [v for k, v in list(encoding_chars.items()) if k in required]
     if len(values) > len(set(values)):
         raise InvalidEncodingChars('Found duplicate encoding chars')
 
@@ -308,7 +310,7 @@ def find_reference(name, element_types, version):
 
 def load_message_profile(path):
     with open(path) as f:
-        mp = cPickle.load(f)
+        mp = pickle.load(f)
 
     return mp
 

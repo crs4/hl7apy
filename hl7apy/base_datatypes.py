@@ -31,6 +31,7 @@
     >>> f = FT('some useful information')
 
 """
+from builtins import object
 
 import re
 import numbers

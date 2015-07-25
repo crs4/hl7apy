@@ -22,6 +22,9 @@
 """
 HL7apy - core classes
 """
+from builtins import str
+from builtins import range
+from builtins import object
 
 import re
 import collections
@@ -290,7 +293,7 @@ class ElementList(collections.MutableSequence):
         reference = None if name is None else self.element.find_child_reference(name)
         child_ref, child_name = (None, None) if reference is None else (reference['ref'], reference['name'])
 
-        if isinstance(value, basestring):  # if the value is a basestring, parse it
+        if isinstance(value, str):  # if the value is a basestring, parse it
             child = self.element.parse_child(value, child_name=child_name, reference=child_ref)
         elif isinstance(value, Element):  # it is already an instance of Element
             child = value
@@ -576,11 +579,11 @@ class ElementFinder(object):
             data['ordered_children'] = ordered_children
             data['structure_by_name'] = structure
             if is_profile is False:
-                data['structure_by_longname'] = {e['ref'][2]: e for e in structure.values()
+                data['structure_by_longname'] = {e['ref'][2]: e for e in list(structure.values())
                                                  if e['ref'][0] == 'leaf'}
             else:
                 # in this case the len is 6 and not 5 as above because here the first is 'mp'
-                data['structure_by_longname'] = {e['ref'][7]: e for e in structure.values()
+                data['structure_by_longname'] = {e['ref'][7]: e for e in list(structure.values())
                                                  if e['ref'][1] == 'leaf' or len(e['ref']) > 6}
 
         if content_type == 'leaf' or (is_profile and len(reference) > 5):
@@ -806,7 +809,7 @@ class Element(object):
     def _find_structure(self, reference=None):
         if self.name is not None:
             structure = ElementFinder.get_structure(self, reference)
-            for k, v in structure.iteritems():
+            for k, v in structure.items():
                 setattr(self, k, v)
 
     def _is_valid_child(self, child):
@@ -903,7 +906,7 @@ class SupportComplexDataType(Element):
                 datatype not in ('varies', None, self.datatype):
             reference = load_reference(datatype, 'Component', self.version)
             structure = ElementFinder.get_structure(self, reference)
-            for k, v in structure.iteritems():
+            for k, v in structure.items():
                 setattr(self, k, v)
 
         if hasattr(self, 'children') and len(self.children) >= 1:
@@ -1111,7 +1114,7 @@ class SubComponent(CanBeVaries):
         if value is None:
             self._value = None
         else:
-            if value and isinstance(value, basestring):
+            if value and isinstance(value, str):
                 self._value = datatype_factory(self.datatype, value, self.version,
                                                self.validation_level)
             elif not value or isinstance(value, BaseDataType):
@@ -1438,7 +1441,7 @@ class Field(SupportComplexDataType):
 
     def _get_children(self, trailing=False):
         if self.datatype == 'varies':
-            children = [self.children.indexes['VARIES_{0}'.format(i+1)] for i in xrange(len(self.children))]
+            children = [self.children.indexes['VARIES_{0}'.format(i+1)] for i in range(len(self.children))]
             children = _remove_trailing(children)
             children.extend([[c] for c in self.children if c.is_unknown()])
             return children
@@ -1699,7 +1702,7 @@ class Segment(Element):
     def _get_children(self, trailing=False):
         children = self.children.get_ordered_children()
         if self.allow_infinite_children:
-            for i in xrange(self._last_allowed_child_index + 1, self._last_child_index + 1):
+            for i in range(self._last_allowed_child_index + 1, self._last_child_index + 1):
                 children.append(self.children.indexes.get('{}_{}'.format(self.name, i), None))
         children.extend([c for c in self.children.get_children() if c[0].name in (None, 'ST')])
         if not trailing:
