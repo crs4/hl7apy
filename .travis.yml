@@ -8,7 +8,7 @@ install:
   - python setup.py install
 # command to run tests
 script:
-  - nosetests tests hl7apy --with-doctest --with-coverage --cover-package hl7apy
+  - nosetests tests hl7apy --with-doctest --doctest-options="+IGNORE_EXCEPTION_DETAIL" --with-coverage --cover-package hl7apy
 after_success:
   - coveralls
 #just build master branch
