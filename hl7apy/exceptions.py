@@ -41,7 +41,7 @@ class ParserError(HL7apyException):
     >>> m = parse_message('NOTHL7')
     Traceback (most recent call last):
     ...
-    hl7apy.exceptions.ParserError: Invalid message
+    ParserError: Invalid message
     """
 
 
@@ -60,7 +60,7 @@ class ValidationError(HL7apyException):
     >>> parse_message(message, validation_level=VALIDATION_LEVEL.STRICT, force_validation=True)
     Traceback (most recent call last):
     ...
-    hl7apy.exceptions.ValidationError: Missing required child ADT_A01.PV1
+    ValidationError: Missing required child ADT_A01.PV1
     """
 
 
@@ -78,7 +78,7 @@ class UnsupportedVersion(HL7apyException):
     >>> set_default_version("2.0")
     Traceback (most recent call last):
     ...
-    hl7apy.exceptions.UnsupportedVersion: The version 2.0 is not supported
+    UnsupportedVersion: The version 2.0 is not supported
     """
     def __init__(self, version):
         self.version = version
@@ -96,7 +96,7 @@ class ChildNotFound(HL7apyException):
     >>> s.unknown = Field()
     Traceback (most recent call last):
     ...
-    hl7apy.exceptions.ChildNotFound: No child named UNKNOWN
+    ChildNotFound: No child named UNKNOWN
     """
     def __init__(self, name):
         self.name = name
@@ -114,7 +114,7 @@ class ChildNotValid(HL7apyException):
     >>> s.pid_1 = Field('PID_34')
     Traceback (most recent call last):
     ...
-    hl7apy.exceptions.ChildNotValid: <Field PID_34 (LAST_UPDATE_FACILITY) of type HD> is not a valid child for PID_1
+    ChildNotValid: <Field PID_34 (LAST_UPDATE_FACILITY) of type HD> is not a valid child for PID_1
     """
     def __init__(self, child, parent):
         self.child = child
@@ -134,7 +134,7 @@ class UnknownValidationLevel(HL7apyException):
     >>> set_default_validation_level(3)
     Traceback (most recent call last):
     ...
-    hl7apy.exceptions.UnknownValidationLevel
+    UnknownValidationLevel
     """
 
 
@@ -146,7 +146,7 @@ class OperationNotAllowed(HL7apyException):
     >>> s = Segment()
     Traceback (most recent call last):
     ...
-    hl7apy.exceptions.OperationNotAllowed: Cannot instantiate an unknown Segment
+    OperationNotAllowed: Cannot instantiate an unknown Segment
     """
 
 
@@ -162,7 +162,7 @@ class MaxChildLimitReached(HL7apyException):
     >>> m.add(Segment('MSH'))
     Traceback (most recent call last):
     ...
-    hl7apy.exceptions.MaxChildLimitReached: Cannot add <Segment MSH>: max limit (1) reached for <Message OML_O33>
+    MaxChildLimitReached: Cannot add <Segment MSH>: max limit (1) reached for <Message OML_O33>
     """
     def __init__(self, parent, child, limit):
         self.parent = parent
@@ -183,7 +183,7 @@ class MaxLengthReached(HL7apyException):
     >>> st = SI(value=11111, validation_level=VALIDATION_LEVEL.STRICT)
     Traceback (most recent call last):
     ...
-    hl7apy.exceptions.MaxLengthReached: The value 11111 exceed the max length: 4
+    MaxLengthReached: The value 11111 exceed the max length: 4
     """
     def __init__(self, value, limit):
         self.value = value
@@ -201,7 +201,7 @@ class InvalidName(HL7apyException):
     >>> Message('Unknown')
     Traceback (most recent call last):
     ...
-    hl7apy.exceptions.InvalidName: Invalid name for Message: UNKNOWN
+    InvalidName: Invalid name for Message: UNKNOWN
     """
     def __init__(self, cls, name):
         self.cls = cls
@@ -221,7 +221,7 @@ class InvalidDataType(HL7apyException):
     >>> datatype_factory('TN', '11 123456', version="2.5")
     Traceback (most recent call last):
     ...
-    hl7apy.exceptions.InvalidDataType: The datatype TN is not available for the given HL7 version
+    InvalidDataType: The datatype TN is not available for the given HL7 version
     """
     def __init__(self, datatype):
         self.datatype = datatype
@@ -241,7 +241,7 @@ class InvalidHighlightRange(HL7apyException):
     >>> s.to_er7()
     Traceback (most recent call last):
     ...
-    hl7apy.exceptions.InvalidHighlightRange: Invalid highlight range: 5 - 3
+    InvalidHighlightRange: Invalid highlight range: 5 - 3
     """
     def __init__(self, lower_bound, upper_bound):
         self.lower_bound = lower_bound
@@ -259,7 +259,7 @@ class InvalidDateFormat(HL7apyException):
     >>> DTM(value='10102013', out_format="%d%m%Y")
     Traceback (most recent call last):
     ...
-    hl7apy.exceptions.InvalidDateFormat: Invalid date format: %d%m%Y
+    InvalidDateFormat: Invalid date format: %d%m%Y
     """
     def __init__(self, out_format):
         self.format = out_format
@@ -276,7 +276,7 @@ class InvalidDateOffset(HL7apyException):
     >>> DTM(value='20131010', out_format="%Y%m%d", offset='+1300')
     Traceback (most recent call last):
     ...
-    hl7apy.exceptions.InvalidDateOffset: Invalid date offset: +1300
+    InvalidDateOffset: Invalid date offset: +1300
     """
     def __init__(self, offset):
         self.offset = offset
@@ -294,7 +294,7 @@ class InvalidMicrosecondsPrecision(HL7apyException):
     >>> DTM(value='20131010', microsec_precision=5)
     Traceback (most recent call last):
     ...
-    hl7apy.exceptions.InvalidMicrosecondsPrecision: Invalid microseconds precision. It must be between 1 and 4
+    InvalidMicrosecondsPrecision: Invalid microseconds precision. It must be between 1 and 4
     """
 
     def __str__(self):
@@ -311,7 +311,7 @@ class InvalidEncodingChars(HL7apyException):
     >>> m = Message('ADT_A01', encoding_chars=encoding_chars)
     Traceback (most recent call last):
     ...
-    hl7apy.exceptions.InvalidEncodingChars: <unprintable InvalidEncodingChars object>
+    InvalidEncodingChars: <unprintable InvalidEncodingChars object>
     """
     def __str__(self):
         return self.message if self.message else 'Invalid encoding chars'
