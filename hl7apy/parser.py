@@ -54,7 +54,7 @@ def parse_message(message, validation_level=None, find_groups=True, message_prof
     :param find_groups: if ``True``, automatically assign the segments found to the appropriate
         :class:`Groups <hl7apy.core.Group>` instances. If ``False``, the segments found are assigned as
         children of the :class:`Message <hl7apy.core.Message>` instance
-        
+
     :type force_validation: ``bool``
     :type force_validation: if ``True``, automatically forces the message validation after the end of the parsing
 
@@ -63,11 +63,11 @@ def parse_message(message, validation_level=None, find_groups=True, message_prof
     >>> message = "MSH|^~\&|GHH_ADT||||20080115153000||OML^O33^OML_O33|0123456789|P|2.5||||AL\\rPID|1||" \
     "566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004|||M\\r"
     >>> m = parse_message(message)
-    >>> print m
+    >>> print(m)
     <Message OML_O33>
-    >>> print m.msh.sending_application.to_er7()
+    >>> print(m.msh.sending_application.to_er7())
     GHH_ADT
-    >>> print m.children
+    >>> print(m.children)
     [<Segment MSH>, <Group OML_O33_PATIENT>]
     """
     message = message.lstrip()
@@ -130,7 +130,7 @@ def parse_segments(text, version=None, encoding_chars=None, validation_level=Non
 
     >>> segments = "EVN||20080115153000||||20080114003000\\rPID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||" \
     "2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004|||M\\r"
-    >>> print parse_segments(segments)
+    >>> print(parse_segments(segments))
     [<Segment EVN>, <Segment PID>]
     """
     version = _get_version(version)
@@ -182,9 +182,9 @@ def parse_segment(text, version=None, encoding_chars=None, validation_level=None
 
     >>> segment = "EVN||20080115153000||||20080114003000"
     >>> s =  parse_segment(segment)
-    >>> print s
+    >>> print(s)
     <Segment EVN>
-    >>> print s.to_er7()
+    >>> print(s.to_er7())
     EVN||20080115153000||||20080114003000
     """
     version = _get_version(version)
@@ -235,16 +235,16 @@ def parse_fields(text, name_prefix=None, version=None, encoding_chars=None, vali
 
     >>> fields = "1|NUCLEAR^NELDA^W|SPO|2222 HOME STREET^^ANN ARBOR^MI^^USA"
     >>> nk1_fields = parse_fields(fields, name_prefix="NK1")
-    >>> print nk1_fields
+    >>> print(nk1_fields)
     [<Field NK1_1 (SET_ID_NK1) of type SI>, <Field NK1_2 (NAME) of type XPN>, <Field NK1_3 (RELATIONSHIP) of type CE>, \
 <Field NK1_4 (ADDRESS) of type XAD>]
     >>> s = Segment("NK1")
     >>> s.children = nk1_fields
-    >>> print s.to_er7()
+    >>> print(s.to_er7())
     NK1|1|NUCLEAR^NELDA^W|SPO|2222 HOME STREET^^ANN ARBOR^MI^^USA
     >>> unknown_fields = parse_fields(fields)
     >>> s.children = unknown_fields
-    >>> print s.to_er7()
+    >>> print(s.to_er7())
     NK1||||||||||||||||||||||||||||||||||||||||1|NUCLEAR^NELDA^W|SPO|2222 HOME STREET^^ANN ARBOR^MI^^USA
     """
     version = _get_version(version)
@@ -314,14 +314,14 @@ def parse_field(text, name=None, version=None, encoding_chars=None, validation_l
 
     >>> field = "NUCLEAR^NELDA^W"
     >>> nk1_2 = parse_field(field, name="NK1_2")
-    >>> print nk1_2
+    >>> print(nk1_2)
     <Field NK1_2 (NAME) of type XPN>
-    >>> print nk1_2.to_er7()
+    >>> print(nk1_2.to_er7())
     NUCLEAR^NELDA^W
     >>> unknown = parse_field(field)
-    >>> print unknown
+    >>> print(unknown)
     <Field of type None>
-    >>> print unknown.to_er7()
+    >>> print(unknown.to_er7())
     NUCLEAR^NELDA^W
     """
     version = _get_version(version)
@@ -384,11 +384,11 @@ def parse_components(text, field_datatype='ST', version=None, encoding_chars=Non
 
     >>> components = "NUCLEAR^NELDA^W^^TEST"
     >>> xpn = parse_components(components, field_datatype="XPN")
-    >>> print xpn
+    >>> print(xpn)
     [<Component XPN_1 (FAMILY_NAME) of type FN>, <Component XPN_2 (GIVEN_NAME) of type ST>, \
 <Component XPN_3 (SECOND_AND_FURTHER_GIVEN_NAMES_OR_INITIALS_THEREOF) of type ST>, \
 <Component XPN_5 (PREFIX_E_G_DR) of type ST>]
-    >>> print parse_components(components)
+    >>> print(parse_components(components))
     [<Component ST (None) of type ST>, <Component ST (None) of type ST>, <Component ST (None) of type ST>, \
 <Component ST (None) of type ST>, <Component ST (None) of type ST>]
     """
@@ -458,11 +458,11 @@ def parse_component(text, name=None, datatype='ST', version=None, encoding_chars
 
     >>> component = "GATEWAY&1.3.6.1.4.1.21367.2011.2.5.17"
     >>> cx_4 = parse_component(component, name="CX_4")
-    >>> print cx_4
+    >>> print(cx_4)
     <Component CX_4 (ASSIGNING_AUTHORITY) of type None>
-    >>> print cx_4.to_er7()
+    >>> print(cx_4.to_er7())
     GATEWAY&1.3.6.1.4.1.21367.2011.2.5.17
-    >>> print parse_component(component)
+    >>> print(parse_component(component))
     <Component ST (None) of type None>
     """
     version = _get_version(version)
@@ -514,17 +514,17 @@ def parse_subcomponents(text, component_datatype='ST', version=None, encoding_ch
 
     >>> subcomponents= "ID&TEST&&AHAH"
     >>> cwe = parse_subcomponents(subcomponents, component_datatype="CWE")
-    >>> print cwe
+    >>> print(cwe)
     [<SubComponent CWE_1>, <SubComponent CWE_2>, <SubComponent CWE_4>]
     >>> c = Component(datatype='CWE')
     >>> c.children = cwe
-    >>> print c.to_er7()
+    >>> print(c.to_er7())
     ID&TEST&&AHAH
     >>> subs = parse_subcomponents(subcomponents)
-    >>> print subs
+    >>> print(subs)
     [<SubComponent ST>, <SubComponent ST>, <SubComponent ST>, <SubComponent ST>]
     >>> c.children = subs
-    >>> print c.to_er7()
+    >>> print(c.to_er7())
     &&&&&&&&&ID&TEST&&AHAH
     """
     version = _get_version(version)

@@ -177,7 +177,7 @@ You can get the ER7-encoded string of ``Message``, ``Group``, ``Segment``, ``Fie
 
   pid = "PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M\r"
   segment = parse_segment(pid)
-  print segment.to_er7()
+  print(segment.to_er7())
 
 You can also use custom encoding chars:
 
@@ -188,7 +188,7 @@ You can also use custom encoding chars:
   custom_chars = {'FIELD': '!', 'COMPONENT': '@', 'SUBCOMPONENT': '%', 'REPETITION': '~', 'ESCAPE': '$'}
   pid = "PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M\r"
   segment = parse_segment(pid)
-  print segment.to_er7(encoding_chars=custom_chars)
+  print(segment.to_er7(encoding_chars=custom_chars))
 
 For ``Message`` objects, you can get the string ready to be sent using mllp, by calling :meth:`hl7apy.Element.to_mllp` method:
 

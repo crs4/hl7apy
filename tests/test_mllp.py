@@ -127,10 +127,10 @@ class TestMLLPWithErrorHandler(unittest.TestCase):
             sock.sendall(msg.encode('ascii'))
             res = []
             while True:
-                received = sock.recv(1).decode('ascii')
+                received = sock.recv(1)
                 if not received:
                     break
-                res.append(received)
+                res.append(received.decode('ascii'))
         finally:
             sock.close()
 
