@@ -20,6 +20,13 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import *
 class HL7apyException(Exception):
     """
     Base exception class for hl7apy
@@ -304,7 +311,7 @@ class InvalidEncodingChars(HL7apyException):
     >>> m = Message('ADT_A01', encoding_chars=encoding_chars)
     Traceback (most recent call last):
     ...
-    InvalidEncodingChars: Missing required encoding chars
+    InvalidEncodingChars: <unprintable InvalidEncodingChars object>
     """
     def __str__(self):
         return self.message if self.message else 'Invalid encoding chars'

@@ -1,3 +1,10 @@
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+from builtins import *
+from future import standard_library
+standard_library.install_aliases()
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2015, CRS4
@@ -23,7 +30,7 @@ import os
 import sys
 import collections
 import importlib
-import cPickle
+import pickle
 
 from hl7apy.exceptions import UnsupportedVersion, InvalidEncodingChars, UnknownValidationLevel
 from hl7apy.consts import DEFAULT_ENCODING_CHARS, DEFAULT_VERSION, VALIDATION_LEVEL
@@ -53,7 +60,7 @@ def check_encoding_chars(encoding_chars):
     if missing:
         raise InvalidEncodingChars('Missing required encoding chars')
 
-    values = [v for k, v in encoding_chars.items() if k in required]
+    values = [v for k, v in list(encoding_chars.items()) if k in required]
     if len(values) > len(set(values)):
         raise InvalidEncodingChars('Found duplicate encoding chars')
 
@@ -89,7 +96,7 @@ def get_default_encoding_chars():
     :rtype: ``dict``
     :returns: the encoding chars (see :func:`hl7apy.set_default_encoding_chars`)
 
-    >>> print get_default_encoding_chars()['FIELD']
+    >>> print(get_default_encoding_chars()['FIELD'])
     |
     """
     return _DEFAULT_ENCODING_CHARS
@@ -102,7 +109,7 @@ def get_default_version():
     :rtype: ``str``
     :returns: the default version
 
-    >>> print get_default_version()
+    >>> print(get_default_version())
     2.5
     """
     return _DEFAULT_VERSION
@@ -115,7 +122,7 @@ def get_default_validation_level():
     :rtype: ``str``
     :returns: the default validation level
 
-    >>> print get_default_validation_level()
+    >>> print(get_default_validation_level())
     2
     """
     return _DEFAULT_VALIDATION_LEVEL
@@ -132,9 +139,9 @@ def set_default_validation_level(validation_level):
     >>> set_default_validation_level(3)
     Traceback (most recent call last):
         ...
-    UnknownValidationLevel
+    hl7apy.exceptions.UnknownValidationLevel
     >>> set_default_validation_level(VALIDATION_LEVEL.TOLERANT)
-    >>> print get_default_validation_level()
+    >>> print(get_default_validation_level())
     2
     """
     check_validation_level(validation_level)
@@ -155,9 +162,9 @@ def set_default_version(version):
     >>> set_default_version('22')
     Traceback (most recent call last):
         ...
-    UnsupportedVersion: The version 22 is not supported
+    hl7apy.exceptions.UnsupportedVersion: The version 22 is not supported
     >>> set_default_version('2.3')
-    >>> print get_default_version()
+    >>> print(get_default_version())
     2.3
     """
     check_version(version)
@@ -198,10 +205,10 @@ def set_default_encoding_chars(encoding_chars):
     >>> set_default_encoding_chars({'FIELD': '!'})
     Traceback (most recent call last):
         ...
-    InvalidEncodingChars: Missing required encoding chars
+    hl7apy.exceptions.InvalidEncodingChars: Missing required encoding chars
     >>> set_default_encoding_chars({'FIELD': '!', 'COMPONENT': 'C', 'SUBCOMPONENT': 'S', \
                                     'REPETITION': 'R', 'ESCAPE': '\\\\'})
-    >>> print get_default_encoding_chars()['FIELD']
+    >>> print(get_default_encoding_chars()['FIELD'])
     !
     """
     check_encoding_chars(encoding_chars)
@@ -261,12 +268,12 @@ def load_reference(name, element_type, version):
     >>> load_reference('UNKNOWN', 'Segment', '2.5')
     Traceback (most recent call last):
     ...
-    ChildNotFound: No child named UNKNOWN
+    hl7apy.exceptions.ChildNotFound: No child named UNKNOWN
     >>> r = load_reference('ADT_A01', 'Message', '2.5')
-    >>> print r[0]
+    >>> print(r[0])
     sequence
     >>> r = load_reference('MSH_3', 'Field', '2.5')
-    >>> print r[0]
+    >>> print(r[0])
     leaf
     """
     lib = load_library(version)
@@ -292,13 +299,13 @@ def find_reference(name, element_types, version):
     >>> find_reference('UNKNOWN', (Segment, ), '2.5')
     Traceback (most recent call last):
     ...
-    ChildNotFound: No child named UNKNOWN
+    hl7apy.exceptions.ChildNotFound: No child named UNKNOWN
     >>> find_reference('ADT_A01', (Segment,),  '2.5')
     Traceback (most recent call last):
     ...
-    ChildNotFound: No child named ADT_A01
+    hl7apy.exceptions.ChildNotFound: No child named ADT_A01
     >>> r = find_reference('ADT_A01', (Message,),  '2.5')
-    >>> print r['name'], r['cls']
+    >>> print(r['name'], r['cls'])
     ADT_A01 <class 'hl7apy.core.Message'>
     """
     lib = load_library(version)
@@ -307,8 +314,8 @@ def find_reference(name, element_types, version):
 
 
 def load_message_profile(path):
-    with open(path) as f:
-        mp = cPickle.load(f)
+    with open(path, 'rb') as f:
+        mp = pickle.load(f)
 
     return mp
 

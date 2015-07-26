@@ -19,7 +19,15 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import SocketServer
+from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import division
+from __future__ import absolute_import
+from builtins import *
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
+import socketserver
 import re
 
 from actor import LIP
@@ -47,7 +55,7 @@ class MLLProtocol(object):
             message = matched.groups()[0]
         return message
 
-class MLLPServer(SocketServer.StreamRequestHandler):
+class MLLPServer(socketserver.StreamRequestHandler):
     """
     Simplistic implementation of a TCP server implementing the MLLP protocol
 
@@ -59,7 +67,7 @@ class MLLPServer(SocketServer.StreamRequestHandler):
         while True:
             char = self.rfile.read(1)
             if not char:
-                print 'client disconnected'
+                print('client disconnected')
                 break
             line += char
             # check if incoming buffer contains a HL7 message
@@ -74,5 +82,5 @@ class MLLPServer(SocketServer.StreamRequestHandler):
 if __name__ == "__main__":
     HOST, PORT = "localhost", 6000
 
-    server = SocketServer.TCPServer((HOST, PORT), MLLPServer)
+    server = socketserver.TCPServer((HOST, PORT), MLLPServer)
     server.serve_forever()

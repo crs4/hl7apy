@@ -130,7 +130,7 @@ class ProfileParser(object):
             if not os.path.exists(self.output_path):
                 os.mkdir(self.output_path)
         except Exception, ex:
-            print "Error occurred while saving the output to: ", self.output_path, ex
+            print("Error occurred while saving the output to: ", self.output_path, ex)
             sys.exit(1)
 
         if os.path.isdir(self.input_path):
@@ -158,13 +158,13 @@ class ProfileParser(object):
             with open(schema_path) as xml_file:
                 data = xml_file.read()
         except Exception, ex:
-            print "Error occurred while opening the message profile file: ", ex
+            print("Error occurred while opening the message profile file: ", ex)
             sys.exit(1)
 
         try:
             f = objectify.XML(data)
         except Exception, ex:
-            print "Invalid XML file: ", profile_file, ex
+            print("Invalid XML file: ", profile_file, ex)
             sys.exit(1)
 
         message_structure = f.HL7v2xStaticDef.get('MsgStructID')

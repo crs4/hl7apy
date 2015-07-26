@@ -19,6 +19,13 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import division
+from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import *
 import os
 import re
 import sys
@@ -92,7 +99,7 @@ def print_report(n_messages, msg_per_version, msg_per_type, exceptions,
                 output.write("{0}: {1}\n".format(version, msg_per_version[vl][version]))
 
             output.write("\n\nMessage types details:\n\n")
-            for k, v in msg_per_type[vl].items():
+            for k, v in list(msg_per_type[vl].items()):
                 output.write("{0}: {1}\n".format(k, v))
 
             output.write("\n\nProblems occurred:\n\n")

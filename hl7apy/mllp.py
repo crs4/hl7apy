@@ -1,3 +1,11 @@
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+from builtins import *
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2015, CRS4
@@ -21,7 +29,7 @@
 
 import re
 import socket
-from SocketServer import StreamRequestHandler, TCPServer, ThreadingMixIn
+from socketserver import StreamRequestHandler, TCPServer, ThreadingMixIn
 
 from hl7apy.parser import get_message_type
 from hl7apy.exceptions import HL7apyException, ParserError

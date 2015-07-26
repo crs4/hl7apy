@@ -1,3 +1,10 @@
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+from builtins import *
+from future import standard_library
+standard_library.install_aliases()
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2015, CRS4
@@ -117,13 +124,13 @@ class TestMLLPWithErrorHandler(unittest.TestCase):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             sock.connect((HOST, PORT))
-            sock.sendall(msg)
+            sock.sendall(msg.encode('ascii'))
             res = []
             while True:
                 received = sock.recv(1)
                 if not received:
                     break
-                res.append(received)
+                res.append(received.decode('ascii'))
         finally:
             sock.close()
 
@@ -173,7 +180,7 @@ class TestMLLPWithoutErrorHandler(unittest.TestCase):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             sock.connect((HOST, PORT + 1))
-            sock.sendall(msg)
+            sock.sendall(msg.encode('ascii'))
             res = []
             while True:
                 received = sock.recv(1)

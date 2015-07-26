@@ -19,6 +19,13 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import *
 import os
 import unittest
 
@@ -287,7 +294,7 @@ class TestMessage(unittest.TestCase):
         b.value = msg
         parsed_b = parse_message(msg, validation_level=VALIDATION_LEVEL.STRICT)
         self.assertEqual(b.to_er7(), parsed_b.to_er7())
-        self.assertEqual(b.children.indexes.keys(), parsed_b.children.indexes.keys())
+        self.assertEqual(list(b.children.indexes.keys()), list(parsed_b.children.indexes.keys()))
 
         c = Message('ADT_A01', validation_level=VALIDATION_LEVEL.TOLERANT)
         with self.assertRaises(OperationNotAllowed):

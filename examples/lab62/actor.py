@@ -19,6 +19,14 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import division
+from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import *
+from builtins import object
 import uuid
 
 from hl7apy.core import Message, Segment
@@ -45,17 +53,17 @@ class LB(object):
     @staticmethod
     def receive(message):
         # print to stdout the data received
-        print "Received by LB"
+        print("Received by LB")
         try:
             # parse the incoming HL7 message
             m = parse_message(message, find_groups=False)
         except:
-            print 'parsing failed', repr(message)
+            print('parsing failed', repr(message))
         else:
-            print "Message type:", m.MSH.message_type.to_er7()
-            print "Message content:", repr(m.to_er7())
+            print("Message type:", m.MSH.message_type.to_er7())
+            print("Message content:", repr(m.to_er7()))
             surname, name = m.PID.PID_5.family_name.to_er7(), m.PID.PID_5.given_name.to_er7()
-            print "Patient data:", surname, name
+            print("Patient data:", surname, name)
 
 class LIP(object):
     """
@@ -85,17 +93,17 @@ class LIP(object):
         :param message: incoming message
         :return: response encoded to ER7 - it can be a NAK or RSP_K11 message
         """
-        print "Received by LIP", repr(message)
+        print("Received by LIP", repr(message))
 
         try:
             # parse the incoming message
             m = parse_message(message, find_groups=False)
         except:
-            print 'parsing failed', repr(message)
+            print('parsing failed', repr(message))
             response = LIP.nak()
         else:
-            print "Message type:", m.MSH.message_type.to_er7()
-            print "Message content:", repr(m.to_er7())
+            print("Message type:", m.MSH.message_type.to_er7())
+            print("Message content:", repr(m.to_er7()))
             if m.MSH.MSH_9.MSH_9_3.to_er7() == 'QBP_Q11':
                 # create a new RSP_K11 message
                 response = Message("RSP_K11")

@@ -22,6 +22,17 @@
 """
 HL7apy - core classes
 """
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import *
+from builtins import str
+from builtins import range
+from builtins import object
+from six import string_types
 
 import re
 import collections
@@ -106,11 +117,11 @@ class ElementProxy(collections.Sequence):
     in order to support the following API:
 
     >>> m = Message("OML_O33")
-    >>> print m.msh
+    >>> print(m.msh)
     [<Segment MSH>]
-    >>> print isinstance(m.msh, ElementProxy)
+    >>> print(isinstance(m.msh, ElementProxy))
     True
-    >>> print isinstance(m.msh.msh_7, ElementProxy)
+    >>> print(isinstance(m.msh.msh_7, ElementProxy))
     True
     """
     cls_attrs = ('element_list', 'list', 'element_name')
@@ -290,7 +301,7 @@ class ElementList(collections.MutableSequence):
         reference = None if name is None else self.element.find_child_reference(name)
         child_ref, child_name = (None, None) if reference is None else (reference['ref'], reference['name'])
 
-        if isinstance(value, basestring):  # if the value is a basestring, parse it
+        if isinstance(value, string_types):  # if the value is a basestring, parse it
             child = self.element.parse_child(value, child_name=child_name, reference=child_ref)
         elif isinstance(value, Element):  # it is already an instance of Element
             child = value
@@ -298,6 +309,7 @@ class ElementList(collections.MutableSequence):
             child = self.create_element(name, False, reference)
             child.value = value
         else:
+            print(type(value))
             raise ChildNotValid(value, child_name)
 
         if child.name != child_name:  # e.g. message.pid = Segment('SPM') is forbidden
@@ -576,11 +588,11 @@ class ElementFinder(object):
             data['ordered_children'] = ordered_children
             data['structure_by_name'] = structure
             if is_profile is False:
-                data['structure_by_longname'] = {e['ref'][2]: e for e in structure.values()
+                data['structure_by_longname'] = {e['ref'][2]: e for e in list(structure.values())
                                                  if e['ref'][0] == 'leaf'}
             else:
                 # in this case the len is 6 and not 5 as above because here the first is 'mp'
-                data['structure_by_longname'] = {e['ref'][7]: e for e in structure.values()
+                data['structure_by_longname'] = {e['ref'][7]: e for e in list(structure.values())
                                                  if e['ref'][1] == 'leaf' or len(e['ref']) > 6}
 
         if content_type == 'leaf' or (is_profile and len(reference) > 5):
@@ -618,7 +630,7 @@ class Element(object):
 
         check_validation_level(validation_level)
         check_version(version)
-        
+
         self.validation_level = validation_level
         self.name = name.upper() if name is not None else None
         self.version = version
@@ -659,7 +671,7 @@ class Element(object):
         >>> f = Field('PID_5')
         >>> f.value = 'EVERYMAN^ADAM'
         >>> s.add(f)
-        >>> print s.to_er7()
+        >>> print(s.to_er7())
         PID|||||EVERYMAN^ADAM
         """
         self.children.append(obj)
@@ -806,7 +818,7 @@ class Element(object):
     def _find_structure(self, reference=None):
         if self.name is not None:
             structure = ElementFinder.get_structure(self, reference)
-            for k, v in structure.iteritems():
+            for k, v in list(structure.items()):
                 setattr(self, k, v)
 
     def _is_valid_child(self, child):
@@ -903,7 +915,7 @@ class SupportComplexDataType(Element):
                 datatype not in ('varies', None, self.datatype):
             reference = load_reference(datatype, 'Component', self.version)
             structure = ElementFinder.get_structure(self, reference)
-            for k, v in structure.iteritems():
+            for k, v in list(structure.items()):
                 setattr(self, k, v)
 
         if hasattr(self, 'children') and len(self.children) >= 1:
@@ -1096,7 +1108,7 @@ class SubComponent(CanBeVaries):
 
         >>> s = SubComponent("CE_1")
         >>> s.value = "IDENTIFIER"
-        >>> print s.to_er7()
+        >>> print(s.to_er7())
         IDENTIFIER
         """
 
@@ -1111,7 +1123,7 @@ class SubComponent(CanBeVaries):
         if value is None:
             self._value = None
         else:
-            if value and isinstance(value, basestring):
+            if value and isinstance(value, str):
                 self._value = datatype_factory(self.datatype, value, self.version,
                                                self.validation_level)
             elif not value or isinstance(value, BaseDataType):
@@ -1211,9 +1223,9 @@ class Component(SupportComplexDataType, CanBeVaries):
 
         >>> c = Component(datatype='CE')
         >>> ce_1 = c.add_subcomponent('CE_1')
-        >>> print ce_1
+        >>> print(ce_1)
         <SubComponent CE_1>
-        >>> print ce_1 in c.children
+        >>> print(ce_1 in c.children)
         True
         """
         if self.is_unknown() and is_base_datatype(self.datatype):
@@ -1232,7 +1244,7 @@ class Component(SupportComplexDataType, CanBeVaries):
         >>> s2 = SubComponent(name='CWE_4', value='ALT_ID')
         >>> c.add(s)
         >>> c.add(s2)
-        >>> print c.to_er7()
+        >>> print(c.to_er7())
         EXAMPLE_ID&&&ALT_ID
         """
         # base datatype components can't have more than one child
@@ -1333,7 +1345,7 @@ class Field(SupportComplexDataType):
         :return: an instance of :class:`Component <hl7apy.core.Component>`
 
         >>> s = Field('PID_5')
-        >>> print s.add_component('XPN_2')
+        >>> print(s.add_component('XPN_2'))
         <Component XPN_2 (GIVEN_NAME) of type ST>
         """
         return self.children.create_element(name)
@@ -1367,7 +1379,7 @@ class Field(SupportComplexDataType):
         >>> c = Component('XPN_2')
         >>> c.value = 'ADAM'
         >>> f.add(c)
-        >>> print f.to_er7()
+        >>> print(f.to_er7())
         EVERYMAN^ADAM
         """
         # base datatype components can't have more than one child
@@ -1402,7 +1414,7 @@ class Field(SupportComplexDataType):
 
         >>> msh_9 = Field("MSH_9")
         >>> msh_9.value = "ADT^A01^ADT_A01"
-        >>> print msh_9.to_er7()
+        >>> print(msh_9.to_er7())
         ADT^A01^ADT_A01
         """
         if encoding_chars is None:
@@ -1438,7 +1450,7 @@ class Field(SupportComplexDataType):
 
     def _get_children(self, trailing=False):
         if self.datatype == 'varies':
-            children = [self.children.indexes['VARIES_{0}'.format(i+1)] for i in xrange(len(self.children))]
+            children = [self.children.indexes['VARIES_{0}'.format(i+1)] for i in range(len(self.children))]
             children = _remove_trailing(children)
             children.extend([[c] for c in self.children if c.is_unknown()])
             return children
@@ -1585,7 +1597,7 @@ class Segment(Element):
         :return: an instance of :class:`Field <hl7apy.core.Field>`
 
         >>> s = Segment('PID')
-        >>> print s.add_field('PID_1')
+        >>> print(s.add_field('PID_1'))
         <Field PID_1 (SET_ID_PID) of type SI>
         """
         return self.children.create_element(name)
@@ -1655,7 +1667,7 @@ class Segment(Element):
         >>> pid = Segment("PID")
         >>> pid.pid_1 = '1'
         >>> pid.pid_5 = "EVERYMAN^ADAM"
-        >>> print pid.to_er7()
+        >>> print(pid.to_er7())
         PID|1||||EVERYMAN^ADAM
         """
         if encoding_chars is None:
@@ -1699,7 +1711,7 @@ class Segment(Element):
     def _get_children(self, trailing=False):
         children = self.children.get_ordered_children()
         if self.allow_infinite_children:
-            for i in xrange(self._last_allowed_child_index + 1, self._last_child_index + 1):
+            for i in range(self._last_allowed_child_index + 1, self._last_child_index + 1):
                 children.append(self.children.indexes.get('{}_{}'.format(self.name, i), None))
         children.extend([c for c in self.children.get_children() if c[0].name in (None, 'ST')])
         if not trailing:
@@ -1750,9 +1762,9 @@ class Group(Element):
 
         >>> m = Message('QBP_Q11')
         >>> qpd = m.add_segment('QPD')
-        >>> print qpd
+        >>> print(qpd)
         <Segment QPD>
-        >>> print qpd in m.children
+        >>> print(qpd in m.children)
         True
         """
         return self.children.create_element(name)
@@ -1766,9 +1778,9 @@ class Group(Element):
 
         >>> m = Message('OML_O33')
         >>> patient = m.add_group('OML_O33_PATIENT')
-        >>> print patient
+        >>> print(patient)
         <Group OML_O33_PATIENT>
-        >>> print patient in m.children
+        >>> print(patient in m.children)
         True
         """
 
