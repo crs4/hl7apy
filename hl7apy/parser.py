@@ -21,6 +21,11 @@
 
 import re
 
+try:
+    xrange
+except NameError:
+    xrange = range
+
 from hl7apy import get_default_encoding_chars, get_default_version, \
     get_default_validation_level, check_version, check_encoding_chars, check_validation_level
 from hl7apy.consts import N_SEPS
