@@ -21,11 +21,18 @@
 
 import importlib
 
-from messages import MESSAGES
-from segments import SEGMENTS
-from fields import FIELDS
-from datatypes import DATATYPES
-from groups import GROUPS
+try:
+    from messages import MESSAGES
+    from segments import SEGMENTS
+    from fields import FIELDS
+    from datatypes import DATATYPES
+    from groups import GROUPS
+except ImportError:
+    from .messages import MESSAGES
+    from .segments import SEGMENTS
+    from .fields import FIELDS
+    from .datatypes import DATATYPES
+    from .groups import GROUPS
 
 from hl7apy.exceptions import ChildNotFound
 
