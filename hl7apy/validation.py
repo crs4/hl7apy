@@ -20,6 +20,8 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import absolute_import
+import traceback
+
 from hl7apy import load_reference
 from hl7apy.consts import VALIDATION_LEVEL
 from hl7apy.exceptions import ChildNotFound, ValidationError, ValidationWarning
@@ -71,7 +73,8 @@ class Validator(object):
                     # if the datatype the is a complex datatype, the z element must follow the correct
                     # structure of that datatype
                     # Component just to search in the datatypes....
-                    ref = load_reference(el.datatype, 'Component', el.version)
+                    dt_struct = load_reference(el.datatype, 'Datatypes_Structs', el.version)
+                    ref = ('sequence', dt_struct, el.datatype, None, None, -1)
                     _check_known_element(el, ref, errs, warns)
             for c in el.children:
                 _is_valid(c, None, errs, warns)
@@ -92,10 +95,11 @@ class Validator(object):
                     errs.append(ValidationError("Missing required child {}.{}".format(el.name,
                                                                                       child_name)))
 
-        def _check_table_compliance(el, ref, is_profile, warns):
-            table = ref[7] if is_profile else ref[3]
-
+        def _check_table_compliance(el, ref, warns):
+            table = ref[4]
             if table is not None:
+                # if isinstance(table, tuple):
+                #     print el
                 try:
                     table_ref = load_reference(table, 'Table', el.version)
                 except ChildNotFound:
@@ -107,51 +111,37 @@ class Validator(object):
                                                        format(el.to_er7(), table, el.parent.name,
                                                               el.name)))
 
-        def _check_length(el, ref, is_profile, warns):
-            max_length = ref[8] if is_profile else -1
+        def _check_length(el, ref, warns):
+            max_length = ref[5]
             if -1 < max_length < len(el.to_er7()):
                 warns.append(ValidationWarning("Exceeded max length ({}) of {}.{}".
                                                format(max_length, el.parent.name, el.name)))
 
-        def _check_datatype(el, ref, is_profile, errs):
-            ref_datatype = ref[5] if is_profile else ref[1]
+        def _check_datatype(el, ref, errs):
+            ref_datatype = ref[2]
             if el.datatype != ref_datatype:
                 errs.append(ValidationError("Datatype {} is not correct for {}.{} (it must be {})".
                                             format(el.datatype, el.parent.name, el.name, ref[1])))
 
-        def _get_valid_children_info(ref, is_profile):
-            if is_profile:
-                valid_children = {c[2] for c in ref[2]}
-                children_refs = ref[2]
-            else:
-                valid_children = {c[0] for c in ref[1]}
-                children_refs = ref[1]
+        def _get_valid_children_info(ref):
+            valid_children = {c[0] for c in ref[1]}
+            children_refs = ref[1]
             return valid_children, children_refs
 
-        def _get_child_reference_info(ref, is_profile):
-            if is_profile:
-                child_name, cardinality = ref[2], ref[4]
-            else:
-                child_name, cardinality = ref
+        def _get_child_reference_info(ref):
+            child_name, cardinality = ref[0], ref[2]
             return child_name, cardinality
 
         def _check_known_element(el, ref, errs, warns):
             if ref is None:
-                is_profile = False
                 try:
                     ref = load_reference(el.name, el.classname, el.version)
                 except ChildNotFound:
                     errs.append(ValidationError("Invalid element found: {}".format(el)))
-            else:
-                is_profile = ref[0] == 'mp'
-
-            if is_profile:  # it is a message profile
-                ref = ref[1:]  # ref[0] is 'mp'
 
             if ref[0] in ('sequence', 'choice'):
                 element_children = {c.name for c in el.children if not c.is_z_element()}
-                valid_children, valid_children_refs = _get_valid_children_info(ref, is_profile)
-                z_children = [c for c in el.children if c.is_z_element()]
+                valid_children, valid_children_refs = _get_valid_children_info(ref)
 
                 # check that the children are all allowed children
                 if not element_children <= valid_children:
@@ -161,8 +151,7 @@ class Validator(object):
                 # iterates the valid children
                 for child_ref in valid_children_refs:
                     # it gets the structure of the children to check
-                    child_name, cardinality = _get_child_reference_info(child_ref, is_profile)
-
+                    child_name, cardinality = _get_child_reference_info(child_ref)
                     try:
                         # it gets all the occurrences of the children of a type
                         children = el.children.get(child_name)
@@ -174,25 +163,26 @@ class Validator(object):
                         _check_repetitions(el, children, cardinality, child_name, errs)
                         # calls validation for every children
                         for c in children:
-                            ref = child_ref if is_profile else None
-                            _is_valid(c, ref, errs, warns)
+                            _is_valid(c, child_ref[1], errs, warns)
 
                 # finally calls validation for z_elements
+                z_children = [c for c in el.children if c.is_z_element()]
                 for c in z_children:
                     _is_valid(c, None, errs, warns)
             else:
-                _check_table_compliance(el, ref, is_profile, warns)
+                # print ref
+                _check_table_compliance(el, ref, warns)
 
-                _check_length(el, ref, is_profile, warns)
+                _check_length(el, ref, warns)
 
                 if el.datatype == 'varies':  # TODO: it should check the real rule
                     return True
-                _check_datatype(el, ref, is_profile, errs)
+                _check_datatype(el, ref, errs)
 
                 # For complex datatypes element, the reference is the one of the datatype
                 if not is_base_datatype(el.datatype, el.version):
                     # Component just to search in the datatypes....
-                    ref = load_reference(el.datatype, 'Component', el.version)
+                    ref = load_reference(el.datatype, 'Datatypes_Structs', el.version)
                     _is_valid(el, ref, errs, warns)
 
         def _is_valid(el, ref, errs, warns):

@@ -90,6 +90,9 @@ def parse_message(message, validation_level=None, find_groups=True, message_prof
         m.children = []
         create_groups(m, children, validation_level)
     else:
+        # m.msh = children[0]
+        # for c in children[1:]:
+        #     m.add(c)
         m.children = children
 
     if force_validation:
@@ -145,7 +148,7 @@ def parse_segments(text, version=None, encoding_chars=None, validation_level=Non
             except KeyError:
                 # the message can be in the groups
                 reference = None
-
+            # TODO: search the reference in the group directly from here
             segments.append(parse_segment(s.strip(), version, encoding_chars, validation_level,
                                           reference))
     return segments
@@ -330,7 +333,7 @@ def parse_field(text, name=None, version=None, encoding_chars=None, validation_l
         field = Field(name, version=version, validation_level=validation_level, reference=reference)
     except InvalidName:
         if force_varies:
-            reference = ('leaf', 'varies', None, None)
+            reference = ('leaf', None, 'varies', None, None, -1)
             field = Field(name, version=version, validation_level=validation_level, reference=reference)
         else:
             field = Field(version=version, validation_level=validation_level, reference=reference)

@@ -115,11 +115,11 @@ class TestParser(unittest.TestCase):
         self.assertEqual(message.children[1].name, 'OML_O33_PATIENT')
         self.assertEqual(message.children[2].name, 'OML_O33_SPECIMEN')
         self.assertEqual(message.children[3].name, 'OML_O33_SPECIMEN')
-        #the first specimen has only one order
+        # the first specimen has only one order
         specimen_1 = message.children[2]
         self.assertEqual(specimen_1.children[0].name, 'SPM')
         self.assertEqual(specimen_1.children[1].name, 'OML_O33_ORDER')
-        #the second specimen has three different orders, and the second and third are inside the ORDER PRIOR group
+        # the second specimen has three different orders, and the second and third are inside the ORDER PRIOR group
         specimen_2 = message.children[3]
         self.assertEqual(specimen_2.children[1].name, 'OML_O33_ORDER')
         spm_2_order =  specimen_2.children[1]

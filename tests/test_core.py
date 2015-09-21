@@ -875,7 +875,7 @@ class TestField(unittest.TestCase):
 
     def test_add_child_with_different_version(self):
         f = Field('PID_4', version='2.4')
-        c = Component('CX_10', version='2.5')
+        c = Component('CX_8', version='2.5')
         self.assertRaises(OperationNotAllowed, f.add, c)
 
     def test_add_empty_component(self):

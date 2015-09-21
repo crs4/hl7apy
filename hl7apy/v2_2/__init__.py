@@ -25,14 +25,14 @@ import importlib
 from .messages import MESSAGES
 from .segments import SEGMENTS
 from .fields import FIELDS
-from .datatypes import DATATYPES
+from .datatypes import DATATYPES, DATATYPES_STRUCTS
 from .groups import GROUPS
 
 from hl7apy.exceptions import ChildNotFound
 
-ELEMENTS = {'Message': MESSAGES, 'Segment': SEGMENTS, 'Field': FIELDS,
-            'Component': DATATYPES, 'Group': GROUPS, 'SubComponent': DATATYPES,
-            'Table': {}}
+ELEMENTS = {'Message': MESSAGES, 'Group': GROUPS, 'Segment': SEGMENTS,
+            'Field': FIELDS, 'Component': DATATYPES, 'SubComponent': DATATYPES,
+            'Datatypes_Structs': DATATYPES_STRUCTS, 'Table': {}}
 
 
 def get(name, element_type):
