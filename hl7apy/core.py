@@ -341,7 +341,6 @@ class ElementList(collections.MutableSequence):
                 self._remove_from_index(child)
                 self.list.remove(child)
         except:
-            print child
             raise
 
     def remove_by_name(self, name, index=0):
@@ -1019,7 +1018,20 @@ class CanBeVaries(Element):
         if datatype == 'varies' and reference is None:
             reference = ('leaf', None, 'varies', None, None, -1)
 
+        if not Validator.is_strict(validation_level) and datatype not in (None, 'varies') \
+                and not is_base_datatype(datatype, version):
+            version = version or get_default_version()
+            children_refs = load_reference(datatype, 'Datatypes_Structs', version)
+            # print children_refs
+            if name is not None:
+                # first we get the original reference for the long_name, table etc
+                orig_ref = load_reference(name, 'Component', version)
+                reference = ('sequence', children_refs, datatype, orig_ref[3], orig_ref[4], orig_ref[5])
+            else:
+                reference = ('sequence', children_refs, datatype, None, None, -1)
+
         if name is not None and _valid_child_name(name, 'VARIES'):
+            # Set name to None because with a VARIES name the Element would raise an Exception
             Element.__init__(self, None, parent, reference, version,
                              validation_level, traversal_parent)
             self.name = name.upper()
@@ -1046,6 +1058,12 @@ class CanBeVaries(Element):
         else:
             self.datatype = datatype
             self.name = self.datatype
+
+    def _find_structure(self, reference=None):
+        if self.name is not None or reference is not None:
+            structure = ElementFinder.get_structure(self, reference)
+            for k, v in structure.iteritems():
+                setattr(self, k, v)
 
     def is_unknown(self):
         return self.name == self.datatype
@@ -1210,8 +1228,8 @@ class Component(SupportComplexDataType, CanBeVaries):
 
         SupportComplexDataType.__init__(self)
 
-        if datatype == 'varies' and reference is None:
-            reference = ('leaf', None, 'varies', None, None, -1)
+        # if datatype == 'varies' and reference is None:
+        #     reference = ('leaf', None, 'varies', None, None, -1)
 
         CanBeVaries.__init__(self, name, datatype, parent, reference,
                              version, validation_level, traversal_parent)
@@ -1219,11 +1237,6 @@ class Component(SupportComplexDataType, CanBeVaries):
         if self.is_unknown() and Validator.is_strict(validation_level) and \
                 not is_base_datatype(self.datatype, self.version) and self.datatype != 'varies':
             raise OperationNotAllowed("Cannot instantiate an unknown Element with strict validation")
-
-        # TODO: This control should be deleted (see CanBeVaries)
-        if datatype is not None and Validator.is_strict(validation_level) and \
-                self.datatype != 'varies' and self.datatype != datatype:
-            raise OperationNotAllowed("Cannot assign a different datatype with strict validation")
 
     def add_subcomponent(self, name):
         """

@@ -1408,11 +1408,11 @@ class TestComponent(unittest.TestCase):
         self.assertRaises(MaxChildLimitReached, c.add, SubComponent(datatype='ST'))
 
     def test_override_datatype(self):
-        c = Component('CX_1',  validation_level=VALIDATION_LEVEL.TOLERANT)
+        c = Component('CX_1', validation_level=VALIDATION_LEVEL.TOLERANT)
         c.datatype = 'TX'
         self.assertEqual(c.datatype, 'TX')
 
-        c = Component('CX_1',  datatype='TX', validation_level=VALIDATION_LEVEL.TOLERANT)
+        c = Component('CX_1', datatype='TX', validation_level=VALIDATION_LEVEL.TOLERANT)
         self.assertEqual(c.datatype, 'TX')
 
         c = Component()
@@ -1420,7 +1420,7 @@ class TestComponent(unittest.TestCase):
         with self.assertRaises(OperationNotAllowed):
             c.datatype = 'TX'
 
-        c = Component('CX_1',  validation_level=VALIDATION_LEVEL.STRICT)
+        c = Component('CX_1', validation_level=VALIDATION_LEVEL.STRICT)
         with self.assertRaises(OperationNotAllowed):
             c.datatype = 'TX'
 
@@ -1428,7 +1428,7 @@ class TestComponent(unittest.TestCase):
         with self.assertRaises(OperationNotAllowed):
             c1.datatype = 'TX'
 
-        self.assertRaises(OperationNotAllowed, Component, 'CX_1', datatype='',
+        self.assertRaises(OperationNotAllowed, Component, 'CX_1', datatype='TX',
                           validation_level=VALIDATION_LEVEL.STRICT)
 
         m = Message('RSP_K21', reference=self.rsp_k21_mp, validation_level=VALIDATION_LEVEL.TOLERANT)

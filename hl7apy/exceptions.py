@@ -210,12 +210,12 @@ class InvalidDataType(HL7apyException):
     Raised when the currently used HL7 version does not support the given datatype
 
     >>> from hl7apy.factories import datatype_factory
-    >>> datatype_factory('TN', '11 123456', version="2.3") #doctest: +ELLIPSIS
+    >>> datatype_factory('TN', '11 123456', version="2.4") #doctest: +ELLIPSIS
     <hl7apy.base_datatypes.TN object at 0x...>
-    >>> datatype_factory('TN', '11 123456', version="2.5")  # doctest: +IGNORE_EXCEPTION_DETAIL
+    >>> datatype_factory('GTS', '11 123456', version="2.4")  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
-    InvalidDataType: The datatype TN is not available for the given HL7 version
+    InvalidDataType: The datatype GTS is not available for the given HL7 version
     """
     def __init__(self, datatype):
         self.datatype = datatype
