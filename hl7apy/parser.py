@@ -21,11 +21,12 @@
 
 from __future__ import absolute_import
 import re
+import copy
 
 from hl7apy import get_default_encoding_chars, get_default_version, \
     get_default_validation_level, check_version, check_encoding_chars, check_validation_level
 from hl7apy.consts import N_SEPS
-from hl7apy.core import is_base_datatype, Message, Group, Segment, Field, Component, SubComponent
+from hl7apy.core import is_base_datatype, Message, Group, Segment, Field, Component, SubComponent, ElementFinder
 from hl7apy.exceptions import InvalidName, ParserError, InvalidEncodingChars, MessageProfileNotFound
 from hl7apy.validation import Validator
 
@@ -70,7 +71,6 @@ def parse_message(message, validation_level=None, find_groups=True, message_prof
     """
     message = message.lstrip()
     encoding_chars, message_structure, version = get_message_info(message)
-
     validation_level = _get_validation_level(validation_level)
 
     try:
@@ -84,16 +84,13 @@ def parse_message(message, validation_level=None, find_groups=True, message_prof
     except InvalidName:
         m = Message(version=version, validation_level=validation_level,
                     encoding_chars=encoding_chars)
-    children = parse_segments(message, m.version, encoding_chars, validation_level,
-                              m.structure_by_name)
-    if m.name is not None and find_groups:
-        m.children = []
-        create_groups(m, children, validation_level)
-    else:
-        # m.msh = children[0]
-        # for c in children[1:]:
-        #     m.add(c)
-        m.children = children
+
+    try:
+        children = parse_segments(message, m.version, encoding_chars, validation_level, m.reference, find_groups)
+    except AttributeError:  # m.reference can raise i
+        children = parse_segments(message, m.version, encoding_chars, validation_level, find_groups=False)
+
+    m.children = children
 
     if force_validation:
         if message_profile is None:
@@ -104,7 +101,7 @@ def parse_message(message, validation_level=None, find_groups=True, message_prof
     return m
 
 
-def parse_segments(text, version=None, encoding_chars=None, validation_level=None, references=None):
+def parse_segments(text, version=None, encoding_chars=None, validation_level=None, references=None, find_groups=False):
     """
     Parse the given ER7-encoded segments and return a list of :class:`hl7apy.core.Segment` instances.
 
@@ -127,6 +124,11 @@ def parse_segments(text, version=None, encoding_chars=None, validation_level=Non
     :type references: ``list``
     :param references: A list of the references of the :class:`Segment <hl7apy.core.Segment>`'s children
 
+    :type find_groups: ``bool``
+    :param find_groups: if ``True``, automatically assign the segments found to the appropriate
+        :class:`Groups <hl7apy.core.Group>` instances. If ``False``, the segments found are assigned as
+        children of the :class:`Message <hl7apy.core.Message>` instance
+
     :return: a list of :class:`Segment <hl7apy.core.Segment>` instances
 
     >>> segments = "EVN||20080115153000||||20080114003000\\rPID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||" \
@@ -140,17 +142,57 @@ def parse_segments(text, version=None, encoding_chars=None, validation_level=Non
 
     segment_sep = encoding_chars['SEGMENT']
     segments = []
+
+    parents_refs = [(None, references)]
+    current_parent = None
     for s in text.split(segment_sep):
         if len(s) > 0:
             segment_name = s[:3]
-            try:
-                reference = references[segment_name]['ref'] if references else None
-            except KeyError:
-                # the message can be in the groups
-                reference = None
-            # TODO: search the reference in the group directly from here
-            segments.append(parse_segment(s.strip(), version, encoding_chars, validation_level,
-                                          reference))
+            for x in xrange(len(parents_refs)):
+                if not find_groups:
+                    segment = parse_segment(s.strip(), version, encoding_chars, validation_level)
+                    segments.append(segment)
+                else:
+                    ref, parents_refs = _get_segment_reference(segment_name, parents_refs)
+                    if ref is None:
+                        # group not found at the current level, go back to the previous level
+                        if current_parent is not None:
+                            parents_refs.pop()
+                            current_parent = current_parent.parent
+                    else:
+                        if current_parent is None and parents_refs[-1][0] is not None or \
+                           current_parent is not None and parents_refs[-1][0] != current_parent.name:
+                            # create the parents group of the segment
+                            if current_parent is not None:
+                                cur_idx = parents_refs.index((current_parent.name, current_parent.reference))
+                            else:
+                                cur_idx = parents_refs.index((None, references))
+                            for p_ref in parents_refs[cur_idx+1:]:
+                                group = Group(p_ref[0], version=version, reference=p_ref[1],
+                                              validation_level=validation_level)
+                                if current_parent is None:
+                                    segments.append(group)
+                                else:
+                                    current_parent.add(group)
+                                current_parent = group
+                        elif current_parent is not None and segment_name in [c.name for c in current_parent.children] and \
+                                current_parent.repetitions[segment_name][1] == 1:
+                            # The number of instances allowed is reached so we create another instance of the same
+                            group = Group(current_parent.name, version=version, reference=current_parent.reference,
+                                          validation_level=validation_level)
+
+                            if current_parent.parent is None:
+                                segments.append(group)
+                            else:
+                                current_parent.parent.add(group)
+                            current_parent = group
+
+                        segment = parse_segment(s.strip(), version, encoding_chars, validation_level, ref)
+                        if current_parent is None:
+                            segments.append(segment)
+                        else:
+                            current_parent.add(segment)
+                        break
     return segments
 
 
@@ -655,101 +697,25 @@ def get_message_info(content):
     return encoding_chars, message_structure, version
 
 
-def create_groups(message, children, validation_level=None):
-    """
-    Create the message's groups
-
-    :param message: a :class:`Message <hl7apy.core.Message>` instance
-
-    :param children: a list of :class:`Segment <hl7apy.core.Segment>` instances
-
-    :param validation_level: the validation level. Possible values are those defined in
-        :class:`VALIDATION_LEVEL <hl7apy.consts.VALIDATION_LEVEL>` class or ``None`` to use the default
-        validation level (see :func:`set_default_validation_level <hl7apy.set_default_validation_level>`)
-
-    """
-    # get the message structure
-    structure = {'structure_by_name': message.structure_by_name,
-                 'ordered_children': message.ordered_children,
-                 'repetitions': message.repetitions}
-    # create the initial search data structure
-    search_data = {'parents': [message], 'indexes': [-1], 'structures': [structure]}
-    # for each segment found in the message...
-    for c in children:
-        found = -1
-        for x in xrange(len(search_data['structures'])):
-            found = _find_group(c, search_data, validation_level)
-            # group not found at the current level, go back to the previous level
-            if found == -1:
-                _go_back(search_data)
-            else:
-                break
-        # group not found: add the segment to the message instance
-        if found == -1:
-            message.add(c)
-
-
-def _go_back(search_data):
-    # go back to the previous level during group search
-    search_data['parents'].pop()
-    search_data['structures'].pop()
-    search_data['indexes'].pop()
-
-
-def _find_group(segment, search_data, validation_level=None):
-    """
-    Recursively find the group the segment belongs to
-
-    :param segment: a :class:`hl7apy.core.Segment` instance
-
-    :param search_data: a dictionary containing current chain of parent, current indexes and element
-        structures
-
-    :param validation_level: the validation level. Possible values are those defined in
-        :class:`VALIDATION_LEVEL <hl7apy.consts.VALIDATION_LEVEL>` class or ``None`` to use the default
-        validation level (see :func:`set_default_validation_level <hl7apy.set_default_validation_level>`)
-
-    :return: the index of the parent children list where the segment has been found
-    """
-    search_index = -1
-    current_index = search_data['indexes'][-1]
-    structure = search_data['structures'][-1]
-    try:
-        search_index = structure['ordered_children'].index(segment.name)
-    except ValueError:
-        # groups of the current parent
-        groups = [k for k in structure['ordered_children']
-                  if structure['structure_by_name'][k]['cls'] == Group]
-        # for any group found, create the group and check if the segment is one of its children
-        for g in groups:
-            group = Group(g, version=segment.version, reference=structure['structure_by_name'][g]['ref'],
-                          validation_level=validation_level)
-            p_structure = {'structure_by_name':  group.structure_by_name,
-                           'ordered_children': group.ordered_children,
-                           'repetitions': group.repetitions}
-            search_data['structures'].append(p_structure)
-            search_data['parents'].append(group)
-            search_data['indexes'].append(-1)
-            found_index = _find_group(segment, search_data, validation_level)
-            # the segment is a child of the current group
-            if found_index > -1:
-                find_parent = search_data['parents'].index(group) - 1
-                group.parent = search_data['parents'][find_parent]
-                search_index = structure['ordered_children'].index(g)
-                search_data['indexes'][find_parent] = search_index
-                break
-            else:  # the segment is not a child of the current group, continue the search
-                _go_back(search_data)
+def _get_segment_reference(segment_name, parents_ref):
+    ref = None
+    groups = []
+    p_ref = parents_ref[-1][1]
+    for c in p_ref[1]:
+        if c[3] == "SEG" and c[0] == segment_name:
+            ref = c[1]
+            break
+        elif c[3] == "GRP":
+            groups.append(c)
     else:
-        if search_index <= current_index and structure['repetitions'][segment.name][1] == 1:
-            # if more than one instance of the segment has been found and only one instance is allowed,
-            # go up of one level to create another instance of the group the segment belongs to
-            _go_back(search_data)
-            return _find_group(segment, search_data, validation_level)
-        search_data['indexes'][-1] = search_index
-        parent = search_data['parents'][-1]
-        parent.add(segment)
-    return search_index
+        for g in groups:
+            parents_ref.append((g[0], g[1]))
+            ref, parents_ref = _get_segment_reference(segment_name, parents_ref)
+            if ref is not None:
+                break
+            else:
+                parents_ref.pop(-1)
+    return ref, parents_ref
 
 
 def _get_version(version):

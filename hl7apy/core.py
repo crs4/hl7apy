@@ -853,6 +853,7 @@ class Element(object):
             else:
                 super(Element, self).__setattr__(name, value)
         elif hasattr(self, 'children'):
+            # print name, value
             self.children.set(name, value, 0)
 
     def __delattr__(self, name):
@@ -1850,14 +1851,13 @@ class Group(Element):
             return Element.parse_child(self, text, **kwargs)
 
     def parse_children(self, text, find_groups=True, **kwargs):
-        from hl7apy.parser import create_groups
-        kwargs = {'references': self.structure_by_name}
+        try:
+            kwargs = {'references': self.reference, 'find_groups': find_groups}
+        except AttributeError:
+            kwargs = {'references': None, 'find_groups': False}
+
         children = super(Group, self).parse_children(text, **kwargs)
-        if self.name and find_groups:
-            self.children = []
-            create_groups(self, children, validation_level=self.validation_level)
-        else:
-            self.children = children
+        self.children = children
 
     def _set_value(self, value):
         self.parse_children(value)

@@ -132,18 +132,23 @@ class TestParser(unittest.TestCase):
     def test_message_inspection_by_group_parsing(self):
         msg = self._get_multiple_segments_groups_message()
         message = parse_message(msg)
-        #access first spm_27_1: P2_S1
+        # access first spm_27_1: P2_S1
         self.assertEqual(message.oml_o33_specimen[0].spm.spm_27.spm_27_1.to_er7(), 'CONTAINER')
-        #by datatype name instead that by position it is the same than previous one
+        # by datatype name instead that by position it is the same than previous one
         self.assertEqual(message.oml_o33_specimen[0].spm.spm_27.cwe_1.to_er7(), 'CONTAINER')
-        #access to the second order test belonging to the second specimen
-        self.assertEqual(message.oml_o33_specimen[
-                             1].oml_o33_order.oml_o33_observation_request.oml_o33_prior_result.oml_o33_order_prior[
-                             1].obr.obr_4.obr_4_1.to_er7(), 'HDL')
-        #try to access to non-existent field
-        # with self.assertRaises(IndexError): # IndexError cannot be raised here to maintain lazy instantiation of children during traversal
-        #     message.oml_o33_specimen[1].oml_o33_order.oml_o33_observation_request.oml_o33_prior_result.oml_o33_order_prior[2].obr.obr_4.obr_4_1.to_er7()
-        #self.assertEqual(message.to_er7(), msg)
+        # access to the second order test belonging to the second specimen
+        self.assertEqual(message.oml_o33_specimen[1].oml_o33_order.
+                         oml_o33_observation_request.oml_o33_prior_result.
+                         oml_o33_order_prior.obr.obr_4.obr_4_1.to_er7(), 'HDL')
+        self.assertEqual(message.oml_o33_specimen[1].oml_o33_order.
+                         oml_o33_observation_request.oml_o33_prior_result.
+                         oml_o33_order_prior[1].obr.obr_4.obr_4_1.to_er7(), 'LDL')
+        # try to access to non-existent field
+        # IndexError cannot be raised here to maintain lazy instantiation of children during traversal
+        # with self.assertRaises(IndexError):
+        #     message.oml_o33_specimen[1].oml_o33_order.oml_o33_observation_request.\
+        #         oml_o33_prior_result.oml_o33_order_prior[2].obr.obr_4.obr_4_1.to_er7()
+        # self.assertEqual(message.to_er7(), msg)
 
     def test_parse_message_with_repetition_segments_and_groups(self):
         msg = self._get_multiple_segments_groups_message()
@@ -185,13 +190,13 @@ class TestParser(unittest.TestCase):
     def test_parse_message_missing_structure(self):
         msh = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000|||0123456789|P|2.6||||AL\r'
         pid = 'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r'
-        msg = msh+pid
+        msg = msh + pid
         parse_message(msg)
 
     def test_parse_message_missing_structure_strict(self):
         msh = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000|||0123456789|P|2.6||||AL\r'
         pid = 'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r'
-        msg = msh+pid
+        msg = msh + pid
         self.assertRaises(OperationNotAllowed, parse_message, msg, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_parse_message_incomplete_structure(self):
@@ -204,7 +209,7 @@ class TestParser(unittest.TestCase):
         msh = 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.5||||AL\r'
         pid = 'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M'
 
-        segments_str = msh+pid
+        segments_str = msh + pid
         segments = parse_segments(segments_str)
         self.assertEqual(msh.replace('\r',''), segments[0].to_er7())
         self.assertEqual(pid, segments[1].to_er7())
