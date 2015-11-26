@@ -1986,7 +1986,7 @@ FIELDS = {
     'TCD_6': ('leaf', None, 'ID', 'AUTOMATIC_REPEAT_ALLOWED', 'HL70136', -1),
     'TCD_7': ('leaf', None, 'ID', 'REFLEX_ALLOWED', 'HL70136', -1),
     'TCD_8': ('sequence', DATATYPES_STRUCTS['CE'], 'CE', 'ANALYTE_REPEAT_STATUS', 'HL70389', -1),
-    'TQ1_1': ('sequence', None, 'SI', 'SET_ID_TQ1', None, -1),
+    'TQ1_1': ('leaf', None, 'SI', 'SET_ID_TQ1', None, -1),
     'TQ1_2': ('sequence', DATATYPES_STRUCTS['CQ'], 'CQ', 'QUANTITY', None, -1),
     'TQ1_3': ('sequence', DATATYPES_STRUCTS['RPT'], 'RPT', 'REPEAT_PATTERN', 'HL70335', -1),
     'TQ1_4': ('leaf', None, 'TM', 'EXPLICIT_TIME', None, -1),
