@@ -24,6 +24,8 @@ Documentation can be found [here](http://hl7apy.org).
 Installation
 ------------
 
+[![Join the chat at https://gitter.im/crs4/hl7apy](https://badges.gitter.im/crs4/hl7apy.svg)](https://gitter.im/crs4/hl7apy?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 HL7apy is platform independent and supports Python 2.7.
 
 To install it get the latest release from [here](http://sourceforge.net/projects/hl7apy/files/) and launch the following command:
