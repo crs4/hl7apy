@@ -21,7 +21,10 @@
 
 import re
 import socket
-from SocketServer import StreamRequestHandler, TCPServer, ThreadingMixIn
+try:
+    from SocketServer import StreamRequestHandler, TCPServer, ThreadingMixIn
+except ImportError:
+    from socketserver import StreamRequestHandler, TCPServer, ThreadingMixIn
 
 from hl7apy.parser import get_message_type
 from hl7apy.exceptions import HL7apyException, ParserError
@@ -51,10 +54,10 @@ class _MLLPRequestHandler(StreamRequestHandler):
         StreamRequestHandler.__init__(self, *args, **kwargs)
 
     def setup(self):
-        self.sb = "\x0b"
-        self.eb = "\x1c"
-        self.cr = "\x0d"
-        self.validator = re.compile(self.sb + "(([^\r]+\r)*([^\r]+\r?))" + self.eb + self.cr)
+        self.sb = u"\x0b"
+        self.eb = u"\x1c"
+        self.cr = u"\x0d"
+        self.validator = re.compile(self.sb + u"(([^\r]+\r)*([^\r]+\r?))" + self.eb + self.cr)
         self.handlers = self.server.handlers
         self.timeout = self.server.timeout
 
@@ -63,7 +66,7 @@ class _MLLPRequestHandler(StreamRequestHandler):
     def handle(self):
         end_seq = "{}{}".format(self.eb, self.cr)
         try:
-            line = self.request.recv(3)
+            line = self.request.recv(3).decode()
         except socket.timeout:
             self.request.close()
             return
@@ -77,7 +80,7 @@ class _MLLPRequestHandler(StreamRequestHandler):
                 char = self.rfile.read(1)
                 if not char:
                     break
-                line += char
+                line += char.decode()
             except socket.timeout:
                 self.request.close()
                 return
@@ -90,7 +93,7 @@ class _MLLPRequestHandler(StreamRequestHandler):
                 self.request.close()
             else:
                 # encode the response
-                self.wfile.write(response)
+                self.wfile.write(response.encode())
         self.request.close()
 
     def _extract_hl7_message(self, msg):

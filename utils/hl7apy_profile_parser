@@ -20,13 +20,20 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import print_function
 import sys
 import os
 import re
 from optparse import OptionParser
 from lxml import objectify
 import collections
-import cPickle
+
+
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
+
 
 
 class ProfileParser(object):
@@ -129,8 +136,8 @@ class ProfileParser(object):
         try:
             if not os.path.exists(self.output_path):
                 os.mkdir(self.output_path)
-        except Exception, ex:
-            print "Error occurred while saving the output to: ", self.output_path, ex
+        except Exception as ex:
+            print("Error occurred while saving the output to: ", self.output_path, ex, sep=' ')
             sys.exit(1)
 
         if os.path.isdir(self.input_path):
@@ -145,7 +152,7 @@ class ProfileParser(object):
             content = self.parse_profile(f)
             file_path = os.path.join(self.output_path, filename)
             with open(file_path, "wb") as output_file:
-                cPickle.dump(dict(content), output_file)
+                pickle.dump(dict(content), output_file)
 
     def parse_profile(self, profile_file):
         """
@@ -157,14 +164,14 @@ class ProfileParser(object):
             schema_path = os.path.join(self.input_path, profile_file)
             with open(schema_path) as xml_file:
                 data = xml_file.read()
-        except Exception, ex:
-            print "Error occurred while opening the message profile file: ", ex
+        except Exception as ex:
+            print("Error occurred while opening the message profile file: ", ex, sep=' ')
             sys.exit(1)
 
         try:
             f = objectify.XML(data)
-        except Exception, ex:
-            print "Invalid XML file: ", profile_file, ex
+        except Exception as ex:
+            print("Invalid XML file: ", profile_file, ex, sep=' ')
             sys.exit(1)
 
         message_structure = f.HL7v2xStaticDef.get('MsgStructID')
