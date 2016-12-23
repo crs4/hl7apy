@@ -22,7 +22,6 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-from io import BytesIO
 import re
 import socket
 try:
@@ -72,28 +71,27 @@ class _MLLPRequestHandler(StreamRequestHandler):
 
     def handle(self):
         end_seq = self.eb + self.cr
-        io = BytesIO()
         try:
-            io.write(self.request.recv(3))
+            line = self.request.recv(3)
         except socket.timeout:
             self.request.close()
             return
 
-        if io.getvalue()[:1] != self.sb:  # First MLLP char
+        if line[:1] != self.sb:  # First MLLP char
             self.request.close()
             return
 
-        while io.getvalue()[-2:] != end_seq:
+        while line[-2:] != end_seq:
             try:
                 char = self.rfile.read(1)
                 if not char:
                     break
-                io.write(char)
+                line += char
             except socket.timeout:
                 self.request.close()
                 return
 
-        message = self._extract_hl7_message(io.getvalue().decode(self.encoding))
+        message = self._extract_hl7_message(line.decode(self.encoding))
         if message is not None:
             try:
                 response = self._route_message(message)
