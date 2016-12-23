@@ -118,7 +118,7 @@ class TestMLLPWithErrorHandler(unittest.TestCase):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             sock.connect((HOST, PORT))
-            sock.sendall(msg)
+            sock.sendall(msg.encode('utf-8'))
             res = []
             while True:
                 received = sock.recv(1)
@@ -128,7 +128,7 @@ class TestMLLPWithErrorHandler(unittest.TestCase):
         finally:
             sock.close()
 
-        return ''.join(res)
+        return b''.join(res).decode('utf-8')
 
     def test_good_message(self):
         msg = '\x0b{}\x1c\x0d'.format(PDQ_REQ)
@@ -174,7 +174,7 @@ class TestMLLPWithoutErrorHandler(unittest.TestCase):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             sock.connect((HOST, PORT + 1))
-            sock.sendall(msg)
+            sock.sendall(msg.encode('utf-8'))
             res = []
             while True:
                 received = sock.recv(1)
@@ -184,7 +184,7 @@ class TestMLLPWithoutErrorHandler(unittest.TestCase):
         finally:
             sock.close()
 
-        return ''.join(res)
+        return b''.join(res).decode('utf-8')
 
     def test_good_message(self):
         msg = '\x0b{}\x1c\x0d'.format(PDQ_REQ)
