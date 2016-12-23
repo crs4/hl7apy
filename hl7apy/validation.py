@@ -120,10 +120,10 @@ class Validator(object):
 
         def _get_valid_children_info(ref, is_profile):
             if is_profile:
-                valid_children = set([c[2] for c in ref[2]])
+                valid_children = {c[2] for c in ref[2]}
                 children_refs = ref[2]
             else:
-                valid_children = set([c[0] for c in ref[1]])
+                valid_children = {c[0] for c in ref[1]}
                 children_refs = ref[1]
             return valid_children, children_refs
 
@@ -148,7 +148,7 @@ class Validator(object):
                 ref = ref[1:]  # ref[0] is 'mp'
 
             if ref[0] in ('sequence', 'choice'):
-                element_children = set([c.name for c in el.children if not c.is_z_element()])
+                element_children = {c.name for c in el.children if not c.is_z_element()}
                 valid_children, valid_children_refs = _get_valid_children_info(ref, is_profile)
                 z_children = [c for c in el.children if c.is_z_element()]
 
