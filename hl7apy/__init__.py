@@ -302,7 +302,7 @@ def find_reference(name, element_types, version):
     ...
     ChildNotFound: No child named ADT_A01
     >>> r = find_reference('ADT_A01', (Message,),  '2.5')
-    >>> print(r['name'], r['cls'])
+    >>> print('%s %s' % (r['name'], r['cls']))
     ADT_A01 <class 'hl7apy.core.Message'>
     """
     lib = load_library(version)
