@@ -156,3 +156,10 @@ def _datetime_obj_factory(value, fmt):
     except ValueError:
         raise ValueError('{0} is not an HL7 valid date value'.format(value))
     return dt_value
+
+
+def iteritems(d):
+    if hasattr(d, 'iteritems'):
+        return d.iteritems()
+    else:
+        return d.items()

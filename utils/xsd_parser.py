@@ -27,6 +27,7 @@ import re
 from optparse import OptionParser
 from lxml import objectify
 import pprint
+from hl7apy.utils import iteritems
 
 
 class XSDParser(object):
@@ -66,7 +67,7 @@ class XSDParser(object):
         parse_res = self.parse_schema("datatypes.xsd")
         content, types = parse_res[0], parse_res[2]
         content.update(types)
-        content = {k: v for k, v in content.iteritems() if not k.endswith("_CONTENT")}
+        content = {k: v for k, v in iteritems(content) if not k.endswith("_CONTENT")}
         self.generate_module("datatypes.py", content)
 
     def parse_messages(self):
@@ -83,7 +84,7 @@ class XSDParser(object):
             message, ext = os.path.splitext(f)
             content = self.parse_schema(f)[0]
             message_def[message] = content[message.upper()]
-            groups.update(g for g in content.iteritems() if g[0] != message)
+            groups.update(g for g in iteritems(content) if g[0] != message)
         self.generate_module("messages.py", message_def)
         self.generate_module("groups.py", groups)
 
@@ -133,7 +134,7 @@ class XSDParser(object):
 
     def reduce_content_size(self, content):
         to_delete = []
-        for key, value in content.iteritems():
+        for key, value in iteritems(content):
             if value is not None:
                 if value['type'] in ('sequence', 'choice') and value.get('content'):
                     try:
