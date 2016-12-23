@@ -34,7 +34,7 @@ class XSDParser(object):
         self.output_path = output_path
         try:
             methods = [getattr(self, p) for p in to_parse]
-        except Exception, ex:
+        except Exception as ex:
             print "Invalid parsing options.", ex
             sys.exit(1)
         for m in methods:
@@ -95,13 +95,13 @@ class XSDParser(object):
             schema_path = os.path.join(self.input_path, schema_file)
             with open(schema_path) as xml_file:
                 data = xml_file.read()
-        except Exception, ex:
+        except Exception as ex:
             print "Error occurred while opening the XSD file: ", ex
             sys.exit(1)
 
         try:
             f = objectify.XML(data)
-        except Exception, ex:
+        except Exception as ex:
             print "Invalid XSD file: ", schema_file, ex
             sys.exit(1)
 
@@ -112,7 +112,7 @@ class XSDParser(object):
 
         try:
             types = [Node(c).to_dict() for c in f.complexType]
-        except Exception, ex:
+        except Exception as ex:
             complex_types = {}  # no xsd:complexType found,
         else:
             complex_types = dict((node.get('name'), node.get('content')) for node in types)
@@ -125,7 +125,7 @@ class XSDParser(object):
                     if content.get('type') == 'annotation':
                         content = node['content']
                 elements[node.get('name')] = content
-        except Exception, ex:
+        except Exception as ex:
             elements = {}  # no xsd:element found
         return elements, includes, complex_types
 
@@ -163,7 +163,7 @@ class XSDParser(object):
             with open(module_path, "w") as output_file:
                 output_file.write("{0} = ".format(constant_name.upper()))
                 pprint.pprint(module_content, output_file)
-        except Exception, ex:
+        except Exception as ex:
             print "Error occurred while saving the output to: ", module_name, ex
             sys.exit(1)
 
