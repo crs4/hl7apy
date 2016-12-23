@@ -32,6 +32,7 @@
 
 """
 
+from __future__ import absolute_import
 import re
 import numbers
 from datetime import datetime

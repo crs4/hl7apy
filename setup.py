@@ -21,6 +21,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+from __future__ import absolute_import
 from distutils.core import setup
 from distutils.errors import DistutilsSetupError
 
