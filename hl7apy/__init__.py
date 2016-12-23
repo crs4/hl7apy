@@ -24,7 +24,10 @@ import os
 import sys
 import collections
 import importlib
-import cPickle
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 
 from hl7apy.exceptions import UnsupportedVersion, InvalidEncodingChars, UnknownValidationLevel
 from hl7apy.consts import DEFAULT_ENCODING_CHARS, DEFAULT_VERSION, VALIDATION_LEVEL
@@ -309,7 +312,7 @@ def find_reference(name, element_types, version):
 
 def load_message_profile(path):
     with open(path) as f:
-        mp = cPickle.load(f)
+        mp = pickle.load(f)
 
     return mp
 
