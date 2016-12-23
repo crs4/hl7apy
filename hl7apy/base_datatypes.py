@@ -37,6 +37,7 @@ import re
 import numbers
 from datetime import datetime
 from decimal import Decimal
+from functools import cmp_to_key
 
 from hl7apy import get_default_encoding_chars, get_default_validation_level
 from hl7apy.exceptions import MaxLengthReached, InvalidHighlightRange, InvalidDateFormat, \
@@ -146,7 +147,7 @@ class TextualDataType(BaseDataType):
                 else:
                     raise InvalidHighlightRange(x, y)
 
-            self.highlights = sorted(self.highlights, cmp=_sort_highlights)
+            self.highlights = sorted(self.highlights, key=cmp_to_key(_sort_highlights))
             words = list(value)
             offset = 0
             for hl in self.highlights:
