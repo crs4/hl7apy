@@ -48,6 +48,12 @@ try:
 except NameError:
     basestring = (str, bytes)
 
+try:
+    xrange = xrange
+except NameError:
+    xrange = range
+
+
 def is_base_datatype(datatype, version=None):
     """
     Check if the given datatype is a base datatype of the specified version

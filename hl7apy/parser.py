@@ -29,6 +29,11 @@ from hl7apy.core import is_base_datatype, Message, Group, Segment, Field, Compon
 from hl7apy.exceptions import InvalidName, ParserError, InvalidEncodingChars, MessageProfileNotFound
 from hl7apy.validation import Validator
 
+try:
+    xrange = xrange
+except NameError:
+    xrange = range
+
 
 def parse_message(message, validation_level=None, find_groups=True, message_profile=None, report_file=None,
                   force_validation=False):
