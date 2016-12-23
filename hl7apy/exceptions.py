@@ -32,7 +32,7 @@ class ParserError(HL7apyException):
     Error during parsing
 
     >>> from hl7apy.parser import parse_message
-    >>> m = parse_message('NOTHL7')
+    >>> m = parse_message('NOTHL7')  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
     ParserError: Invalid message
@@ -51,7 +51,7 @@ class ValidationError(HL7apyException):
     >>> pid = 'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||' \
     '555-555-2004~444-333-222|||M\\r'
     >>> message = msh + evn + pid
-    >>> parse_message(message, validation_level=VALIDATION_LEVEL.STRICT, force_validation=True)
+    >>> parse_message(message, validation_level=VALIDATION_LEVEL.STRICT, force_validation=True)  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
     ValidationError: Missing required child ADT_A01.PV1
@@ -69,7 +69,7 @@ class UnsupportedVersion(HL7apyException):
     Given version is not supported
 
     >>> from hl7apy import set_default_version
-    >>> set_default_version("2.0")
+    >>> set_default_version("2.0")  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
     UnsupportedVersion: The version 2.0 is not supported
@@ -87,7 +87,7 @@ class ChildNotFound(HL7apyException):
 
     >>> from hl7apy.core import Segment, Field
     >>> s = Segment('MSH')
-    >>> s.unknown = Field()
+    >>> s.unknown = Field()  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
     ChildNotFound: No child named UNKNOWN
@@ -105,7 +105,7 @@ class ChildNotValid(HL7apyException):
 
     >>> from hl7apy.core import Segment, Field
     >>> s = Segment('PID', validation_level=1)
-    >>> s.pid_1 = Field('PID_34')
+    >>> s.pid_1 = Field('PID_34')  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
     ChildNotValid: <Field PID_34 (LAST_UPDATE_FACILITY) of type HD> is not a valid child for PID_1
@@ -125,7 +125,7 @@ class UnknownValidationLevel(HL7apyException):
     It should be one of those defined in :class:`VALIDATION_LEVEL <hl7apy.consts.VALIDATION_LEVEL>`.
 
     >>> from hl7apy import set_default_validation_level
-    >>> set_default_validation_level(3)
+    >>> set_default_validation_level(3)  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
     UnknownValidationLevel
@@ -137,7 +137,7 @@ class OperationNotAllowed(HL7apyException):
     Generic exception raised when something is not allowed
 
     >>> from hl7apy.core import Segment
-    >>> s = Segment()
+    >>> s = Segment()  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
     OperationNotAllowed: Cannot instantiate an unknown Segment
@@ -153,7 +153,7 @@ class MaxChildLimitReached(HL7apyException):
 
     >>> from hl7apy.core import Message, Segment
     >>> m = Message("OML_O33", validation_level=1)
-    >>> m.add(Segment('MSH'))
+    >>> m.add(Segment('MSH'))  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
     MaxChildLimitReached: Cannot add <Segment MSH>: max limit (1) reached for <Message OML_O33>
@@ -174,7 +174,7 @@ class MaxLengthReached(HL7apyException):
     >>> from hl7apy.v2_5 import get_base_datatypes
     >>> from hl7apy.consts import VALIDATION_LEVEL
     >>> SI = get_base_datatypes()['SI']
-    >>> st = SI(value=11111, validation_level=VALIDATION_LEVEL.STRICT)
+    >>> st = SI(value=11111, validation_level=VALIDATION_LEVEL.STRICT)  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
     MaxLengthReached: The value 11111 exceed the max length: 4
@@ -192,7 +192,7 @@ class InvalidName(HL7apyException):
     Raised if the reference for the given class/name has not been found
 
     >>> from hl7apy.core import Message
-    >>> Message('Unknown')
+    >>> Message('Unknown')  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
     InvalidName: Invalid name for Message: UNKNOWN
@@ -212,7 +212,7 @@ class InvalidDataType(HL7apyException):
     >>> from hl7apy.factories import datatype_factory
     >>> datatype_factory('TN', '11 123456', version="2.3") #doctest: +ELLIPSIS
     <hl7apy.base_datatypes.TN object at 0x...>
-    >>> datatype_factory('TN', '11 123456', version="2.5")
+    >>> datatype_factory('TN', '11 123456', version="2.5")  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
     InvalidDataType: The datatype TN is not available for the given HL7 version
@@ -232,7 +232,7 @@ class InvalidHighlightRange(HL7apyException):
 
     >>> from hl7apy.v2_5 import ST
     >>> s = ST(value='some useful information', highlights=((5, 3),))
-    >>> s.to_er7()
+    >>> s.to_er7()  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
     InvalidHighlightRange: Invalid highlight range: 5 - 3
@@ -250,7 +250,7 @@ class InvalidDateFormat(HL7apyException):
     Raised when the output format for a :class:`hl7apy.base_datatypes.DateTimeDataType` is not valid
 
     >>> from hl7apy.v2_5 import DTM
-    >>> DTM(value='10102013', out_format="%d%m%Y")
+    >>> DTM(value='10102013', out_format="%d%m%Y")  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
     InvalidDateFormat: Invalid date format: %d%m%Y
@@ -267,7 +267,7 @@ class InvalidDateOffset(HL7apyException):
     Raised when the offset for a :class:`TM` or :class:`hl7apy.base_datatypes.DTM` is not valid
 
     >>> from hl7apy.v2_5 import DTM
-    >>> DTM(value='20131010', out_format="%Y%m%d", offset='+1300')
+    >>> DTM(value='20131010', out_format="%Y%m%d", offset='+1300')  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
     InvalidDateOffset: Invalid date offset: +1300
@@ -285,7 +285,7 @@ class InvalidMicrosecondsPrecision(HL7apyException):
 
     >>> from hl7apy.v2_5 import get_base_datatypes
     >>> DTM = get_base_datatypes()['DTM']
-    >>> DTM(value='20131010', microsec_precision=5)
+    >>> DTM(value='20131010', microsec_precision=5)  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
     InvalidMicrosecondsPrecision: Invalid microseconds precision. It must be between 1 and 4
@@ -302,7 +302,7 @@ class InvalidEncodingChars(HL7apyException):
     >>> from hl7apy.core import Message
     >>> encoding_chars = {'GROUP': '\\r', 'SEGMENT': '\\r', 'COMPONENT': '^', \
                           'SUBCOMPONENT': '&', 'REPETITION': '~', 'ESCAPE': '\\\\'}
-    >>> m = Message('ADT_A01', encoding_chars=encoding_chars)
+    >>> m = Message('ADT_A01', encoding_chars=encoding_chars)  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
     InvalidEncodingChars: Missing required encoding chars
