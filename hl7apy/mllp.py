@@ -63,7 +63,7 @@ class _MLLPRequestHandler(StreamRequestHandler):
         self.eb = b"\x1c"
         self.cr = b"\x0d"
         self.validator = re.compile(
-            self.sb.decode('ascii') + r"(([^\r]+\r)*([^\r]+\r?))" + self.eb.decode('ascii') + self.cr.decode('ascii'))
+            ''.join([self.sb.decode('ascii'), r"(([^\r]+\r)*([^\r]+\r?))", self.eb.decode('ascii'), self.cr.decode('ascii')]))
         self.handlers = self.server.handlers
         self.timeout = self.server.timeout
 

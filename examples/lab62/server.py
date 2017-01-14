@@ -25,9 +25,9 @@ from __future__ import print_function
 import re
 
 try:
-    import SocketServer as socketserver
-except ImportError:
-    import socketserver
+    from SocketServer as StreamRequestHandler, TCPServer
+except ImportError:  # Python 3
+    from socketserver as StreamRequestHandler, TCPServer
 
 from actor import LIP
 
@@ -54,7 +54,7 @@ class MLLProtocol(object):
             message = matched.groups()[0]
         return message
 
-class MLLPServer(socketserver.StreamRequestHandler):
+class MLLPServer(StreamRequestHandler):
     """
     Simplistic implementation of a TCP server implementing the MLLP protocol
 
@@ -81,5 +81,5 @@ class MLLPServer(socketserver.StreamRequestHandler):
 if __name__ == "__main__":
     HOST, PORT = "localhost", 6000
 
-    server = six.moves.socketserver.TCPServer((HOST, PORT), MLLPServer)
+    server = TCPServer((HOST, PORT), MLLPServer)
     server.serve_forever()
