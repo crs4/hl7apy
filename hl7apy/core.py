@@ -711,14 +711,14 @@ class Element(object):
             If it is ``None`` it uses :attr:`self.encoding_chars`,
             which by default is the ones return by
             :func:`get_default_encoding_chars <hl7apy.get_default_encoding_chars>`
-
+values
         :rtype: ``str``
         :return: the HL7 representation of the :class:`Element <hl7apy.core.Element>`
         """
         if encoding_chars is None:
             encoding_chars = self.encoding_chars
 
-        child_class = self.child_classes.values()[0]
+        child_class = list(self.child_classes.values())[0]
         separator = encoding_chars.get(child_class.__name__.upper(), '')
 
         s = []
@@ -935,7 +935,7 @@ class SupportComplexDataType(Element):
         if isinstance(value, BaseDataType):
             if not is_base_datatype(self.datatype, self.version):
                 raise ChildNotValid(value, self)
-            cls = self.child_classes.values()[0]
+            cls = list(self.child_classes.values())[0]
             child = cls(datatype=value.classname, version=self.version,
                         validation_level=self.validation_level)
             child.value = value
@@ -1063,7 +1063,7 @@ class CanBeVaries(Element):
     def _find_structure(self, reference=None):
         if self.name is not None or reference is not None:
             structure = ElementFinder.get_structure(self, reference)
-            for k, v in structure.iteritems():
+            for k, v in iteritems(structure):
                 setattr(self, k, v)
 
     def is_unknown(self):

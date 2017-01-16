@@ -271,7 +271,7 @@ def load_reference(name, element_type, version):
     sequence
     >>> r = load_reference('MSH_3', 'Field', '2.5')
     >>> print(r[0])
-    leaf
+    sequence
     """
     lib = load_library(version)
     ref = lib.get(name, element_type)

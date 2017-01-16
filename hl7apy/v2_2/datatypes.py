@@ -19,6 +19,8 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from hl7apy.utils import iteritems
+
 DATATYPES = {
     'AD_1': ['leaf', None, 'ST', 'STREET_ADDRESS', None, -1],
     'AD_2': ['leaf', None, 'ST', 'OTHER_DESIGNATION', None, -1],
@@ -427,6 +429,6 @@ DATATYPES_STRUCTS = {
            ('TS_2', DATATYPES['TS_2'], (0, 1), 'CMP'),),
 }
 
-for k, v in DATATYPES.iteritems():
+for k, v in iteritems(DATATYPES):
     if v[0] == 'sequence':
         v[1] = DATATYPES_STRUCTS[v[2]]

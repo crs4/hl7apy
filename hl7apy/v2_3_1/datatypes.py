@@ -1,3 +1,4 @@
+from hl7apy.utils import iteritems
 
 DATATYPES = {
     'AD_1': ['leaf', None, 'ST', 'STREET_ADDRESS', None, -1],
@@ -867,6 +868,6 @@ DATATYPES_STRUCTS = {
            ('XTN_9', DATATYPES['XTN_9'], (0, 1), 'CMP'),),
 }
 
-for k, v in DATATYPES.iteritems():
+for k, v in iteritems(DATATYPES):
     if v[0] == 'sequence':
         v[1] = DATATYPES_STRUCTS[v[2]]

@@ -3,9 +3,9 @@ from .segments import SEGMENTS
 
 MESSAGES = {
     'ACK': ('sequence',
-                (('MSH', SEGMENTS['MSH'], (1, 1), 'SEG'),
-                 ('MSA', SEGMENTS['MSA'], (1, 1), 'SEG'),
-                 ('ERR', SEGMENTS['ERR'], (0, 1), 'SEG'),)),
+            (('MSH', SEGMENTS['MSH'], (1, 1), 'SEG'),
+             ('MSA', SEGMENTS['MSA'], (1, 1), 'SEG'),
+             ('ERR', SEGMENTS['ERR'], (0, 1), 'SEG'),)),
     'ADR_A19': ('sequence',
                 (('MSH', SEGMENTS['MSH'], (1, 1), 'SEG'),
                  ('MSA', SEGMENTS['MSA'], (1, 1), 'SEG'),
@@ -320,7 +320,8 @@ MESSAGES = {
                  ('DSC', SEGMENTS['DSC'], (0, 1), 'SEG'),)),
     'NMD_N02': ('sequence',
                 (('MSH', SEGMENTS['MSH'], (1, 1), 'SEG'),
-                 ('NMD_N02_CLOCK_AND_STATS_WITH_NOTES', GROUPS['NMD_N02_CLOCK_AND_STATS_WITH_NOTES'], (1, -1), 'GRP'),)),
+                 (
+                 'NMD_N02_CLOCK_AND_STATS_WITH_NOTES', GROUPS['NMD_N02_CLOCK_AND_STATS_WITH_NOTES'], (1, -1), 'GRP'),)),
     'NMQ_N01': ('sequence',
                 (('MSH', SEGMENTS['MSH'], (1, 1), 'SEG'),
                  ('NMQ_N01_QRY_WITH_DETAIL', GROUPS['NMQ_N01_QRY_WITH_DETAIL'], (0, 1), 'GRP'),
@@ -330,7 +331,8 @@ MESSAGES = {
                  ('MSA', SEGMENTS['MSA'], (1, 1), 'SEG'),
                  ('ERR', SEGMENTS['ERR'], (0, -1), 'SEG'),
                  ('QRD', SEGMENTS['QRD'], (0, 1), 'SEG'),
-                 ('NMR_N01_CLOCK_AND_STATS_WITH_NOTES_ALT', GROUPS['NMR_N01_CLOCK_AND_STATS_WITH_NOTES_ALT'], (1, -1), 'GRP'),)),
+                 ('NMR_N01_CLOCK_AND_STATS_WITH_NOTES_ALT', GROUPS['NMR_N01_CLOCK_AND_STATS_WITH_NOTES_ALT'], (1, -1),
+                  'GRP'),)),
     'OMD_O01': ('sequence',
                 (('MSH', SEGMENTS['MSH'], (1, 1), 'SEG'),
                  ('NTE', SEGMENTS['NTE'], (0, -1), 'SEG'),

@@ -1,3 +1,4 @@
+from hl7apy.utils import iteritems
 from .segments import SEGMENTS
 
 GROUPS = {
@@ -2828,7 +2829,7 @@ GROUPS = {
                 (['PID', SEGMENTS['PID'], (1, 1), 'SEG'],
                  ['NK1', SEGMENTS['NK1'], (0, -1), 'SEG'],)),
 }
-for k, v in GROUPS.iteritems():
+for k, v in iteritems(GROUPS):
     for item in v[1]:
         if item[3] == 'GRP':
             item[1] = GROUPS[item[0]]
