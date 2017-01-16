@@ -19,12 +19,15 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import absolute_import
+from __future__ import print_function
 import sys
 import os
 import re
 from optparse import OptionParser
 from lxml import objectify
 import pprint
+from hl7apy.utils import iteritems
 
 
 class XSDParser(object):
@@ -34,8 +37,8 @@ class XSDParser(object):
         self.output_path = output_path
         try:
             methods = [getattr(self, p) for p in to_parse]
-        except Exception, ex:
-            print "Invalid parsing options.", ex
+        except Exception as ex:
+            print("Invalid parsing options.", ex)
             sys.exit(1)
         for m in methods:
             m()
@@ -64,7 +67,7 @@ class XSDParser(object):
         parse_res = self.parse_schema("datatypes.xsd")
         content, types = parse_res[0], parse_res[2]
         content.update(types)
-        content = {k: v for k, v in content.iteritems() if not k.endswith("_CONTENT")}
+        content = {k: v for k, v in iteritems(content) if not k.endswith("_CONTENT")}
         self.generate_module("datatypes.py", content)
 
     def parse_messages(self):
@@ -81,7 +84,7 @@ class XSDParser(object):
             message, ext = os.path.splitext(f)
             content = self.parse_schema(f)[0]
             message_def[message] = content[message.upper()]
-            groups.update(g for g in content.iteritems() if g[0] != message)
+            groups.update(g for g in iteritems(content) if g[0] != message)
         self.generate_module("messages.py", message_def)
         self.generate_module("groups.py", groups)
 
@@ -95,14 +98,14 @@ class XSDParser(object):
             schema_path = os.path.join(self.input_path, schema_file)
             with open(schema_path) as xml_file:
                 data = xml_file.read()
-        except Exception, ex:
-            print "Error occurred while opening the XSD file: ", ex
+        except Exception as ex:
+            print("Error occurred while opening the XSD file: ", ex)
             sys.exit(1)
 
         try:
             f = objectify.XML(data)
-        except Exception, ex:
-            print "Invalid XSD file: ", schema_file, ex
+        except Exception as ex:
+            print("Invalid XSD file: ", schema_file, ex)
             sys.exit(1)
 
         try:
@@ -112,7 +115,7 @@ class XSDParser(object):
 
         try:
             types = [Node(c).to_dict() for c in f.complexType]
-        except Exception, ex:
+        except Exception as ex:
             complex_types = {}  # no xsd:complexType found,
         else:
             complex_types = dict((node.get('name'), node.get('content')) for node in types)
@@ -125,13 +128,13 @@ class XSDParser(object):
                     if content.get('type') == 'annotation':
                         content = node['content']
                 elements[node.get('name')] = content
-        except Exception, ex:
+        except Exception as ex:
             elements = {}  # no xsd:element found
         return elements, includes, complex_types
 
     def reduce_content_size(self, content):
         to_delete = []
-        for key, value in content.iteritems():
+        for key, value in iteritems(content):
             if value is not None:
                 if value['type'] in ('sequence', 'choice') and value.get('content'):
                     try:
@@ -163,8 +166,8 @@ class XSDParser(object):
             with open(module_path, "w") as output_file:
                 output_file.write("{0} = ".format(constant_name.upper()))
                 pprint.pprint(module_content, output_file)
-        except Exception, ex:
-            print "Error occurred while saving the output to: ", module_name, ex
+        except Exception as ex:
+            print("Error occurred while saving the output to: ", module_name, ex)
             sys.exit(1)
 
 
