@@ -72,7 +72,7 @@ class _MLLPRequestHandler(StreamRequestHandler):
     def handle(self):
         end_seq = self.eb + self.cr
         try:
-            line = self.request.recv(3)
+            line = self.request.recv(3).decode()
         except socket.timeout:
             self.request.close()
             return
@@ -86,7 +86,7 @@ class _MLLPRequestHandler(StreamRequestHandler):
                 char = self.rfile.read(1)
                 if not char:
                     break
-                line += char
+                line += char.decode()
             except socket.timeout:
                 self.request.close()
                 return

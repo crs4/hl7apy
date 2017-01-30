@@ -19,7 +19,8 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
+
 import os
 import sys
 import collections
@@ -156,10 +157,13 @@ def set_default_version(version):
     :param version: the new default version (e.g. ``2.6``)
     :raises: :class:`hl7apy.exceptions.UnsupportedVersion` if the given version is unsupported
 
-    >>> set_default_version('22')  # doctest: +IGNORE_EXCEPTION_DETAIL
-    Traceback (most recent call last):
-        ...
-    UnsupportedVersion: The version 22 is not supported
+    >>> from hl7apy.exceptions import UnsupportedVersion
+    >>> try:
+    ...     set_default_version('22')
+    ...     raise AssertionError('UnsupportedVersion exception was not raised')
+    ... except UnsupportedVersion as ex:
+    ...     print(ex)
+    The version 22 is not supported
     >>> set_default_version('2.3')
     >>> print(get_default_version())
     2.3
@@ -199,10 +203,13 @@ def set_default_encoding_chars(encoding_chars):
     |ESCAPE        |``\\``            |
     +--------------+-----------------+
 
-    >>> set_default_encoding_chars({'FIELD': '!'})  # doctest: +IGNORE_EXCEPTION_DETAIL
-    Traceback (most recent call last):
-        ...
-    InvalidEncodingChars: Missing required encoding chars
+    >>> from hl7apy.exceptions import InvalidEncodingChars
+    >>> try:
+    ...     set_default_encoding_chars({'FIELD': '!'})
+    ...     raise AssertionError('InvalidEncodingChars exception was not raised')
+    ... except InvalidEncodingChars as ex:
+    ...     print(ex)
+    Missing required encoding chars
     >>> set_default_encoding_chars({'FIELD': '!', 'COMPONENT': 'C', 'SUBCOMPONENT': 'S', \
                                     'REPETITION': 'R', 'ESCAPE': '\\\\'})
     >>> print(get_default_encoding_chars()['FIELD'])
@@ -262,10 +269,13 @@ def load_reference(name, element_type, version):
     |              |('sequence', (<child>, (<min>, <max>), ...))|
     +--------------+--------------------------------------------+
 
-    >>> load_reference('UNKNOWN', 'Segment', '2.5')  # doctest: +IGNORE_EXCEPTION_DETAIL
-    Traceback (most recent call last):
-    ...
-    ChildNotFound: No child named UNKNOWN
+    >>> from hl7apy.exceptions import ChildNotFound
+    >>> try:
+    ...     load_reference('UNKNOWN', 'Segment', '2.5')
+    ...     raise AssertionError('ChildNotFound exception was not raised')
+    ... except ChildNotFound as ex:
+    ...     print(ex)
+    No child named UNKNOWN
     >>> r = load_reference('ADT_A01', 'Message', '2.5')
     >>> print(r[0])
     sequence
@@ -284,8 +294,8 @@ def find_reference(name, element_types, version):
 
     :type name: ``str``
     :param name: the element name to look for (e.g. 'MSH')
-    :type types: ``list`` or ``tuple``
-    :param types: the element classes where to look for the element (e.g. (Group, Segment))
+    :type element_types: ``list`` or ``tuple``
+    :param element_types: the element classes where to look for the element (e.g. (Group, Segment))
     :type version: ``str``
     :param version: the version of the library where to search the element (e.g. '2.6')
     :rtype: ``dict``
@@ -293,16 +303,21 @@ def find_reference(name, element_types, version):
     :raise: :class:`hl7apy.exceptions.ChildNotFound` if the element has not been found
 
     >>> from hl7apy.core import Message, Segment
-    >>> find_reference('UNKNOWN', (Segment, ), '2.5')  # doctest: +IGNORE_EXCEPTION_DETAIL
-    Traceback (most recent call last):
-    ...
-    ChildNotFound: No child named UNKNOWN
-    >>> find_reference('ADT_A01', (Segment,),  '2.5')  # doctest: +IGNORE_EXCEPTION_DETAIL
-    Traceback (most recent call last):
-    ...
-    ChildNotFound: No child named ADT_A01
+    >>> from hl7apy.exceptions import ChildNotFound
+    >>> try:
+    ...     find_reference('UNKNOWN', (Segment, ), '2.5')
+    ...     raise AssertionError('ChildNotFound exception was not raised')
+    ... except ChildNotFound as ex:
+    ...     print(ex)
+    No child named UNKNOWN
+    >>> try:
+    ...     find_reference('ADT_A01', (Segment,),  '2.5')
+    ...     raise AssertionError('ChildNotFound exception was not raised')
+    ... except ChildNotFound as ex:
+    ...     print(ex)
+    No child named ADT_A01
     >>> r = find_reference('ADT_A01', (Message,),  '2.5')
-    >>> print('%s %s' % (r['name'], r['cls']))
+    >>> print(r['name'], r['cls'], sep=' ')
     ADT_A01 <class 'hl7apy.core.Message'>
     """
     lib = load_library(version)

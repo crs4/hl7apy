@@ -29,6 +29,22 @@ import collections
 import datetime
 from itertools import takewhile
 import importlib
+import sys
+
+
+if sys.version_info[0] <= 2:
+    string_types = basestring
+    range_func = xrange
+
+    def iteritems(d, **kw):
+        return d.iteritems(**kw)
+else:
+    string_types = str
+    range_func = range
+
+    def iteritems(d, **kw):
+        return iter(d.items(**kw))
+
 
 from hl7apy import get_default_version, get_default_encoding_chars, \
     get_default_validation_level, check_validation_level, \
@@ -302,7 +318,7 @@ class ElementList(collections.MutableSequence):
         reference = None if name is None else self.element.find_child_reference(name)
         child_ref, child_name = (None, None) if reference is None else (reference['ref'], reference['name'])
 
-        if isinstance(value, basestring):  # if the value is a basestring, parse it
+        if isinstance(value, string_types):  # if the value is a string_types, parse it
             child = self.element.parse_child(value, child_name=child_name, reference=child_ref)
         elif isinstance(value, Element):  # it is already an instance of Element
             child = value
@@ -1123,7 +1139,7 @@ class SubComponent(CanBeVaries):
         if value is None:
             self._value = None
         else:
-            if value and isinstance(value, basestring):
+            if value and isinstance(value, string_types):
                 self._value = datatype_factory(self.datatype, value, self.version,
                                                self.validation_level)
             elif not value or isinstance(value, BaseDataType):
@@ -1450,7 +1466,10 @@ class Field(SupportComplexDataType):
 
     def _get_children(self, trailing=False):
         if self.datatype == 'varies':
-            children = [self.children.indexes['VARIES_{0}'.format(i+1)] for i in xrange(len(self.children))]
+            children = [
+                self.children.indexes['VARIES_{0}'.format(i+1)]
+                for i in range_func(len(self.children))
+            ]
             children = _remove_trailing(children)
             children.extend([[c] for c in self.children if c.is_unknown()])
             return children
@@ -1711,7 +1730,7 @@ class Segment(Element):
     def _get_children(self, trailing=False):
         children = self.children.get_ordered_children()
         if self.allow_infinite_children:
-            for i in xrange(self._last_allowed_child_index + 1, self._last_child_index + 1):
+            for i in range_func(self._last_allowed_child_index + 1, self._last_child_index + 1):
                 children.append(self.children.indexes.get('{}_{}'.format(self.name, i), None))
         children.extend([c for c in self.children.get_children() if c[0].name in (None, 'ST')])
         if not trailing:

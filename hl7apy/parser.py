@@ -21,6 +21,7 @@
 
 from __future__ import absolute_import
 import re
+import sys
 
 from hl7apy import get_default_encoding_chars, get_default_version, \
     get_default_validation_level, check_version, check_encoding_chars, check_validation_level
@@ -33,6 +34,12 @@ try:
     xrange = xrange
 except NameError:
     xrange = range
+
+
+if sys.version_info[0] <= 2:
+    range_func = xrange
+else:
+    range_func = range
 
 
 def parse_message(message, validation_level=None, find_groups=True, message_profile=None, report_file=None,
@@ -674,7 +681,7 @@ def create_groups(message, children, validation_level=None):
     # for each segment found in the message...
     for c in children:
         found = -1
-        for x in xrange(len(search_data['structures'])):
+        for x in range_func(len(search_data['structures'])):
             found = _find_group(c, search_data, validation_level)
             # group not found at the current level, go back to the previous level
             if found == -1:

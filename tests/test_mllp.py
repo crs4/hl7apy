@@ -21,11 +21,18 @@
 
 from __future__ import absolute_import
 import socket
+import sys
 import unittest
 from threading import Thread
 
 from hl7apy.mllp import MLLPServer, AbstractHandler
 from hl7apy.mllp import InvalidHL7Message, UnsupportedMessageType
+
+
+if sys.version_info[0] <= 2:
+    text_type = unicode
+else:
+    text_type = str
 
 
 HOST = 'localhost'
@@ -114,6 +121,8 @@ class TestMLLPWithErrorHandler(unittest.TestCase):
         stop_server(cls.server, cls.thread)
 
     def _client(self, msg):
+        if isinstance(msg, text_type):
+            msg = msg.encode()
         # establish the connection
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
@@ -124,7 +133,7 @@ class TestMLLPWithErrorHandler(unittest.TestCase):
                 received = sock.recv(1)
                 if not received:
                     break
-                res.append(received)
+                res.append(received.decode())
         finally:
             sock.close()
 
@@ -170,6 +179,8 @@ class TestMLLPWithoutErrorHandler(unittest.TestCase):
         stop_server(cls.server, cls.thread)
 
     def _client(self, msg):
+        if isinstance(msg, text_type):
+            msg = msg.encode()
         # establish the connection
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
@@ -180,7 +191,7 @@ class TestMLLPWithoutErrorHandler(unittest.TestCase):
                 received = sock.recv(1)
                 if not received:
                     break
-                res.append(received)
+                res.append(received.decode())
         finally:
             sock.close()
 

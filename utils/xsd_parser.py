@@ -19,8 +19,8 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import
-from __future__ import print_function
+from __future__ import absolute_import, print_function
+
 import sys
 import os
 import re
@@ -28,6 +28,14 @@ from optparse import OptionParser
 from lxml import objectify
 import pprint
 from hl7apy.utils import iteritems
+
+
+if sys.version_info[0] <= 2:
+    def iteritems(d, **kw):
+        return d.iteritems(**kw)
+else:
+    def iteritems(d, **kw):
+        return iter(d.items(**kw))
 
 
 class XSDParser(object):
@@ -38,7 +46,7 @@ class XSDParser(object):
         try:
             methods = [getattr(self, p) for p in to_parse]
         except Exception as ex:
-            print("Invalid parsing options.", ex)
+            print("Invalid parsing options.", ex, sep=' ')
             sys.exit(1)
         for m in methods:
             m()
@@ -99,13 +107,13 @@ class XSDParser(object):
             with open(schema_path) as xml_file:
                 data = xml_file.read()
         except Exception as ex:
-            print("Error occurred while opening the XSD file: ", ex)
+            print("Error occurred while opening the XSD file: ", ex, sep=' ')
             sys.exit(1)
 
         try:
             f = objectify.XML(data)
         except Exception as ex:
-            print("Invalid XSD file: ", schema_file, ex)
+            print("Invalid XSD file: ", schema_file, ex, sep=' ')
             sys.exit(1)
 
         try:
@@ -167,7 +175,7 @@ class XSDParser(object):
                 output_file.write("{0} = ".format(constant_name.upper()))
                 pprint.pprint(module_content, output_file)
         except Exception as ex:
-            print("Error occurred while saving the output to: ", module_name, ex)
+            print("Error occurred while saving the output to: ", module_name, ex, sep=' ')
             sys.exit(1)
 
 
