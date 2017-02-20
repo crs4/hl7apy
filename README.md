@@ -15,7 +15,7 @@ The main features includes:
 
 Currently supported HL7 versions are: 2.2, 2.3, 2.3.1, 2.4, 2.5, 2.5.1, 2.6.
 
-Current version is __1.1.2__
+Current version is __1.2.0__
 
 This project is not affiliated with the HL7 organization: the library is just consistent with their specification.
 
@@ -24,7 +24,7 @@ Documentation can be found [here](http://hl7apy.org).
 Installation
 ------------
 
-HL7apy is platform independent and supports Python 2.7.
+HL7apy is platform independent and supports Python 2.7 and Python 3.4, 3.5, 3.6.
 
 To install it get the latest release from [here](http://sourceforge.net/projects/hl7apy/files/) and launch the following command:
 
