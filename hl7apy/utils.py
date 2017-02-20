@@ -19,6 +19,7 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import absolute_import
 import re
 from datetime import datetime
 
@@ -155,3 +156,10 @@ def _datetime_obj_factory(value, fmt):
     except ValueError:
         raise ValueError('{0} is not an HL7 valid date value'.format(value))
     return dt_value
+
+
+def iteritems(d):
+    if hasattr(d, 'iteritems'):
+        return d.iteritems()
+    else:
+        return d.items()

@@ -19,7 +19,10 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os
+import re
 import sys
 import time
 from collections import defaultdict
@@ -56,6 +59,18 @@ def usage():
     print("-d ")
 
 
+def natural_sort(list_of_lists, index=0):
+    """
+    Sort the `list_of_lists` in natural order using the `index` element
+
+    Inspired from: http://stackoverflow.com/a/4836734/592289
+
+    """
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key[index])]
+    return sorted(list_of_lists, key=alphanum_key)
+
+
 def print_report(n_messages, msg_per_version, msg_per_type, exceptions,
                  elapsed_time, output_file, time_per_message, encoding_time,
                  validation_level, message_profile):
@@ -89,11 +104,11 @@ def print_report(n_messages, msg_per_version, msg_per_type, exceptions,
                     ex['type'], ex['ex'], ex['file_name'], repr(ex['msg'])))
 
             output.write("\n\nParsing time statistics:\n\n")
-            for tpm in time_per_message[vl]:
+            for tpm in natural_sort(time_per_message[vl]):
                 output.write("File: {}\tSegments: {}\tMessage Type: {}\tTime: {}\n".format(tpm[0], tpm[1], tpm[2], tpm[3]))
 
         output.write("\nEncoding  time statistics:\n\n")
-        for et in encoding_time:
+        for et in natural_sort(encoding_time):
             output.write("File: {}\tSegments: {}\tMessage Type: {}\tTime: {}\n".format(et[0], et[1], et[2], et[3]))
 
 

@@ -24,6 +24,7 @@ This module contains factory functions for hl7apy base data types.
 The functions get the value of the data type as string and return the correct object
 """
 
+from __future__ import absolute_import
 from decimal import Decimal, InvalidOperation
 from types import FunctionType
 
@@ -97,7 +98,7 @@ def datatype_factory(datatype, value, version=None, validation_level=None):
         return factory(value, validation_level=validation_level)
     except KeyError:
         raise InvalidDataType(datatype)
-    except ValueError, e:
+    except ValueError as e:
         if Validator.is_strict(validation_level):
             raise e
         # TODO: Do we really want this? In that case the parent's datatype must be changed accordingly

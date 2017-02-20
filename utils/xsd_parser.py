@@ -19,12 +19,15 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import absolute_import
+from __future__ import print_function
 import sys
 import os
 import re
 from optparse import OptionParser
 from lxml import objectify
 import pprint
+from hl7apy.utils import iteritems
 
 
 class XSDParser(object):
@@ -34,8 +37,8 @@ class XSDParser(object):
         self.output_path = output_path
         try:
             methods = [getattr(self, p) for p in to_parse]
-        except Exception, ex:
-            print "Invalid parsing options.", ex
+        except Exception as ex:
+            print("Invalid parsing options.", ex)
             sys.exit(1)
         for m in methods:
             m()
@@ -45,7 +48,7 @@ class XSDParser(object):
         Parses the segments.xsd file found in the input_path and stores
         the results in the segments.py module.
         """
-        content, includes, types = self.parse_schema("segments.xsd")
+        content = self.parse_schema("segments.xsd")[0]
         self.generate_module("segments.py", content)
 
     def parse_fields(self):
@@ -53,7 +56,7 @@ class XSDParser(object):
         Parses the fields.xsd file found in the input_path and stores
         the results in the fields.py module.
         """
-        content, includes, types = self.parse_schema("fields.xsd")
+        content = self.parse_schema("fields.xsd")[0]
         self.generate_module("fields.py", content)
 
     def parse_datatypes(self):
@@ -61,9 +64,10 @@ class XSDParser(object):
         Parses the datatypes.xsd file found in the input_path and stores
         the results in the datatypes.py module.
         """
-        content, includes, types = self.parse_schema("datatypes.xsd")
+        parse_res = self.parse_schema("datatypes.xsd")
+        content, types = parse_res[0], parse_res[2]
         content.update(types)
-        content = {k:v for k, v in content.iteritems() if not k.endswith("_CONTENT")}
+        content = {k: v for k, v in iteritems(content) if not k.endswith("_CONTENT")}
         self.generate_module("datatypes.py", content)
 
     def parse_messages(self):
@@ -71,7 +75,8 @@ class XSDParser(object):
         Retrieves XSD files list from messages.xsd for parsing and stores
         all the results in the messages.py module.
         """
-        content, includes, types = self.parse_schema("messages.xsd")
+        parse_res = self.parse_schema("messages.xsd")
+        content, includes = parse_res[0], parse_res[1]
         message_files = includes
         message_def = {}
         groups = {}
@@ -79,7 +84,7 @@ class XSDParser(object):
             message, ext = os.path.splitext(f)
             content = self.parse_schema(f)[0]
             message_def[message] = content[message.upper()]
-            groups.update(g for g in content.iteritems() if g[0] != message)
+            groups.update(g for g in iteritems(content) if g[0] != message)
         self.generate_module("messages.py", message_def)
         self.generate_module("groups.py", groups)
 
@@ -88,19 +93,19 @@ class XSDParser(object):
         Parses the given XSD file using the lxml library then returns a dictionary
         containing parsing results.
         """
-        elements = {}
+
         try:
             schema_path = os.path.join(self.input_path, schema_file)
             with open(schema_path) as xml_file:
                 data = xml_file.read()
-        except Exception, ex:
-            print "Error occurred while opening the XSD file: ", ex
+        except Exception as ex:
+            print("Error occurred while opening the XSD file: ", ex)
             sys.exit(1)
 
         try:
             f = objectify.XML(data)
-        except Exception, ex:
-            print "Invalid XSD file: ", schema_file, ex
+        except Exception as ex:
+            print("Invalid XSD file: ", schema_file, ex)
             sys.exit(1)
 
         try:
@@ -110,7 +115,7 @@ class XSDParser(object):
 
         try:
             types = [Node(c).to_dict() for c in f.complexType]
-        except Exception, ex:
+        except Exception as ex:
             complex_types = {}  # no xsd:complexType found,
         else:
             complex_types = dict((node.get('name'), node.get('content')) for node in types)
@@ -123,17 +128,18 @@ class XSDParser(object):
                     if content.get('type') == 'annotation':
                         content = node['content']
                 elements[node.get('name')] = content
-        except Exception, ex:
+        except Exception as ex:
             elements = {}  # no xsd:element found
         return elements, includes, complex_types
 
     def reduce_content_size(self, content):
         to_delete = []
-        for key, value in content.iteritems():
+        for key, value in iteritems(content):
             if value is not None:
                 if value['type'] in ('sequence', 'choice') and value.get('content'):
                     try:
-                        new_value = (value['type'], tuple((x['ref'], (x.get('min', 0), x.get('max', -1))) for x in value['content']))
+                        new_value = (value['type'],
+                                     tuple((x['ref'], (x.get('min', 0), x.get('max', -1))) for x in value['content']))
                     except:
                         new_value = None
                 elif value['type'] == 'annotation':
@@ -152,7 +158,7 @@ class XSDParser(object):
         Stores parsing results in a python module.
         """
         module_path = os.path.join(self.output_path, module_name)
-        constant_name, ext = os.path.splitext(module_name)
+        constant_name = os.path.splitext(module_name)[0]
         self.reduce_content_size(module_content)
         try:
             if not os.path.exists(self.output_path):
@@ -160,20 +166,20 @@ class XSDParser(object):
             with open(module_path, "w") as output_file:
                 output_file.write("{0} = ".format(constant_name.upper()))
                 pprint.pprint(module_content, output_file)
-        except Exception, ex:
-            print "Error occurred while saving the output to: ", module_name, ex
+        except Exception as ex:
+            print("Error occurred while saving the output to: ", module_name, ex)
             sys.exit(1)
 
 
 class Node(object):
 
-    def __init__(self, xml_node, types=[]):
+    def __init__(self, xml_node, types=None):
         """"
         Simpler representation of an XML node for storing relevant information
         from the HL7.org XSD files.
         """
         self.node = xml_node
-        self.types = types
+        self.types = types if types is not None else []
         self.tag = xml_node.tag.replace("{http://www.w3.org/2001/XMLSchema}", "")
         self.name = self._sanitize(self.node.get('name'))
         self.type = self._sanitize(self.node.get('type'))

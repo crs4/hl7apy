@@ -19,14 +19,15 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import absolute_import
 import importlib
 
-from messages import MESSAGES
-from segments import SEGMENTS
-from fields import FIELDS
-from datatypes import DATATYPES
-from groups import GROUPS
-from tables import TABLES
+from .messages import MESSAGES
+from .segments import SEGMENTS
+from .fields import FIELDS
+from .datatypes import DATATYPES
+from .groups import GROUPS
+from .tables import TABLES
 
 from hl7apy.exceptions import ChildNotFound
 
@@ -46,7 +47,7 @@ def find(name, where):
     for cls in where:
         try:
             return {'ref': get(name, cls.__name__), 'name': name, 'cls': cls}
-        except:
+        except ChildNotFound:
             pass
     raise ChildNotFound(name)
 

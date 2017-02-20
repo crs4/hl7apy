@@ -12,3 +12,8 @@ syntax: glob
 syntax: regexp
 build/
 docs/_build
+
+.cache
+.tox
+.coverage
+MANIFEST

@@ -23,6 +23,7 @@
 HL7apy - core classes
 """
 
+from __future__ import absolute_import
 import re
 import collections
 import datetime
@@ -40,6 +41,17 @@ from hl7apy.exceptions import ChildNotFound, ChildNotValid, \
 from hl7apy.factories import datatype_factory
 from hl7apy.base_datatypes import BaseDataType
 from hl7apy.consts import MLLP_ENCODING_CHARS
+from hl7apy.utils import iteritems
+
+try:
+    basestring = basestring
+except NameError:
+    basestring = (str, bytes)
+
+try:
+    xrange = xrange
+except NameError:
+    xrange = range
 
 
 def is_base_datatype(datatype, version=None):
@@ -106,12 +118,12 @@ class ElementProxy(collections.Sequence):
     in order to support the following API:
 
     >>> m = Message("OML_O33")
-    >>> print m.msh
+    >>> print(m.msh)
     [<Segment MSH>]
-    >>> print m.msh.__class__
-    <class '__main__.ElementProxy'>
-    >>> print m.msh.msh_7.__class__
-    <class '__main__.ElementProxy'>
+    >>> print(isinstance(m.msh, ElementProxy))
+    True
+    >>> print(isinstance(m.msh.msh_7, ElementProxy))
+    True
     """
     cls_attrs = ('element_list', 'list', 'element_name')
 
@@ -454,9 +466,9 @@ class ElementList(collections.MutableSequence):
             else:
                 # if validation is strict, check the child cardinality
                 if Validator.is_strict(self.element.validation_level):
-                    min, max = self.element.repetitions.get(child.name, (0, -1))
-                    if len(self.indexes.get(child.name, [])) + 1 > int(max) and max > -1:
-                        raise MaxChildLimitReached(self.element, child, max)
+                    min_rep, max_rep = self.element.repetitions.get(child.name, (0, -1))
+                    if len(self.indexes.get(child.name, [])) + 1 > int(max_rep) and max_rep > -1:
+                        raise MaxChildLimitReached(self.element, child, max_rep)
                 if self.element.validation_level != child.validation_level:
                     raise OperationNotAllowed('Cannot add a child with a different validation_level')
                 if self.element.version != child.version:
@@ -477,7 +489,7 @@ class ElementList(collections.MutableSequence):
             self.traversal_indexes[child.name].remove(child)
             if len(self.traversal_indexes[child.name]) == 0:
                 del self.traversal_indexes[child.name]
-        except (KeyError, ValueError) as e:
+        except (KeyError, ValueError):
             pass
 
     def __len__(self):
@@ -659,7 +671,7 @@ class Element(object):
         >>> f = Field('PID_5')
         >>> f.value = 'EVERYMAN^ADAM'
         >>> s.add(f)
-        >>> print s.to_er7()
+        >>> print(s.to_er7())
         PID|||||EVERYMAN^ADAM
         """
         self.children.append(obj)
@@ -806,7 +818,7 @@ class Element(object):
     def _find_structure(self, reference=None):
         if self.name is not None:
             structure = ElementFinder.get_structure(self, reference)
-            for k, v in structure.iteritems():
+            for k, v in iteritems(structure):
                 setattr(self, k, v)
 
     def _is_valid_child(self, child):
@@ -903,7 +915,7 @@ class SupportComplexDataType(Element):
                 datatype not in ('varies', None, self.datatype):
             reference = load_reference(datatype, 'Component', self.version)
             structure = ElementFinder.get_structure(self, reference)
-            for k, v in structure.iteritems():
+            for k, v in iteritems(structure):
                 setattr(self, k, v)
 
         if hasattr(self, 'children') and len(self.children) >= 1:
@@ -1096,7 +1108,7 @@ class SubComponent(CanBeVaries):
 
         >>> s = SubComponent("CE_1")
         >>> s.value = "IDENTIFIER"
-        >>> print s.to_er7()
+        >>> print(s.to_er7())
         IDENTIFIER
         """
 
@@ -1198,7 +1210,8 @@ class Component(SupportComplexDataType, CanBeVaries):
             raise OperationNotAllowed("Cannot instantiate an unknown Element with strict validation")
 
         # TODO: This control should be deleted (see CanBeVaries)
-        if datatype is not None and Validator.is_strict(validation_level) and self.datatype != 'varies' and self.datatype != datatype:
+        if datatype is not None and Validator.is_strict(validation_level) and \
+                self.datatype != 'varies' and self.datatype != datatype:
             raise OperationNotAllowed("Cannot assign a different datatype with strict validation")
 
     def add_subcomponent(self, name):
@@ -1210,9 +1223,9 @@ class Component(SupportComplexDataType, CanBeVaries):
 
         >>> c = Component(datatype='CE')
         >>> ce_1 = c.add_subcomponent('CE_1')
-        >>> print ce_1
+        >>> print(ce_1)
         <SubComponent CE_1>
-        >>> print ce_1 in c.children
+        >>> print(ce_1 in c.children)
         True
         """
         if self.is_unknown() and is_base_datatype(self.datatype):
@@ -1231,7 +1244,7 @@ class Component(SupportComplexDataType, CanBeVaries):
         >>> s2 = SubComponent(name='CWE_4', value='ALT_ID')
         >>> c.add(s)
         >>> c.add(s2)
-        >>> print c.to_er7()
+        >>> print(c.to_er7())
         EXAMPLE_ID&&&ALT_ID
         """
         # base datatype components can't have more than one child
@@ -1332,7 +1345,7 @@ class Field(SupportComplexDataType):
         :return: an instance of :class:`Component <hl7apy.core.Component>`
 
         >>> s = Field('PID_5')
-        >>> print s.add_component('XPN_2')
+        >>> print(s.add_component('XPN_2'))
         <Component XPN_2 (GIVEN_NAME) of type ST>
         """
         return self.children.create_element(name)
@@ -1366,7 +1379,7 @@ class Field(SupportComplexDataType):
         >>> c = Component('XPN_2')
         >>> c.value = 'ADAM'
         >>> f.add(c)
-        >>> print f.to_er7()
+        >>> print(f.to_er7())
         EVERYMAN^ADAM
         """
         # base datatype components can't have more than one child
@@ -1401,7 +1414,7 @@ class Field(SupportComplexDataType):
 
         >>> msh_9 = Field("MSH_9")
         >>> msh_9.value = "ADT^A01^ADT_A01"
-        >>> print msh_9.to_er7()
+        >>> print(msh_9.to_er7())
         ADT^A01^ADT_A01
         """
         if encoding_chars is None:
@@ -1584,7 +1597,7 @@ class Segment(Element):
         :return: an instance of :class:`Field <hl7apy.core.Field>`
 
         >>> s = Segment('PID')
-        >>> print s.add_field('PID_1')
+        >>> print(s.add_field('PID_1'))
         <Field PID_1 (SET_ID_PID) of type SI>
         """
         return self.children.create_element(name)
@@ -1654,7 +1667,7 @@ class Segment(Element):
         >>> pid = Segment("PID")
         >>> pid.pid_1 = '1'
         >>> pid.pid_5 = "EVERYMAN^ADAM"
-        >>> print pid.to_er7()
+        >>> print(pid.to_er7())
         PID|1||||EVERYMAN^ADAM
         """
         if encoding_chars is None:
@@ -1749,9 +1762,9 @@ class Group(Element):
 
         >>> m = Message('QBP_Q11')
         >>> qpd = m.add_segment('QPD')
-        >>> print qpd
+        >>> print(qpd)
         <Segment QPD>
-        >>> print qpd in m.children
+        >>> print(qpd in m.children)
         True
         """
         return self.children.create_element(name)
@@ -1765,9 +1778,9 @@ class Group(Element):
 
         >>> m = Message('OML_O33')
         >>> patient = m.add_group('OML_O33_PATIENT')
-        >>> print patient
+        >>> print(patient)
         <Group OML_O33_PATIENT>
-        >>> print patient in m.children
+        >>> print(patient in m.children)
         True
         """
 

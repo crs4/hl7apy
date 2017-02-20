@@ -21,6 +21,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+from __future__ import absolute_import
 from distutils.core import setup
 from distutils.errors import DistutilsSetupError
 
@@ -67,9 +68,14 @@ setup(
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python',
         'Intended Audience :: Healthcare Industry',
         'Topic :: Scientific/Engineering :: Medical Science Apps.'
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
     ],
     packages=['hl7apy', 'hl7apy.v2_2', 'hl7apy.v2_3', 'hl7apy.v2_3_1', 'hl7apy.v2_4',
               'hl7apy.v2_5', 'hl7apy.v2_5_1', 'hl7apy.v2_6'],
