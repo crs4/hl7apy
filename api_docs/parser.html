@@ -158,7 +158,7 @@ children of the <a class="reference internal" href="core.html#hl7apy.core.Messag
 </tr>
 </tbody>
 </table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">message</span> <span class="o">=</span> <span class="s">&quot;MSH|^~\&amp;|GHH_ADT||||20080115153000||OML^O33^OML_O33|0123456789|P|2.5||||AL</span><span class="se">\r</span><span class="s">PID|1||&quot;</span>     <span class="s">&quot;566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004|||M</span><span class="se">\r</span><span class="s">&quot;</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;MSH|^~\&amp;|GHH_ADT||||20080115153000||OML^O33^OML_O33|0123456789|P|2.5||||AL</span><span class="se">\r</span><span class="s2">PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004|||M</span><span class="se">\r</span><span class="s2">&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">parse_message</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">m</span>
 <span class="go">&lt;Message OML_O33&gt;</span>
@@ -196,7 +196,7 @@ validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set
 </tr>
 </tbody>
 </table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">segments</span> <span class="o">=</span> <span class="s">&quot;EVN||20080115153000||||20080114003000</span><span class="se">\r</span><span class="s">PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||&quot;</span>     <span class="s">&quot;2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004|||M</span><span class="se">\r</span><span class="s">&quot;</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">segments</span> <span class="o">=</span> <span class="s2">&quot;EVN||20080115153000||||20080114003000</span><span class="se">\r</span><span class="s2">PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004|||M</span><span class="se">\r</span><span class="s2">&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">parse_segments</span><span class="p">(</span><span class="n">segments</span><span class="p">)</span>
 <span class="go">[&lt;Segment EVN&gt;, &lt;Segment PID&gt;]</span>
 </pre></div>
@@ -231,7 +231,7 @@ belonging to a message profile</li>
 </tr>
 </tbody>
 </table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">segment</span> <span class="o">=</span> <span class="s">&quot;EVN||20080115153000||||20080114003000&quot;</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">segment</span> <span class="o">=</span> <span class="s2">&quot;EVN||20080115153000||||20080114003000&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span>  <span class="n">parse_segment</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">s</span>
 <span class="go">&lt;Segment EVN&gt;</span>
@@ -270,11 +270,11 @@ It is used when a segment ends with a field of type varies that thus support inf
 </tr>
 </tbody>
 </table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fields</span> <span class="o">=</span> <span class="s">&quot;1|NUCLEAR^NELDA^W|SPO|2222 HOME STREET^^ANN ARBOR^MI^^USA&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">nk1_fields</span> <span class="o">=</span> <span class="n">parse_fields</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">name_prefix</span><span class="o">=</span><span class="s">&quot;NK1&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fields</span> <span class="o">=</span> <span class="s2">&quot;1|NUCLEAR^NELDA^W|SPO|2222 HOME STREET^^ANN ARBOR^MI^^USA&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nk1_fields</span> <span class="o">=</span> <span class="n">parse_fields</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">name_prefix</span><span class="o">=</span><span class="s2">&quot;NK1&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">nk1_fields</span>
 <span class="go">[&lt;Field NK1_1 (SET_ID_NK1) of type SI&gt;, &lt;Field NK1_2 (NAME) of type XPN&gt;, &lt;Field NK1_3 (RELATIONSHIP) of type CE&gt;, &lt;Field NK1_4 (ADDRESS) of type XAD&gt;]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">(</span><span class="s">&quot;NK1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">(</span><span class="s2">&quot;NK1&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">nk1_fields</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">s</span><span class="o">.</span><span class="n">to_er7</span><span class="p">()</span>
 <span class="go">NK1|1|NUCLEAR^NELDA^W|SPO|2222 HOME STREET^^ANN ARBOR^MI^^USA</span>
@@ -317,8 +317,8 @@ It is used when a segment ends with a field of type varies that thus support inf
 </tr>
 </tbody>
 </table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">field</span> <span class="o">=</span> <span class="s">&quot;NUCLEAR^NELDA^W&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">nk1_2</span> <span class="o">=</span> <span class="n">parse_field</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;NK1_2&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">field</span> <span class="o">=</span> <span class="s2">&quot;NUCLEAR^NELDA^W&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nk1_2</span> <span class="o">=</span> <span class="n">parse_field</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;NK1_2&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">nk1_2</span>
 <span class="go">&lt;Field NK1_2 (NAME) of type XPN&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">nk1_2</span><span class="o">.</span><span class="n">to_er7</span><span class="p">()</span>
@@ -360,8 +360,8 @@ validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set
 </tr>
 </tbody>
 </table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">components</span> <span class="o">=</span> <span class="s">&quot;NUCLEAR^NELDA^W^^TEST&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">xpn</span> <span class="o">=</span> <span class="n">parse_components</span><span class="p">(</span><span class="n">components</span><span class="p">,</span> <span class="n">field_datatype</span><span class="o">=</span><span class="s">&quot;XPN&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">components</span> <span class="o">=</span> <span class="s2">&quot;NUCLEAR^NELDA^W^^TEST&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xpn</span> <span class="o">=</span> <span class="n">parse_components</span><span class="p">(</span><span class="n">components</span><span class="p">,</span> <span class="n">field_datatype</span><span class="o">=</span><span class="s2">&quot;XPN&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">xpn</span>
 <span class="go">[&lt;Component XPN_1 (FAMILY_NAME) of type FN&gt;, &lt;Component XPN_2 (GIVEN_NAME) of type ST&gt;, &lt;Component XPN_3 (SECOND_AND_FURTHER_GIVEN_NAMES_OR_INITIALS_THEREOF) of type ST&gt;, &lt;Component XPN_5 (PREFIX_E_G_DR) of type ST&gt;]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">parse_components</span><span class="p">(</span><span class="n">components</span><span class="p">)</span>
@@ -401,8 +401,8 @@ or belonging to a message profile</li>
 </tr>
 </tbody>
 </table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">component</span> <span class="o">=</span> <span class="s">&quot;GATEWAY&amp;1.3.6.1.4.1.21367.2011.2.5.17&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cx_4</span> <span class="o">=</span> <span class="n">parse_component</span><span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;CX_4&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;GATEWAY&amp;1.3.6.1.4.1.21367.2011.2.5.17&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cx_4</span> <span class="o">=</span> <span class="n">parse_component</span><span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;CX_4&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">cx_4</span>
 <span class="go">&lt;Component CX_4 (ASSIGNING_AUTHORITY) of type None&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">cx_4</span><span class="o">.</span><span class="n">to_er7</span><span class="p">()</span>
@@ -440,11 +440,11 @@ validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set
 </tr>
 </tbody>
 </table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">subcomponents</span><span class="o">=</span> <span class="s">&quot;ID&amp;TEST&amp;&amp;AHAH&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cwe</span> <span class="o">=</span> <span class="n">parse_subcomponents</span><span class="p">(</span><span class="n">subcomponents</span><span class="p">,</span> <span class="n">component_datatype</span><span class="o">=</span><span class="s">&quot;CWE&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">subcomponents</span><span class="o">=</span> <span class="s2">&quot;ID&amp;TEST&amp;&amp;AHAH&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cwe</span> <span class="o">=</span> <span class="n">parse_subcomponents</span><span class="p">(</span><span class="n">subcomponents</span><span class="p">,</span> <span class="n">component_datatype</span><span class="o">=</span><span class="s2">&quot;CWE&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">cwe</span>
 <span class="go">[&lt;SubComponent CWE_1&gt;, &lt;SubComponent CWE_2&gt;, &lt;SubComponent CWE_4&gt;]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="n">datatype</span><span class="o">=</span><span class="s">&#39;CWE&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="n">datatype</span><span class="o">=</span><span class="s1">&#39;CWE&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">cwe</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">c</span><span class="o">.</span><span class="n">to_er7</span><span class="p">()</span>
 <span class="go">ID&amp;TEST&amp;&amp;AHAH</span>
@@ -477,7 +477,7 @@ validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set
   <hr/>
 
   <div role="contentinfo" class="footer-font footer-div">
-        &copy; Copyright 2012-2015, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
+        &copy; Copyright 2012-2017, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
   </div>
 
   <div class="footer-font footer-div">
@@ -505,7 +505,7 @@ validation level (see <a class="reference internal" href="hl7apy.html#hl7apy.set
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.2',
+            VERSION:'1.2.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

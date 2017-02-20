@@ -142,7 +142,7 @@ but you should not import them directly from here. If you need an implementation
 use the <code class="xref py py-func docutils literal"><span class="pre">get_base_datatypes()</span></code> function from a specific version&#8217;s module
 For example if you&#8217;re using version 2.4 and you need an <cite>FT</cite> base datatype do the following:</p>
 <div class="last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.v2_4</span> <span class="kn">import</span> <span class="n">FT</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">FT</span><span class="p">(</span><span class="s">&#39;some useful information&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">FT</span><span class="p">(</span><span class="s1">&#39;some useful information&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -326,7 +326,7 @@ the same of the superclass</p>
 <hr class="docutils" />
 <dl class="class">
 <dt id="hl7apy.base_datatypes.DateTimeDataType">
-<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">DateTimeDataType</code><span class="sig-paren">(</span><em>value=None</em>, <em>out_format=''</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.DateTimeDataType" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">DateTimeDataType</code><span class="sig-paren">(</span><em>value=None</em>, <em>format=''</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.DateTimeDataType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for datetime data types.
 It is meant to be extended and it should not be used directly.
 Children classes should at least override the <code class="xref py py-attr docutils literal"><span class="pre">allowed_formats</span></code> tuple</p>
@@ -336,7 +336,7 @@ Children classes should at least override the <code class="xref py py-attr docut
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>value</strong> &#8211; a <cite>datetime</cite> date object. Default is <code class="docutils literal"><span class="pre">None</span></code></li>
-<li><strong>out_format</strong> (<em>str</em>) &#8211; the format that will be used converting the object to string.
+<li><strong>format</strong> (<em>str</em>) &#8211; the format that will be used converting the object to string.
 It must be an item of the <code class="xref py py-attr docutils literal"><span class="pre">allowed_formats</span></code> tuple</li>
 </ul>
 </td>
@@ -352,7 +352,7 @@ the <code class="xref py py-attr docutils literal"><span class="pre">allowed_for
 <p>Classes representing datetime datatypes are:</p>
 <dl class="class">
 <dt id="hl7apy.base_datatypes.DT">
-<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">DT</code><span class="sig-paren">(</span><em>value=None</em>, <em>out_format='%Y%m%d'</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.DT" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">DT</code><span class="sig-paren">(</span><em>value=None</em>, <em>format='%Y%m%d'</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.DT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for DT base datatype. It extends DatetimeDatatype and it represents a time value with
 year, month and day. Parameters are the same of the superclass.</p>
 <p>The <code class="xref py py-attr docutils literal"><span class="pre">allowed_formats</span></code> tuple is <code class="docutils literal"><span class="pre">('%Y',</span> <span class="pre">'%Y%m',</span> <span class="pre">'%Y%m%d')</span></code></p>
@@ -360,7 +360,7 @@ year, month and day. Parameters are the same of the superclass.</p>
 
 <dl class="class">
 <dt id="hl7apy.base_datatypes.TM">
-<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">TM</code><span class="sig-paren">(</span><em>value=None</em>, <em>out_format='%H%M%S.%f'</em>, <em>offset=''</em>, <em>microsec_precision=4</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.TM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">TM</code><span class="sig-paren">(</span><em>value=None</em>, <em>format='%H%M%S.%f'</em>, <em>offset=''</em>, <em>microsec_precision=4</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.TM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for TM base datatype. It extends DateTimeDatatype and it represents a time value with
 hours, minutes, seconds and microseconds. Parameters are the same of the superclass plus <code class="docutils literal"><span class="pre">offset</span></code>.
 Since HL7 supports only four digits for microseconds, and Python datetime uses 6 digits, the wanted
@@ -384,7 +384,7 @@ It must be between 1 and 4</li>
 
 <dl class="class">
 <dt id="hl7apy.base_datatypes.DTM">
-<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">DTM</code><span class="sig-paren">(</span><em>value=None</em>, <em>out_format='%Y%m%d%H%M%S.%f'</em>, <em>offset=''</em>, <em>microsec_precision=4</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.DTM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">hl7apy.base_datatypes.</code><code class="descname">DTM</code><span class="sig-paren">(</span><em>value=None</em>, <em>format='%Y%m%d%H%M%S.%f'</em>, <em>offset=''</em>, <em>microsec_precision=4</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.base_datatypes.DTM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for DTM base datatype. It extends TM and it represents classes DT and DTM combined.
 Thus it represents year, month, day, hours, minutes, seconds and microseconds.
 Parameters are the same of the superclass.</p>
@@ -411,7 +411,7 @@ Parameters are the same of the superclass.</p>
   <hr/>
 
   <div role="contentinfo" class="footer-font footer-div">
-        &copy; Copyright 2012-2015, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
+        &copy; Copyright 2012-2017, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
   </div>
 
   <div class="footer-font footer-div">
@@ -439,7 +439,7 @@ Parameters are the same of the superclass.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.2',
+            VERSION:'1.2.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

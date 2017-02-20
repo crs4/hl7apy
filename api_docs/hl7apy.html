@@ -209,16 +209,16 @@
 </tbody>
 </table>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="kn">import</span> <span class="n">Message</span><span class="p">,</span> <span class="n">Segment</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">find_reference</span><span class="p">(</span><span class="s">&#39;UNKNOWN&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">Segment</span><span class="p">,</span> <span class="p">),</span> <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_reference</span><span class="p">(</span><span class="s1">&#39;UNKNOWN&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">Segment</span><span class="p">,</span> <span class="p">),</span> <span class="s1">&#39;2.5&#39;</span><span class="p">)</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
 <span class="gr">ChildNotFound</span>: <span class="n">No child named UNKNOWN</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">find_reference</span><span class="p">(</span><span class="s">&#39;ADT_A01&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">Segment</span><span class="p">,),</span>  <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_reference</span><span class="p">(</span><span class="s1">&#39;ADT_A01&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">Segment</span><span class="p">,),</span>  <span class="s1">&#39;2.5&#39;</span><span class="p">)</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
 <span class="gr">ChildNotFound</span>: <span class="n">No child named ADT_A01</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">find_reference</span><span class="p">(</span><span class="s">&#39;ADT_A01&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">Message</span><span class="p">,),</span>  <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">r</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s">&#39;cls&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">find_reference</span><span class="p">(</span><span class="s1">&#39;ADT_A01&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">Message</span><span class="p">,),</span>  <span class="s1">&#39;2.5&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;cls&#39;</span><span class="p">]</span>
 <span class="go">ADT_A01 &lt;class &#39;hl7apy.core.Message&#39;&gt;</span>
 </pre></div>
 </div>
@@ -238,7 +238,7 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">get_default_encoding_chars</span><span class="p">()[</span><span class="s">&#39;FIELD&#39;</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">get_default_encoding_chars</span><span class="p">()[</span><span class="s1">&#39;FIELD&#39;</span><span class="p">]</span>
 <span class="go">|</span>
 </pre></div>
 </div>
@@ -352,14 +352,14 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">load_reference</span><span class="p">(</span><span class="s">&#39;UNKNOWN&#39;</span><span class="p">,</span> <span class="s">&#39;Segment&#39;</span><span class="p">,</span> <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">load_reference</span><span class="p">(</span><span class="s1">&#39;UNKNOWN&#39;</span><span class="p">,</span> <span class="s1">&#39;Segment&#39;</span><span class="p">,</span> <span class="s1">&#39;2.5&#39;</span><span class="p">)</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
 <span class="gr">ChildNotFound</span>: <span class="n">No child named UNKNOWN</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">load_reference</span><span class="p">(</span><span class="s">&#39;ADT_A01&#39;</span><span class="p">,</span> <span class="s">&#39;Message&#39;</span><span class="p">,</span> <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">load_reference</span><span class="p">(</span><span class="s1">&#39;ADT_A01&#39;</span><span class="p">,</span> <span class="s1">&#39;Message&#39;</span><span class="p">,</span> <span class="s1">&#39;2.5&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="go">sequence</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">load_reference</span><span class="p">(</span><span class="s">&#39;MSH_3&#39;</span><span class="p">,</span> <span class="s">&#39;Field&#39;</span><span class="p">,</span> <span class="s">&#39;2.5&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">load_reference</span><span class="p">(</span><span class="s1">&#39;MSH_3&#39;</span><span class="p">,</span> <span class="s1">&#39;Field&#39;</span><span class="p">,</span> <span class="s1">&#39;2.5&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="go">leaf</span>
 </pre></div>
@@ -415,12 +415,12 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_encoding_chars</span><span class="p">({</span><span class="s">&#39;FIELD&#39;</span><span class="p">:</span> <span class="s">&#39;!&#39;</span><span class="p">})</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_encoding_chars</span><span class="p">({</span><span class="s1">&#39;FIELD&#39;</span><span class="p">:</span> <span class="s1">&#39;!&#39;</span><span class="p">})</span>
 <span class="gt">Traceback (most recent call last):</span>
     <span class="o">...</span>
 <span class="gr">InvalidEncodingChars</span>: <span class="n">Missing required encoding chars</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_encoding_chars</span><span class="p">({</span><span class="s">&#39;FIELD&#39;</span><span class="p">:</span> <span class="s">&#39;!&#39;</span><span class="p">,</span> <span class="s">&#39;COMPONENT&#39;</span><span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="s">&#39;SUBCOMPONENT&#39;</span><span class="p">:</span> <span class="s">&#39;S&#39;</span><span class="p">,</span>                                     <span class="s">&#39;REPETITION&#39;</span><span class="p">:</span> <span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="s">&#39;ESCAPE&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="se">\\</span><span class="s">&#39;</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">get_default_encoding_chars</span><span class="p">()[</span><span class="s">&#39;FIELD&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_encoding_chars</span><span class="p">({</span><span class="s1">&#39;FIELD&#39;</span><span class="p">:</span> <span class="s1">&#39;!&#39;</span><span class="p">,</span> <span class="s1">&#39;COMPONENT&#39;</span><span class="p">:</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;SUBCOMPONENT&#39;</span><span class="p">:</span> <span class="s1">&#39;S&#39;</span><span class="p">,</span>                                     <span class="s1">&#39;REPETITION&#39;</span><span class="p">:</span> <span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="s1">&#39;ESCAPE&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">get_default_encoding_chars</span><span class="p">()[</span><span class="s1">&#39;FIELD&#39;</span><span class="p">]</span>
 <span class="go">!</span>
 </pre></div>
 </div>
@@ -465,11 +465,11 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_version</span><span class="p">(</span><span class="s">&#39;22&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_version</span><span class="p">(</span><span class="s1">&#39;22&#39;</span><span class="p">)</span>
 <span class="gt">Traceback (most recent call last):</span>
     <span class="o">...</span>
 <span class="gr">UnsupportedVersion</span>: <span class="n">The version 22 is not supported</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_version</span><span class="p">(</span><span class="s">&#39;2.3&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_version</span><span class="p">(</span><span class="s1">&#39;2.3&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">get_default_version</span><span class="p">()</span>
 <span class="go">2.3</span>
 </pre></div>
@@ -495,7 +495,7 @@
   <hr/>
 
   <div role="contentinfo" class="footer-font footer-div">
-        &copy; Copyright 2012-2015, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
+        &copy; Copyright 2012-2017, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
   </div>
 
   <div class="footer-font footer-div">
@@ -523,7 +523,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.2',
+            VERSION:'1.2.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

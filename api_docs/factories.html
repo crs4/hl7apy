@@ -164,11 +164,11 @@ The date format is chosen according to the length of the value as stated in this
 </table>
 <p>Some examples that work are:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.base_datatypes</span> <span class="kn">import</span> <span class="n">DT</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">date_factory</span><span class="p">(</span><span class="s">&quot;1974&quot;</span><span class="p">,</span> <span class="n">DT</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">date_factory</span><span class="p">(</span><span class="s2">&quot;1974&quot;</span><span class="p">,</span> <span class="n">DT</span><span class="p">)</span> 
 <span class="go">&lt;hl7apy.base_datatypes.DT object at 0x...&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">date_factory</span><span class="p">(</span><span class="s">&quot;198302&quot;</span><span class="p">,</span> <span class="n">DT</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">date_factory</span><span class="p">(</span><span class="s2">&quot;198302&quot;</span><span class="p">,</span> <span class="n">DT</span><span class="p">)</span> 
 <span class="go">&lt;hl7apy.base_datatypes.DT object at 0x...&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">date_factory</span><span class="p">(</span><span class="s">&quot;19880312&quot;</span><span class="p">,</span> <span class="n">DT</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">date_factory</span><span class="p">(</span><span class="s2">&quot;19880312&quot;</span><span class="p">,</span> <span class="n">DT</span><span class="p">)</span> 
 <span class="go">&lt;hl7apy.base_datatypes.DT object at 0x...&gt;</span>
 </pre></div>
 </div>
@@ -228,15 +228,15 @@ The date format is chosen according to the length of the value as stated in this
 </table>
 <p>Some examples that work are:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.base_datatypes</span> <span class="kn">import</span> <span class="n">TM</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">timestamp_factory</span><span class="p">(</span><span class="s">&quot;12&quot;</span><span class="p">,</span> <span class="n">TM</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timestamp_factory</span><span class="p">(</span><span class="s2">&quot;12&quot;</span><span class="p">,</span> <span class="n">TM</span><span class="p">)</span> 
 <span class="go">&lt;hl7apy.base_datatypes.TM object at 0x...&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">timestamp_factory</span><span class="p">(</span><span class="s">&quot;12+0300&quot;</span><span class="p">,</span> <span class="n">TM</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timestamp_factory</span><span class="p">(</span><span class="s2">&quot;12+0300&quot;</span><span class="p">,</span> <span class="n">TM</span><span class="p">)</span> 
 <span class="go">&lt;hl7apy.base_datatypes.TM object at 0x...&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">timestamp_factory</span><span class="p">(</span><span class="s">&quot;1204&quot;</span><span class="p">,</span> <span class="n">TM</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timestamp_factory</span><span class="p">(</span><span class="s2">&quot;1204&quot;</span><span class="p">,</span> <span class="n">TM</span><span class="p">)</span> 
 <span class="go">&lt;hl7apy.base_datatypes.TM object at 0x...&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">timestamp_factory</span><span class="p">(</span><span class="s">&quot;120434&quot;</span><span class="p">,</span> <span class="n">TM</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timestamp_factory</span><span class="p">(</span><span class="s2">&quot;120434&quot;</span><span class="p">,</span> <span class="n">TM</span><span class="p">)</span> 
 <span class="go">&lt;hl7apy.base_datatypes.TM object at 0x...&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">timestamp_factory</span><span class="p">(</span><span class="s">&quot;120434-0400&quot;</span><span class="p">,</span> <span class="n">TM</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timestamp_factory</span><span class="p">(</span><span class="s2">&quot;120434-0400&quot;</span><span class="p">,</span> <span class="n">TM</span><span class="p">)</span> 
 <span class="go">&lt;hl7apy.base_datatypes.TM object at 0x...&gt;</span>
 </pre></div>
 </div>
@@ -305,13 +305,13 @@ The date format is chosen according to the length of the value as stated in this
 </table>
 <p>Some examples that work are:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.base_datatypes</span> <span class="kn">import</span> <span class="n">DTM</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">datetime_factory</span><span class="p">(</span><span class="s">&quot;1924&quot;</span><span class="p">,</span> <span class="n">DTM</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">datetime_factory</span><span class="p">(</span><span class="s2">&quot;1924&quot;</span><span class="p">,</span> <span class="n">DTM</span><span class="p">)</span> 
 <span class="go">&lt;hl7apy.base_datatypes.DTM object at 0x...&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">datetime_factory</span><span class="p">(</span><span class="s">&quot;1924+0300&quot;</span><span class="p">,</span> <span class="n">DTM</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">datetime_factory</span><span class="p">(</span><span class="s2">&quot;1924+0300&quot;</span><span class="p">,</span> <span class="n">DTM</span><span class="p">)</span> 
 <span class="go">&lt;hl7apy.base_datatypes.DTM object at 0x...&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">datetime_factory</span><span class="p">(</span><span class="s">&quot;19220430&quot;</span><span class="p">,</span> <span class="n">DTM</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">datetime_factory</span><span class="p">(</span><span class="s2">&quot;19220430&quot;</span><span class="p">,</span> <span class="n">DTM</span><span class="p">)</span> 
 <span class="go">&lt;hl7apy.base_datatypes.DTM object at 0x...&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">datetime_factory</span><span class="p">(</span><span class="s">&quot;19220430-0400&quot;</span><span class="p">,</span> <span class="n">DTM</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">datetime_factory</span><span class="p">(</span><span class="s2">&quot;19220430-0400&quot;</span><span class="p">,</span> <span class="n">DTM</span><span class="p">)</span> 
 <span class="go">&lt;hl7apy.base_datatypes.DTM object at 0x...&gt;</span>
 </pre></div>
 </div>
@@ -411,7 +411,7 @@ modules</li>
   <hr/>
 
   <div role="contentinfo" class="footer-font footer-div">
-        &copy; Copyright 2012-2015, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
+        &copy; Copyright 2012-2017, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
   </div>
 
   <div class="footer-font footer-div">
@@ -439,7 +439,7 @@ modules</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.2',
+            VERSION:'1.2.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -143,56 +143,56 @@ for adding, removing and visiting the tree nodes.</p>
 <p>You can create a new message by instantiating the <a class="reference internal" href="../api_docs/core.html#hl7apy.core.Message" title="hl7apy.core.Message"><code class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Message</span></code></a> class:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="kn">import</span> <span class="n">Message</span>
 
-<span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s">&quot;ADT_A01&quot;</span><span class="p">)</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s2">&quot;ADT_A01&quot;</span><span class="p">)</span>
 <span class="n">m2</span> <span class="o">=</span> <span class="n">Message</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>You can both create a message specifying a structure (e.g. ADT_A01) or create a new message with no predefined structure.</p>
 <p>Your new message can be populated as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">pid</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">(</span><span class="s">&quot;PID&quot;</span><span class="p">)</span>
-<span class="n">patient_group</span> <span class="o">=</span> <span class="n">Group</span><span class="p">(</span><span class="s">&quot;OML_O33_PATIENT&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">pid</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">(</span><span class="s2">&quot;PID&quot;</span><span class="p">)</span>
+<span class="n">patient_group</span> <span class="o">=</span> <span class="n">Group</span><span class="p">(</span><span class="s2">&quot;OML_O33_PATIENT&quot;</span><span class="p">)</span>
 
-<span class="c"># add a Segment instance</span>
+<span class="c1"># add a Segment instance</span>
 <span class="n">m</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span>
 
-<span class="c"># add a Group instance</span>
+<span class="c1"># add a Group instance</span>
 <span class="n">m2</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">patient_group</span><span class="p">)</span>
 
-<span class="c"># create a Segment named MSA and add it to m2</span>
-<span class="n">msa</span> <span class="o">=</span> <span class="n">m2</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="s">&#39;MSA&#39;</span><span class="p">)</span>
+<span class="c1"># create a Segment named MSA and add it to m2</span>
+<span class="n">msa</span> <span class="o">=</span> <span class="n">m2</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="s1">&#39;MSA&#39;</span><span class="p">)</span>
 
-<span class="c"># create a Group named ADT_A01_INSURANCE and add it to m</span>
-<span class="n">g</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_group</span><span class="p">(</span><span class="s">&quot;ADT_A01_INSURANCE&quot;</span><span class="p">)</span>
+<span class="c1"># create a Group named ADT_A01_INSURANCE and add it to m</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_group</span><span class="p">(</span><span class="s2">&quot;ADT_A01_INSURANCE&quot;</span><span class="p">)</span>
 
-<span class="c"># assign a Segment instance</span>
+<span class="c1"># assign a Segment instance</span>
 <span class="n">m</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="n">pid</span>
 
-<span class="c"># assign a string</span>
-<span class="n">m</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="s">&quot;PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M&quot;</span>
-<span class="c"># equivalent to</span>
-<span class="n">m</span><span class="o">.</span><span class="n">pid</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M&quot;</span>
+<span class="c1"># assign a string</span>
+<span class="n">m</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="s2">&quot;PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M&quot;</span>
+<span class="c1"># equivalent to</span>
+<span class="n">m</span><span class="o">.</span><span class="n">pid</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M&quot;</span>
 
-<span class="c"># copy from another_message child</span>
+<span class="c1"># copy from another_message child</span>
 <span class="n">m</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="n">m2</span><span class="o">.</span><span class="n">oml_o33_patient</span><span class="o">.</span><span class="n">pid</span>
 </pre></div>
 </div>
 <p>You can also populate your message without explicit creation of its children, as in the following example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="kn">import</span> <span class="n">Message</span>
 
-<span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s">&quot;ADT_A01&quot;</span><span class="p">)</span>
-<span class="n">m</span><span class="o">.</span><span class="n">pid</span><span class="o">.</span><span class="n">pid_5_1</span> <span class="o">=</span> <span class="s">&#39;EVERYMAN&#39;</span>
-<span class="n">m</span><span class="o">.</span><span class="n">pid</span><span class="o">.</span><span class="n">pid_5_2</span> <span class="o">=</span> <span class="s">&#39;ADAM&#39;</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s2">&quot;ADT_A01&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">pid</span><span class="o">.</span><span class="n">pid_5_1</span> <span class="o">=</span> <span class="s1">&#39;EVERYMAN&#39;</span>
+<span class="n">m</span><span class="o">.</span><span class="n">pid</span><span class="o">.</span><span class="n">pid_5_2</span> <span class="o">=</span> <span class="s1">&#39;ADAM&#39;</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal"><span class="pre">PID</span></code> segment is created during child traversal, as well as their related fields and components.
 The previous snippet of code is equivalent to:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="kn">import</span> <span class="n">Message</span>
 
-<span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s">&quot;ADT_A01&quot;</span><span class="p">)</span>
-<span class="n">pid</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">(</span><span class="s">&quot;PID&quot;</span><span class="p">)</span>
-<span class="n">pid_5</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">&quot;PID_5&quot;</span><span class="p">)</span>
-<span class="n">pid_5</span><span class="o">.</span><span class="n">pid_5_1</span> <span class="o">=</span> <span class="s">&#39;EVERYMAN&#39;</span>
-<span class="n">pid_5</span><span class="o">.</span><span class="n">pid_5_2</span> <span class="o">=</span> <span class="s">&#39;ADAM&#39;</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s2">&quot;ADT_A01&quot;</span><span class="p">)</span>
+<span class="n">pid</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">(</span><span class="s2">&quot;PID&quot;</span><span class="p">)</span>
+<span class="n">pid_5</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;PID_5&quot;</span><span class="p">)</span>
+<span class="n">pid_5</span><span class="o">.</span><span class="n">pid_5_1</span> <span class="o">=</span> <span class="s1">&#39;EVERYMAN&#39;</span>
+<span class="n">pid_5</span><span class="o">.</span><span class="n">pid_5_2</span> <span class="o">=</span> <span class="s1">&#39;ADAM&#39;</span>
 <span class="n">pid</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">pid_5</span><span class="p">)</span>
 <span class="n">m</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span>
 </pre></div>
@@ -211,22 +211,22 @@ NK1|1|NUCLEAR^NELDA^W|SPO|2222 HOME STREET^^ANN ARBOR^MI^^USA
 in the following snippet of code, we show you a way to create it from scratch:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="kn">import</span> <span class="n">Message</span>
 
-<span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s">&quot;ADT_A01&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s">&quot;2.5&quot;</span><span class="p">)</span>
-<span class="n">m</span><span class="o">.</span><span class="n">msh</span><span class="o">.</span><span class="n">msh_3</span> <span class="o">=</span> <span class="s">&#39;GHH_ADT&#39;</span>
-<span class="n">m</span><span class="o">.</span><span class="n">msh</span><span class="o">.</span><span class="n">msh_7</span> <span class="o">=</span> <span class="s">&#39;20080115153000&#39;</span>
-<span class="n">m</span><span class="o">.</span><span class="n">msh</span><span class="o">.</span><span class="n">msh_9</span> <span class="o">=</span> <span class="s">&#39;ADT^A01^ADT_A01&#39;</span>
-<span class="n">m</span><span class="o">.</span><span class="n">msh</span><span class="o">.</span><span class="n">msh_10</span> <span class="o">=</span> <span class="s">&quot;0123456789&quot;</span>
-<span class="n">m</span><span class="o">.</span><span class="n">msh</span><span class="o">.</span><span class="n">msh_11</span> <span class="o">=</span> <span class="s">&quot;P&quot;</span>
-<span class="n">m</span><span class="o">.</span><span class="n">msh</span><span class="o">.</span><span class="n">msh_16</span> <span class="o">=</span> <span class="s">&quot;AL&quot;</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s2">&quot;ADT_A01&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;2.5&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">msh</span><span class="o">.</span><span class="n">msh_3</span> <span class="o">=</span> <span class="s1">&#39;GHH_ADT&#39;</span>
+<span class="n">m</span><span class="o">.</span><span class="n">msh</span><span class="o">.</span><span class="n">msh_7</span> <span class="o">=</span> <span class="s1">&#39;20080115153000&#39;</span>
+<span class="n">m</span><span class="o">.</span><span class="n">msh</span><span class="o">.</span><span class="n">msh_9</span> <span class="o">=</span> <span class="s1">&#39;ADT^A01^ADT_A01&#39;</span>
+<span class="n">m</span><span class="o">.</span><span class="n">msh</span><span class="o">.</span><span class="n">msh_10</span> <span class="o">=</span> <span class="s2">&quot;0123456789&quot;</span>
+<span class="n">m</span><span class="o">.</span><span class="n">msh</span><span class="o">.</span><span class="n">msh_11</span> <span class="o">=</span> <span class="s2">&quot;P&quot;</span>
+<span class="n">m</span><span class="o">.</span><span class="n">msh</span><span class="o">.</span><span class="n">msh_16</span> <span class="o">=</span> <span class="s2">&quot;AL&quot;</span>
 <span class="n">m</span><span class="o">.</span><span class="n">evn</span><span class="o">.</span><span class="n">evn_2</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">msh</span><span class="o">.</span><span class="n">msh_7</span>
-<span class="n">m</span><span class="o">.</span><span class="n">evn</span><span class="o">.</span><span class="n">evn_4</span> <span class="o">=</span> <span class="s">&quot;AAA&quot;</span>
+<span class="n">m</span><span class="o">.</span><span class="n">evn</span><span class="o">.</span><span class="n">evn_4</span> <span class="o">=</span> <span class="s2">&quot;AAA&quot;</span>
 <span class="n">m</span><span class="o">.</span><span class="n">evn</span><span class="o">.</span><span class="n">evn_5</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">evn</span><span class="o">.</span><span class="n">evn_4</span>
-<span class="n">m</span><span class="o">.</span><span class="n">evn</span><span class="o">.</span><span class="n">evn_6</span> <span class="o">=</span> <span class="s">&#39;20080114003000&#39;</span>
-<span class="n">m</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="s">&quot;PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M&quot;</span>
-<span class="n">m</span><span class="o">.</span><span class="n">nk1</span><span class="o">.</span><span class="n">nk1_1</span> <span class="o">=</span> <span class="s">&#39;1&#39;</span>
-<span class="n">m</span><span class="o">.</span><span class="n">nk1</span><span class="o">.</span><span class="n">nk1_2</span> <span class="o">=</span> <span class="s">&#39;NUCLEAR^NELDA^W&#39;</span>
-<span class="n">m</span><span class="o">.</span><span class="n">nk1</span><span class="o">.</span><span class="n">nk1_3</span> <span class="o">=</span> <span class="s">&#39;SPO&#39;</span>
-<span class="n">m</span><span class="o">.</span><span class="n">nk1</span><span class="o">.</span><span class="n">nk1_4</span> <span class="o">=</span> <span class="s">&#39;2222 HOME STREET^^ANN ARBOR^MI^^USA&#39;</span>
+<span class="n">m</span><span class="o">.</span><span class="n">evn</span><span class="o">.</span><span class="n">evn_6</span> <span class="o">=</span> <span class="s1">&#39;20080114003000&#39;</span>
+<span class="n">m</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="s2">&quot;PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M&quot;</span>
+<span class="n">m</span><span class="o">.</span><span class="n">nk1</span><span class="o">.</span><span class="n">nk1_1</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
+<span class="n">m</span><span class="o">.</span><span class="n">nk1</span><span class="o">.</span><span class="n">nk1_2</span> <span class="o">=</span> <span class="s1">&#39;NUCLEAR^NELDA^W&#39;</span>
+<span class="n">m</span><span class="o">.</span><span class="n">nk1</span><span class="o">.</span><span class="n">nk1_3</span> <span class="o">=</span> <span class="s1">&#39;SPO&#39;</span>
+<span class="n">m</span><span class="o">.</span><span class="n">nk1</span><span class="o">.</span><span class="n">nk1_4</span> <span class="o">=</span> <span class="s1">&#39;2222 HOME STREET^^ANN ARBOR^MI^^USA&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -235,12 +235,12 @@ in the following snippet of code, we show you a way to create it from scratch:</
 <p>You can use the provided ER7 parsers to parse a message string:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">hl7apy.parser</span> <span class="kn">import</span> <span class="n">parse_message</span>
 
-<span class="n">msh</span> <span class="o">=</span> <span class="s">&quot;MSH|^~\&amp;|GHH_ADT||||20080115153000||ADT^A01^ADT_A01|0123456789|P|2.5||||AL</span><span class="se">\r</span><span class="s">&quot;</span>
-<span class="n">evn</span> <span class="o">=</span> <span class="s">&quot;EVN||20080115153000||AAA|AAA|20080114003000</span><span class="se">\r</span><span class="s">&quot;</span>
-<span class="n">pid</span> <span class="o">=</span> <span class="s">&quot;PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M</span><span class="se">\r</span><span class="s">&quot;</span>
-<span class="n">nk1</span> <span class="o">=</span> <span class="s">&quot;NK1|1|NUCLEAR^NELDA^W|SPO|2222 HOME STREET^^ANN ARBOR^MI^^USA</span><span class="se">\r</span><span class="s">&quot;</span>
-<span class="n">pv1</span> <span class="o">=</span> <span class="s">&quot;PV1|1|I|GHH PATIENT WARD|U||||^SENDER^SAM^^MD|^PUMP^PATRICK^P|CAR||||2|A0|||||||||||||||||||||||||||||2008</span><span class="se">\r</span><span class="s">&quot;</span>
-<span class="n">in1</span> <span class="o">=</span> <span class="s">&quot;IN1|1|HCID-GL^GLOBAL|HCID-23432|HC PAYOR, INC.|5555 INSURERS CIRCLE^^ANN ARBOR^MI^99999^USA||||||||||||||||||||||||||||||||||||||||||||444-33-3333&quot;</span>
+<span class="n">msh</span> <span class="o">=</span> <span class="s2">&quot;MSH|^~\&amp;|GHH_ADT||||20080115153000||ADT^A01^ADT_A01|0123456789|P|2.5||||AL</span><span class="se">\r</span><span class="s2">&quot;</span>
+<span class="n">evn</span> <span class="o">=</span> <span class="s2">&quot;EVN||20080115153000||AAA|AAA|20080114003000</span><span class="se">\r</span><span class="s2">&quot;</span>
+<span class="n">pid</span> <span class="o">=</span> <span class="s2">&quot;PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M</span><span class="se">\r</span><span class="s2">&quot;</span>
+<span class="n">nk1</span> <span class="o">=</span> <span class="s2">&quot;NK1|1|NUCLEAR^NELDA^W|SPO|2222 HOME STREET^^ANN ARBOR^MI^^USA</span><span class="se">\r</span><span class="s2">&quot;</span>
+<span class="n">pv1</span> <span class="o">=</span> <span class="s2">&quot;PV1|1|I|GHH PATIENT WARD|U||||^SENDER^SAM^^MD|^PUMP^PATRICK^P|CAR||||2|A0|||||||||||||||||||||||||||||2008</span><span class="se">\r</span><span class="s2">&quot;</span>
+<span class="n">in1</span> <span class="o">=</span> <span class="s2">&quot;IN1|1|HCID-GL^GLOBAL|HCID-23432|HC PAYOR, INC.|5555 INSURERS CIRCLE^^ANN ARBOR^MI^99999^USA||||||||||||||||||||||||||||||||||||||||||||444-33-3333&quot;</span>
 
 <span class="n">s</span> <span class="o">=</span> <span class="n">msh</span> <span class="o">+</span> <span class="n">evn</span> <span class="o">+</span> <span class="n">pid</span> <span class="o">+</span> <span class="n">nk1</span> <span class="o">+</span> <span class="n">pv1</span> <span class="o">+</span> <span class="n">in1</span>
 <span class="n">message</span> <span class="o">=</span> <span class="n">parse_message</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
@@ -251,10 +251,10 @@ You can disable this behaviour by passing <code class="docutils literal"><span c
 <p>ER7 parsers for segments, fields and components are also provided:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">hl7apy.parser</span> <span class="kn">import</span> <span class="n">parse_segment</span><span class="p">,</span> <span class="n">parse_field</span><span class="p">,</span> <span class="n">parse_component</span>
 
-<span class="n">pid</span> <span class="o">=</span> <span class="s">&quot;PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M</span><span class="se">\r</span><span class="s">&quot;</span>
+<span class="n">pid</span> <span class="o">=</span> <span class="s2">&quot;PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M</span><span class="se">\r</span><span class="s2">&quot;</span>
 <span class="n">segment</span> <span class="o">=</span> <span class="n">parse_segment</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span>
-<span class="n">field</span> <span class="o">=</span> <span class="n">parse_field</span><span class="p">(</span><span class="s">&quot;EVERYMAN^ADAM^A&quot;</span><span class="p">)</span> <span class="c"># it will return an instance of Field()</span>
-<span class="n">component</span> <span class="o">=</span> <span class="n">parse_component</span><span class="p">(</span><span class="s">&quot;ID&amp;TEST&amp;TEST2&quot;</span><span class="p">)</span> <span class="c"># it will return an instance of Component()</span>
+<span class="n">field</span> <span class="o">=</span> <span class="n">parse_field</span><span class="p">(</span><span class="s2">&quot;EVERYMAN^ADAM^A&quot;</span><span class="p">)</span> <span class="c1"># it will return an instance of Field()</span>
+<span class="n">component</span> <span class="o">=</span> <span class="n">parse_component</span><span class="p">(</span><span class="s2">&quot;ID&amp;TEST&amp;TEST2&quot;</span><span class="p">)</span> <span class="c1"># it will return an instance of Component()</span>
 </pre></div>
 </div>
 <p>Each parser will return an instance of the corresponding core class (e.g. <a class="reference internal" href="../api_docs/parser.html#hl7apy.parser.parse_field" title="hl7apy.parser.parse_field"><code class="xref py py-func docutils literal"><span class="pre">hl7apy.parser.parse_field()</span></code></a> will return a <a class="reference internal" href="../api_docs/core.html#hl7apy.core.Field" title="hl7apy.core.Field"><code class="xref py py-class docutils literal"><span class="pre">hl7apy.core.Field</span></code></a> instance).</p>
@@ -263,8 +263,8 @@ functions to assign the name of the corresponding <a class="reference internal" 
 not possible to infer their names by simply parsing the input strings:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">hl7apy.parser</span> <span class="kn">import</span> <span class="n">parse_field</span><span class="p">,</span> <span class="n">parse_component</span>
 
-<span class="n">field</span> <span class="o">=</span> <span class="n">parse_field</span><span class="p">(</span><span class="s">&quot;EVERYMAN^ADAM^A&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;PID_5&quot;</span><span class="p">)</span> <span class="c"># it will return an instance of Field(&quot;PID_5&quot;)</span>
-<span class="n">component</span> <span class="o">=</span> <span class="n">parse_component</span><span class="p">(</span><span class="s">&quot;AUTH&amp;1.3.6.1.4.1.21367.2011.2.5.17&amp;ISO&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;CX_4&quot;</span><span class="p">)</span> <span class="c"># it will return an instance of Component(&quot;CX_4&quot;)</span>
+<span class="n">field</span> <span class="o">=</span> <span class="n">parse_field</span><span class="p">(</span><span class="s2">&quot;EVERYMAN^ADAM^A&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;PID_5&quot;</span><span class="p">)</span> <span class="c1"># it will return an instance of Field(&quot;PID_5&quot;)</span>
+<span class="n">component</span> <span class="o">=</span> <span class="n">parse_component</span><span class="p">(</span><span class="s2">&quot;AUTH&amp;1.3.6.1.4.1.21367.2011.2.5.17&amp;ISO&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;CX_4&quot;</span><span class="p">)</span> <span class="c1"># it will return an instance of Component(&quot;CX_4&quot;)</span>
 </pre></div>
 </div>
 </div>
@@ -273,7 +273,7 @@ not possible to infer their names by simply parsing the input strings:</p>
 <p>You can get the ER7-encoded string of <code class="docutils literal"><span class="pre">Message</span></code>, <code class="docutils literal"><span class="pre">Group</span></code>, <code class="docutils literal"><span class="pre">Segment</span></code>, <code class="docutils literal"><span class="pre">Field</span></code>, <code class="docutils literal"><span class="pre">Component</span></code> instances by simply calling the <code class="xref py py-meth docutils literal"><span class="pre">hl7apy.Element.to_er7()</span></code> method:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">hl7apy.parser</span> <span class="kn">import</span> <span class="n">parse_segment</span>
 
-<span class="n">pid</span> <span class="o">=</span> <span class="s">&quot;PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M</span><span class="se">\r</span><span class="s">&quot;</span>
+<span class="n">pid</span> <span class="o">=</span> <span class="s2">&quot;PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M</span><span class="se">\r</span><span class="s2">&quot;</span>
 <span class="n">segment</span> <span class="o">=</span> <span class="n">parse_segment</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">segment</span><span class="o">.</span><span class="n">to_er7</span><span class="p">()</span>
 </pre></div>
@@ -281,14 +281,14 @@ not possible to infer their names by simply parsing the input strings:</p>
 <p>You can also use custom encoding chars:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">hl7apy.parser</span> <span class="kn">import</span> <span class="n">parse_segment</span>
 
-<span class="n">custom_chars</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;FIELD&#39;</span><span class="p">:</span> <span class="s">&#39;!&#39;</span><span class="p">,</span> <span class="s">&#39;COMPONENT&#39;</span><span class="p">:</span> <span class="s">&#39;@&#39;</span><span class="p">,</span> <span class="s">&#39;SUBCOMPONENT&#39;</span><span class="p">:</span> <span class="s">&#39;%&#39;</span><span class="p">,</span> <span class="s">&#39;REPETITION&#39;</span><span class="p">:</span> <span class="s">&#39;~&#39;</span><span class="p">,</span> <span class="s">&#39;ESCAPE&#39;</span><span class="p">:</span> <span class="s">&#39;$&#39;</span><span class="p">}</span>
-<span class="n">pid</span> <span class="o">=</span> <span class="s">&quot;PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M</span><span class="se">\r</span><span class="s">&quot;</span>
+<span class="n">custom_chars</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;FIELD&#39;</span><span class="p">:</span> <span class="s1">&#39;!&#39;</span><span class="p">,</span> <span class="s1">&#39;COMPONENT&#39;</span><span class="p">:</span> <span class="s1">&#39;@&#39;</span><span class="p">,</span> <span class="s1">&#39;SUBCOMPONENT&#39;</span><span class="p">:</span> <span class="s1">&#39;%&#39;</span><span class="p">,</span> <span class="s1">&#39;REPETITION&#39;</span><span class="p">:</span> <span class="s1">&#39;~&#39;</span><span class="p">,</span> <span class="s1">&#39;ESCAPE&#39;</span><span class="p">:</span> <span class="s1">&#39;$&#39;</span><span class="p">}</span>
+<span class="n">pid</span> <span class="o">=</span> <span class="s2">&quot;PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M</span><span class="se">\r</span><span class="s2">&quot;</span>
 <span class="n">segment</span> <span class="o">=</span> <span class="n">parse_segment</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">segment</span><span class="o">.</span><span class="n">to_er7</span><span class="p">(</span><span class="n">encoding_chars</span><span class="o">=</span><span class="n">custom_chars</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>For <code class="docutils literal"><span class="pre">Message</span></code> objects, you can get the string ready to be sent using mllp, by calling <code class="xref py py-meth docutils literal"><span class="pre">hl7apy.Element.to_mllp()</span></code> method:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s">&#39;OML_O33&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s1">&#39;OML_O33&#39;</span><span class="p">)</span>
 <span class="n">m</span><span class="o">.</span><span class="n">to_mllp</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -304,30 +304,30 @@ Components and SubComponents name are defined as follows:</p>
 <li>If the name is not specified it is the name of the datatype</li>
 </ul>
 </div></blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">f</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">&#39;PID_1&#39;</span><span class="p">)</span>
-<span class="n">f</span><span class="o">.</span><span class="n">datatype</span> <span class="c"># it prints &#39;SI&#39;</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">&#39;PID_3&#39;</span><span class="p">)</span>
-<span class="n">f</span><span class="o">.</span><span class="n">datatype</span> <span class="c"># it prints &#39;CX&#39;</span>
-<span class="n">c</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="s">&#39;CX_10&#39;</span><span class="p">)</span> <span class="c"># the component is part of a complex datatype (CX)</span>
-<span class="n">s</span> <span class="o">=</span> <span class="n">SubComponent</span><span class="p">(</span><span class="s">&#39;CWE_1&#39;</span><span class="p">)</span> <span class="c"># the subcomponent is part of a complex datatype (CWE)</span>
-<span class="n">c</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="n">datatype</span><span class="o">=</span><span class="s">&#39;CWE&#39;</span><span class="p">)</span> <span class="c"># the name is &#39;CWE&#39;</span>
-<span class="n">s</span> <span class="o">=</span> <span class="n">SubComponent</span><span class="p">(</span><span class="n">datatype</span><span class="o">=</span><span class="s">&#39;ST&#39;</span><span class="p">)</span> <span class="c"># the name is &#39;ST&#39;</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">f</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s1">&#39;PID_1&#39;</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">datatype</span> <span class="c1"># it prints &#39;SI&#39;</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s1">&#39;PID_3&#39;</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">datatype</span> <span class="c1"># it prints &#39;CX&#39;</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;CX_10&#39;</span><span class="p">)</span> <span class="c1"># the component is part of a complex datatype (CX)</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">SubComponent</span><span class="p">(</span><span class="s1">&#39;CWE_1&#39;</span><span class="p">)</span> <span class="c1"># the subcomponent is part of a complex datatype (CWE)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="n">datatype</span><span class="o">=</span><span class="s1">&#39;CWE&#39;</span><span class="p">)</span> <span class="c1"># the name is &#39;CWE&#39;</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">SubComponent</span><span class="p">(</span><span class="n">datatype</span><span class="o">=</span><span class="s1">&#39;ST&#39;</span><span class="p">)</span> <span class="c1"># the name is &#39;ST&#39;</span>
 </pre></div>
 </div>
 <p>The library implements base datatypes classes and validation of their values</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">hl7apy.v2_4</span> <span class="kn">import</span> <span class="n">ST</span><span class="p">,</span> <span class="n">NM</span><span class="p">,</span> <span class="n">DTM</span> <span class="c">#...the list of datatypes depends on the version</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">hl7apy.v2_4</span> <span class="kn">import</span> <span class="n">ST</span><span class="p">,</span> <span class="n">NM</span><span class="p">,</span> <span class="n">DTM</span> <span class="c1">#...the list of datatypes depends on the version</span>
 
-<span class="n">s</span> <span class="o">=</span> <span class="n">ST</span><span class="p">(</span><span class="s">&#39;some information&#39;</span><span class="p">)</span>
-<span class="n">s</span> <span class="o">=</span> <span class="n">ST</span><span class="p">(</span><span class="mi">1000</span><span class="o">*</span><span class="s">&#39;a&#39;</span><span class="p">)</span> <span class="c"># it raises an exceptions since the given value exceeds the max length for an ST datatype</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">ST</span><span class="p">(</span><span class="s1">&#39;some information&#39;</span><span class="p">)</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">ST</span><span class="p">(</span><span class="mi">1000</span><span class="o">*</span><span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="c1"># it raises an exceptions since the given value exceeds the max length for an ST datatype</span>
 <span class="n">n</span> <span class="o">=</span> <span class="n">NM</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
-<span class="n">n</span> <span class="o">=</span> <span class="n">NM</span><span class="p">(</span><span class="mi">11111</span><span class="p">)</span> <span class="c"># it raises an exceptions since the given value exceeds the max length for a NM datatype</span>
-<span class="n">d</span> <span class="o">=</span> <span class="n">DTM</span><span class="p">(</span><span class="s">&#39;20131010&#39;</span><span class="p">)</span>
-<span class="n">d</span> <span class="o">=</span> <span class="n">DTM</span><span class="p">(</span><span class="s">&#39;10102013&#39;</span><span class="p">)</span> <span class="c"># it raises an exceptions since the given value is not a valid DTM value</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">NM</span><span class="p">(</span><span class="mi">11111</span><span class="p">)</span> <span class="c1"># it raises an exceptions since the given value exceeds the max length for a NM datatype</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">DTM</span><span class="p">(</span><span class="s1">&#39;20131010&#39;</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">DTM</span><span class="p">(</span><span class="s1">&#39;10102013&#39;</span><span class="p">)</span> <span class="c1"># it raises an exceptions since the given value is not a valid DTM value</span>
 </pre></div>
 </div>
 <p>In the case of SubComponent the <code class="xref py py-attr docutils literal"><span class="pre">value</span></code> can also be an instance of a base datatype</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="n">SubComponent</span><span class="p">(</span><span class="n">datatype</span><span class="o">=</span><span class="s">&quot;FT&quot;</span><span class="p">)</span>
-<span class="n">s</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">FT</span><span class="p">(</span><span class="s">&#39;some information&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="n">SubComponent</span><span class="p">(</span><span class="n">datatype</span><span class="o">=</span><span class="s2">&quot;FT&quot;</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">FT</span><span class="p">(</span><span class="s1">&#39;some information&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -341,52 +341,52 @@ Components and SubComponents name are defined as follows:</p>
 <li>by position</li>
 </ul>
 </div></blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">(</span><span class="s">&#39;PID&#39;</span><span class="p">)</span>
-<span class="n">s</span><span class="o">.</span><span class="n">pid_5</span> <span class="c"># by name</span>
-<span class="n">s</span><span class="o">.</span><span class="n">patient_name</span> <span class="c"># by long name</span>
-<span class="n">s</span><span class="o">.</span><span class="n">pid_5</span><span class="o">.</span><span class="n">pid_5_1</span> <span class="c"># by position</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">(</span><span class="s1">&#39;PID&#39;</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">pid_5</span> <span class="c1"># by name</span>
+<span class="n">s</span><span class="o">.</span><span class="n">patient_name</span> <span class="c1"># by long name</span>
+<span class="n">s</span><span class="o">.</span><span class="n">pid_5</span><span class="o">.</span><span class="n">pid_5_1</span> <span class="c1"># by position</span>
 </pre></div>
 </div>
 <p>Please note that child traversal is case insensitive (e.g. s.PATIENT_NAME is the same as s.patient_name)</p>
 <p>By default the returned child is always the first, because usually an element have only one instance for a child.
 If you want to access to another child you have to specify the index</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">s</span><span class="o">.</span><span class="n">pid_13</span> <span class="c"># it is the same as s.pid_13[0]</span>
-<span class="n">s</span><span class="o">.</span><span class="n">pid_13</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c"># it returns the second instance of pid_13 (if it exists)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">s</span><span class="o">.</span><span class="n">pid_13</span> <span class="c1"># it is the same as s.pid_13[0]</span>
+<span class="n">s</span><span class="o">.</span><span class="n">pid_13</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># it returns the second instance of pid_13 (if it exists)</span>
 </pre></div>
 </div>
 <p>If you want to access to a Field&#8217;s children you can also use the following syntax:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">org_5</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">&#39;org_5&#39;</span><span class="p">)</span> <span class="c"># the datatype is CX</span>
-<span class="n">org_5</span><span class="o">.</span><span class="n">org_5_10</span> <span class="c"># it returns the tenth component of the field. It is the same as org_5.cx_10</span>
-<span class="n">org_5</span><span class="o">.</span><span class="n">org_5_10_3</span> <span class="c"># it returns the third subcomponent of the tenth component of the field. It is the same as org_5.cx_10.cwe_3</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">org_5</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s1">&#39;org_5&#39;</span><span class="p">)</span> <span class="c1"># the datatype is CX</span>
+<span class="n">org_5</span><span class="o">.</span><span class="n">org_5_10</span> <span class="c1"># it returns the tenth component of the field. It is the same as org_5.cx_10</span>
+<span class="n">org_5</span><span class="o">.</span><span class="n">org_5_10_3</span> <span class="c1"># it returns the third subcomponent of the tenth component of the field. It is the same as org_5.cx_10.cwe_3</span>
 
-<span class="n">org_4</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">&#39;ORG_4&#39;</span><span class="p">)</span> <span class="c"># the datatype is ID</span>
-<span class="n">org_4</span><span class="o">.</span><span class="n">org_4_1_1</span> <span class="c"># it raises an exception since org_4_1 is a base_datatype and doesn&#39;t have a subcomponent</span>
+<span class="n">org_4</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s1">&#39;ORG_4&#39;</span><span class="p">)</span> <span class="c1"># the datatype is ID</span>
+<span class="n">org_4</span><span class="o">.</span><span class="n">org_4_1_1</span> <span class="c1"># it raises an exception since org_4_1 is a base_datatype and doesn&#39;t have a subcomponent</span>
 </pre></div>
 </div>
 <p>If you want to iterate over an element&#8217;s children</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
-    <span class="c"># do something useful with child</span>
+    <span class="c1"># do something useful with child</span>
 </pre></div>
 </div>
 <p>You can also iterate over all the repetitions of a given child</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s">&#39;OML_O33&#39;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">spm</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">spm</span><span class="p">:</span> <span class="c"># in this case returns all the children named spm, not just the first one</span>
-    <span class="c"># do something useful with spm</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s1">&#39;OML_O33&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">spm</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">spm</span><span class="p">:</span> <span class="c1"># in this case returns all the children named spm, not just the first one</span>
+    <span class="c1"># do something useful with spm</span>
 </pre></div>
 </div>
 <p>You can delete a child from an elements</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s">&#39;OML_O33&#39;</span><span class="p">)</span>
-<span class="k">del</span> <span class="n">m</span><span class="o">.</span><span class="n">MSA</span> <span class="c"># it deletes the first msa</span>
-<span class="k">del</span> <span class="n">m</span><span class="o">.</span><span class="n">spm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">spm_1</span> <span class="c"># it deletes the spm_1 field of the second spm segment</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s1">&#39;OML_O33&#39;</span><span class="p">)</span>
+<span class="k">del</span> <span class="n">m</span><span class="o">.</span><span class="n">MSA</span> <span class="c1"># it deletes the first msa</span>
+<span class="k">del</span> <span class="n">m</span><span class="o">.</span><span class="n">spm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">spm_1</span> <span class="c1"># it deletes the spm_1 field of the second spm segment</span>
 </pre></div>
 </div>
 <p>During children traversal if you try to access to an element which has not been created yet, it returns an empty list (if the child is valid)</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">f</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">&#39;PID_3&#39;</span><span class="p">)</span>
-<span class="n">f</span><span class="o">.</span><span class="n">cx_10</span> <span class="c"># it returns []</span>
-<span class="n">f</span><span class="o">.</span><span class="n">cx_30</span> <span class="c"># it raises an exception since cx_30 does not exist</span>
-<span class="n">f</span><span class="o">.</span><span class="n">cx_10</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="s">&#39;CX_10&#39;</span><span class="p">)</span>
-<span class="n">f</span><span class="o">.</span><span class="n">cx_10</span> <span class="c"># it returns [&lt;Component CX_10&gt;]</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">f</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s1">&#39;PID_3&#39;</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">cx_10</span> <span class="c1"># it returns []</span>
+<span class="n">f</span><span class="o">.</span><span class="n">cx_30</span> <span class="c1"># it raises an exception since cx_30 does not exist</span>
+<span class="n">f</span><span class="o">.</span><span class="n">cx_10</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;CX_10&#39;</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">cx_10</span> <span class="c1"># it returns [&lt;Component CX_10&gt;]</span>
 </pre></div>
 </div>
 </div>
@@ -396,14 +396,14 @@ If you want to access to another child you have to specify the index</p>
 <p>To use a message profile, first you need to create a file that HL7apy can interpret. The file must be created using
 the utility script <code class="docutils literal"><span class="pre">hl7apy_profile_parser</span></code> which needs the XML static definition of the profile as input.</p>
 <p>The command below will create the file for <code class="docutils literal"><span class="pre">message_profile.xml</span></code></p>
-<div class="highlight-bash"><div class="highlight"><pre>python hl7apy_profile_parser message_profile.xml -o <span class="nv">$HOME</span>/message_profile
+<div class="highlight-bash"><div class="highlight"><pre>python hl7apy_profile_parser message_profile.xml -o $HOME/message_profile
 </pre></div>
 </div>
 <p>To create messages according to a message profile, it is necessary to load the corresponding file and pass it when
 instantiating of parsing a <a class="reference internal" href="../api_docs/core.html#hl7apy.core.Message" title="hl7apy.core.Message"><code class="xref py py-class docutils literal"><span class="pre">Message</span></code></a></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">hl7apy</span> <span class="kn">import</span> <span class="n">load_message_profile</span>
-<span class="n">mp</span> <span class="o">=</span> <span class="n">load_message_profile</span><span class="p">(</span><span class="s">&#39;$HOME/message_profile&#39;</span><span class="p">)</span>
-<span class="n">m1</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s">&#39;RSP_K21&#39;</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">mp</span><span class="p">)</span>
+<span class="n">mp</span> <span class="o">=</span> <span class="n">load_message_profile</span><span class="p">(</span><span class="s1">&#39;$HOME/message_profile&#39;</span><span class="p">)</span>
+<span class="n">m1</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s1">&#39;RSP_K21&#39;</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">mp</span><span class="p">)</span>
 <span class="n">m2</span> <span class="o">=</span> <span class="n">parse_message</span><span class="p">(</span><span class="n">er7_str</span><span class="p">,</span> <span class="n">message_profile</span><span class="o">=</span><span class="n">mp</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -418,19 +418,19 @@ children references will be used, it is necessary to create each child using ele
 method.</p>
 <p>For example, let&#8217;s consider a message profile that specifies the datatype of the PID.3 to be CWE (the official
 one is CX).</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">mp</span> <span class="o">=</span> <span class="n">load_message_profile</span><span class="p">(</span><span class="s">&#39;$HOME/message_profile&#39;</span><span class="p">)</span>
-<span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s">&#39;RSP_K21&#39;</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">mp</span><span class="p">)</span>
-<span class="n">m</span><span class="o">.</span><span class="n">pid</span><span class="o">.</span><span class="n">pid_3</span><span class="o">.</span><span class="n">cwe_1</span> <span class="o">=</span> <span class="s">&#39;aaa&#39;</span>  <span class="c"># populate the first occurrence of pid_3.</span>
-<span class="n">pid_3</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">pid</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="s">&#39;PID_3&#39;</span><span class="p">)</span>  <span class="c"># create a second occurrence</span>
-<span class="n">pid_3</span><span class="o">.</span><span class="n">cwe_1</span> <span class="o">=</span> <span class="s">&#39;bbb&#39;</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">mp</span> <span class="o">=</span> <span class="n">load_message_profile</span><span class="p">(</span><span class="s1">&#39;$HOME/message_profile&#39;</span><span class="p">)</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s1">&#39;RSP_K21&#39;</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">mp</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">pid</span><span class="o">.</span><span class="n">pid_3</span><span class="o">.</span><span class="n">cwe_1</span> <span class="o">=</span> <span class="s1">&#39;aaa&#39;</span>  <span class="c1"># populate the first occurrence of pid_3.</span>
+<span class="n">pid_3</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">pid</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="s1">&#39;PID_3&#39;</span><span class="p">)</span>  <span class="c1"># create a second occurrence</span>
+<span class="n">pid_3</span><span class="o">.</span><span class="n">cwe_1</span> <span class="o">=</span> <span class="s1">&#39;bbb&#39;</span>
 </pre></div>
 </div>
 <p>In this example, since we are using traversal and <code class="docutils literal"><span class="pre">add_field()</span></code> method, the library will use the PID.3 structure
 specified in the message profile.
 If we create the children separately the library will use the official HL7 structures.</p>
-<div class="last highlight-python"><div class="highlight"><pre><span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s">&#39;RSP_K21&#39;</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">mp</span><span class="p">)</span>
-<span class="n">pid_3</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">&#39;PID_3&#39;</span><span class="p">)</span>
-<span class="n">pid_3</span><span class="o">.</span><span class="n">cwe_1</span>  <span class="c">#  this will raise an error, since the official datatype is &#39;CX&#39;</span>
+<div class="last highlight-python"><div class="highlight"><pre><span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s1">&#39;RSP_K21&#39;</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">mp</span><span class="p">)</span>
+<span class="n">pid_3</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s1">&#39;PID_3&#39;</span><span class="p">)</span>
+<span class="n">pid_3</span><span class="o">.</span><span class="n">cwe_1</span>  <span class="c1">#  this will raise an error, since the official datatype is &#39;CX&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -453,21 +453,21 @@ If we create the children separately the library will use the official HL7 struc
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="kn">import</span> <span class="n">Message</span>
 <span class="kn">from</span> <span class="nn">hl7apy.consts</span> <span class="kn">import</span> <span class="n">VALIDATION_LEVEL</span>
 
-<span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s">&quot;ADT_A01&quot;</span><span class="p">,</span> <span class="n">validation_level</span><span class="o">=</span><span class="n">VALIDATION_LEVEL</span><span class="o">.</span><span class="n">STRICT</span><span class="p">)</span> <span class="c"># note that the MSH segment is automatically created when instantiating a Message</span>
-<span class="n">m</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="s">&#39;MSH&#39;</span><span class="p">)</span> <span class="c"># a Message cannot have more than 1 MSH segment</span>
-<span class="c">#Traceback (most recent call last):</span>
-<span class="c">#...</span>
-<span class="c">#MaxChildLimitReached: Cannot add &lt;Segment MSH&gt;: max limit (1) reached for &lt;Message ADT_A01&gt;</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s2">&quot;ADT_A01&quot;</span><span class="p">,</span> <span class="n">validation_level</span><span class="o">=</span><span class="n">VALIDATION_LEVEL</span><span class="o">.</span><span class="n">STRICT</span><span class="p">)</span> <span class="c1"># note that the MSH segment is automatically created when instantiating a Message</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="s1">&#39;MSH&#39;</span><span class="p">)</span> <span class="c1"># a Message cannot have more than 1 MSH segment</span>
+<span class="c1">#Traceback (most recent call last):</span>
+<span class="c1">#...</span>
+<span class="c1">#MaxChildLimitReached: Cannot add &lt;Segment MSH&gt;: max limit (1) reached for &lt;Message ADT_A01&gt;</span>
 
-<span class="n">m</span><span class="o">.</span><span class="n">msh</span><span class="o">.</span><span class="n">pid_1</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">&#39;PID_1&#39;</span><span class="p">)</span>
-<span class="c">#Traceback (most recent call last):</span>
-<span class="c">#...</span>
-<span class="c">#ChildNotValid: &lt;Field PID_1 (SET_ID_PID) of type SI&gt; is not a valid child for &lt;Segment MSH&gt;</span>
+<span class="n">m</span><span class="o">.</span><span class="n">msh</span><span class="o">.</span><span class="n">pid_1</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s1">&#39;PID_1&#39;</span><span class="p">)</span>
+<span class="c1">#Traceback (most recent call last):</span>
+<span class="c1">#...</span>
+<span class="c1">#ChildNotValid: &lt;Field PID_1 (SET_ID_PID) of type SI&gt; is not a valid child for &lt;Segment MSH&gt;</span>
 
-<span class="n">m</span><span class="o">.</span><span class="n">msh</span><span class="o">.</span><span class="n">msh_7</span> <span class="o">=</span> <span class="s">&#39;abcde&#39;</span> <span class="c"># its value should be a valid DTM value (e.g. 20130101)</span>
-<span class="c">#Traceback (most recent call last):</span>
-<span class="c">#...</span>
-<span class="c">#ValueError: abcde is not an HL7 valid date value</span>
+<span class="n">m</span><span class="o">.</span><span class="n">msh</span><span class="o">.</span><span class="n">msh_7</span> <span class="o">=</span> <span class="s1">&#39;abcde&#39;</span> <span class="c1"># its value should be a valid DTM value (e.g. 20130101)</span>
+<span class="c1">#Traceback (most recent call last):</span>
+<span class="c1">#...</span>
+<span class="c1">#ValueError: abcde is not an HL7 valid date value</span>
 </pre></div>
 </div>
 <p>In <code class="docutils literal"><span class="pre">TOLERANT</span></code> mode, the library does not perform the checks listed above, but you can still verify if an
@@ -475,14 +475,14 @@ element created with <code class="docutils literal"><span class="pre">TOLERANT</
 <code class="xref py py-func docutils literal"><span class="pre">hl7apy.core.Element.validate()</span></code> method:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="kn">import</span> <span class="n">Message</span>
 
-<span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s">&quot;ADT_A01&quot;</span><span class="p">)</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s2">&quot;ADT_A01&quot;</span><span class="p">)</span>
 <span class="n">m</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>When a message is created using a message profile, the validation will be performed using it as reference.</p>
 <p>The validate method can also save a report file with all the errors and warnings occurred during validation.
 You just need to specify the file path as input</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">m</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">report_file</span><span class="o">=</span><span class="s">&#39;report&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">m</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">report_file</span><span class="o">=</span><span class="s1">&#39;report&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -490,55 +490,55 @@ You just need to specify the file path as input</p>
 <h2>Z Elements<a class="headerlink" href="#z-elements" title="Permalink to this headline">¶</a></h2>
 <p>The library supports the use of Z Elements which are Z messages, Z segments and Z fields</p>
 <p>A Z Message can be created using a name starting with Z: both parts of the trigger event must start with a Z</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s">&#39;ZBE_Z01&#39;</span><span class="p">)</span> <span class="c"># This is allowed</span>
-<span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s">&#39;ZBEZ01&#39;</span><span class="p">)</span> <span class="c"># This is not allowed</span>
-<span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s">&#39;ZBE_A01&#39;</span><span class="p">)</span> <span class="c"># This is not allowed</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s1">&#39;ZBE_Z01&#39;</span><span class="p">)</span> <span class="c1"># This is allowed</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s1">&#39;ZBEZ01&#39;</span><span class="p">)</span> <span class="c1"># This is not allowed</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s1">&#39;ZBE_A01&#39;</span><span class="p">)</span> <span class="c1"># This is not allowed</span>
 </pre></div>
 </div>
 <p>You can add every kind of segment to a Z Message, both normal segment or Z segment. Also groups are allowed.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s">&#39;ZBE_Z01&#39;</span><span class="p">)</span> <span class="c"># This is allowed</span>
-<span class="n">m</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="s">&#39;PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M</span><span class="se">\r</span><span class="s">&#39;</span>
-<span class="n">m</span><span class="o">.</span><span class="n">zin</span> <span class="o">=</span> <span class="s">&#39;ZIN|aa|bb|cc&#39;</span>
-<span class="n">m</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Group</span><span class="p">(</span><span class="s">&#39;ADT_A01_INSURANCE&#39;</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s1">&#39;ZBE_Z01&#39;</span><span class="p">)</span> <span class="c1"># This is allowed</span>
+<span class="n">m</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="s1">&#39;PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M</span><span class="se">\r</span><span class="s1">&#39;</span>
+<span class="n">m</span><span class="o">.</span><span class="n">zin</span> <span class="o">=</span> <span class="s1">&#39;ZIN|aa|bb|cc&#39;</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Group</span><span class="p">(</span><span class="s1">&#39;ADT_A01_INSURANCE&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>When encoding to ER7, segments and groups are encoded in the order of creation</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s">&#39;ZBE_Z01&#39;</span><span class="p">)</span> <span class="c"># This is allowed</span>
-<span class="n">m</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="s">&#39;PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M</span><span class="se">\r</span><span class="s">&#39;</span>
-<span class="n">m</span><span class="o">.</span><span class="n">zin</span> <span class="o">=</span> <span class="s">&#39;ZIN|aa|bb|cc&#39;</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s1">&#39;ZBE_Z01&#39;</span><span class="p">)</span> <span class="c1"># This is allowed</span>
+<span class="n">m</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="s1">&#39;PID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M</span><span class="se">\r</span><span class="s1">&#39;</span>
+<span class="n">m</span><span class="o">.</span><span class="n">zin</span> <span class="o">=</span> <span class="s1">&#39;ZIN|aa|bb|cc&#39;</span>
 <span class="n">m</span><span class="o">.</span><span class="n">to_er7</span><span class="p">()</span>
 
-<span class="c"># &#39;MSH|^~\\&amp;|||||20140731143925|||||2.5\rPID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M\rZIN|aa|bb|cc&#39;</span>
+<span class="c1"># &#39;MSH|^~\\&amp;|||||20140731143925|||||2.5\rPID|1||566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004~444-333-222|||M\rZIN|aa|bb|cc&#39;</span>
 </pre></div>
 </div>
 <p>A Z segment is a segment that have the name starting with a Z</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">(</span><span class="s">&#39;ZBE&#39;</span><span class="p">)</span> <span class="c"># This is allowed</span>
-<span class="n">s</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">(</span><span class="s">&#39;ZCEV&#39;</span><span class="p">)</span> <span class="c"># This is not allowed</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">(</span><span class="s1">&#39;ZBE&#39;</span><span class="p">)</span> <span class="c1"># This is allowed</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">(</span><span class="s1">&#39;ZCEV&#39;</span><span class="p">)</span> <span class="c1"># This is not allowed</span>
 </pre></div>
 </div>
 <p>As other segments, you can add fields with the positional name or unknown fields, (the latter in <code class="docutils literal"><span class="pre">TOLERANT</span></code> only)</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="n">Segments</span><span class="p">(</span><span class="s">&#39;ZIN&#39;</span><span class="p">)</span>
-<span class="n">s</span><span class="o">.</span><span class="n">zin_1</span> <span class="o">=</span> <span class="s">&#39;abc&#39;</span>
-<span class="n">s</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="s">&#39;zin_2&#39;</span><span class="p">)</span>
-<span class="n">zin_3</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">&#39;ZIN_3&#39;</span><span class="p">,</span> <span class="n">datatype</span><span class="o">=</span><span class="s">&#39;CX&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="n">Segments</span><span class="p">(</span><span class="s1">&#39;ZIN&#39;</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">zin_1</span> <span class="o">=</span> <span class="s1">&#39;abc&#39;</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="s1">&#39;zin_2&#39;</span><span class="p">)</span>
+<span class="n">zin_3</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s1">&#39;ZIN_3&#39;</span><span class="p">,</span> <span class="n">datatype</span><span class="o">=</span><span class="s1">&#39;CX&#39;</span><span class="p">)</span>
 <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">zin_3</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Z fields are fields belonging to a Z segment. They&#8217;re named with the name of the segment plus the position</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">f</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">&#39;ZIN_1&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">f</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s1">&#39;ZIN_1&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>By default a Z field&#8217;s datatype is <code class="docutils literal"><span class="pre">ST</span></code>. When the value assigned to the <code class="docutils literal"><span class="pre">Field</span></code> contains more than one component, its datatype is converted to <code class="docutils literal"><span class="pre">None</span></code></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">f</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">&#39;ZIN_1&#39;</span><span class="p">)</span>
-<span class="n">f</span><span class="o">.</span><span class="n">datatype</span> <span class="c"># &#39;ST&#39;</span>
-<span class="n">f</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s">&#39;abc^def&#39;</span>
-<span class="n">f</span><span class="o">.</span><span class="n">datatype</span> <span class="c"># None</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">f</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s1">&#39;ZIN_1&#39;</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">datatype</span> <span class="c1"># &#39;ST&#39;</span>
+<span class="n">f</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;abc^def&#39;</span>
+<span class="n">f</span><span class="o">.</span><span class="n">datatype</span> <span class="c1"># None</span>
 </pre></div>
 </div>
 <p>Validation of Z elements follow the same rules of the other elements. So for example you can&#8217;t a Field of datatype None is not validated</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">f</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">&#39;ZIN_1&#39;</span><span class="p">)</span>
-<span class="n">f</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s">&#39;abc^def&#39;</span>
-<span class="n">f</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span> <span class="c"># False</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">f</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s1">&#39;ZIN_1&#39;</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;abc^def&#39;</span>
+<span class="n">f</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span> <span class="c1"># False</span>
 </pre></div>
 </div>
 </div>
@@ -556,10 +556,10 @@ for this kind of message, subclassing <a class="reference internal" href="../api
 <span class="k">class</span> <span class="nc">PDQHandler</span><span class="p">(</span><span class="n">AbstractHandler</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">reply</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="n">parse_message</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_message</span><span class="p">)</span>
-        <span class="c"># do something with the message</span>
+        <span class="c1"># do something with the message</span>
 
-        <span class="n">res</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s">&#39;RSP_K21&#39;</span><span class="p">)</span>
-        <span class="c"># populate the message</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s1">&#39;RSP_K21&#39;</span><span class="p">)</span>
+        <span class="c1"># populate the message</span>
         <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">to_mllp</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -567,10 +567,10 @@ for this kind of message, subclassing <a class="reference internal" href="../api
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">hl7apy.mllp</span> <span class="kn">import</span> <span class="n">MLLPServer</span>
 
 <span class="n">handlers</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">&#39;QBP^Q22^QBP_Q21&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">PDQHandler</span><span class="p">,)</span> <span class="c"># value is a tuple</span>
+    <span class="s1">&#39;QBP^Q22^QBP_Q21&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">PDQHandler</span><span class="p">,)</span> <span class="c1"># value is a tuple</span>
 <span class="p">}</span>
 
-<span class="n">server</span> <span class="o">=</span> <span class="n">MLLPServer</span><span class="p">(</span><span class="s">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">2575</span><span class="p">,</span> <span class="n">handlers</span><span class="p">)</span>
+<span class="n">server</span> <span class="o">=</span> <span class="n">MLLPServer</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">2575</span><span class="p">,</span> <span class="n">handlers</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We can also implement a handler that accepts custom arguments. In the example below, the handler is provided
@@ -585,13 +585,13 @@ with the name of the demographic database to retrieve the patients information f
 
     <span class="k">def</span> <span class="nf">reply</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="n">parse_message</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_message</span><span class="p">)</span>
-        <span class="c"># do something with the message</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s">&#39;RSP_K21&#39;</span><span class="p">)</span>
-        <span class="c"># populate the message</span>
+        <span class="c1"># do something with the message</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s1">&#39;RSP_K21&#39;</span><span class="p">)</span>
+        <span class="c1"># populate the message</span>
         <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">to_mllp</span><span class="p">()</span>
 
 <span class="n">handlers</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">&#39;QBP^Q22^QBP_Q21&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">PDQHandler</span><span class="p">,</span> <span class="s">&#39;db_name&#39;</span><span class="p">)</span>
+    <span class="s1">&#39;QBP^Q22^QBP_Q21&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">PDQHandler</span><span class="p">,</span> <span class="s1">&#39;db_name&#39;</span><span class="p">)</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -604,14 +604,14 @@ the attribute <code class="xref py py-attr docutils literal"><span class="pre">e
 <span class="k">class</span> <span class="nc">ErrorHandler</span><span class="p">(</span><span class="n">AbstractErrorHandler</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">reply</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exc</span><span class="p">,</span> <span class="n">UnsupportedMessageType</span><span class="p">):</span>
-            <span class="c"># return your custom response for unsupported message</span>
+            <span class="c1"># return your custom response for unsupported message</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c"># return your custom response for general errors</span>
+            <span class="c1"># return your custom response for general errors</span>
 
 
 <span class="n">handlers</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">&#39;QBP^Q22^QBP_Q21&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">PDQHandler</span><span class="p">,</span> <span class="s">&#39;demographic_db&#39;</span><span class="p">),</span>
-    <span class="s">&#39;ERR&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">ErrorHandler</span><span class="p">,)</span>
+    <span class="s1">&#39;QBP^Q22^QBP_Q21&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">PDQHandler</span><span class="p">,</span> <span class="s1">&#39;demographic_db&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;ERR&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">ErrorHandler</span><span class="p">,)</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -635,7 +635,7 @@ the attribute <code class="xref py py-attr docutils literal"><span class="pre">e
   <hr/>
 
   <div role="contentinfo" class="footer-font footer-div">
-        &copy; Copyright 2012-2015, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
+        &copy; Copyright 2012-2017, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
   </div>
 
   <div class="footer-font footer-div">
@@ -663,7 +663,7 @@ the attribute <code class="xref py py-attr docutils literal"><span class="pre">e
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.1.2',
+            VERSION:'1.2.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
