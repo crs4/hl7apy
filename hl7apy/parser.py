@@ -588,7 +588,19 @@ def _split_msh(content):
         try:
             comp_sep, rep_sep, escape, sub_sep = seps
         except ValueError:
-            if len(seps) < N_SEPS:
+            if len(seps) == 5:
+                comp_sep, rep_sep, escape, sub_sep, trunc_sep  = seps
+                encoding_chars = {
+                    'FIELD': field_sep,
+                    'COMPONENT': comp_sep,
+                    'SUBCOMPONENT': sub_sep,
+                    'REPETITION': rep_sep,
+                    'ESCAPE': escape,
+                    'SEGMENT': '\r',
+                    'GROUP': '\r',
+                    'TRUNCATE':trunc_sep
+                }
+            elif len(seps) < N_SEPS:
                 raise InvalidEncodingChars('Missing required encoding chars')
             else:
                 raise InvalidEncodingChars('Found {0} encoding chars'.format(len(seps)))
