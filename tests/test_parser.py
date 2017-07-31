@@ -399,8 +399,6 @@ class TestParser(unittest.TestCase):
         for mt in ("ADT^A01^ADT_A01", "ADT^A01", "^^^", "^^ADT_A01"):
             self.assertEqual(get_message_type(msh.format(mt)), mt)
 
-            )
-
     def test_parse_message_27(self):
         m = parse_message('MSH|^~\&#|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^|')
             
