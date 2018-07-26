@@ -71,36 +71,39 @@ class _MLLPRequestHandler(StreamRequestHandler):
 
     def handle(self):
         end_seq = self.eb + self.cr
-        try:
-            line = self.request.recv(3)
-        except socket.timeout:
-            self.request.close()
-            return
 
-        if line[:1] != self.sb:  # First MLLP char
-            self.request.close()
-            return
-
-        while line[-2:] != end_seq:
+        # 1) each loop through is a single HL7 message with MLLP markers
+        # 2) we leave the loop via a handled or unhandled exception
+        while True:
             try:
-                char = self.rfile.read(1)
-                if not char:
-                    break
-                line += char
+                line = self.rfile.read(3)
             except socket.timeout:
                 self.request.close()
                 return
 
-        message = self._extract_hl7_message(line.decode(self.encoding))
-        if message is not None:
-            try:
-                response = self._route_message(message)
-            except Exception:
+            if line[:1] != self.sb:  # First MLLP char
                 self.request.close()
-            else:
-                # encode the response
-                self.wfile.write(response.encode(self.encoding))
-        self.request.close()
+                return
+
+            while line[-2:] != end_seq:
+                try:
+                    char = self.rfile.read(1)
+                    if not char:
+                        break
+                    line += char
+                except socket.timeout:
+                    self.request.close()
+                    return
+
+            message = self._extract_hl7_message(line.decode(self.encoding))
+            if message is not None:
+                try:
+                    response = self._route_message(message)
+                except Exception:
+                    self.request.close()
+                else:
+                    # encode the response
+                    self.wfile.write(response.encode(self.encoding))
 
     def _extract_hl7_message(self, msg):
         message = None
@@ -164,6 +167,11 @@ class MLLPServer(ThreadingMixIn, TCPServer):
         self.handlers = handlers
         self.timeout = timeout
         TCPServer.__init__(self, (host, port), _MLLPRequestHandler)
+
+    # JCJC
+    def shutdown_request(self, request):
+        # leave socket active
+        pass
 
 
 class AbstractHandler(object):
