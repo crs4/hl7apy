@@ -23,11 +23,16 @@
 import sys
 import os
 import re
-from optparse import OptionParser
-from lxml import objectify
-import collections
-import cPickle
 import pprint
+from optparse import OptionParser
+from lxml import objectify, etree
+import collections
+
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
+
 
 class ProfileParser(object):
 
@@ -83,7 +88,7 @@ class ProfileParser(object):
         name = segment.get('Name')
         fields = []
         for index, field in enumerate(segment.Field):
-            field_name = "{}_{}".format(name, index+1)
+            field_name = "{}_{}".format(name, index + 1)
             field_long_name = self._sanitize(field.get('Name'))
             field_datatype = field.get('Datatype')
             field_cardinality = self._get_cardinality(field)
@@ -92,8 +97,6 @@ class ProfileParser(object):
             field_children = self._parse_datatype(field) or None
             field_type = 'sequence' if field_children is not None else 'leaf'
             field_datatype = field_datatype.upper() if field_datatype.upper() != "VARIES" else "varies"
-            # field_data = [field_type, field_name, field_children, field_cardinality, 'Field',
-            #               field_datatype, field_long_name, field_table, field_length]
             field_data = [field_name, (field_type, field_children, field_datatype,
                                        field_long_name, field_table, field_length),
                           field_cardinality, "FIE"]
@@ -107,21 +110,18 @@ class ProfileParser(object):
         for el_type in ['Component', 'SubComponent']:
             try:
                 for c_index, component in enumerate(getattr(parent, el_type)):
-                    comp_name = "{}_{}".format(datatype, c_index+1)
+                    comp_name = "{}_{}".format(datatype, c_index + 1)
                     comp_long_name = self._sanitize(component.get('Name'))
-                    comp_cardinality = (1,1) if component.get('Usage') in ('R',) else (0, 1)
+                    comp_cardinality = (1, 1) if component.get('Usage') in ('R',) else (0, 1)
                     comp_datatype = component.get('Datatype')
                     comp_length = int(component.get('Length')) if component.get('Length') else 0
                     comp_table = "HL7{}".format(component.get('Table')) if component.get('Table') else None
-                    comp_children = self._parse_datatype(component)  or None
+                    comp_children = self._parse_datatype(component) or None
                     comp_type = 'sequence' if comp_children is not None else 'leaf'
                     comp_datatype = comp_datatype.upper() if comp_datatype.upper() != "VARIES" else "varies"
-                    # component_data = (comp_type, comp_name, comp_children, comp_cardinality,
-                    #                   el_type, comp_datatype, comp_long_name, comp_table, comp_length)
                     component_data = (comp_name, (comp_type, comp_children, comp_datatype,
                                                   comp_long_name, comp_table, comp_length),
                                       comp_cardinality, "CMP")
-                    # component_data = (comp_name, cardinality, self._parse_field(component), type)
                     components.append(component_data)
             except:
                 continue
@@ -132,8 +132,8 @@ class ProfileParser(object):
         try:
             if not os.path.exists(self.output_path):
                 os.mkdir(self.output_path)
-        except Exception, ex:
-            print "Error occurred while saving the output to: ", self.output_path, ex
+        except Exception as ex:
+            print("Error occurred while saving the output to: ", self.output_path, ex)
             sys.exit(1)
 
         if os.path.isdir(self.input_path):
@@ -148,7 +148,7 @@ class ProfileParser(object):
             content = self.parse_profile(f)
             file_path = os.path.join(self.output_path, filename)
             with open(file_path, "wb") as output_file:
-                cPickle.dump(dict(content), output_file)
+                pickle.dump(dict(content), output_file, protocol=2)
 
     def parse_profile(self, profile_file):
         """
@@ -158,26 +158,29 @@ class ProfileParser(object):
         elements = {}
         try:
             schema_path = os.path.join(self.input_path, profile_file)
-            with open(schema_path) as xml_file:
+            with open(schema_path, 'rb') as xml_file:
                 data = xml_file.read()
-        except Exception, ex:
-            print "Error occurred while opening the message profile file: ", ex
+        except Exception as ex:
+            print("Error occurred while opening the message profile file")
             sys.exit(1)
 
         try:
             f = objectify.XML(data)
-        except Exception, ex:
-            print "Invalid XML file: ", profile_file, ex
+        except Exception as ex:
+            import traceback
+            traceback.print_exc()
+            print("Invalid XML file: " + profile_file)
             sys.exit(1)
-
+        print(type(f))
         message_structure = f.HL7v2xStaticDef.get('MsgStructID')
-
+        print(message_structure)
         messages = collections.defaultdict(list)
 
         children = self._parse_children(f.HL7v2xStaticDef, message_structure)
         messages[message_structure] = ('sequence', children)
 
         return messages
+
 
 if __name__ == '__main__':
     usage = "%prog [options] input_path\ninputh_path can be a file or a folder containing the message " \

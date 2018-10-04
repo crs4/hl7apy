@@ -36,19 +36,19 @@ from hl7apy.validation import VALIDATION_LEVEL as VL
 
 
 def get_parser():
-    parser = OptionParser()
-    parser.add_option("-d", "--input_dir",  type="string", dest="input_dir",
-                      help="directory containing .hl7 files")
-    parser.add_option("-o", "--output_file", type="string", dest="output_file",
-                      help="statistics file. By default its stdout")
-    parser.add_option("-n", "--number_of_message", type="int", dest="n_msg",
-                      help="maximum number of message to parse")
-    parser.add_option("-v", "--validation_level", dest="validation_level", default='strict',
-                      choices=['tolerant', 'strict'], help="validation level to use")
-    parser.add_option("-g", "--find_groups", dest="find_groups", help="whether it should find groups or not",
-                      choices=["yes", "no"], default="yes")
-    parser.add_option("-m", "--message_profile", dest="message_profile", help="message profile to use")
-    return parser
+    p = OptionParser()
+    p.add_option("-d", "--input_dir", type="string", dest="input_dir",
+                 help="directory containing .hl7 files")
+    p.add_option("-o", "--output_file", type="string", dest="output_file",
+                 help="statistics file. By default it is stdout")
+    p.add_option("-n", "--number_of_message", type="int", dest="n_msg",
+                 help="maximum number of message to parse")
+    p.add_option("-v", "--validation_level", dest="validation_level", default='strict',
+                 choices=['tolerant', 'strict'], help="validation level to use")
+    p.add_option("-g", "--find_groups", dest="find_groups", help="whether it should find groups or not",
+                 choices=["yes", "no"], default="yes")
+    p.add_option("-m", "--message_profile", dest="message_profile", help="message profile to use")
+    return p
 
 
 def usage():
@@ -66,15 +66,19 @@ def natural_sort(list_of_lists, index=0):
     Inspired from: http://stackoverflow.com/a/4836734/592289
 
     """
-    convert = lambda text: int(text) if text.isdigit() else text.lower()
-    alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key[index])]
+
+    def convert(text):
+        return int(text) if text.isdigit() else text.lower()
+
+    def alphanum_key(key):
+        return [convert(c) for c in re.split('([0-9]+)', key[index])]
+
     return sorted(list_of_lists, key=alphanum_key)
 
 
 def print_report(n_messages, msg_per_version, msg_per_type, exceptions,
                  elapsed_time, output_file, time_per_message, encoding_time,
                  validation_level, message_profile):
-
     validations = [VL.STRICT, VL.TOLERANT]
     if validation_level == VL.TOLERANT:
         validations.remove(VL.STRICT)
@@ -105,7 +109,8 @@ def print_report(n_messages, msg_per_version, msg_per_type, exceptions,
 
             output.write("\n\nParsing time statistics:\n\n")
             for tpm in natural_sort(time_per_message[vl]):
-                output.write("File: {}\tSegments: {}\tMessage Type: {}\tTime: {}\n".format(tpm[0], tpm[1], tpm[2], tpm[3]))
+                output.write(
+                    "File: {}\tSegments: {}\tMessage Type: {}\tTime: {}\n".format(tpm[0], tpm[1], tpm[2], tpm[3]))
 
         output.write("\nEncoding  time statistics:\n\n")
         for et in natural_sort(encoding_time):
@@ -114,11 +119,10 @@ def print_report(n_messages, msg_per_version, msg_per_type, exceptions,
 
 def parse_messages(directory, validation_level=VL.STRICT, find_groups=True, limit=-1,
                    output_file=None, message_profile=None):
-
     exceptions = {VL.TOLERANT: [], VL.STRICT: []}
     msg_per_versions = {VL.TOLERANT: defaultdict(int), VL.STRICT: defaultdict(int)}
     msg_per_type = {VL.TOLERANT: defaultdict(int), VL.STRICT: defaultdict(int)}
-    parsing_time = {VL.TOLERANT : [], VL.STRICT : []}
+    parsing_time = {VL.TOLERANT: [], VL.STRICT: []}
     encoding_time = []
     files = _get_files(directory)[:limit] if limit != -1 else _get_files(directory)
     n_messages = {VL.TOLERANT: 0, VL.STRICT: 0}
@@ -186,9 +190,10 @@ def parse_messages(directory, validation_level=VL.STRICT, find_groups=True, limi
 def _get_files(directory):
     try:
         files = os.listdir(directory)
-        return [os.path.abspath( '{0}/{1}'.format(directory, f) ) for f in files if f.endswith('.hl7')]
+        return [os.path.abspath('{0}/{1}'.format(directory, f)) for f in files if f.endswith('.hl7')]
     except IOError:
         print("Invalid directory")
+
 
 if __name__ == '__main__':
     parser = get_parser()

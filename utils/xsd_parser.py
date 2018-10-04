@@ -30,6 +30,7 @@ from lxml import objectify
 import pprint
 from hl7apy.utils import iteritems
 
+
 def natural_sort(list_of_lists):
     """
     Sort the `list_of_lists` in natural order using the `index` element
@@ -37,9 +38,15 @@ def natural_sort(list_of_lists):
     Inspired from: http://stackoverflow.com/a/4836734/592289
 
     """
-    convert = lambda text: int(text) if text.isdigit() else text.lower()
-    alphanum_key = lambda key: [convert(c) for c in re.split('_', key)]
+
+    def convert(text):
+        return int(text) if text.isdigit() else text.lower()
+
+    def alphanum_key(key):
+        return [convert(c) for c in re.split('_', key)]
+
     return sorted(list_of_lists, key=alphanum_key)
+
 
 base_dt = {
     "2_2": ('var', 'ST', 'DT', 'FT', 'NM', 'TM', 'TX', 'TN', 'ID', 'SI'),
@@ -71,6 +78,7 @@ class XSDParser(object):
         Parses the segments.xsd file found in the input_path and stores
         the results in the segments.py module.
         """
+
         def writer(output_file, module_content, import_modules, constant_name):
             for im in import_modules:
                 output_file.write("from .{} import {}\n".format(im, im.upper()))
@@ -100,6 +108,7 @@ class XSDParser(object):
         Parses the fields.xsd file found in the input_path and stores
         the results in the fields.py module.
         """
+
         def writer(output_file, module_content, import_modules, constant_name):
             for im in import_modules:
                 output_file.write("from .{} import DATATYPES_STRUCTS\n".format(im))
@@ -135,8 +144,9 @@ class XSDParser(object):
         Parses the datatypes.xsd file found in the input_path and stores
         the results in the datatypes.py module.
         """
+
         def writer(output_file, module_content, import_modules, constant_name):
-            if self.hl7_version == "2_2": # ADD CK datatype which is missing in the xsd file
+            if self.hl7_version == "2_2":  # ADD CK datatype which is missing in the xsd file
                 module_content.update({
                     "CK": ("sequence", (("CK_1", (0, 1)), ("CK_2", (0, 1)),
                                         ("CK_3", (0, 1)), ("CK_4", (0, 1)))),
@@ -190,6 +200,7 @@ class XSDParser(object):
         Retrieves XSD files list from messages.xsd for parsing and stores
         all the results in the messages.py module.
         """
+
         def message_writer(output_file, module_content, import_modules, constant_name):
             for im in import_modules:
                 output_file.write("from .{} import {}\n".format(im, im.upper()))
@@ -309,7 +320,7 @@ class XSDParser(object):
             if value is not None:
                 if value['type'] in ('sequence', 'choice') and value.get('content'):
                     try:
-                        new_value = (value['type'], # TODO: can we set only sequence?
+                        new_value = (value['type'],  # TODO: can we set only sequence?
                                      tuple((x['ref'], (x.get('min', 0), x.get('max', -1))) for x in value['content']))
                     except:
                         new_value = None
@@ -336,7 +347,7 @@ class XSDParser(object):
                 os.mkdir(self.output_path)
             with open(module_path, "w") as output_file:
                 writer_func(output_file, module_content, import_modules, constant_name)
-        except Exception, ex:
+        except Exception as ex:
             traceback.print_exc(ex)
             print("Error occurred while saving the output to: ", module_name, ex)
             sys.exit(1)
@@ -389,7 +400,7 @@ class Node(object):
     def to_dict(self):
         node_dict = dict(self.get_node_attrs())
         node_children = [c.to_dict() for c in self.children
-                            if c.tag not in ['attributeGroup', 'complexContent', 'simpleContent']]
+                         if c.tag not in ['attributeGroup', 'complexContent', 'simpleContent']]
         ref = node_dict.get('ref') or node_dict.get('type')
         if node_dict.get('tag'):
             if node_dict['tag'] in ['sequence', 'annotation', 'choice']:
@@ -416,7 +427,7 @@ class Node(object):
 
                     node_dict['table'] = self.node.appinfo.find('{urn:hl7-org:v2xml}Table') or \
                                          self.node.appinfo.find('{urn:com.sun:encoder-hl7-1.0}Table')
-            del(node_dict['tag'])
+            del (node_dict['tag'])
         if ref in self.types:
             node_dict['content'] = self.types[ref]
         elif node_children:
@@ -430,31 +441,32 @@ class Node(object):
         return [(attr, getattr(self, attr)) for attr in ['name', 'type', 'ref', 'min', 'max', 'tag']
                 if getattr(self, attr) is not None]
 
+
 if __name__ == '__main__':
     usage = "%prog [options] xsd_folder"
     example = "Example: python xsd_parser.py --segments --messages /home/user/hl7_2.5_xsd/"
     parser = OptionParser(usage=usage, epilog=example)
     parser.add_option("-a", "--all",
-                        action="store_true", dest="all",
-                        help="parse all XSD files")
+                      action="store_true", dest="all",
+                      help="parse all XSD files")
     parser.add_option("-s", "--segments",
-                        action="append_const", dest="to_parse",
-                        help="parse segments.xsd file", const='parse_segments')
+                      action="append_const", dest="to_parse",
+                      help="parse segments.xsd file", const='parse_segments')
     parser.add_option("-f", "--fields",
-                        action="append_const", dest="to_parse",
-                        help="parse fields.xsd file", const='parse_fields')
+                      action="append_const", dest="to_parse",
+                      help="parse fields.xsd file", const='parse_fields')
     parser.add_option("-d", "--datatypes",
-                        action="append_const", dest="to_parse",
-                        help="parse datatypes.xsd file", const='parse_datatypes')
+                      action="append_const", dest="to_parse",
+                      help="parse datatypes.xsd file", const='parse_datatypes')
     parser.add_option("-m", "--messages",
-                        action="append_const", dest="to_parse",
-                        help="parse XSD files defining HL7 messages", const='parse_messages')
+                      action="append_const", dest="to_parse",
+                      help="parse XSD files defining HL7 messages", const='parse_messages')
     parser.add_option("-o", "--output_dir",
-                        action="store", dest="output_dir", default="./hl7_2_5",
-                        help="output path [%default]")
+                      action="store", dest="output_dir", default="./hl7_2_5",
+                      help="output path [%default]")
     parser.add_option("-v", "--hl7_version",
-                        action="store", dest="hl7_version", default="2_5",
-                        help="the hl7 version of the files")
+                      action="store", dest="hl7_version", default="2_5",
+                      help="the hl7 version of the files")
     (options, args) = parser.parse_args()
     try:
         path = args[0]
@@ -465,7 +477,7 @@ if __name__ == '__main__':
             parser.error("Folder %s not found." % path)
         if not options.all and not options.to_parse:
             parser.error("Please specify the HL7.org XSD files to be parsed. \n" +
-                "Example: python xsd_parser.py --all /home/user/hl7_2.5_xsd")
+                         "Example: python xsd_parser.py --all /home/user/hl7_2.5_xsd")
         elif options.all:
             options.to_parse = ['parse_segments', 'parse_fields', 'parse_datatypes', 'parse_messages']
         XSDParser(path, options.output_dir, options.to_parse, options.hl7_version)
