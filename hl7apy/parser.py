@@ -21,11 +21,10 @@
 
 from __future__ import absolute_import
 import re
-import copy
 
 from hl7apy import get_default_encoding_chars, get_default_version, \
     get_default_validation_level, check_version, check_encoding_chars, check_validation_level
-from hl7apy.consts import N_SEPS
+from hl7apy.consts import N_SEPS, N_SEPS_27
 from hl7apy.core import is_base_datatype, Message, Group, Segment, Field, Component, SubComponent, ElementFinder
 from hl7apy.exceptions import InvalidName, ParserError, InvalidEncodingChars, MessageProfileNotFound
 from hl7apy.validation import Validator
@@ -630,10 +629,20 @@ def _split_msh(content):
         seps = fields[1]  # get the remaining encoding chars (MSH.2)
         if len(seps) > len(set(seps)):
             raise InvalidEncodingChars("Found duplicate encoding chars")
+
         try:
-            comp_sep, rep_sep, escape, sub_sep = seps
+            n_seps = N_SEPS_27 if fields[11] >= '2.7' else N_SEPS
+        except IndexError:
+            # It means the fields[11] does not exists. Probably something wrong with the message
+            n_seps = N_SEPS
+
+        try:
+            if n_seps == N_SEPS:
+                comp_sep, rep_sep, escape, sub_sep = seps
+            else:
+                comp_sep, rep_sep, escape, sub_sep, trunc_sep = seps
         except ValueError:
-            if len(seps) < N_SEPS:
+            if len(seps) < n_seps:
                 raise InvalidEncodingChars('Missing required encoding chars')
             else:
                 raise InvalidEncodingChars('Found {0} encoding chars'.format(len(seps)))
@@ -647,6 +656,9 @@ def _split_msh(content):
                 'SEGMENT': '\r',
                 'GROUP': '\r',
             }
+            if n_seps == N_SEPS_27:
+                encoding_chars.update({'TRUNCATION': trunc_sep})
+
     else:
         raise ParserError("Invalid message")
 

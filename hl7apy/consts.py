@@ -26,7 +26,7 @@ HL7apy - Constants
 #: number of expected separators
 N_SEPS = 4
 #: number of expected separators from v2.7
-N_SEPS_V27 = 5
+N_SEPS_27 = 5
 
 #: Dictionary with default encoding characters as per standard specifications
 DEFAULT_ENCODING_CHARS = {

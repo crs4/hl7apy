@@ -855,7 +855,6 @@ values
             else:
                 super(Element, self).__setattr__(name, value)
         elif hasattr(self, 'children'):
-            # print name, value
             self.children.set(name, value, 0)
 
     def __delattr__(self, name):
@@ -1026,7 +1025,6 @@ class CanBeVaries(Element):
                 and not is_base_datatype(datatype, version):
             version = version or get_default_version()
             children_refs = load_reference(datatype, 'Datatypes_Structs', version)
-            # print children_refs
             if name is not None:
                 # first we get the original reference for the long_name, table etc
                 orig_ref = load_reference(name, 'Component', version)
@@ -1459,7 +1457,6 @@ class Field(SupportComplexDataType):
             except IndexError:
                 return self.msh_1_1.children[0].value
         elif self.is_named('MSH_2'):
-            print(self.msh_2_1.children[0].value.value)
             try:
                 return self.msh_2_1.children[0].value.value
             except IndexError:
