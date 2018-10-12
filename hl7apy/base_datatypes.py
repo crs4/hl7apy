@@ -124,12 +124,16 @@ class TextualDataType(BaseDataType):
             encoding_chars = get_default_encoding_chars()
         return self._escape_value(self.value, encoding_chars)
 
+    def _get_translations(self, encoding_chars):
+        escape_char = encoding_chars['ESCAPE']
+        return ((encoding_chars['FIELD'], '{esc}F{esc}'.format(esc=escape_char)),
+                (encoding_chars['COMPONENT'], '{esc}S{esc}'.format(esc=escape_char)),
+                (encoding_chars['SUBCOMPONENT'], '{esc}T{esc}'.format(esc=escape_char)),
+                (encoding_chars['REPETITION'], '{esc}R{esc}'.format(esc=escape_char)),)
+
     def _escape_value(self, value, encoding_chars=None):
         escape_char = encoding_chars['ESCAPE']
-        translations = ((encoding_chars['FIELD'], '{esc}F{esc}'.format(esc=escape_char)),
-                        (encoding_chars['COMPONENT'], '{esc}S{esc}'.format(esc=escape_char)),
-                        (encoding_chars['SUBCOMPONENT'], '{esc}T{esc}'.format(esc=escape_char)),
-                        (encoding_chars['REPETITION'], '{esc}R{esc}'.format(esc=escape_char)))
+        translations = self._get_translations(encoding_chars)
 
         # Inserts the highlights escape sequences
         if self.highlights is not None:

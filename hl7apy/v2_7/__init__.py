@@ -29,7 +29,7 @@ from .datatypes import DATATYPES, DATATYPES_STRUCTS
 from .groups import GROUPS
 # from .tables import TABLES
 
-from hl7apy.v2_7_1.base_datatypes import ST as _ST27, SNM
+from hl7apy.v2_7.base_datatypes import ST as _ST27, SNM
 from hl7apy.exceptions import ChildNotFound
 
 ELEMENTS = {'Message': MESSAGES, 'Group': GROUPS, 'Segment': SEGMENTS,

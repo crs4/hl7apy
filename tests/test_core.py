@@ -370,6 +370,8 @@ class TestMessage(unittest.TestCase):
 
     def test_create_v27_message(self):
         m = Message('RSP_K21', version='2.7')
+        self.assertEqual(m.encoding_chars['TRUNCATION'], '#')
+        self.assertEqual(m.msh.msh_2.to_er7(), '^~\\&#')
 
 
 class TestGroup(unittest.TestCase):
@@ -1596,7 +1598,7 @@ class TestComponent(unittest.TestCase):
         self.assertEqual(len(c.children), 3)
 
     def test_assign_value_string_message_profile(self):
-        #TODO: test max_ length for every base datatype
+        # TODO: test max_ length for every base datatype
         # simple string
         cmp_str = 'aaa'
 

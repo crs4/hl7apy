@@ -87,16 +87,18 @@ def check_version(version):
         raise UnsupportedVersion(version)
 
 
-def get_default_encoding_chars():
+def get_default_encoding_chars(version=None):
     """
     Get the default encoding chars
 
     :rtype: ``dict``
     :returns: the encoding chars (see :func:`hl7apy.set_default_encoding_chars`)
 
-    >>> print(get_default_encoding_chars()['FIELD'])
+    >>> print(get_default_encoding_chars('2.6')['FIELD'])
     |
     """
+    if version and version >= '2.7':
+        return _DEFAULT_ENCODING_CHARS_27
     return _DEFAULT_ENCODING_CHARS
 
 
@@ -206,7 +208,7 @@ def set_default_encoding_chars(encoding_chars):
     InvalidEncodingChars: Missing required encoding chars
     >>> set_default_encoding_chars({'FIELD': '!', 'COMPONENT': 'C', 'SUBCOMPONENT': 'S', \
                                     'REPETITION': 'R', 'ESCAPE': '\\\\'})
-    >>> print(get_default_encoding_chars()['FIELD'])
+    >>> print(get_default_encoding_chars('2.5')['FIELD'])
     !
     """
     check_encoding_chars(encoding_chars)
@@ -325,7 +327,7 @@ def _discover_libraries():
 
 
 SUPPORTED_LIBRARIES = _discover_libraries()
-print(SUPPORTED_LIBRARIES)
+
 
 if __name__ == '__main__':
 

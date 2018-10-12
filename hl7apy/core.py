@@ -199,6 +199,7 @@ class ElementList(collections.MutableSequence):
     return all child named 'SPM' found in the :class:` Message <hl7apy.core.Message>` instance)
 
     """
+
     def __init__(self, element):
         self.element = element
         self.list = []
@@ -371,6 +372,7 @@ class ElementList(collections.MutableSequence):
 
         :return: an instance of :class:`Element <hl7apy.core.Element>` subclass
         """
+
         def _finder(n, i):
             try:
                 return self.indexes[n][i]
@@ -604,7 +606,7 @@ class Element(object):
     """
 
     cls_attrs = ['name', 'validation_level', 'version', 'children', 'ordered_children',
-                 'table', 'long_name', 'value', '_value', 'parent',  '_parent', '_traversal_parent',
+                 'table', 'long_name', 'value', '_value', 'parent', '_parent', '_traversal_parent',
                  'traversal_parent', 'child_classes', 'encoding_chars', 'structure_by_name',
                  'structure_by_longname', 'repetitions', 'reference']
 
@@ -622,7 +624,7 @@ class Element(object):
 
         check_validation_level(validation_level)
         check_version(version)
-        
+
         self.validation_level = validation_level
         self.name = name.upper() if name is not None else None
         self.version = version
@@ -805,7 +807,7 @@ values
         """
         if self.parent is not None:
             return self.parent.encoding_chars
-        return get_default_encoding_chars()
+        return get_default_encoding_chars(self.version)
 
     def _find_structure(self, reference=None):
         if self.name is not None:
@@ -1010,6 +1012,7 @@ class CanBeVaries(Element):
     """
     Mixin for Elements that can be of VARIES datatype
     """
+
     def __init__(self, name=None, datatype=None, parent=None, reference=None,
                  version=None, validation_level=None, traversal_parent=None):
 
@@ -1456,6 +1459,7 @@ class Field(SupportComplexDataType):
             except IndexError:
                 return self.msh_1_1.children[0].value
         elif self.is_named('MSH_2'):
+            print(self.msh_2_1.children[0].value.value)
             try:
                 return self.msh_2_1.children[0].value.value
             except IndexError:
@@ -1481,7 +1485,7 @@ class Field(SupportComplexDataType):
 
     def _get_children(self, trailing=False):
         if self.datatype == 'varies':
-            children = [self.children.indexes['VARIES_{0}'.format(i+1)] for i in xrange(len(self.children))]
+            children = [self.children.indexes['VARIES_{0}'.format(i + 1)] for i in xrange(len(self.children))]
             children = _remove_trailing(children)
             children.extend([[c] for c in self.children if c.is_unknown()])
             return children
@@ -1896,6 +1900,7 @@ class Message(Group):
     :param encoding_chars: a dictionary containing the encoding chars or None to use the default
         (see :func:`get_default_encoding_chars <hl7apy.get_default_encoding_chars>`)
     """
+
     def __init__(self, name=None, reference=None, version=None, validation_level=None, encoding_chars=None):
 
         if reference is not None:
@@ -1917,8 +1922,7 @@ class Message(Group):
                 raise
 
         if encoding_chars is None:
-            encoding_chars = get_default_encoding_chars()
-
+            encoding_chars = get_default_encoding_chars(version)
         # TODO: Change it to support message profiles
         try:
             msh_reference = self.structure_by_name['MSH']['ref']
@@ -1989,7 +1993,7 @@ class Message(Group):
 
     def _get_encoding_chars(self):
         msh_2 = self.msh.msh_2.msh_2_1.children[0].value.value
-        return {
+        chars = {
             'FIELD': self.msh.msh_1.msh_1_1.children[0].value.value,
             'COMPONENT': msh_2[0],
             'REPETITION': msh_2[1],
@@ -1998,6 +2002,9 @@ class Message(Group):
             'GROUP': '\r',
             'SEGMENT': '\r',
         }
+        if self.version >= '2.7':
+            chars.update({'TRUNCATION': msh_2[4]})
+        return chars
 
     def _set_encoding_chars(self, encoding_chars):
         check_encoding_chars(encoding_chars)
@@ -2009,10 +2016,18 @@ class Message(Group):
                       version=self.version)
         c.add(s)
         msh_1.st = c
-        value = '{0}{1}{2}{3}'.format(encoding_chars['COMPONENT'],
-                                      encoding_chars['REPETITION'],
-                                      encoding_chars['ESCAPE'],
-                                      encoding_chars['SUBCOMPONENT'])
+        if self.version >= '2.7':
+            value = '{0}{1}{2}{3}{4}'.format(encoding_chars['COMPONENT'],
+                                             encoding_chars['REPETITION'],
+                                             encoding_chars['ESCAPE'],
+                                             encoding_chars['SUBCOMPONENT'],
+                                             encoding_chars['TRUNCATION'])
+        else:
+            value = '{0}{1}{2}{3}'.format(encoding_chars['COMPONENT'],
+                                          encoding_chars['REPETITION'],
+                                          encoding_chars['ESCAPE'],
+                                          encoding_chars['SUBCOMPONENT'])
+
         s = SubComponent(datatype='ST', value=value,
                          validation_level=self.validation_level, version=self.version)
         c = Component(datatype='ST', validation_level=self.validation_level,
@@ -2026,6 +2041,6 @@ class Message(Group):
 
 
 if __name__ == '__main__':
-
     import doctest
+
     doctest.testmod()

@@ -137,7 +137,7 @@ def parse_segments(text, version=None, encoding_chars=None, validation_level=Non
     [<Segment EVN>, <Segment PID>]
     """
     version = _get_version(version)
-    encoding_chars = _get_encoding_chars(encoding_chars)
+    encoding_chars = _get_encoding_chars(encoding_chars, version)
     validation_level = _get_validation_level(validation_level)
 
     segment_sep = encoding_chars['SEGMENT']
@@ -231,7 +231,7 @@ def parse_segment(text, version=None, encoding_chars=None, validation_level=None
     EVN||20080115153000||||20080114003000
     """
     version = _get_version(version)
-    encoding_chars = _get_encoding_chars(encoding_chars)
+    encoding_chars = _get_encoding_chars(encoding_chars, version)
     validation_level = _get_validation_level(validation_level)
 
     segment_name = text[:3]
@@ -291,7 +291,7 @@ def parse_fields(text, name_prefix=None, version=None, encoding_chars=None, vali
     NK1||||||||||||||||||||||||||||||||||||||||1|NUCLEAR^NELDA^W|SPO|2222 HOME STREET^^ANN ARBOR^MI^^USA
     """
     version = _get_version(version)
-    encoding_chars = _get_encoding_chars(encoding_chars)
+    encoding_chars = _get_encoding_chars(encoding_chars, version)
     validation_level = _get_validation_level(validation_level)
 
     text = text.strip("\r")
@@ -368,7 +368,7 @@ def parse_field(text, name=None, version=None, encoding_chars=None, validation_l
     NUCLEAR^NELDA^W
     """
     version = _get_version(version)
-    encoding_chars = _get_encoding_chars(encoding_chars)
+    encoding_chars = _get_encoding_chars(encoding_chars, version)
     validation_level = _get_validation_level(validation_level)
 
     try:
@@ -436,7 +436,7 @@ def parse_components(text, field_datatype='ST', version=None, encoding_chars=Non
 <Component ST (None) of type ST>, <Component ST (None) of type ST>]
     """
     version = _get_version(version)
-    encoding_chars = _get_encoding_chars(encoding_chars)
+    encoding_chars = _get_encoding_chars(encoding_chars, version)
     validation_level = _get_validation_level(validation_level)
 
     component_sep = encoding_chars['COMPONENT']
@@ -509,7 +509,7 @@ def parse_component(text, name=None, datatype='ST', version=None, encoding_chars
     <Component ST (None) of type None>
     """
     version = _get_version(version)
-    encoding_chars = _get_encoding_chars(encoding_chars)
+    encoding_chars = _get_encoding_chars(encoding_chars, version)
     validation_level = _get_validation_level(validation_level)
 
     try:
@@ -571,7 +571,7 @@ def parse_subcomponents(text, component_datatype='ST', version=None, encoding_ch
     &&&&&&&&&ID&TEST&&AHAH
     """
     version = _get_version(version)
-    encoding_chars = _get_encoding_chars(encoding_chars)
+    encoding_chars = _get_encoding_chars(encoding_chars, version)
     validation_level = _get_validation_level(validation_level)
 
     subcomp_sep = encoding_chars['SUBCOMPONENT']
@@ -725,9 +725,9 @@ def _get_version(version):
     return version
 
 
-def _get_encoding_chars(encoding_chars):
+def _get_encoding_chars(encoding_chars, version):
     if encoding_chars is None:
-        return get_default_encoding_chars()
+        return get_default_encoding_chars(version)
     check_encoding_chars(encoding_chars)
     return encoding_chars
 
