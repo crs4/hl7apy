@@ -106,6 +106,14 @@ class TestMessage(unittest.TestCase):
 
     def test_create_unknown_message(self):
         self.assertRaises(InvalidName, Message, 'AAA_A01')
+        self.assertRaises(InvalidName, Message, 'AAA_A01', version='2.2')
+        self.assertRaises(InvalidName, Message, 'AAA_A01', version='2.3')
+        self.assertRaises(InvalidName, Message, 'AAA_A01', version='2.3.1')
+        self.assertRaises(InvalidName, Message, 'AAA_A01', version='2.4')
+        self.assertRaises(InvalidName, Message, 'AAA_A01', version='2.5')
+        self.assertRaises(InvalidName, Message, 'AAA_A01', version='2.5.1')
+        self.assertRaises(InvalidName, Message, 'AAA_A01', version='2.6')
+        self.assertRaises(InvalidName, Message, 'AAA_A01', version='2.7')
         self.assertRaises(InvalidName, Message, 'AAA_A01', validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_create_unsupported_version_message(self):

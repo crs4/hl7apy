@@ -34,7 +34,10 @@ class TextualDataType(BaseTextualDataType):
                 (encoding_chars['COMPONENT'], '{esc}S{esc}'.format(esc=escape_char)),
                 (encoding_chars['SUBCOMPONENT'], '{esc}T{esc}'.format(esc=escape_char)),
                 (encoding_chars['REPETITION'], '{esc}R{esc}'.format(esc=escape_char)),
-                (encoding_chars['TRUNCATION'], '{esc}R{esc}'.format(esc=escape_char)),)
+                (encoding_chars['TRUNCATION'], '{esc}L{esc}'.format(esc=escape_char)),)
+
+    def _get_escape_char_regex(self, escape_char):
+        return r'(?<!%s[HNFSTREL])%s(?![HNFSTREL]%s)' % tuple(3 * [re.escape(escape_char)])
 
     def to_er7(self, encoding_chars=None):
         if encoding_chars is None:

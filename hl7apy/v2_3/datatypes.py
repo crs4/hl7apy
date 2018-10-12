@@ -755,7 +755,4 @@ DATATYPES_STRUCTS = {
 
 for k, v in iteritems(DATATYPES):
     if v[0] == 'sequence':
-        try:
-            v[1] = DATATYPES_STRUCTS[v[2]]
-        except:
-            raise
+        v[1] = DATATYPES_STRUCTS[v[2]]

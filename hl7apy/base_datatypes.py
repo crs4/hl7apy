@@ -131,6 +131,9 @@ class TextualDataType(BaseDataType):
                 (encoding_chars['SUBCOMPONENT'], '{esc}T{esc}'.format(esc=escape_char)),
                 (encoding_chars['REPETITION'], '{esc}R{esc}'.format(esc=escape_char)),)
 
+    def _get_escape_char_regex(self, escape_char):
+        return r'(?<!%s[HNFSTRE])%s(?![HNFSTRE]%s)' % tuple(3*[re.escape(escape_char)])
+
     def _escape_value(self, value, encoding_chars=None):
         escape_char = encoding_chars['ESCAPE']
         translations = self._get_translations(encoding_chars)
@@ -171,7 +174,7 @@ class TextualDataType(BaseDataType):
         # Thus the regex search for escape chars not followed and not preceeded by one of the litteral
         # composing an escape sequence. We use lambda because otherwise the backslash sequence in the string
         # is processed (look for re.sub in python doc) and we don't want this
-        value = re.sub('(?<!%s[HNFSTRE])%s(?![HNFSTRE]%s)' % tuple(3*[re.escape(escape_char)]),
+        value = re.sub(self._get_escape_char_regex(escape_char),
                        lambda x: '{esc}E{esc}'.format(esc=escape_char), value)
 
         return value
@@ -437,7 +440,7 @@ class TN(TextualDataType):
     """
     def __init__(self, value, validation_level=None):
 
-        regexp = "(\d\d\s)?(\(\d+\))?(\d+-?\d+)(X\d+)?(B\d+)?(C.+)?"
+        regexp = r'(\d\d\s)?(\(\d+\))?(\d+-?\d+)(X\d+)?(B\d+)?(C.+)?'
         if not re.match(regexp, value):
             raise ValueError('Invalid value for TN data')
 

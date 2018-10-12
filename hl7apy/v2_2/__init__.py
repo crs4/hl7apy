@@ -43,6 +43,14 @@ def get(name, element_type):
 
 
 def find(name, where):
+    """
+    >>> from hl7apy.core import Segment
+    >>> from hl7apy import find_reference
+    >>> find_reference('UNKNOWN', (Segment, ), '2.2')  # doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    ...
+    ChildNotFound: No child named UNKNOWN
+    """
     for cls in where:
         try:
             return {'ref': get(name, cls.__name__), 'name': name, 'cls': cls}

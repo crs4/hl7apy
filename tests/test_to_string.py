@@ -27,52 +27,60 @@ from hl7apy.base_datatypes import *
 from hl7apy.exceptions import InvalidHighlightRange
 from hl7apy.consts import MLLP_ENCODING_CHARS, VALIDATION_LEVEL
 
+
 class ToStringTestCase(unittest.TestCase):
     """
     TestCase class which tests the functionalities of the API converting the
     HL7 elements to string
     """
-    def setUp(self):
-        self.custom_encoding_chars = {'SEGMENT' : '\r',
-                                      'FIELD' :  '!',
-                                      'COMPONENT' : '$',
-                                      'SUBCOMPONENT' : '@',
-                                      'REPETITION' : 'r',
-                                      'ESCAPE' : '?'}
-        self.msh_values_standard = ['|', '^~\&', 'LIP', 'LIP', 'LB', 'LB', '20111207121030', '', 'RSP^SLI^RSP_K11', '430102569308795840', 'D', '2.5', '', '', '', '', 'IT', '', 'EN', '', '']
-        self.msh_standard = 'MSH|^~\\&|LIP|LIP|LB|LB|20111207121030||RSP^SLI^RSP_K11|430102569308795840|D|2.5|||||IT||EN'
-        self.msh_values_custom = ['!', '$r?@', 'LIP', 'LIP', 'LB', 'LB', '20111207121030', '', 'RSP^SLI^RSP_K11', '430102569308795840', 'D', '2.5', '', '', '', '', 'IT', '', 'EN', '', '']
-        self.msh_custom = 'MSH!$r?@!LIP!LIP!LB!LB!20111207121030!!RSP^SLI^RSP_K11!430102569308795840!D!2.5!!!!!IT!!EN'
-        self.msh_highlighted = 'MSH|^~\\&|LIP|LIP|LB|LB|20111207121030|\\H\\HIGHLIGHTED\\N\\TEXT\\H\\IMPORTANT\\N\\|RSP^SLI^RSP_K11|430102569308795840|D|2.5|||||IT||EN'
 
-    def _get_msh(self, values):
-        encoding_chars = {'SEGMENT' : '\r',
-                          'FIELD' :  values[0],
-                          'COMPONENT' : values[1][0],
-                          'SUBCOMPONENT' : values[1][1],
-                          'REPETITION' : values[1][2],
-                          'ESCAPE' : values[1][3]}
-        msh = parse_segment('MSH{0}{1}'.format(encoding_chars['FIELD'], encoding_chars['FIELD'].join(values[1:])), encoding_chars=encoding_chars)
+    def setUp(self):
+        self.custom_encoding_chars = {'SEGMENT': '\r',
+                                      'FIELD': '!',
+                                      'COMPONENT': '$',
+                                      'SUBCOMPONENT': '@',
+                                      'REPETITION': 'r',
+                                      'ESCAPE': '?'}
+        self.msh_values_standard = ['|', '^~\&', 'LIP', 'LIP', 'LB', 'LB', '20111207121030', '', 'RSP^SLI^RSP_K11',
+                                    '430102', 'D', '2.5', '', '', '', '', 'IT', '', 'EN', '', '']
+        self.msh_standard = 'MSH|^~\\&|LIP|LIP|LB|LB|20111207121030||RSP^SLI^RSP_K11|430102|D|2.5|||||IT||EN'
+        self.msh_values_custom = ['!', '$r?@', 'LIP', 'LIP', 'LB', 'LB', '20111207121030', '', 'RSP^SLI^RSP_K11',
+                                  '430102', 'D', '2.5', '', '', '', '', 'IT', '', 'EN', '', '']
+        self.msh_custom = 'MSH!$r?@!LIP!LIP!LB!LB!20111207121030!!RSP^SLI^RSP_K11!430102!D!2.5!!!!!IT!!EN'
+        self.msh_highlighted = \
+            'MSH|^~\\&|LIP|LIP|LB|LB|20111207121030|\\H\\HIGHLIGHTED\\N\\TEXT\\H\\IMPORTANT\\N\\|RSP^SLI^RSP_K11|430102|D|2.5|||||IT||EN'
+
+    @staticmethod
+    def _get_msh(values):
+        encoding_chars = {'SEGMENT': '\r',
+                          'FIELD': values[0],
+                          'COMPONENT': values[1][0],
+                          'SUBCOMPONENT': values[1][1],
+                          'REPETITION': values[1][2],
+                          'ESCAPE': values[1][3]}
+        msh = parse_segment('MSH{0}{1}'.format(encoding_chars['FIELD'], encoding_chars['FIELD'].join(values[1:])),
+                            encoding_chars=encoding_chars)
         return msh
 
-    def _get_test_msg(self, trailing_children=False):
+    @staticmethod
+    def _get_test_msg(trailing_children=False):
         if trailing_children is False:
-            return 'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
-                   'PID|1||566-554-3423^^^GHH^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r' \
-                   'PV1||O|||||||||||||||||1107080001^^^LIS\r' \
-                   'SPM|1|100187400201||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
-                   'ORC|NW|83428|83428|18740|SC||||20110708162817\r' \
-                   'TQ1|||||||||R\r' \
-                   'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN'
+            return \
+                'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
+                'PID|1||566-554-3423^^^GHH^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r' \
+                'PV1||O|||||||||||||||||1107080001^^^LIS\r' \
+                'SPM|1|100187400201||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
+                'ORC|NW|83428|83428|18740|SC||||20110708162817\r' \
+                'TQ1|||||||||R\r' \
+                'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN'
         else:
-            return 'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN||\r' \
+            return 'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN||\r' \
                    'PID|1||566-554-3423^^^GHH^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M|||||||||||||||||||||||\r' \
                    'PV1||O|||||||||||||||||1107080001^^^LIS|||||||||||||||||||||||||||||||||\r' \
                    'SPM|1|100187400201||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC||\r' \
                    'ORC|NW|83428|83428|18740|SC||||20110708162817|||||||||||||||||||||\r' \
                    'TQ1|||||||||R|||||\r' \
                    'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN|||||||||||||||||||||||||||||||||'
-
 
     def _create_test_message(self, msh_values):
         """
@@ -102,8 +110,6 @@ class ToStringTestCase(unittest.TestCase):
         """
         It tests the to_er7 message for an empty message
         """
-        from datetime import datetime
-
         msg = Message('RSP_K11')
         self.assertRegexpMatches(msg.to_er7(), 'MSH|^~\\&|||||d+|||||2.5')
 
@@ -112,14 +118,14 @@ class ToStringTestCase(unittest.TestCase):
         It tests the highlighting functionaly
         """
         msg = self._create_test_message(self.msh_values_standard)
-        value = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0,11), (15,24)))
+        value = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (15, 24)))
         s = SubComponent(datatype='ST', value=value)
         c = Component(datatype='ST')
         c.add(s)
         msg.msh.msh_8.msh_8_1 = c
         self.assertEqual(msg.to_er7(), self.msh_highlighted)
 
-        value = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((15,24), (0,11)))
+        value = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((15, 24), (0, 11)))
         s = SubComponent(datatype='ST', value=value)
         c = Component(datatype='ST')
         c.add(s)
@@ -131,13 +137,13 @@ class ToStringTestCase(unittest.TestCase):
         It tests that highlighting functionality raises the
         :exc:`InvalidHighlightRange` exception in case of invalid range
         """
-        data = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0,11), (4,24)))
+        data = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (4, 24)))
         self.assertRaises(InvalidHighlightRange, data.to_er7)
-        data = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((4,24), (0,11)))
+        data = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((4, 24), (0, 11)))
         self.assertRaises(InvalidHighlightRange, data.to_er7)
-        data = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((5,11), (0,11)))
+        data = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((5, 11), (0, 11)))
         self.assertRaises(InvalidHighlightRange, data.to_er7)
-        data = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0,11), (0,4)))
+        data = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (0, 4)))
         self.assertRaises(InvalidHighlightRange, data.to_er7)
 
     def test_to_string_msh_field(self):
@@ -145,6 +151,16 @@ class ToStringTestCase(unittest.TestCase):
         msh = m.msh
         self.assertEqual(msh.msh_1.to_er7(), '|')
         self.assertEqual(msh.msh_2.to_er7(), '^~\\&')
+        msh_1 = Field('MSH_1')
+        msh_2 = Field('MSH_2')
+        self.assertRaises(IndexError, msh_1.to_er7)
+        self.assertRaises(IndexError, msh_2.to_er7)
+
+    def test_to_string_msh_field_v27(self):
+        m = Message('OML_O33', version='2.7')
+        msh = m.msh
+        self.assertEqual(msh.msh_1.to_er7(), '|')
+        self.assertEqual(msh.msh_2.to_er7(), '^~\\&#')
         msh_1 = Field('MSH_1')
         msh_2 = Field('MSH_2')
         self.assertRaises(IndexError, msh_1.to_er7)
@@ -179,7 +195,7 @@ class ToStringTestCase(unittest.TestCase):
         qpd.qpd_10 = 'cba'
         self.assertEqual(qpd.to_er7(), 'QPD|||abc|||||||cba')
 
-        zin = Segment('ZIN',validation_level=VALIDATION_LEVEL.STRICT)
+        zin = Segment('ZIN', validation_level=VALIDATION_LEVEL.STRICT)
         zin.zin_1 = 'yyy'
         self.assertEqual(zin.to_er7(), 'ZIN|yyy')
         zin.zin_10 = 'www'
@@ -191,7 +207,7 @@ class ToStringTestCase(unittest.TestCase):
         f2 = Field()
         f2.value = 'cba'
 
-        pid_er7 = 'PID|1||566-554-3423^^^GHH^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M|||||||||||||||||||||||'
+        pid_er7 = 'PID|1||566-554-3423^^^GHH^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE^^SOMEWHERE^^^USA||555~444|||M|||||||||||||||||||||||'
         pid = parse_segment(pid_er7)
         pid.add(f1)
         self.assertEqual(pid.to_er7(trailing_children=True), pid_er7 + '|abc')
@@ -226,8 +242,8 @@ class ToStringTestCase(unittest.TestCase):
         g.zbe = 'ZBE||ab|ab'
 
         msg.add(g)
-        self.assertEqual(msg.to_er7(), self.msh_standard + '\rZIN||abc||cba^www~abc^yyy\rZBE|yyy|ww||||||yyy\rPID|1\rZBE||ab|ab')
-
+        self.assertEqual(msg.to_er7(), self.msh_standard +
+                         '\rZIN||abc||cba^www~abc^yyy\rZBE|yyy|ww||||||yyy\rPID|1\rZBE||ab|ab')
 
 
 if __name__ == '__main__':

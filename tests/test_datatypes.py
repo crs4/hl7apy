@@ -23,17 +23,17 @@ from __future__ import absolute_import
 import unittest
 
 from datetime import datetime
-from hl7apy.base_datatypes import DT, TM, DTM, ST, FT, ID, IS, TX, GTS, NM, SI
+from hl7apy.base_datatypes import DT, TM, DTM, ST, FT, ID, IS, TX, GTS, NM, SI, TN
+from hl7apy.v2_7 import ST as ST27, FT as FT27, ID as ID27, IS as IS27, TX as TX27, GTS as GTS27, TN as TN27, SNM
+# from hl7apy.v2_7 import ST as ST27
 from hl7apy.factories import datatype_factory
 from hl7apy.exceptions import InvalidDateFormat, InvalidDateOffset, MaxLengthReached, \
-                              InvalidHighlightRange, InvalidDataType, InvalidMicrosecondsPrecision
+    InvalidHighlightRange, InvalidDataType, InvalidMicrosecondsPrecision
 from hl7apy.validation import VALIDATION_LEVEL
 from decimal import Decimal
 
 
 class TestDatatypeFactory(unittest.TestCase):
-
-    #Datatype factory test case
 
     def test_datatype_creation(self):
         st = datatype_factory('ST', 'string')
@@ -124,10 +124,7 @@ class TestDatatypeFactory(unittest.TestCase):
         self.assertRaises(ValueError, datatype_factory, 'NM', 'aaaaa', validation_level=VALIDATION_LEVEL.STRICT)
 
 
-
 class TestDT(unittest.TestCase):
-
-    #Test DT datatype
 
     def test_DT(self):
         date = datetime.strptime('2013', '%Y')
@@ -141,12 +138,11 @@ class TestDT(unittest.TestCase):
         self.assertEqual(dt1.to_er7(), datetime.strftime(date1, dt1.format))
         self.assertEqual(dt2.to_er7(), datetime.strftime(date2, dt2.format))
 
-
     def test_DT_wrong_format(self):
-        self.assertRaises(InvalidDateFormat, DT,datetime.strptime('13', '%y'), out_format='%y')
-        self.assertRaises(InvalidDateFormat, DT,datetime.strptime('12', '%m'), out_format='%m')
-        self.assertRaises(InvalidDateFormat, DT,datetime.strptime('1202', '%m%d'), out_format='%m%d')
-        self.assertRaises(InvalidDateFormat, DT,datetime.strptime('02', '%d'), out_format='%d')
+        self.assertRaises(InvalidDateFormat, DT, datetime.strptime('13', '%y'), out_format='%y')
+        self.assertRaises(InvalidDateFormat, DT, datetime.strptime('12', '%m'), out_format='%m')
+        self.assertRaises(InvalidDateFormat, DT, datetime.strptime('1202', '%m%d'), out_format='%m%d')
+        self.assertRaises(InvalidDateFormat, DT, datetime.strptime('02', '%d'), out_format='%d')
 
     def test_DT_default_format(self):
         date = datetime.strptime('20130715', '%Y%m%d')
@@ -159,8 +155,6 @@ class TestDT(unittest.TestCase):
 
 
 class TestTM(unittest.TestCase):
-
-    #Test TM datatype
 
     def test_TM(self):
         time = datetime.strptime('01', '%H')
@@ -199,7 +193,7 @@ class TestTM(unittest.TestCase):
         TM(time, offset='-1200')
         self.assertEqual(tm.offset, '+0100')
         self.assertEqual(tm2.offset, '-0300')
-        self.assertEqual(tm.to_er7(), '0101+0100') #check if a space is needed between time and offset, or not
+        self.assertEqual(tm.to_er7(), '0101+0100')  # check if a space is needed between time and offset, or not
         self.assertEqual(tm2.to_er7(), '010111.1110-0300')
 
     def test_TM_invalid_offset(self):
@@ -228,7 +222,7 @@ class TestTM(unittest.TestCase):
 class TestDTM(unittest.TestCase):
 
     def test_DTM(self):
-        dtime  = datetime.strptime('2013', '%Y')
+        dtime = datetime.strptime('2013', '%Y')
         dtime1 = datetime.strptime('201307', '%Y%m')
         dtime2 = datetime.strptime('20130715', '%Y%m%d')
         dtime3 = datetime.strptime('01', '%H')
@@ -237,7 +231,7 @@ class TestDTM(unittest.TestCase):
         dtime6 = datetime.strptime('010111.1110', '%H%M%S.%f')
         dtime7 = datetime.strptime('20130715010111.1110', '%Y%m%d%H%M%S.%f')
 
-        dtm  = DTM(dtime, out_format='%Y')
+        dtm = DTM(dtime, out_format='%Y')
         dtm1 = DTM(dtime1, out_format='%Y%m')
         dtm2 = DTM(dtime2, out_format='%Y%m%d')
         dtm3 = TM(dtime3, out_format='%H')
@@ -268,7 +262,7 @@ class TestDTM(unittest.TestCase):
     def test_DTM_offset(self):
         dtime = datetime.strptime('20130715 010111.1110', '%Y%m%d %H%M%S.%f')
         dtm = DTM(dtime, offset='+0100')
-        self.assertEqual(dtm.to_er7(), '20130715010111.1110+0100' )
+        self.assertEqual(dtm.to_er7(), '20130715010111.1110+0100')
 
     def test_DTM_invalid_offset(self):
         self.assertRaises(InvalidDateOffset, DTM, datetime.strptime('2013', '%Y'), offset='+00:00')
@@ -293,7 +287,7 @@ class TestDTM(unittest.TestCase):
 
 class TestST(unittest.TestCase):
 
-    #Test ST datatype
+    # Test ST datatype
 
     def test_ST(self):
         st = ST('Specimen')
@@ -301,12 +295,12 @@ class TestST(unittest.TestCase):
         self.assertEqual(st.to_er7(), 'Specimen')
 
     def test_ST_maxlength_strict(self):
-        str = 'a' * (ST(' ').max_length + 1)
-        self.assertRaises(MaxLengthReached, ST, str, validation_level=VALIDATION_LEVEL.STRICT)
+        s = 'a' * (ST(' ').max_length + 1)
+        self.assertRaises(MaxLengthReached, ST, s, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_ST_maxlength(self):
-        str = 'a' * (ST(' ').max_length + 100)
-        ST(str)
+        s = 'a' * (ST(' ').max_length + 100)
+        ST(s)
 
     def test_ST_field_escaping(self):
         st = ST('|field|')
@@ -325,28 +319,32 @@ class TestST(unittest.TestCase):
         self.assertEqual(st.to_er7(), '\\R\\repetition\\R\\')
 
     def test_ST_highlights(self):
-        st = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0,11), (18,24)))
+        st = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (18, 24)))
         self.assertEqual(st.to_er7(), '\\H\\HIGHLIGHTED\\N\\TEXTIMP\\H\\ORTANT\\N\\')
 
     def test_ST_invalid_highlight_range(self):
-        st = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0,11), (4,24)))
+        st = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (4, 24)))
         self.assertRaises(InvalidHighlightRange, st.to_er7)
-        st = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((4,24), (0,11)))
+        st = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((4, 24), (0, 11)))
         self.assertRaises(InvalidHighlightRange, st.to_er7)
-        st = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((5,11), (0,11)))
+        st = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((5, 11), (0, 11)))
         self.assertRaises(InvalidHighlightRange, st.to_er7)
-        st = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0,11), (0,4)))
+        st = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (0, 4)))
         self.assertRaises(InvalidHighlightRange, st.to_er7)
+
+    def test_ST27_truncation_escape(self):
+        st = ST27('#truncation#')
+        self.assertEqual(st.to_er7(), '\\L\\truncation\\L\\')
 
 
 class TestFT(unittest.TestCase):
 
-    #Test FT datatype
+    # Test FT datatype
 
     def test_FT(self):
         text = 'This is a FT datatype text'
         ft = FT(text)
-        self.assertEqual(ft.classname, ('FT'))
+        self.assertEqual(ft.classname, 'FT')
         self.assertEqual(ft.to_er7(), text)
 
     def test_FT_maxlength_strict(self):
@@ -355,7 +353,7 @@ class TestFT(unittest.TestCase):
 
     def test_FT_maxlength(self):
         ft_str = 'a' * (FT(' ').max_length + 1)
-        ft = FT(ft_str) #no exception is raised here
+        FT(ft_str)  # no exception is raised here
 
     def test_FT_field_escaping(self):
         ft = FT('|field|')
@@ -374,54 +372,126 @@ class TestFT(unittest.TestCase):
         self.assertEqual(ft.to_er7(), '\\R\\repetition\\R\\')
 
     def test_FT_highlights(self):
-        ft = FT('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0,11), (18,24)))
+        ft = FT('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (18, 24)))
         self.assertEqual(ft.to_er7(), '\\H\\HIGHLIGHTED\\N\\TEXTIMP\\H\\ORTANT\\N\\')
 
     def test_FT_invalid_highlight_range(self):
-        ft = FT('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0,11), (4,24)))
+        ft = FT('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (4, 24)))
         self.assertRaises(InvalidHighlightRange, ft.to_er7)
-        ft = FT('HIGHLIGHTEDTEXTIMPORTANT', highlights=((4,24), (0,11)))
+        ft = FT('HIGHLIGHTEDTEXTIMPORTANT', highlights=((4, 24), (0, 11)))
         self.assertRaises(InvalidHighlightRange, ft.to_er7)
-        ft = FT('HIGHLIGHTEDTEXTIMPORTANT', highlights=((5,11), (0,11)))
+        ft = FT('HIGHLIGHTEDTEXTIMPORTANT', highlights=((5, 11), (0, 11)))
         self.assertRaises(InvalidHighlightRange, ft.to_er7)
-        ft = FT('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0,11), (0,4)))
+        ft = FT('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (0, 4)))
         self.assertRaises(InvalidHighlightRange, ft.to_er7)
+
+    def test_FT27_truncation_escape(self):
+        ft = FT27('#truncation#')
+        self.assertEqual(ft.to_er7(), '\\L\\truncation\\L\\')
 
 
 class TestID(unittest.TestCase):
 
-    #Test ID datatype
+    # Test ID datatype
 
     def test_ID(self):
         id_str = 'This is a ID'
-        id = ID(id_str)
-        self.assertEqual(id.classname, ('ID'))
-        self.assertEqual(id.to_er7(), id_str)
+        i = ID(id_str)
+        self.assertEqual(i.classname, 'ID')
+        self.assertEqual(i.to_er7(), id_str)
+
+    def test_ID_field_escaping(self):
+        i = ID('|field|')
+        self.assertEqual(i.to_er7(), '\\F\\field\\F\\')
+
+    def test_ID_component_escape(self):
+        i = ID('^component^')
+        self.assertEqual(i.to_er7(), '\\S\\component\\S\\')
+
+    def test_ID_subcomponent_escape(self):
+        i = ID('&subcomponent&')
+        self.assertEqual(i.to_er7(), '\\T\\subcomponent\\T\\')
+
+    def test_ID_repetition_escape(self):
+        i = ID('~repetition~')
+        self.assertEqual(i.to_er7(), '\\R\\repetition\\R\\')
+
+    def test_ID_highlights(self):
+        i = ID('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (18, 24)))
+        self.assertEqual(i.to_er7(), '\\H\\HIGHLIGHTED\\N\\TEXTIMP\\H\\ORTANT\\N\\')
+
+    def test_ID_invalid_highlight_range(self):
+        i = ID('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (4, 24)))
+        self.assertRaises(InvalidHighlightRange, i.to_er7)
+        i = ID('HIGHLIGHTEDTEXTIMPORTANT', highlights=((4, 24), (0, 11)))
+        self.assertRaises(InvalidHighlightRange, i.to_er7)
+        i = ID('HIGHLIGHTEDTEXTIMPORTANT', highlights=((5, 11), (0, 11)))
+        self.assertRaises(InvalidHighlightRange, i.to_er7)
+        i = ID('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (0, 4)))
+        self.assertRaises(InvalidHighlightRange, i.to_er7)
+
+    def test_ID27_truncation_escape(self):
+        i = ID27('#truncation#')
+        self.assertEqual(i.to_er7(), '\\L\\truncation\\L\\')
 
 
 class TestIS(unittest.TestCase):
 
-    #Test IS datatype
+    # Test IS datatype
 
     def test_IS(self):
         is_str = 'This is a IS'
         is_obj = IS(is_str)
-        self.assertEqual(is_obj.classname, ('IS'))
+        self.assertEqual(is_obj.classname, 'IS')
         self.assertEqual(is_obj.to_er7(), is_str)
 
     def test_IS_maxlength_strict(self):
         is_str = 'a' * (IS(' ').max_length + 1)
         self.assertRaises(MaxLengthReached, IS, is_str, validation_level=VALIDATION_LEVEL.STRICT)
 
+    def test_IS_field_escaping(self):
+        i = IS('|field|')
+        self.assertEqual(i.to_er7(), '\\F\\field\\F\\')
+
+    def test_IS_component_escape(self):
+        i = IS('^component^')
+        self.assertEqual(i.to_er7(), '\\S\\component\\S\\')
+
+    def test_IS_subcomponent_escape(self):
+        i = IS('&subcomponent&')
+        self.assertEqual(i.to_er7(), '\\T\\subcomponent\\T\\')
+
+    def test_IS_repetition_escape(self):
+        i = IS('~repetition~')
+        self.assertEqual(i.to_er7(), '\\R\\repetition\\R\\')
+
+    def test_IS_highlights(self):
+        i = IS('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (18, 24)))
+        self.assertEqual(i.to_er7(), '\\H\\HIGHLIGHTED\\N\\TEXTIMP\\H\\ORTANT\\N\\')
+
+    def test_ST_invalid_highlight_range(self):
+        st = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (4, 24)))
+        self.assertRaises(InvalidHighlightRange, st.to_er7)
+        st = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((4, 24), (0, 11)))
+        self.assertRaises(InvalidHighlightRange, st.to_er7)
+        st = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((5, 11), (0, 11)))
+        self.assertRaises(InvalidHighlightRange, st.to_er7)
+        st = ST('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (0, 4)))
+        self.assertRaises(InvalidHighlightRange, st.to_er7)
+
+    def test_IS27_truncation_escape(self):
+        i = IS27('#truncation#')
+        self.assertEqual(i.to_er7(), '\\L\\truncation\\L\\')
+
 
 class TestTX(unittest.TestCase):
 
-    #Test TX datatype
+    # Test TX datatype
 
     def test_TX(self):
         text = 'This is a TX datatype text'
         tx = TX(text)
-        self.assertEqual(tx.classname, ('TX'))
+        self.assertEqual(tx.classname, 'TX')
         self.assertEqual(tx.to_er7(), text)
 
     def test_TX_maxlength_strict(self):
@@ -449,23 +519,27 @@ class TestTX(unittest.TestCase):
         self.assertEqual(tx.to_er7(), '\\R\\repetition\\R\\')
 
     def test_TX_highlights(self):
-        tx = TX('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0,11), (18,24)))
+        tx = TX('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (18, 24)))
         self.assertEqual(tx.to_er7(), '\\H\\HIGHLIGHTED\\N\\TEXTIMP\\H\\ORTANT\\N\\')
 
     def test_TX_invalid_highlight_range(self):
-        tx = TX('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0,11), (4,24)))
+        tx = TX('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (4, 24)))
         self.assertRaises(InvalidHighlightRange, tx.to_er7)
-        tx = TX('HIGHLIGHTEDTEXTIMPORTANT', highlights=((4,24), (0,11)))
+        tx = TX('HIGHLIGHTEDTEXTIMPORTANT', highlights=((4, 24), (0, 11)))
         self.assertRaises(InvalidHighlightRange, tx.to_er7)
-        tx = TX('HIGHLIGHTEDTEXTIMPORTANT', highlights=((5,11), (0,11)))
+        tx = TX('HIGHLIGHTEDTEXTIMPORTANT', highlights=((5, 11), (0, 11)))
         self.assertRaises(InvalidHighlightRange, tx.to_er7)
-        tx = TX('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0,11), (0,4)))
+        tx = TX('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (0, 4)))
         self.assertRaises(InvalidHighlightRange, tx.to_er7)
+
+    def test_TX27_truncation_escape(self):
+        tx = TX27('#truncation#')
+        self.assertEqual(tx.to_er7(), '\\L\\truncation\\L\\')
 
 
 class TestGTS(unittest.TestCase):
 
-    #Test GTS Datatype
+    # Test GTS Datatype
 
     def test_GTS(self):
         text = 'This is a GTS datatype text'
@@ -498,28 +572,32 @@ class TestGTS(unittest.TestCase):
         self.assertEqual(gts.to_er7(), '\\R\\repetition\\R\\')
 
     def test_GTS_highlights(self):
-        gts = GTS('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0,11), (18,24)))
+        gts = GTS('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (18, 24)))
         self.assertEqual(gts.to_er7(), '\\H\\HIGHLIGHTED\\N\\TEXTIMP\\H\\ORTANT\\N\\')
 
     def test_GTS_invalid_highlight_range(self):
-        gts = GTS('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0,11), (4,24)))
+        gts = GTS('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (4, 24)))
         self.assertRaises(InvalidHighlightRange, gts.to_er7)
-        gts = GTS('HIGHLIGHTEDTEXTIMPORTANT', highlights=((4,24), (0,11)))
+        gts = GTS('HIGHLIGHTEDTEXTIMPORTANT', highlights=((4, 24), (0, 11)))
         self.assertRaises(InvalidHighlightRange, gts.to_er7)
-        gts = GTS('HIGHLIGHTEDTEXTIMPORTANT', highlights=((5,11), (0,11)))
+        gts = GTS('HIGHLIGHTEDTEXTIMPORTANT', highlights=((5, 11), (0, 11)))
         self.assertRaises(InvalidHighlightRange, gts.to_er7)
-        gts = GTS('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0,11), (0,4)))
+        gts = GTS('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (0, 4)))
         self.assertRaises(InvalidHighlightRange, gts.to_er7)
+
+    def test_GTS27_truncation_escape(self):
+        gts = GTS27('#truncation#')
+        self.assertEqual(gts.to_er7(), '\\L\\truncation\\L\\')
 
 
 class TestNM(unittest.TestCase):
 
-    #Test NM datatype
+    # Test NM datatype
 
     def test_NM(self):
         num = NM(Decimal(1234))
         self.assertEqual(num.classname, 'NM')
-        self.assertEqual(num.to_er7(),'1234')
+        self.assertEqual(num.to_er7(), '1234')
         num = 1234
         NM(num)
         num = float(1234.54)
@@ -540,7 +618,7 @@ class TestNM(unittest.TestCase):
 
 class TestSI(unittest.TestCase):
 
-    #Test SI datatype
+    # Test SI datatype
 
     def test_SI(self):
         si = SI(1234)
@@ -552,11 +630,90 @@ class TestSI(unittest.TestCase):
         self.assertRaises(MaxLengthReached, SI, si, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_SI_maxlength(self):
-        SI(10000) # no exception is raised here
+        SI(10000)  # no exception is raised here
 
     def test_invalid_SI(self):
         self.assertRaises(ValueError, SI, 'aaaaaa')
 
+
+class TestSNM(unittest.TestCase):
+
+    # Test SNM Datatype
+
+    def test_SNM(self):
+        text = 'This is a SNM datatype text'
+        snm = SNM(text)
+        self.assertEqual(snm.classname, 'SNM')
+        self.assertEqual(snm.to_er7(), text)
+
+    def test_SNM_field_escaping(self):
+        snm = SNM('|field|')
+        self.assertEqual(snm.to_er7(), '\\F\\field\\F\\')
+
+    def test_SNM_component_escape(self):
+        snm = SNM('^component^')
+        self.assertEqual(snm.to_er7(), '\\S\\component\\S\\')
+
+    def test_SNM_subcomponent_escape(self):
+        snm = SNM('&subcomponent&')
+        self.assertEqual(snm.to_er7(), '\\T\\subcomponent\\T\\')
+
+    def test_SNM_repetition_escape(self):
+        snm = SNM('~repetition~')
+        self.assertEqual(snm.to_er7(), '\\R\\repetition\\R\\')
+
+    def test_SNM_highlights(self):
+        snm = SNM('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (18, 24)))
+        self.assertEqual(snm.to_er7(), '\\H\\HIGHLIGHTED\\N\\TEXTIMP\\H\\ORTANT\\N\\')
+
+    def test_SNM_invalid_highlight_range(self):
+        snm = SNM('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (4, 24)))
+        self.assertRaises(InvalidHighlightRange, snm.to_er7)
+        snm = SNM('HIGHLIGHTEDTEXTIMPORTANT', highlights=((4, 24), (0, 11)))
+        self.assertRaises(InvalidHighlightRange, snm.to_er7)
+        snm = SNM('HIGHLIGHTEDTEXTIMPORTANT', highlights=((5, 11), (0, 11)))
+        self.assertRaises(InvalidHighlightRange, snm.to_er7)
+        snm = SNM('HIGHLIGHTEDTEXTIMPORTANT', highlights=((0, 11), (0, 4)))
+        self.assertRaises(InvalidHighlightRange, snm.to_er7)
+
+    def test_SNM_truncation_escape(self):
+        snm = SNM('#truncation#')
+        self.assertEqual(snm.to_er7(), '\\L\\truncation\\L\\')
+
+
+class TestTN(unittest.TestCase):
+
+    # Test TN Datatype
+
+    def test_TN(self):
+        text = '(111)999-999-222X111B222CTEXT'
+        tn = TN(text)
+        self.assertEqual(tn.classname, 'TN')
+        self.assertEqual(tn.to_er7(), text)
+
+    def test_TN_invalid_value(self):
+        self.assertRaises(ValueError, TN, 'invalid_value')
+        self.assertRaises(ValueError, TN27, 'invalid_value')
+
+    def test_TN_field_escaping(self):
+        tn = TN('(111)999-999-222X111B222C|field|')
+        self.assertEqual(tn.to_er7(), '(111)999-999-222X111B222C\\F\\field\\F\\')
+
+    def test_TN_component_escape(self):
+        tn = TN('(111)999-999-222X111B222C^component^')
+        self.assertEqual(tn.to_er7(), '(111)999-999-222X111B222C\\S\\component\\S\\')
+
+    def test_TN_subcomponent_escape(self):
+        tn = TN('(111)999-999-222X111B222C&subcomponent&')
+        self.assertEqual(tn.to_er7(), '(111)999-999-222X111B222C\\T\\subcomponent\\T\\')
+
+    def test_TN_repetition_escape(self):
+        tn = TN('(111)999-999-222X111B222C~repetition~')
+        self.assertEqual(tn.to_er7(), '(111)999-999-222X111B222C\\R\\repetition\\R\\')
+
+    def test_TN27_truncation_escape(self):
+        tn = TN27('(111)999-999-222X111B222C#truncation#')
+        self.assertEqual(tn.to_er7(), '(111)999-999-222X111B222C\\L\\truncation\\L\\')
 
 
 if __name__ == '__main__':
