@@ -19,61 +19,21 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""
-HL7apy - Constants
-"""
-
-#: number of expected separators
-N_SEPS = 4
-#: number of expected separators from v2.7
-N_SEPS_V27 = 5
-
-#: Dictionary with default encoding characters as per standard specifications
-DEFAULT_ENCODING_CHARS = {
-    'GROUP': '\r',
-    'SEGMENT': '\r',
-    'FIELD':  '|',
-    'COMPONENT': '^',
-    'SUBCOMPONENT': '&',
-    'REPETITION': '~',
-    'ESCAPE': '\\'
-}
-
-#: Dictionary with default encoding characters for version superior to 2.7
-DEFAULT_ENCODING_CHARS_27 = {
-    'GROUP': '\r',
-    'SEGMENT': '\r',
-    'FIELD':  '|',
-    'COMPONENT': '^',
-    'SUBCOMPONENT': '&',
-    'REPETITION': '~',
-    'ESCAPE': '\\',
-    'TRUNCATION': '#'
-}
-
-#: default hl7 version
-DEFAULT_VERSION = "2.5"
+from __future__ import absolute_import
+from hl7apy.base_datatypes import TextualDataType
 
 
-class MLLP_ENCODING_CHARS(object):
+class ST(TextualDataType):
     """
-    MLLP encoding chars
+    :attr:`max_length` is 199
     """
-    #: Start Block
-    SB = '\x0b'
-    #: End Block
-    EB = '\x1c'
-    #: Carriage return
-    CR = '\x0d'
+    def __init__(self, value, highlights=None, validation_level=None):
+        super(ST, self).__init__(value, 999, highlights, validation_level)
 
 
-class VALIDATION_LEVEL(object):
+class SNM(TextualDataType):
     """
-    Allowed validation levels
+    :attr:`max_length` is 199
     """
-    #: Strict validation
-    STRICT = 1
-    #: Tolerant validation
-    TOLERANT = 2
-    # kept for backward compatibility
-    QUIET = TOLERANT
+    def __init__(self, value, highlights=None, validation_level=None):
+        super(SNM, self).__init__(value, None, highlights, validation_level)

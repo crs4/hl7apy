@@ -318,6 +318,8 @@ class XSDParser(object):
         to_delete = []
         for key, value in iteritems(content):
             if value is not None:
+                if isinstance(value, list):
+                    continue
                 if value['type'] in ('sequence', 'choice') and value.get('content'):
                     try:
                         new_value = (value['type'],  # TODO: can we set only sequence?

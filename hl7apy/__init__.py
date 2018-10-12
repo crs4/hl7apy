@@ -30,7 +30,7 @@ except ImportError:
     import pickle
 
 from hl7apy.exceptions import UnsupportedVersion, InvalidEncodingChars, UnknownValidationLevel
-from hl7apy.consts import DEFAULT_ENCODING_CHARS, DEFAULT_VERSION, VALIDATION_LEVEL
+from hl7apy.consts import DEFAULT_ENCODING_CHARS, DEFAULT_ENCODING_CHARS_27, DEFAULT_VERSION, VALIDATION_LEVEL
 
 __author__ = 'Daniela Ghironi, Vittorio Meloni, Alessandro Sulis, Federico Caboni'
 __author_email__ = '<ghiron@gmail.com>, <vittorio.meloni@crs4.it>, <alessandro.sulis@crs4.it>, ' \
@@ -38,6 +38,7 @@ __author_email__ = '<ghiron@gmail.com>, <vittorio.meloni@crs4.it>, <alessandro.s
 __url__ = 'http://crs4.github.io/hl7apy/'
 
 _DEFAULT_ENCODING_CHARS = DEFAULT_ENCODING_CHARS
+_DEFAULT_ENCODING_CHARS_27 = DEFAULT_ENCODING_CHARS_27
 _DEFAULT_VERSION = DEFAULT_VERSION
 _DEFAULT_VALIDATION_LEVEL = VALIDATION_LEVEL.TOLERANT
 
@@ -322,7 +323,9 @@ def _discover_libraries():
     return {o[1:].replace("_", "."): "hl7apy.{}".format(o)
             for o in os.listdir(current_dir) if o.startswith("v2_")}
 
+
 SUPPORTED_LIBRARIES = _discover_libraries()
+print(SUPPORTED_LIBRARIES)
 
 if __name__ == '__main__':
 

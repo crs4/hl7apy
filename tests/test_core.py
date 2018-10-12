@@ -368,6 +368,9 @@ class TestMessage(unittest.TestCase):
 
         sub = m.rsp_k21_query_response.pid.pid_3.cx_10.cwe_1
 
+    def test_create_v27_message(self):
+        m = Message('RSP_K21', version='2.7')
+
 
 class TestGroup(unittest.TestCase):
 
@@ -2091,6 +2094,7 @@ class TestSubComponent(unittest.TestCase):
         f = Field('STF_2')
         with self.assertRaises(ChildNotFound):
             f.stf_2_10_100 = 'subcomponent'
+
 
 if __name__ == '__main__':
     unittest.main()
