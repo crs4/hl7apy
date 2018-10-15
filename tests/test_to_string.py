@@ -25,7 +25,7 @@ from hl7apy.core import Message, Group, Segment, Field, Component, SubComponent
 from hl7apy.parser import parse_segment, parse_message
 from hl7apy.base_datatypes import *
 from hl7apy.exceptions import InvalidHighlightRange
-from hl7apy.consts import MLLP_ENCODING_CHARS, VALIDATION_LEVEL
+from hl7apy.consts import MLLP_ENCODING_CHARS, VALIDATION_LEVEL, DEFAULT_ENCODING_CHARS
 
 
 class ToStringTestCase(unittest.TestCase):
@@ -161,6 +161,16 @@ class ToStringTestCase(unittest.TestCase):
         msh = m.msh
         self.assertEqual(msh.msh_1.to_er7(), '|')
         self.assertEqual(msh.msh_2.to_er7(), '^~\\&#')
+        msh_1 = Field('MSH_1')
+        msh_2 = Field('MSH_2')
+        self.assertRaises(IndexError, msh_1.to_er7)
+        self.assertRaises(IndexError, msh_2.to_er7)
+
+    def test_to_string_msh_field_v27_no_truncation(self):
+        m = Message('OML_O33', encoding_chars=DEFAULT_ENCODING_CHARS, version='2.7')
+        msh = m.msh
+        self.assertEqual(msh.msh_1.to_er7(), '|')
+        self.assertEqual(msh.msh_2.to_er7(), '^~\\&')
         msh_1 = Field('MSH_1')
         msh_2 = Field('MSH_2')
         self.assertRaises(IndexError, msh_1.to_er7)

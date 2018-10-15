@@ -51,10 +51,17 @@ class TestParser(unittest.TestCase):
 
         self.rsp_k21_27 = \
             'MSH|^~\&#|SEND APP|SEND FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|1234|D|2.7|||||ITA||EN\r' \
-            'MSA|AA|26775702551812240|\r' \
+            'MSA|AA|26775702551812240\r' \
             'QAK|111069|OK||1|1|0\r' \
-            'QPD|IHE PDQ Query|111069|@PID.3.1^1010110909194822~@PID.5.1^SMITH||||\r' \
-            'PID|1||10101^^^GATEWAY&1.3.6.1.4.1.21367.2011.2.5.17&ISO||JOHN^SMITH^^^^^A||19690113|M|||VIA DELLE VIE^^CAGLIARI^^^100^H^^092009||||||||||||CAGLIARI|||||\r'
+            'QPD|IHE PDQ Query|111069|@PID.3.1^1010110909194822~@PID.5.1^SMITH\r' \
+            'PID|1||10101^^^GATEWAY&1.3.6.1.4.1.21367.2011.2.5.17&ISO||JOHN^SMITH^^^^^A||19690113|M|||VIA DELLE VIE^^CAGLIARI^^^100^H^^092009||||||||||||CAGLIARI'
+
+        self.rsp_k21_27_no_truncation = \
+            'MSH|^~\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|1234|D|2.7|||||ITA||EN\r' \
+            'MSA|AA|26775702551812240\r' \
+            'QAK|111069|OK||1|1|0\r' \
+            'QPD|IHE PDQ Query|111069|@PID.3.1^1010110909194822~@PID.5.1^SMITH\r' \
+            'PID|1||10101^^^GATEWAY&1.3.6.1.4.1.21367.2011.2.5.17&ISO||JOHN^SMITH^^^^^A||19690113|M|||VIA DELLE VIE^^CAGLIARI^^^100^H^^092009||||||||||||CAGLIARI'
 
         base_path = os.path.abspath(os.path.dirname(__file__))
         path = os.path.join(base_path, 'profiles/iti_21')
@@ -175,7 +182,7 @@ class TestParser(unittest.TestCase):
         m = 'MSH|||||||||||||||||||'
         self.assertRaises(InvalidEncodingChars, parse_message, m)
         self.assertRaises(InvalidEncodingChars, parse_message, m, validation_level=VALIDATION_LEVEL.STRICT)
-        m = 'MSH|^~\&||||||||||2.7'
+        m = 'MSH|^~\||||||||||2.7'
         self.assertRaises(InvalidEncodingChars, parse_message, m)
         self.assertRaises(InvalidEncodingChars, parse_message, m, validation_level=VALIDATION_LEVEL.STRICT)
 
@@ -183,7 +190,7 @@ class TestParser(unittest.TestCase):
         m = 'MSH|@%\|||||||||'
         self.assertRaises(InvalidEncodingChars, parse_message, m)
         self.assertRaises(InvalidEncodingChars, parse_message, m, validation_level=VALIDATION_LEVEL.STRICT)
-        m = 'MSH|^~\&||||||||||2.7'
+        m = 'MSH|^~\||||||||||2.7'
         self.assertRaises(InvalidEncodingChars, parse_message, m)
         self.assertRaises(InvalidEncodingChars, parse_message, m, validation_level=VALIDATION_LEVEL.STRICT)
 
@@ -437,6 +444,13 @@ class TestParser(unittest.TestCase):
         m = parse_message(self.rsp_k21_27)
         self.assertEqual(m.msh.msh_2.to_er7(), '^~\\&#')
         self.assertEqual(m.encoding_chars['TRUNCATION'], '#')
+        self.assertEqual(m.to_er7(), self.rsp_k21_27)
+
+    def test_parse_version_27_message_no_truncation(self):
+        m = parse_message(self.rsp_k21_27_no_truncation)
+        self.assertEqual(m.msh.msh_2.to_er7(), '^~\\&')
+        self.assertNotIn('TRUNCATION', m.encoding_chars)
+        self.assertEqual(m.to_er7(), self.rsp_k21_27_no_truncation)
 
 
 if __name__ == '__main__':

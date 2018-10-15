@@ -30,11 +30,17 @@ class TextualDataType(BaseTextualDataType):
 
     def _get_translations(self, encoding_chars):
         escape_char = encoding_chars['ESCAPE']
-        return ((encoding_chars['FIELD'], '{esc}F{esc}'.format(esc=escape_char)),
-                (encoding_chars['COMPONENT'], '{esc}S{esc}'.format(esc=escape_char)),
-                (encoding_chars['SUBCOMPONENT'], '{esc}T{esc}'.format(esc=escape_char)),
-                (encoding_chars['REPETITION'], '{esc}R{esc}'.format(esc=escape_char)),
-                (encoding_chars['TRUNCATION'], '{esc}L{esc}'.format(esc=escape_char)),)
+        try:
+            return ((encoding_chars['FIELD'], '{esc}F{esc}'.format(esc=escape_char)),
+                    (encoding_chars['COMPONENT'], '{esc}S{esc}'.format(esc=escape_char)),
+                    (encoding_chars['SUBCOMPONENT'], '{esc}T{esc}'.format(esc=escape_char)),
+                    (encoding_chars['REPETITION'], '{esc}R{esc}'.format(esc=escape_char)),
+                    (encoding_chars['TRUNCATION'], '{esc}L{esc}'.format(esc=escape_char)),)
+        except KeyError:
+            return ((encoding_chars['FIELD'], '{esc}F{esc}'.format(esc=escape_char)),
+                    (encoding_chars['COMPONENT'], '{esc}S{esc}'.format(esc=escape_char)),
+                    (encoding_chars['SUBCOMPONENT'], '{esc}T{esc}'.format(esc=escape_char)),
+                    (encoding_chars['REPETITION'], '{esc}R{esc}'.format(esc=escape_char)),)
 
     def _get_escape_char_regex(self, escape_char):
         return r'(?<!%s[HNFSTREL])%s(?![HNFSTREL]%s)' % tuple(3 * [re.escape(escape_char)])

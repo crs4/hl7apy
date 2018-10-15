@@ -24,6 +24,7 @@ import os
 import unittest
 
 import hl7apy
+from hl7apy import DEFAULT_ENCODING_CHARS
 from hl7apy.core import Message, Segment, Field, Group, Component, SubComponent, ElementProxy
 from hl7apy.exceptions import ChildNotValid, ChildNotFound, OperationNotAllowed, InvalidName, \
     MaxChildLimitReached, UnsupportedVersion, InvalidEncodingChars, \
@@ -380,6 +381,11 @@ class TestMessage(unittest.TestCase):
         m = Message('RSP_K21', version='2.7')
         self.assertEqual(m.encoding_chars['TRUNCATION'], '#')
         self.assertEqual(m.msh.msh_2.to_er7(), '^~\\&#')
+
+    def test_create_v27_message_no_truncation(self):
+        m = Message('RSP_K21', encoding_chars=DEFAULT_ENCODING_CHARS, version='2.7')
+        self.assertNotIn('TRUNCATION', m.encoding_chars)
+        self.assertEqual(m.msh.msh_2.to_er7(), '^~\\&')
 
 
 class TestGroup(unittest.TestCase):

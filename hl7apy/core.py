@@ -608,7 +608,7 @@ class Element(object):
     cls_attrs = ['name', 'validation_level', 'version', 'children', 'ordered_children',
                  'table', 'long_name', 'value', '_value', 'parent', '_parent', '_traversal_parent',
                  'traversal_parent', 'child_classes', 'encoding_chars', 'structure_by_name',
-                 'structure_by_longname', 'repetitions', 'reference']
+                 'structure_by_longname', 'repetitions', 'reference', '_truncation_char']
 
     def __init__(self, name=None, parent=None, reference=None, version=None,
                  validation_level=None, traversal_parent=None):
@@ -1898,7 +1898,8 @@ class Message(Group):
         (see :func:`get_default_encoding_chars <hl7apy.get_default_encoding_chars>`)
     """
 
-    def __init__(self, name=None, reference=None, version=None, validation_level=None, encoding_chars=None):
+    def __init__(self, name=None, reference=None, version=None, validation_level=None,
+                 encoding_chars=None):
 
         if reference is not None:
             try:
@@ -1999,7 +2000,7 @@ class Message(Group):
             'GROUP': '\r',
             'SEGMENT': '\r',
         }
-        if self.version >= '2.7':
+        if self.version >= '2.7' and len(msh_2) == 5:
             chars.update({'TRUNCATION': msh_2[4]})
         return chars
 
@@ -2013,7 +2014,7 @@ class Message(Group):
                       version=self.version)
         c.add(s)
         msh_1.st = c
-        if self.version >= '2.7':
+        if self.version >= '2.7' and 'TRUNCATION' in encoding_chars:
             value = '{0}{1}{2}{3}{4}'.format(encoding_chars['COMPONENT'],
                                              encoding_chars['REPETITION'],
                                              encoding_chars['ESCAPE'],

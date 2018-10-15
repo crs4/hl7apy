@@ -627,37 +627,32 @@ def _split_msh(content):
         msh = content.split("\r", 1)[0]  # get the first segment
         fields = msh.split(field_sep)
         seps = fields[1]  # get the remaining encoding chars (MSH.2)
+
         if len(seps) > len(set(seps)):
             raise InvalidEncodingChars("Found duplicate encoding chars")
 
         try:
-            n_seps = N_SEPS_27 if fields[11] >= '2.7' else N_SEPS
-        except IndexError:
-            # It means the fields[11] does not exists. Probably something wrong with the message
-            n_seps = N_SEPS
-
-        try:
-            if n_seps == N_SEPS:
-                comp_sep, rep_sep, escape, sub_sep = seps
-            else:
-                comp_sep, rep_sep, escape, sub_sep, trunc_sep = seps
+            comp_sep, rep_sep, escape, sub_sep = seps
+            trunc_sep = None
         except ValueError:
-            if len(seps) < n_seps:
+            if len(seps) < N_SEPS:
                 raise InvalidEncodingChars('Missing required encoding chars')
+            elif len(seps) == N_SEPS_27 and fields[11] >= '2.7':
+                comp_sep, rep_sep, escape, sub_sep, trunc_sep = seps
             else:
                 raise InvalidEncodingChars('Found {0} encoding chars'.format(len(seps)))
-        else:
-            encoding_chars = {
-                'FIELD': field_sep,
-                'COMPONENT': comp_sep,
-                'SUBCOMPONENT': sub_sep,
-                'REPETITION': rep_sep,
-                'ESCAPE': escape,
-                'SEGMENT': '\r',
-                'GROUP': '\r',
-            }
-            if n_seps == N_SEPS_27:
-                encoding_chars.update({'TRUNCATION': trunc_sep})
+
+        encoding_chars = {
+            'FIELD': field_sep,
+            'COMPONENT': comp_sep,
+            'SUBCOMPONENT': sub_sep,
+            'REPETITION': rep_sep,
+            'ESCAPE': escape,
+            'SEGMENT': '\r',
+            'GROUP': '\r',
+        }
+        if trunc_sep:
+            encoding_chars.update({'TRUNCATION': trunc_sep})
 
     else:
         raise ParserError("Invalid message")
