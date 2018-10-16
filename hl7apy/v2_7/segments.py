@@ -699,7 +699,6 @@ SEGMENTS = {
             (('EVN_1', FIELDS['EVN_1'], (0, 0), 'FIE'),
              ('EVN_2', FIELDS['EVN_2'], (1, 1), 'FIE'),
              ('EVN_3', FIELDS['EVN_3'], (0, 1), 'FIE'),
-             ('EVN_3', FIELDS['EVN_3'], (0, 1), 'FIE'),
              ('EVN_4', FIELDS['EVN_4'], (0, 1), 'FIE'),
              ('EVN_5', FIELDS['EVN_5'], (0, -1), 'FIE'),
              ('EVN_6', FIELDS['EVN_6'], (0, 1), 'FIE'),

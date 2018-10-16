@@ -231,6 +231,18 @@ class DateTimeDataType(BaseDataType):
         return datetime.strftime(self.value, self.format)
 
 
+class WD(TextualDataType):
+    """
+    Datatype class for withdraw fields. They are fields that has been withdrawn from specification and should not be
+    used. It is implemented as a :class:`hl7apy.base_datatypes.TextualDatatype` with :attr:`max_length` 0.
+
+    :attr:`max_length` is 0
+    """
+    def __init__(self, value, highlights=None,
+                 validation_level=None):
+        super(WD, self).__init__(value, 199, highlights, validation_level)
+
+
 class DT(DateTimeDataType):
     """
     Class for DT base datatype. It extends DatetimeDatatype and it represents a time value with

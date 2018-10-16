@@ -28,7 +28,7 @@ from hl7apy.parser import parse_message, parse_segments, parse_segment, parse_fi
     parse_components, parse_component, parse_subcomponents, get_message_type
 from hl7apy.validation import VALIDATION_LEVEL
 from hl7apy.exceptions import ParserError, OperationNotAllowed, InvalidEncodingChars, InvalidName, \
-    ValidationError
+    ValidationError, MaxChildLimitReached
 
 
 class TestParser(unittest.TestCase):
@@ -451,6 +451,17 @@ class TestParser(unittest.TestCase):
         self.assertEqual(m.msh.msh_2.to_er7(), '^~\\&')
         self.assertNotIn('TRUNCATION', m.encoding_chars)
         self.assertEqual(m.to_er7(), self.rsp_k21_27_no_truncation)
+
+    def test_parse_wd_field(self):
+        """
+        Tests that, in strict mode, a wd field is not present
+        """
+        # The EV1 message is of type WD
+        s = 'EVN|EV1|20080115153000||AAA|AAA|20080114003000'
+        self.assertRaises(MaxChildLimitReached, parse_segment, s, version='2.7',
+                          validation_level=VALIDATION_LEVEL.STRICT)
+        parsed_s = parse_segment(s, version='2.7')
+        self.assertEqual(parsed_s.to_er7(), s)
 
 
 if __name__ == '__main__':

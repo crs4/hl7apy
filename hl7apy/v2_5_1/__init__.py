@@ -69,13 +69,14 @@ def get_base_datatypes():
 
 
 def _load_base_datatypes():
-    base_datatypes = ('ST', 'ID', 'DT', 'DTM', 'FT', 'GTS', 'IS', 'NM', 'SI', 'TM', 'TX')
+    base_datatypes = ('ST', 'ID', 'DT', 'DTM', 'FT', 'GTS', 'IS', 'NM', 'SI', 'TM', 'TX', 'WD')
     module = importlib.import_module("hl7apy.base_datatypes")
     dts = {}
     for cls in base_datatypes:
         cls = getattr(module, cls)
         dts[cls.__name__] = cls
     return dts
+
 
 BASE_DATATYPES = _load_base_datatypes()
 
@@ -90,3 +91,4 @@ NM = BASE_DATATYPES['NM']
 SI = BASE_DATATYPES['SI']
 TM = BASE_DATATYPES['TM']
 TX = BASE_DATATYPES['TX']
+WD = BASE_DATATYPES['WD']

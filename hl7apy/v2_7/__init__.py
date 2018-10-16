@@ -22,6 +22,7 @@
 from __future__ import absolute_import
 import importlib
 
+from hl7apy.base_datatypes import WD
 from .messages import MESSAGES
 from .segments import SEGMENTS
 from .fields import FIELDS
@@ -88,7 +89,8 @@ BASE_DATATYPES.update({
     'TX': TX,
     'GTS': GTS,
     'TN': TN,
-    'SNM': SNM
+    'SNM': SNM,
+    'WD': WD,
 })
 
 DT = BASE_DATATYPES['DT']

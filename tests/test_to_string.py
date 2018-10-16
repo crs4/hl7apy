@@ -255,6 +255,15 @@ class ToStringTestCase(unittest.TestCase):
         self.assertEqual(msg.to_er7(), self.msh_standard +
                          '\rZIN||abc||cba^www~abc^yyy\rZBE|yyy|ww||||||yyy\rPID|1\rZBE||ab|ab')
 
+    def test_to_string_wd_field(self):
+        """
+        Tests that, in strict mode, a wd field is not present
+        """
+        # The EV1 message is of type WD
+        s = 'EVN||20080115153000||AAA|AAA|20080114003000'
+        parsed_s = parse_segment(s, version='2.7')
+        self.assertEqual(parsed_s.to_er7(), 'EVN||20080115153000||AAA|AAA|20080114003000')
+
 
 if __name__ == '__main__':
     unittest.main()

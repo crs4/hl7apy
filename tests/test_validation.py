@@ -371,6 +371,16 @@ class TestValidation(unittest.TestCase):
         self.assertRaises(ValidationError, f.validate, report_file=self.report_file)
         self._test_report_file('ERROR')
 
+    def test_wd_type_field(self):
+        """
+        Tests that, in strict mode, a wd field is not present
+        """
+        # The EV1 message is of type WD
+        s = 'EVN|EV1|20080115153000||AAA|AAA|20080114003000'
+        parsed_s = parse_segment(s, version='2.7')
+        self.assertRaises(ValidationError, parsed_s.validate)
+
+
 
 class TestMessageProfile(unittest.TestCase):
 
@@ -625,6 +635,7 @@ class TestMessageProfile(unittest.TestCase):
         zin_4.value = 'dd'
         msg.zin.zin_4 = zin_4
         self.assertTrue(msg.validate())
+
 
 if __name__ == '__main__':
     unittest.main()
