@@ -28,14 +28,14 @@ from .segments import SEGMENTS
 from .fields import FIELDS
 from .datatypes import DATATYPES, DATATYPES_STRUCTS
 from .groups import GROUPS
-# from .tables import TABLES
+from .tables import TABLES
 
 from .base_datatypes import ST, FT, ID, IS, TX, GTS, TN, SNM
 from hl7apy.exceptions import ChildNotFound
 
 ELEMENTS = {'Message': MESSAGES, 'Group': GROUPS, 'Segment': SEGMENTS,
             'Field': FIELDS, 'Component': DATATYPES, 'SubComponent': DATATYPES,
-            'Datatypes_Structs': DATATYPES_STRUCTS, 'Table': []}
+            'Datatypes_Structs': DATATYPES_STRUCTS, 'Table': TABLES}
 
 
 def get(name, element_type):

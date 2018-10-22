@@ -98,14 +98,12 @@ class Validator(object):
         def _check_table_compliance(el, ref, warns):
             table = ref[4]
             if table is not None:
-                # if isinstance(table, tuple):
-                #     print el
                 try:
                     table_ref = load_reference(table, 'Table', el.version)
                 except ChildNotFound:
                     pass
                 else:
-                    table_children = [c[0] for c in table_ref[1]]
+                    table_children = table_ref[1]
                     if el.to_er7() not in table_children:
                         warns.append(ValidationWarning("Value {} not in table {} in element {}.{}".
                                                        format(el.to_er7(), table, el.parent.name,
