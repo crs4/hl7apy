@@ -19,7 +19,7 @@ Current version is __1.2.0__
 
 This project is not affiliated with the HL7 organization: the library is just consistent with their specification.
 
-Documentation can be found [here](http://hl7apy.org).
+Documentation can be found [here](http://crs4.github.io/hl7apy/).
 
 Installation
 ------------
