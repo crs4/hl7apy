@@ -30,7 +30,7 @@ from .datatypes import DATATYPES, DATATYPES_STRUCTS
 from .groups import GROUPS
 from .tables import TABLES
 
-from .base_datatypes import ST, FT, ID, IS, TX, GTS, SNM
+from ..v2_7.base_datatypes import ST, FT, ID, IS, TX, GTS, SNM
 from hl7apy.exceptions import ChildNotFound
 
 ELEMENTS = {'Message': MESSAGES, 'Group': GROUPS, 'Segment': SEGMENTS,
@@ -49,7 +49,7 @@ def find(name, where):
     """
     >>> from hl7apy.core import Segment
     >>> from hl7apy import find_reference
-    >>> find_reference('UNKNOWN', (Segment, ), '2.7')  # doctest: +IGNORE_EXCEPTION_DETAIL
+    >>> find_reference('UNKNOWN', (Segment, ), '2.8.2')  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
     ChildNotFound: No child named UNKNOWN

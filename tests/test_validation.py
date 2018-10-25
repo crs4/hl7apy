@@ -401,7 +401,7 @@ class TestMessageProfile(unittest.TestCase):
     def _create_message(self, msg_str):
         return parse_message(msg_str, message_profile=self.rsp_k21_mp)
 
-    def _test_report_file(self, error_type):
+    def _test_report_file(self, error_type, present=True):
 
         with open(self.report_file, 'r') as f:
             s = f.read()
@@ -409,7 +409,12 @@ class TestMessageProfile(unittest.TestCase):
             regex = 'Error:.*'
         elif error_type == 'WARNING':
             regex = 'Warning:.*'
-        self.assertRegexpMatches(s, regex)
+        else:
+            return
+        if present:
+            self.assertRegexpMatches(s, regex)
+        else:
+            self.assertNotRegexpMatches(s, regex)
         os.remove(self.report_file)
 
     def test_well_structured_message(self):

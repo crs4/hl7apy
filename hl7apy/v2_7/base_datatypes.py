@@ -126,26 +126,6 @@ class GTS(TextualDataType):
         super(GTS, self).__init__(value, 199, highlights, validation_level)
 
 
-class TN(TextualDataType):
-    """
-    Class for TN datatype. It extends TextualDatatype and the parameters are the same of the superclass
-
-    :attr:`max_length` is 199.
-
-    The type of ``value`` must be `str` and should match the format
-    [NN] [(999)]999-9999[X99999][B99999][C any text]
-
-    :raise: :exc:`ValueError` raised when the value does not match the expected format
-    """
-    def __init__(self, value, validation_level=None):
-
-        regexp = r'(\d\d\s)?(\(\d+\))?(\d+-?\d+)(X\d+)?(B\d+)?(C.+)?'
-        if not re.match(regexp, value):
-            raise ValueError('Invalid value for TN data')
-
-        super(TN, self).__init__(value, 199, None, validation_level)
-
-
 class SNM(TextualDataType):
     """
     :attr:`max_length` is 199

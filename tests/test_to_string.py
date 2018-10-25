@@ -157,24 +157,26 @@ class ToStringTestCase(unittest.TestCase):
         self.assertRaises(IndexError, msh_2.to_er7)
 
     def test_to_string_msh_field_v27(self):
-        m = Message('OML_O33', version='2.7')
-        msh = m.msh
-        self.assertEqual(msh.msh_1.to_er7(), '|')
-        self.assertEqual(msh.msh_2.to_er7(), '^~\\&#')
-        msh_1 = Field('MSH_1')
-        msh_2 = Field('MSH_2')
-        self.assertRaises(IndexError, msh_1.to_er7)
-        self.assertRaises(IndexError, msh_2.to_er7)
+        for v in ('2.7', '2.8', '2.8.1', '2.8.2'):
+            m = Message('OML_O33', version=v)
+            msh = m.msh
+            self.assertEqual(msh.msh_1.to_er7(), '|')
+            self.assertEqual(msh.msh_2.to_er7(), '^~\\&#')
+            msh_1 = Field('MSH_1')
+            msh_2 = Field('MSH_2')
+            self.assertRaises(IndexError, msh_1.to_er7)
+            self.assertRaises(IndexError, msh_2.to_er7)
 
     def test_to_string_msh_field_v27_no_truncation(self):
-        m = Message('OML_O33', encoding_chars=DEFAULT_ENCODING_CHARS, version='2.7')
-        msh = m.msh
-        self.assertEqual(msh.msh_1.to_er7(), '|')
-        self.assertEqual(msh.msh_2.to_er7(), '^~\\&')
-        msh_1 = Field('MSH_1')
-        msh_2 = Field('MSH_2')
-        self.assertRaises(IndexError, msh_1.to_er7)
-        self.assertRaises(IndexError, msh_2.to_er7)
+        for v in ('2.7', '2.8', '2.8.1', '2.8.2'):
+            m = Message('OML_O33', encoding_chars=DEFAULT_ENCODING_CHARS, version=v)
+            msh = m.msh
+            self.assertEqual(msh.msh_1.to_er7(), '|')
+            self.assertEqual(msh.msh_2.to_er7(), '^~\\&')
+            msh_1 = Field('MSH_1')
+            msh_2 = Field('MSH_2')
+            self.assertRaises(IndexError, msh_1.to_er7)
+            self.assertRaises(IndexError, msh_2.to_er7)
 
     def test_trailing_children(self):
         test_msg = self._get_test_msg(trailing_children=False)

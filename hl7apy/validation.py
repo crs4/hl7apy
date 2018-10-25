@@ -168,7 +168,6 @@ class Validator(object):
                 for c in z_children:
                     _is_valid(c, None, errs, warns)
             else:
-                # print ref
                 _check_table_compliance(el, ref, warns)
 
                 _check_length(el, ref, warns)

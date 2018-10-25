@@ -24,8 +24,7 @@ import unittest
 
 from datetime import datetime
 from hl7apy.base_datatypes import DT, TM, DTM, ST, FT, ID, IS, TX, GTS, NM, SI, TN
-from hl7apy.v2_7 import ST as ST27, FT as FT27, ID as ID27, IS as IS27, TX as TX27, GTS as GTS27, TN as TN27, SNM
-# from hl7apy.v2_7 import ST as ST27
+from hl7apy.v2_7 import ST as ST27, FT as FT27, ID as ID27, IS as IS27, TX as TX27, GTS as GTS27, SNM
 from hl7apy.factories import datatype_factory
 from hl7apy.exceptions import InvalidDateFormat, InvalidDateOffset, MaxLengthReached, \
     InvalidHighlightRange, InvalidDataType, InvalidMicrosecondsPrecision
@@ -693,7 +692,6 @@ class TestTN(unittest.TestCase):
 
     def test_TN_invalid_value(self):
         self.assertRaises(ValueError, TN, 'invalid_value')
-        self.assertRaises(ValueError, TN27, 'invalid_value')
 
     def test_TN_field_escaping(self):
         tn = TN('(111)999-999-222X111B222C|field|')
@@ -710,10 +708,6 @@ class TestTN(unittest.TestCase):
     def test_TN_repetition_escape(self):
         tn = TN('(111)999-999-222X111B222C~repetition~')
         self.assertEqual(tn.to_er7(), '(111)999-999-222X111B222C\\R\\repetition\\R\\')
-
-    def test_TN27_truncation_escape(self):
-        tn = TN27('(111)999-999-222X111B222C#truncation#')
-        self.assertEqual(tn.to_er7(), '(111)999-999-222X111B222C\\L\\truncation\\L\\')
 
 
 if __name__ == '__main__':

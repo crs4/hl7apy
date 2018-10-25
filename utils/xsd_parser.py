@@ -56,6 +56,10 @@ base_dt = {
     "2_5": ('var', 'ST', 'ID', 'DT', 'DTM', 'FT', 'GTS', 'IS', 'NM', 'SI', 'TM', 'TX'),
     "2_5_1": ('var', 'ST', 'ID', 'DT', 'DTM', 'FT', 'GTS', 'IS', 'NM', 'SI', 'TM', 'TX'),
     "2_6": ('varies', 'ST', 'ID', 'DT', 'DTM', 'FT', 'GTS', 'IS', 'NM', 'SI', 'TM', 'TX'),
+    "2_7": ('varies', 'ST', 'ID', 'DT', 'DTM', 'FT', 'GTS', 'IS', 'NM', 'SI', 'TM', 'TX', 'SNM'),
+    "2_8": ('varies', 'ST', 'ID', 'DT', 'DTM', 'FT', 'GTS', 'IS', 'NM', 'SI', 'TM', 'TX', 'SNM'),
+    "2_8_1": ('varies', 'ST', 'ID', 'DT', 'DTM', 'FT', 'GTS', 'IS', 'NM', 'SI', 'TM', 'TX', 'SNM'),
+    "2_8_2": ('varies', 'ST', 'ID', 'DT', 'DTM', 'FT', 'GTS', 'IS', 'NM', 'SI', 'TM', 'TX', 'SNM'),
 }
 
 
