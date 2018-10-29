@@ -39,7 +39,7 @@ from hl7apy import get_default_version, get_default_encoding_chars, \
 from hl7apy.validation import Validator
 from hl7apy.exceptions import ChildNotFound, ChildNotValid, \
     MaxChildLimitReached, OperationNotAllowed, \
-    InvalidName, MessageProfileNotFound
+    InvalidName, MessageProfileNotFound, LegacyMessageProfile
 from hl7apy.factories import datatype_factory
 from hl7apy.base_datatypes import BaseDataType
 from hl7apy.consts import MLLP_ENCODING_CHARS
@@ -1904,6 +1904,8 @@ class Message(Group):
         if reference is not None:
             try:
                 reference = reference[name]
+                if reference[0] == 'mp':
+                    raise LegacyMessageProfile()
             except KeyError:
                 raise MessageProfileNotFound()
             except TypeError:

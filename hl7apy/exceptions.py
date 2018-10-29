@@ -318,6 +318,15 @@ class MessageProfileNotFound(HL7apyException):
     def __str__(self):
         return 'Message profile not found for the specified message'
 
+
+class LegacyMessageProfile(HL7apyException):
+    """
+    Raised when the message profile file does not correspond to a valid message profile
+    """
+    def __str__(self):
+        return 'The message profile provided is not supported anymore'
+
+
 if __name__ == '__main__':
 
     import doctest

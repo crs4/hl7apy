@@ -28,7 +28,7 @@ from hl7apy import DEFAULT_ENCODING_CHARS
 from hl7apy.core import Message, Segment, Field, Group, Component, SubComponent, ElementProxy
 from hl7apy.exceptions import ChildNotValid, ChildNotFound, OperationNotAllowed, InvalidName, \
     MaxChildLimitReached, UnsupportedVersion, InvalidEncodingChars, \
-    MaxLengthReached, MessageProfileNotFound
+    MaxLengthReached, MessageProfileNotFound, LegacyMessageProfile
 from hl7apy.v2_5 import ST, SI
 from hl7apy.validation import VALIDATION_LEVEL
 from hl7apy.parser import parse_message, parse_segment
@@ -96,8 +96,10 @@ class TestMessage(unittest.TestCase):
 
     def setUp(self):
         base_path = os.path.abspath(os.path.dirname(__file__))
-        path = os.path.join(base_path, 'profiles/iti_21')
-        self.rsp_k21_mp = hl7apy.load_message_profile(path)
+        mp_path = os.path.join(base_path, 'profiles/iti_21')
+        self.rsp_k21_mp = hl7apy.load_message_profile(mp_path)
+        legacy_mp = os.path.join(base_path, 'profiles/old_pharm_h4')
+        self.legacy_mp = hl7apy.load_message_profile(legacy_mp)
 
     # Message test cases
     def test_create_empty_message(self):
@@ -386,6 +388,9 @@ class TestMessage(unittest.TestCase):
         m = Message('RSP_K21', encoding_chars=DEFAULT_ENCODING_CHARS, version='2.7')
         self.assertNotIn('TRUNCATION', m.encoding_chars)
         self.assertEqual(m.msh.msh_2.to_er7(), '^~\\&')
+
+    def test_legacy_message_profile(self):
+        self.assertRaises(LegacyMessageProfile, Message, 'RAS_O17', reference=self.legacy_mp)
 
 
 class TestGroup(unittest.TestCase):
