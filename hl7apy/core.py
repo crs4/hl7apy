@@ -712,8 +712,7 @@ class Element(object):
         :param encoding_chars: The encoding chars to use.
             If it is ``None`` it uses :attr:`self.encoding_chars`,
             which by default is the ones return by
-            :func:`get_default_encoding_chars <hl7apy.get_default_encoding_chars>`
-values
+            :func:`get_default_encoding_chars <hl7apy.get_default_encoding_chars>` values
         :rtype: ``str``
         :return: the HL7 representation of the :class:`Element <hl7apy.core.Element>`
         """
