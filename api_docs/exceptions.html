@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages" href="../index.html"/>
         <link rel="up" title="API Docs" href="index.html"/>
         <link rel="next" title="Validation module" href="validation.html"/>
@@ -72,6 +75,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#er7-encoding">ER7 encoding</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#datatypes">Datatypes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#elements-manipulation">Elements manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#version-2-7">Version 2.7</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#message-profiles">Message Profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#validation">Validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#z-elements">Z Elements</a></li>
@@ -85,7 +89,7 @@
 <li class="toctree-l2"><a class="reference internal" href="parser.html">Parser</a></li>
 <li class="toctree-l2"><a class="reference internal" href="base_datatypes.html">Base datatypes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="factories.html">Datatype factories</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Exceptions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Exceptions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="validation.html">Validation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mllp.html">MLLP Classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html">Utility functions</a></li>
@@ -124,7 +128,7 @@
     <li>Exceptions</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../_sources/api_docs/exceptions.txt" rel="nofollow"> View page source</a>
+          <a href="../_sources/api_docs/exceptions.rst.txt" rel="nofollow"> View page source</a>
         
       </li>
   </ul>
@@ -144,8 +148,8 @@
 <dt id="hl7apy.exceptions.ParserError">
 <em class="property">class </em><code class="descclassname">hl7apy.exceptions.</code><code class="descname">ParserError</code><a class="headerlink" href="#hl7apy.exceptions.ParserError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Error during parsing</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.parser</span> <span class="kn">import</span> <span class="n">parse_message</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">parse_message</span><span class="p">(</span><span class="s1">&#39;NOTHL7&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.parser</span> <span class="k">import</span> <span class="n">parse_message</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">parse_message</span><span class="p">(</span><span class="s1">&#39;NOTHL7&#39;</span><span class="p">)</span>  <span class="c1"># doctest: +IGNORE_EXCEPTION_DETAIL</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
 <span class="gr">ParserError</span>: <span class="n">Invalid message</span>
@@ -157,8 +161,8 @@
 <dt id="hl7apy.exceptions.UnsupportedVersion">
 <em class="property">class </em><code class="descclassname">hl7apy.exceptions.</code><code class="descname">UnsupportedVersion</code><span class="sig-paren">(</span><em>version</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.exceptions.UnsupportedVersion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given version is not supported</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy</span> <span class="kn">import</span> <span class="n">set_default_version</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_version</span><span class="p">(</span><span class="s2">&quot;2.0&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy</span> <span class="k">import</span> <span class="n">set_default_version</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_version</span><span class="p">(</span><span class="s2">&quot;2.0&quot;</span><span class="p">)</span>  <span class="c1"># doctest: +IGNORE_EXCEPTION_DETAIL</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
 <span class="gr">UnsupportedVersion</span>: <span class="n">The version 2.0 is not supported</span>
@@ -170,9 +174,9 @@
 <dt id="hl7apy.exceptions.ChildNotFound">
 <em class="property">class </em><code class="descclassname">hl7apy.exceptions.</code><code class="descname">ChildNotFound</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.exceptions.ChildNotFound" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised when a child element is not found in the HL7 reference structures for the given version</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="kn">import</span> <span class="n">Segment</span><span class="p">,</span> <span class="n">Field</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="k">import</span> <span class="n">Segment</span><span class="p">,</span> <span class="n">Field</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">(</span><span class="s1">&#39;MSH&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">unknown</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">unknown</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>  <span class="c1"># doctest: +IGNORE_EXCEPTION_DETAIL</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
 <span class="gr">ChildNotFound</span>: <span class="n">No child named UNKNOWN</span>
@@ -183,10 +187,10 @@
 <dl class="class">
 <dt id="hl7apy.exceptions.ChildNotValid">
 <em class="property">class </em><code class="descclassname">hl7apy.exceptions.</code><code class="descname">ChildNotValid</code><span class="sig-paren">(</span><em>child</em>, <em>parent</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.exceptions.ChildNotValid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Raised when you try to assign an unexpected child to an <a class="reference internal" href="core.html#hl7apy.core.Element" title="hl7apy.core.Element"><code class="xref py py-class docutils literal"><span class="pre">Element</span></code></a></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="kn">import</span> <span class="n">Segment</span><span class="p">,</span> <span class="n">Field</span>
+<dd><p>Raised when you try to assign an unexpected child to an <a class="reference internal" href="core.html#hl7apy.core.Element" title="hl7apy.core.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="k">import</span> <span class="n">Segment</span><span class="p">,</span> <span class="n">Field</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">(</span><span class="s1">&#39;PID&#39;</span><span class="p">,</span> <span class="n">validation_level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">pid_1</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s1">&#39;PID_34&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">pid_1</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s1">&#39;PID_34&#39;</span><span class="p">)</span>  <span class="c1"># doctest: +IGNORE_EXCEPTION_DETAIL</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
 <span class="gr">ChildNotValid</span>: <span class="n">&lt;Field PID_34 (LAST_UPDATE_FACILITY) of type HD&gt; is not a valid child for PID_1</span>
@@ -198,9 +202,9 @@
 <dt id="hl7apy.exceptions.UnknownValidationLevel">
 <em class="property">class </em><code class="descclassname">hl7apy.exceptions.</code><code class="descname">UnknownValidationLevel</code><a class="headerlink" href="#hl7apy.exceptions.UnknownValidationLevel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised when the validation_level specified is not valid</p>
-<p>It should be one of those defined in <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><code class="xref py py-class docutils literal"><span class="pre">VALIDATION_LEVEL</span></code></a>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy</span> <span class="kn">import</span> <span class="n">set_default_validation_level</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_validation_level</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<p>It should be one of those defined in <a class="reference internal" href="consts.html#hl7apy.consts.VALIDATION_LEVEL" title="hl7apy.consts.VALIDATION_LEVEL"><code class="xref py py-class docutils literal notranslate"><span class="pre">VALIDATION_LEVEL</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy</span> <span class="k">import</span> <span class="n">set_default_validation_level</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_default_validation_level</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># doctest: +IGNORE_EXCEPTION_DETAIL</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
 <span class="gr">UnknownValidationLevel</span>
@@ -212,8 +216,8 @@
 <dt id="hl7apy.exceptions.OperationNotAllowed">
 <em class="property">class </em><code class="descclassname">hl7apy.exceptions.</code><code class="descname">OperationNotAllowed</code><a class="headerlink" href="#hl7apy.exceptions.OperationNotAllowed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generic exception raised when something is not allowed</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="kn">import</span> <span class="n">Segment</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="k">import</span> <span class="n">Segment</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">()</span>  <span class="c1"># doctest: +IGNORE_EXCEPTION_DETAIL</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
 <span class="gr">OperationNotAllowed</span>: <span class="n">Cannot instantiate an unknown Segment</span>
@@ -224,13 +228,13 @@
 <dl class="class">
 <dt id="hl7apy.exceptions.MaxChildLimitReached">
 <em class="property">class </em><code class="descclassname">hl7apy.exceptions.</code><code class="descname">MaxChildLimitReached</code><span class="sig-paren">(</span><em>parent</em>, <em>child</em>, <em>limit</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.exceptions.MaxChildLimitReached" title="Permalink to this definition">¶</a></dt>
-<dd><p>Raised when a child cannot be added to an instance of <a class="reference internal" href="core.html#hl7apy.core.Element" title="hl7apy.core.Element"><code class="xref py py-class docutils literal"><span class="pre">Element</span></code></a>
-since the <a class="reference internal" href="core.html#hl7apy.core.Element" title="hl7apy.core.Element"><code class="xref py py-class docutils literal"><span class="pre">Element</span></code></a> has already reached the maximum number
-of children allowed for the given child type (e.g. a <a class="reference internal" href="core.html#hl7apy.core.Message" title="hl7apy.core.Message"><code class="xref py py-class docutils literal"><span class="pre">Message</span></code></a> should have
+<dd><p>Raised when a child cannot be added to an instance of <a class="reference internal" href="core.html#hl7apy.core.Element" title="hl7apy.core.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a>
+since the <a class="reference internal" href="core.html#hl7apy.core.Element" title="hl7apy.core.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a> has already reached the maximum number
+of children allowed for the given child type (e.g. a <a class="reference internal" href="core.html#hl7apy.core.Message" title="hl7apy.core.Message"><code class="xref py py-class docutils literal notranslate"><span class="pre">Message</span></code></a> should have
 at most 1 MSH segment)</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="kn">import</span> <span class="n">Message</span><span class="p">,</span> <span class="n">Segment</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="k">import</span> <span class="n">Message</span><span class="p">,</span> <span class="n">Segment</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s2">&quot;OML_O33&quot;</span><span class="p">,</span> <span class="n">validation_level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Segment</span><span class="p">(</span><span class="s1">&#39;MSH&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Segment</span><span class="p">(</span><span class="s1">&#39;MSH&#39;</span><span class="p">))</span>  <span class="c1"># doctest: +IGNORE_EXCEPTION_DETAIL</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
 <span class="gr">MaxChildLimitReached</span>: <span class="n">Cannot add &lt;Segment MSH&gt;: max limit (1) reached for &lt;Message OML_O33&gt;</span>
@@ -241,11 +245,11 @@ at most 1 MSH segment)</p>
 <dl class="class">
 <dt id="hl7apy.exceptions.MaxLengthReached">
 <em class="property">class </em><code class="descclassname">hl7apy.exceptions.</code><code class="descname">MaxLengthReached</code><span class="sig-paren">(</span><em>value</em>, <em>limit</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.exceptions.MaxLengthReached" title="Permalink to this definition">¶</a></dt>
-<dd><p>Value length exceeds its datatype <code class="xref py py-attr docutils literal"><span class="pre">max_length</span></code>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.v2_5</span> <span class="kn">import</span> <span class="n">get_base_datatypes</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.consts</span> <span class="kn">import</span> <span class="n">VALIDATION_LEVEL</span>
+<dd><p>Value length exceeds its datatype <code class="xref py py-attr docutils literal notranslate"><span class="pre">max_length</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.v2_5</span> <span class="k">import</span> <span class="n">get_base_datatypes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.consts</span> <span class="k">import</span> <span class="n">VALIDATION_LEVEL</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">SI</span> <span class="o">=</span> <span class="n">get_base_datatypes</span><span class="p">()[</span><span class="s1">&#39;SI&#39;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">st</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">11111</span><span class="p">,</span> <span class="n">validation_level</span><span class="o">=</span><span class="n">VALIDATION_LEVEL</span><span class="o">.</span><span class="n">STRICT</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">st</span> <span class="o">=</span> <span class="n">SI</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">11111</span><span class="p">,</span> <span class="n">validation_level</span><span class="o">=</span><span class="n">VALIDATION_LEVEL</span><span class="o">.</span><span class="n">STRICT</span><span class="p">)</span>  <span class="c1"># doctest: +IGNORE_EXCEPTION_DETAIL</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
 <span class="gr">MaxLengthReached</span>: <span class="n">The value 11111 exceed the max length: 4</span>
@@ -257,8 +261,8 @@ at most 1 MSH segment)</p>
 <dt id="hl7apy.exceptions.InvalidName">
 <em class="property">class </em><code class="descclassname">hl7apy.exceptions.</code><code class="descname">InvalidName</code><span class="sig-paren">(</span><em>cls</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.exceptions.InvalidName" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised if the reference for the given class/name has not been found</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="kn">import</span> <span class="n">Message</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Message</span><span class="p">(</span><span class="s1">&#39;Unknown&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="k">import</span> <span class="n">Message</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Message</span><span class="p">(</span><span class="s1">&#39;Unknown&#39;</span><span class="p">)</span>  <span class="c1"># doctest: +IGNORE_EXCEPTION_DETAIL</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
 <span class="gr">InvalidName</span>: <span class="n">Invalid name for Message: UNKNOWN</span>
@@ -270,13 +274,13 @@ at most 1 MSH segment)</p>
 <dt id="hl7apy.exceptions.InvalidDataType">
 <em class="property">class </em><code class="descclassname">hl7apy.exceptions.</code><code class="descname">InvalidDataType</code><span class="sig-paren">(</span><em>datatype</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.exceptions.InvalidDataType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised when the currently used HL7 version does not support the given datatype</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.factories</span> <span class="kn">import</span> <span class="n">datatype_factory</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">datatype_factory</span><span class="p">(</span><span class="s1">&#39;TN&#39;</span><span class="p">,</span> <span class="s1">&#39;11 123456&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;2.3&quot;</span><span class="p">)</span> 
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.factories</span> <span class="k">import</span> <span class="n">datatype_factory</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">datatype_factory</span><span class="p">(</span><span class="s1">&#39;TN&#39;</span><span class="p">,</span> <span class="s1">&#39;11 123456&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;2.4&quot;</span><span class="p">)</span> <span class="c1">#doctest: +ELLIPSIS</span>
 <span class="go">&lt;hl7apy.base_datatypes.TN object at 0x...&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">datatype_factory</span><span class="p">(</span><span class="s1">&#39;TN&#39;</span><span class="p">,</span> <span class="s1">&#39;11 123456&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;2.5&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">datatype_factory</span><span class="p">(</span><span class="s1">&#39;GTS&#39;</span><span class="p">,</span> <span class="s1">&#39;11 123456&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;2.4&quot;</span><span class="p">)</span>  <span class="c1"># doctest: +IGNORE_EXCEPTION_DETAIL</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
-<span class="gr">InvalidDataType</span>: <span class="n">The datatype TN is not available for the given HL7 version</span>
+<span class="gr">InvalidDataType</span>: <span class="n">The datatype GTS is not available for the given HL7 version</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -285,10 +289,10 @@ at most 1 MSH segment)</p>
 <dt id="hl7apy.exceptions.InvalidHighlightRange">
 <em class="property">class </em><code class="descclassname">hl7apy.exceptions.</code><code class="descname">InvalidHighlightRange</code><span class="sig-paren">(</span><em>lower_bound</em>, <em>upper_bound</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.exceptions.InvalidHighlightRange" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised when the specified highlight range is not valid</p>
-<p>For a description of highlight range see <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.TextualDataType" title="hl7apy.base_datatypes.TextualDataType"><code class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.TextualDataType</span></code></a></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.v2_5</span> <span class="kn">import</span> <span class="n">ST</span>
+<p>For a description of highlight range see <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.TextualDataType" title="hl7apy.base_datatypes.TextualDataType"><code class="xref py py-class docutils literal notranslate"><span class="pre">hl7apy.base_datatypes.TextualDataType</span></code></a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.v2_5</span> <span class="k">import</span> <span class="n">ST</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">ST</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s1">&#39;some useful information&#39;</span><span class="p">,</span> <span class="n">highlights</span><span class="o">=</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">),))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">to_er7</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">to_er7</span><span class="p">()</span>  <span class="c1"># doctest: +IGNORE_EXCEPTION_DETAIL</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
 <span class="gr">InvalidHighlightRange</span>: <span class="n">Invalid highlight range: 5 - 3</span>
@@ -298,10 +302,10 @@ at most 1 MSH segment)</p>
 
 <dl class="class">
 <dt id="hl7apy.exceptions.InvalidDateFormat">
-<em class="property">class </em><code class="descclassname">hl7apy.exceptions.</code><code class="descname">InvalidDateFormat</code><span class="sig-paren">(</span><em>format</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.exceptions.InvalidDateFormat" title="Permalink to this definition">¶</a></dt>
-<dd><p>Raised when the output format for a <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.DateTimeDataType" title="hl7apy.base_datatypes.DateTimeDataType"><code class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.DateTimeDataType</span></code></a> is not valid</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.v2_5</span> <span class="kn">import</span> <span class="n">DTM</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">DTM</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s1">&#39;10102013&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">%m%Y&quot;</span><span class="p">)</span>
+<em class="property">class </em><code class="descclassname">hl7apy.exceptions.</code><code class="descname">InvalidDateFormat</code><span class="sig-paren">(</span><em>out_format</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.exceptions.InvalidDateFormat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raised when the output format for a <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.DateTimeDataType" title="hl7apy.base_datatypes.DateTimeDataType"><code class="xref py py-class docutils literal notranslate"><span class="pre">hl7apy.base_datatypes.DateTimeDataType</span></code></a> is not valid</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.v2_5</span> <span class="k">import</span> <span class="n">DTM</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DTM</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s1">&#39;10102013&#39;</span><span class="p">,</span> <span class="n">out_format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">%m%Y&quot;</span><span class="p">)</span>  <span class="c1"># doctest: +IGNORE_EXCEPTION_DETAIL</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
 <span class="gr">InvalidDateFormat</span>: <span class="n">Invalid date format: %d%m%Y</span>
@@ -312,9 +316,9 @@ at most 1 MSH segment)</p>
 <dl class="class">
 <dt id="hl7apy.exceptions.InvalidDateOffset">
 <em class="property">class </em><code class="descclassname">hl7apy.exceptions.</code><code class="descname">InvalidDateOffset</code><span class="sig-paren">(</span><em>offset</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.exceptions.InvalidDateOffset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Raised when the offset for a <code class="xref py py-class docutils literal"><span class="pre">TM</span></code> or <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.DTM" title="hl7apy.base_datatypes.DTM"><code class="xref py py-class docutils literal"><span class="pre">hl7apy.base_datatypes.DTM</span></code></a> is not valid</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.v2_5</span> <span class="kn">import</span> <span class="n">DTM</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">DTM</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s1">&#39;20131010&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="s1">&#39;+1300&#39;</span><span class="p">)</span>
+<dd><p>Raised when the offset for a <code class="xref py py-class docutils literal notranslate"><span class="pre">TM</span></code> or <a class="reference internal" href="base_datatypes.html#hl7apy.base_datatypes.DTM" title="hl7apy.base_datatypes.DTM"><code class="xref py py-class docutils literal notranslate"><span class="pre">hl7apy.base_datatypes.DTM</span></code></a> is not valid</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.v2_5</span> <span class="k">import</span> <span class="n">DTM</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DTM</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s1">&#39;20131010&#39;</span><span class="p">,</span> <span class="n">out_format</span><span class="o">=</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="s1">&#39;+1300&#39;</span><span class="p">)</span>  <span class="c1"># doctest: +IGNORE_EXCEPTION_DETAIL</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
 <span class="gr">InvalidDateOffset</span>: <span class="n">Invalid date offset: +1300</span>
@@ -326,9 +330,9 @@ at most 1 MSH segment)</p>
 <dt id="hl7apy.exceptions.InvalidEncodingChars">
 <em class="property">class </em><code class="descclassname">hl7apy.exceptions.</code><code class="descname">InvalidEncodingChars</code><a class="headerlink" href="#hl7apy.exceptions.InvalidEncodingChars" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised when the encoding chars specified is not a correct set of HL7 encoding chars</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="kn">import</span> <span class="n">Message</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">hl7apy.core</span> <span class="k">import</span> <span class="n">Message</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">encoding_chars</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;GROUP&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;SEGMENT&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;COMPONENT&#39;</span><span class="p">:</span> <span class="s1">&#39;^&#39;</span><span class="p">,</span>                           <span class="s1">&#39;SUBCOMPONENT&#39;</span><span class="p">:</span> <span class="s1">&#39;&amp;&#39;</span><span class="p">,</span> <span class="s1">&#39;REPETITION&#39;</span><span class="p">:</span> <span class="s1">&#39;~&#39;</span><span class="p">,</span> <span class="s1">&#39;ESCAPE&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s1">&#39;ADT_A01&#39;</span><span class="p">,</span> <span class="n">encoding_chars</span><span class="o">=</span><span class="n">encoding_chars</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s1">&#39;ADT_A01&#39;</span><span class="p">,</span> <span class="n">encoding_chars</span><span class="o">=</span><span class="n">encoding_chars</span><span class="p">)</span>  <span class="c1"># doctest: +IGNORE_EXCEPTION_DETAIL</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
 <span class="gr">InvalidEncodingChars</span>: <span class="n">Missing required encoding chars</span>
@@ -355,7 +359,7 @@ at most 1 MSH segment)</p>
   <hr/>
 
   <div role="contentinfo" class="footer-font footer-div">
-        &copy; Copyright 2012-2017, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
+        &copy; Copyright 2012-2018, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
   </div>
 
   <div class="footer-font footer-div">
@@ -383,7 +387,7 @@ at most 1 MSH segment)</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.2.0',
+            VERSION:'1.3.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
@@ -392,6 +396,7 @@ at most 1 MSH segment)</p>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

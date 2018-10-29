@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="HL7apy - a lightweight Python library to parse, create and handle HL7 v2.x messages" href="../index.html"/>
         <link rel="up" title="API Docs" href="index.html"/>
         <link rel="next" title="Utility functions" href="utils.html"/>
@@ -72,6 +75,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#er7-encoding">ER7 encoding</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#datatypes">Datatypes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#elements-manipulation">Elements manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#version-2-7">Version 2.7</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#message-profiles">Message Profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#validation">Validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial/index.html#z-elements">Z Elements</a></li>
@@ -87,7 +91,7 @@
 <li class="toctree-l2"><a class="reference internal" href="factories.html">Datatype factories</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="validation.html">Validation module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">MLLP Classes</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">MLLP Classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html">Utility functions</a></li>
 </ul>
 </li>
@@ -124,7 +128,7 @@
     <li>MLLP Classes</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../_sources/api_docs/mllp.txt" rel="nofollow"> View page source</a>
+          <a href="../_sources/api_docs/mllp.rst.txt" rel="nofollow"> View page source</a>
         
       </li>
   </ul>
@@ -137,15 +141,15 @@
 <dl class="class">
 <dt id="hl7apy.mllp.MLLPServer">
 <em class="property">class </em><code class="descclassname">hl7apy.mllp.</code><code class="descname">MLLPServer</code><span class="sig-paren">(</span><em>host</em>, <em>port</em>, <em>handlers</em>, <em>timeout=10</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.mllp.MLLPServer" title="Permalink to this definition">¶</a></dt>
-<dd><p>A <code class="xref py py-class docutils literal"><span class="pre">TCPServer</span></code> subclass that implements an MLLP server.
+<dd><p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">TCPServer</span></code> subclass that implements an MLLP server.
 It receives MLLP-encoded HL7 and redirects them to the correct handler, according to the
-<code class="xref py py-attr docutils literal"><span class="pre">handlers</span></code> dictionary passed in.</p>
-<p>The <code class="xref py py-attr docutils literal"><span class="pre">handlers</span></code> dictionary is structured as follows. Every key represents a message type (i.e.,
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">handlers</span></code> dictionary passed in.</p>
+<p>The <code class="xref py py-attr docutils literal notranslate"><span class="pre">handlers</span></code> dictionary is structured as follows. Every key represents a message type (i.e.,
 the MSH.9) to handle, and the associated value is a tuple containing a subclass of
-<a class="reference internal" href="#hl7apy.mllp.AbstractHandler" title="hl7apy.mllp.AbstractHandler"><code class="xref py py-class docutils literal"><span class="pre">AbstractHandler</span></code></a> for that message type and additional arguments to pass to its
+<a class="reference internal" href="#hl7apy.mllp.AbstractHandler" title="hl7apy.mllp.AbstractHandler"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractHandler</span></code></a> for that message type and additional arguments to pass to its
 constructor.</p>
-<p>It is possible to specify a special handler for errors using the <code class="docutils literal"><span class="pre">ERR</span></code> key.
-In this case the handler should subclass <a class="reference internal" href="#hl7apy.mllp.AbstractErrorHandler" title="hl7apy.mllp.AbstractErrorHandler"><code class="xref py py-class docutils literal"><span class="pre">AbstractErrorHandler</span></code></a>,
+<p>It is possible to specify a special handler for errors using the <code class="docutils literal notranslate"><span class="pre">ERR</span></code> key.
+In this case the handler should subclass <a class="reference internal" href="#hl7apy.mllp.AbstractErrorHandler" title="hl7apy.mllp.AbstractErrorHandler"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractErrorHandler</span></code></a>,
 which receives, in addition to other parameters, the raised exception as the first argument.
 If the special handler is not specified the server will just close the connection.</p>
 <p>The class allows to specify the timeout to wait before closing the connection.</p>
@@ -154,10 +158,10 @@ If the special handler is not specified the server will just close the connectio
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>host</strong> &#8211; the address of the listener</li>
-<li><strong>port</strong> &#8211; the port of the listener</li>
-<li><strong>handlers</strong> &#8211; the dictionary that specifies the handler classes for every kind of supported message.</li>
-<li><strong>timeout</strong> &#8211; the timeout for the requests</li>
+<li><strong>host</strong> – the address of the listener</li>
+<li><strong>port</strong> – the port of the listener</li>
+<li><strong>handlers</strong> – the dictionary that specifies the handler classes for every kind of supported message.</li>
+<li><strong>timeout</strong> – the timeout for the requests</li>
 </ul>
 </td>
 </tr>
@@ -169,13 +173,13 @@ If the special handler is not specified the server will just close the connectio
 <dt id="hl7apy.mllp.AbstractHandler">
 <em class="property">class </em><code class="descclassname">hl7apy.mllp.</code><code class="descname">AbstractHandler</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.mllp.AbstractHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract transaction handler. Handlers should implement the
-<a class="reference internal" href="#hl7apy.mllp.AbstractHandler.reply" title="hl7apy.mllp.AbstractHandler.reply"><code class="xref py py-func docutils literal"><span class="pre">reply()</span></code></a> method which handle the incoming message.
-The incoming message is accessible using the attribute <code class="xref py py-attr docutils literal"><span class="pre">incoming_message</span></code></p>
+<a class="reference internal" href="#hl7apy.mllp.AbstractHandler.reply" title="hl7apy.mllp.AbstractHandler.reply"><code class="xref py py-func docutils literal notranslate"><span class="pre">reply()</span></code></a> method which handle the incoming message.
+The incoming message is accessible using the attribute <code class="xref py py-attr docutils literal notranslate"><span class="pre">incoming_message</span></code></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>message</strong> &#8211; the ER7-formatted HL7 message to handle</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>message</strong> – the ER7-formatted HL7 message to handle</td>
 </tr>
 </tbody>
 </table>
@@ -191,16 +195,22 @@ The incoming message is accessible using the attribute <code class="xref py py-a
 <dt id="hl7apy.mllp.AbstractErrorHandler">
 <em class="property">class </em><code class="descclassname">hl7apy.mllp.</code><code class="descname">AbstractErrorHandler</code><span class="sig-paren">(</span><em>exc</em>, <em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.mllp.AbstractErrorHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract transaction handler for errors. It receives also the instance of the exception occurred, which will be
-accessible through the <code class="xref py py-attr docutils literal"><span class="pre">exc</span></code> attribute.
-Specific exceptions that can be handled are <code class="xref py py-exc docutils literal"><span class="pre">UnsupportedMessageType</span></code> and <code class="xref py py-exc docutils literal"><span class="pre">InvalidHL7Message</span></code></p>
+accessible through the <code class="xref py py-attr docutils literal notranslate"><span class="pre">exc</span></code> attribute.
+Specific exceptions that can be handled are <code class="xref py py-exc docutils literal notranslate"><span class="pre">UnsupportedMessageType</span></code> and <code class="xref py py-exc docutils literal notranslate"><span class="pre">InvalidHL7Message</span></code></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exc</strong> &#8211; the <code class="xref py py-exc docutils literal"><span class="pre">Exception</span></code> occurred</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exc</strong> – the <code class="xref py py-exc docutils literal notranslate"><span class="pre">Exception</span></code> occurred</td>
 </tr>
 </tbody>
 </table>
+<dl class="method">
+<dt id="hl7apy.mllp.AbstractErrorHandler.reply">
+<code class="descname">reply</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hl7apy.mllp.AbstractErrorHandler.reply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract method. It should implement the handling of the request message and return the response.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -222,7 +232,7 @@ Specific exceptions that can be handled are <code class="xref py py-exc docutils
   <hr/>
 
   <div role="contentinfo" class="footer-font footer-div">
-        &copy; Copyright 2012-2017, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
+        &copy; Copyright 2012-2018, CRS4 - Center for Advanced Studies, Research and Development in Sardinia.
   </div>
 
   <div class="footer-font footer-div">
@@ -250,7 +260,7 @@ Specific exceptions that can be handled are <code class="xref py py-exc docutils
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.2.0',
+            VERSION:'1.3.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
@@ -259,6 +269,7 @@ Specific exceptions that can be handled are <code class="xref py py-exc docutils
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
