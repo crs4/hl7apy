@@ -18,6 +18,7 @@ Classes representing textual datatypes are:
 .. autoclass::  IS
 .. autoclass::  TX
 .. autoclass::  GTS
+.. autoclass::  WD
 
 --------------------------------
 

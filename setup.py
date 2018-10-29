@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2015, CRS4
+# Copyright (c) 2012-2018, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -77,9 +77,10 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
     ],
-    packages=['hl7apy', 'hl7apy.v2_2', 'hl7apy.v2_3', 'hl7apy.v2_3_1', 'hl7apy.v2_4',
-              'hl7apy.v2_5', 'hl7apy.v2_5_1', 'hl7apy.v2_6'],
+    packages=['hl7apy', 'hl7apy.v2_2', 'hl7apy.v2_3', 'hl7apy.v2_3_1', 'hl7apy.v2_4', 'hl7apy.v2_5',
+              'hl7apy.v2_5_1', 'hl7apy.v2_6', 'hl7apy.v2_7', 'hl7apy.v2_8', 'hl7apy.v2_8_1', 'hl7apy.v2_8_2'],
     scripts=['utils/hl7apy_profile_parser'],
     test_suite='tests',
 )

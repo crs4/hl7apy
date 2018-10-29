@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2015, CRS4
+# Copyright (c) 2012-2018, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -210,12 +210,12 @@ class InvalidDataType(HL7apyException):
     Raised when the currently used HL7 version does not support the given datatype
 
     >>> from hl7apy.factories import datatype_factory
-    >>> datatype_factory('TN', '11 123456', version="2.3") #doctest: +ELLIPSIS
+    >>> datatype_factory('TN', '11 123456', version="2.4") #doctest: +ELLIPSIS
     <hl7apy.base_datatypes.TN object at 0x...>
-    >>> datatype_factory('TN', '11 123456', version="2.5")  # doctest: +IGNORE_EXCEPTION_DETAIL
+    >>> datatype_factory('GTS', '11 123456', version="2.4")  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
-    InvalidDataType: The datatype TN is not available for the given HL7 version
+    InvalidDataType: The datatype GTS is not available for the given HL7 version
     """
     def __init__(self, datatype):
         self.datatype = datatype
@@ -317,6 +317,15 @@ class MessageProfileNotFound(HL7apyException):
     """
     def __str__(self):
         return 'Message profile not found for the specified message'
+
+
+class LegacyMessageProfile(HL7apyException):
+    """
+    Raised when the message profile file does not correspond to a valid message profile
+    """
+    def __str__(self):
+        return 'The message profile provided is not supported anymore'
+
 
 if __name__ == '__main__':
 

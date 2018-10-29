@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2015, CRS4
+# Copyright (c) 2012-2018, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -25,15 +25,15 @@ import importlib
 from .messages import MESSAGES
 from .segments import SEGMENTS
 from .fields import FIELDS
-from .datatypes import DATATYPES
+from .datatypes import DATATYPES, DATATYPES_STRUCTS
 from .groups import GROUPS
 from .tables import TABLES
 
 from hl7apy.exceptions import ChildNotFound
 
-ELEMENTS = {'Message': MESSAGES, 'Segment': SEGMENTS, 'Field': FIELDS,
-            'Component': DATATYPES, 'Group': GROUPS, 'SubComponent': DATATYPES,
-            'Table': TABLES}
+ELEMENTS = {'Message': MESSAGES, 'Group': GROUPS, 'Segment': SEGMENTS,
+            'Field': FIELDS, 'Component': DATATYPES, 'SubComponent': DATATYPES,
+            'Datatypes_Structs': DATATYPES_STRUCTS, 'Table': TABLES}
 
 
 def get(name, element_type):
@@ -44,6 +44,14 @@ def get(name, element_type):
 
 
 def find(name, where):
+    """
+    >>> from hl7apy.core import Segment
+    >>> from hl7apy import find_reference
+    >>> find_reference('UNKNOWN', (Segment, ), '2.4')  # doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    ...
+    ChildNotFound: No child named UNKNOWN
+    """
     for cls in where:
         try:
             return {'ref': get(name, cls.__name__), 'name': name, 'cls': cls}
@@ -61,13 +69,14 @@ def get_base_datatypes():
 
 
 def _load_base_datatypes():
-    base_datatypes = ('ST', 'ID', 'DT', 'FT', 'IS', 'NM', 'SI', 'TM', 'TX', 'TN')
+    base_datatypes = ('ST', 'ID', 'DT', 'FT', 'IS', 'NM', 'SI', 'TM', 'TX', 'TN', 'WD')
     module = importlib.import_module("hl7apy.base_datatypes")
     dts = {}
     for cls in base_datatypes:
         cls = getattr(module, cls)
         dts[cls.__name__] = cls
     return dts
+
 
 BASE_DATATYPES = _load_base_datatypes()
 
@@ -81,3 +90,4 @@ SI = BASE_DATATYPES['SI']
 TM = BASE_DATATYPES['TM']
 TX = BASE_DATATYPES['TX']
 TN = BASE_DATATYPES['TN']
+WD = BASE_DATATYPES['WD']

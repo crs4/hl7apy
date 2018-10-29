@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2015, CRS4
+# Copyright (c) 2012-2018, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -19,36 +19,30 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import
 import socket
 
-from actor import LB
-from server import MLLProtocol
+from hl7apy.parser import parse_message
 
-def query(host, port, patient_id):
-    """
-    Establish a TCP connection to the given host and port and send a QBP_Q11 message
-    :param host: address to connect to
-    :param port: port to connect to
-    :param patient_id: patient_id for the query message
-    """
-    # generate a QBP_Q11 message
-    message = LB.send(patient_id)
+
+def query(host, port):
+    msg = \
+        'MSH|^~\&|REC APP|REC FAC|SEND APP|SEND FAC|20110708163513||QBP^Q22^QBP_Q21|111069|D|2.5|||||ITA||EN\r' \
+        'QPD|IHE PDQ Query|111069|@PID.5.2^SMITH||||\r' \
+        'RCP|I|'
     # establish the connection
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         sock.connect((host, port))
         # send the message
-        sock.sendall(message)
+        sock.sendall(parse_message(msg).to_mllp().encode('UTF-8'))
         # receive the answer
         received = sock.recv(1024*1024)
-        message = MLLProtocol.get_message(received)
-        # handle the response
-        LB.receive(message)
+        return received
     finally:
         sock.close()
 
+
 if __name__ == '__main__':
-    host, port = 'localhost', 6000
-    patient_id = '100002'
-    query(host, port, patient_id)
+    res = query('localhost', 6789)
+    print("Received response: ")
+    print(repr(res))

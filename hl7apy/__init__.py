@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2015, CRS4
+# Copyright (c) 2012-2018, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -30,7 +30,7 @@ except ImportError:
     import pickle
 
 from hl7apy.exceptions import UnsupportedVersion, InvalidEncodingChars, UnknownValidationLevel
-from hl7apy.consts import DEFAULT_ENCODING_CHARS, DEFAULT_VERSION, VALIDATION_LEVEL
+from hl7apy.consts import DEFAULT_ENCODING_CHARS, DEFAULT_ENCODING_CHARS_27, DEFAULT_VERSION, VALIDATION_LEVEL
 
 __author__ = 'Daniela Ghironi, Vittorio Meloni, Alessandro Sulis, Federico Caboni'
 __author_email__ = '<ghiron@gmail.com>, <vittorio.meloni@crs4.it>, <alessandro.sulis@crs4.it>, ' \
@@ -38,6 +38,7 @@ __author_email__ = '<ghiron@gmail.com>, <vittorio.meloni@crs4.it>, <alessandro.s
 __url__ = 'http://crs4.github.io/hl7apy/'
 
 _DEFAULT_ENCODING_CHARS = DEFAULT_ENCODING_CHARS
+_DEFAULT_ENCODING_CHARS_27 = DEFAULT_ENCODING_CHARS_27
 _DEFAULT_VERSION = DEFAULT_VERSION
 _DEFAULT_VALIDATION_LEVEL = VALIDATION_LEVEL.TOLERANT
 
@@ -86,16 +87,18 @@ def check_version(version):
         raise UnsupportedVersion(version)
 
 
-def get_default_encoding_chars():
+def get_default_encoding_chars(version=None):
     """
     Get the default encoding chars
 
     :rtype: ``dict``
     :returns: the encoding chars (see :func:`hl7apy.set_default_encoding_chars`)
 
-    >>> print(get_default_encoding_chars()['FIELD'])
+    >>> print(get_default_encoding_chars('2.6')['FIELD'])
     |
     """
+    if version and version >= '2.7':
+        return _DEFAULT_ENCODING_CHARS_27
     return _DEFAULT_ENCODING_CHARS
 
 
@@ -205,7 +208,7 @@ def set_default_encoding_chars(encoding_chars):
     InvalidEncodingChars: Missing required encoding chars
     >>> set_default_encoding_chars({'FIELD': '!', 'COMPONENT': 'C', 'SUBCOMPONENT': 'S', \
                                     'REPETITION': 'R', 'ESCAPE': '\\\\'})
-    >>> print(get_default_encoding_chars()['FIELD'])
+    >>> print(get_default_encoding_chars('2.5')['FIELD'])
     !
     """
     check_encoding_chars(encoding_chars)
@@ -271,7 +274,7 @@ def load_reference(name, element_type, version):
     sequence
     >>> r = load_reference('MSH_3', 'Field', '2.5')
     >>> print(r[0])
-    leaf
+    sequence
     """
     lib = load_library(version)
     ref = lib.get(name, element_type)
@@ -322,7 +325,9 @@ def _discover_libraries():
     return {o[1:].replace("_", "."): "hl7apy.{}".format(o)
             for o in os.listdir(current_dir) if o.startswith("v2_")}
 
+
 SUPPORTED_LIBRARIES = _discover_libraries()
+
 
 if __name__ == '__main__':
 

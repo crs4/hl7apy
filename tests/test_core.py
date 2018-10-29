@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2015, CRS4
+# Copyright (c) 2012-2018, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -24,10 +24,11 @@ import os
 import unittest
 
 import hl7apy
+from hl7apy import DEFAULT_ENCODING_CHARS
 from hl7apy.core import Message, Segment, Field, Group, Component, SubComponent, ElementProxy
 from hl7apy.exceptions import ChildNotValid, ChildNotFound, OperationNotAllowed, InvalidName, \
     MaxChildLimitReached, UnsupportedVersion, InvalidEncodingChars, \
-    MaxLengthReached, MessageProfileNotFound
+    MaxLengthReached, MessageProfileNotFound, LegacyMessageProfile
 from hl7apy.v2_5 import ST, SI
 from hl7apy.validation import VALIDATION_LEVEL
 from hl7apy.parser import parse_message, parse_segment
@@ -95,8 +96,10 @@ class TestMessage(unittest.TestCase):
 
     def setUp(self):
         base_path = os.path.abspath(os.path.dirname(__file__))
-        path = os.path.join(base_path, 'profiles/iti_21')
-        self.rsp_k21_mp = hl7apy.load_message_profile(path)
+        mp_path = os.path.join(base_path, 'profiles/iti_21')
+        self.rsp_k21_mp = hl7apy.load_message_profile(mp_path)
+        legacy_mp = os.path.join(base_path, 'profiles/old_pharm_h4')
+        self.legacy_mp = hl7apy.load_message_profile(legacy_mp)
 
     # Message test cases
     def test_create_empty_message(self):
@@ -106,6 +109,14 @@ class TestMessage(unittest.TestCase):
 
     def test_create_unknown_message(self):
         self.assertRaises(InvalidName, Message, 'AAA_A01')
+        self.assertRaises(InvalidName, Message, 'AAA_A01', version='2.2')
+        self.assertRaises(InvalidName, Message, 'AAA_A01', version='2.3')
+        self.assertRaises(InvalidName, Message, 'AAA_A01', version='2.3.1')
+        self.assertRaises(InvalidName, Message, 'AAA_A01', version='2.4')
+        self.assertRaises(InvalidName, Message, 'AAA_A01', version='2.5')
+        self.assertRaises(InvalidName, Message, 'AAA_A01', version='2.5.1')
+        self.assertRaises(InvalidName, Message, 'AAA_A01', version='2.6')
+        self.assertRaises(InvalidName, Message, 'AAA_A01', version='2.7')
         self.assertRaises(InvalidName, Message, 'AAA_A01', validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_create_unsupported_version_message(self):
@@ -367,6 +378,19 @@ class TestMessage(unittest.TestCase):
         self.assertNotIn("RSP_K21_QUERY_RESPONSE", m.children.traversal_indexes)
 
         sub = m.rsp_k21_query_response.pid.pid_3.cx_10.cwe_1
+
+    def test_create_v27_message(self):
+        m = Message('RSP_K21', version='2.7')
+        self.assertEqual(m.encoding_chars['TRUNCATION'], '#')
+        self.assertEqual(m.msh.msh_2.to_er7(), '^~\\&#')
+
+    def test_create_v27_message_no_truncation(self):
+        m = Message('RSP_K21', encoding_chars=DEFAULT_ENCODING_CHARS, version='2.7')
+        self.assertNotIn('TRUNCATION', m.encoding_chars)
+        self.assertEqual(m.msh.msh_2.to_er7(), '^~\\&')
+
+    def test_legacy_message_profile(self):
+        self.assertRaises(LegacyMessageProfile, Message, 'RAS_O17', reference=self.legacy_mp)
 
 
 class TestGroup(unittest.TestCase):
@@ -875,7 +899,7 @@ class TestField(unittest.TestCase):
 
     def test_add_child_with_different_version(self):
         f = Field('PID_4', version='2.4')
-        c = Component('CX_10', version='2.5')
+        c = Component('CX_8', version='2.5')
         self.assertRaises(OperationNotAllowed, f.add, c)
 
     def test_add_empty_component(self):
@@ -1408,11 +1432,11 @@ class TestComponent(unittest.TestCase):
         self.assertRaises(MaxChildLimitReached, c.add, SubComponent(datatype='ST'))
 
     def test_override_datatype(self):
-        c = Component('CX_1',  validation_level=VALIDATION_LEVEL.TOLERANT)
+        c = Component('CX_1', validation_level=VALIDATION_LEVEL.TOLERANT)
         c.datatype = 'TX'
         self.assertEqual(c.datatype, 'TX')
 
-        c = Component('CX_1',  datatype='TX', validation_level=VALIDATION_LEVEL.TOLERANT)
+        c = Component('CX_1', datatype='TX', validation_level=VALIDATION_LEVEL.TOLERANT)
         self.assertEqual(c.datatype, 'TX')
 
         c = Component()
@@ -1420,7 +1444,7 @@ class TestComponent(unittest.TestCase):
         with self.assertRaises(OperationNotAllowed):
             c.datatype = 'TX'
 
-        c = Component('CX_1',  validation_level=VALIDATION_LEVEL.STRICT)
+        c = Component('CX_1', validation_level=VALIDATION_LEVEL.STRICT)
         with self.assertRaises(OperationNotAllowed):
             c.datatype = 'TX'
 
@@ -1428,7 +1452,7 @@ class TestComponent(unittest.TestCase):
         with self.assertRaises(OperationNotAllowed):
             c1.datatype = 'TX'
 
-        self.assertRaises(OperationNotAllowed, Component, 'CX_1', datatype='',
+        self.assertRaises(OperationNotAllowed, Component, 'CX_1', datatype='TX',
                           validation_level=VALIDATION_LEVEL.STRICT)
 
         m = Message('RSP_K21', reference=self.rsp_k21_mp, validation_level=VALIDATION_LEVEL.TOLERANT)
@@ -1593,7 +1617,7 @@ class TestComponent(unittest.TestCase):
         self.assertEqual(len(c.children), 3)
 
     def test_assign_value_string_message_profile(self):
-        #TODO: test max_ length for every base datatype
+        # TODO: test max_ length for every base datatype
         # simple string
         cmp_str = 'aaa'
 
@@ -2091,6 +2115,7 @@ class TestSubComponent(unittest.TestCase):
         f = Field('STF_2')
         with self.assertRaises(ChildNotFound):
             f.stf_2_10_100 = 'subcomponent'
+
 
 if __name__ == '__main__':
     unittest.main()

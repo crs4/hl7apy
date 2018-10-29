@@ -17,9 +17,9 @@ The main features includes:
  * Support to Z-Elements
  * Simple MLLP server implementation
 
-Currently supported HL7 versions are: 2.2, 2.3, 2.3.1, 2.4, 2.5, 2.5.1, 2.6.
+Currently supported HL7 versions are: 2.2, 2.3, 2.3.1, 2.4, 2.5, 2.5.1, 2.6, 2.7, 2.8, 2.8.1, 2.8.2
 
-Current version is 1.2.0
+Current version is 1.3.0
 
 To get started visit the :ref:`Getting started <tutorial>` section
 
@@ -28,11 +28,10 @@ This project is not affiliated with the HL7 organization: the library is just co
 Installation
 ============
 
-HL7apy is platform independent and supports Python 2.7 and Python 3.4, 3.5, 3.6.
+HL7apy is platform independent and supports Python 2.7 and Python 3.4, 3.5, 3.6, 3.7
 
-Get the latest release from GitHub: `https://github.com/crs4/hl7apy <https://github.com/crs4/hl7apy>`_
-
-Launch the following command:
+To install it get the latest release from `GitHub <https://github.com/crs4/hl7apy/releases>`_ and launch the following
+command:
 
 .. code-block:: bash
 
@@ -62,7 +61,7 @@ HL7apy is released under the MIT License (MIT)
 
 ::
 
-  Copyright (c) 2012-2015, CRS4
+  Copyright (c) 2012-2018, CRS4
 
   Permission is hereby granted, free of charge, to any person obtaining a copy of
   this software and associated documentation files (the "Software"), to deal in

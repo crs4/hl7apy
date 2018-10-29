@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012-2015, CRS4
+# Copyright (c) 2012-2018, CRS4
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -25,6 +25,8 @@ HL7apy - Constants
 
 #: number of expected separators
 N_SEPS = 4
+#: number of expected separators from v2.7
+N_SEPS_27 = 5
 
 #: Dictionary with default encoding characters as per standard specifications
 DEFAULT_ENCODING_CHARS = {
@@ -35,6 +37,18 @@ DEFAULT_ENCODING_CHARS = {
     'SUBCOMPONENT': '&',
     'REPETITION': '~',
     'ESCAPE': '\\'
+}
+
+#: Dictionary with default encoding characters for version superior to 2.7
+DEFAULT_ENCODING_CHARS_27 = {
+    'GROUP': '\r',
+    'SEGMENT': '\r',
+    'FIELD':  '|',
+    'COMPONENT': '^',
+    'SUBCOMPONENT': '&',
+    'REPETITION': '~',
+    'ESCAPE': '\\',
+    'TRUNCATION': '#'
 }
 
 #: default hl7 version
