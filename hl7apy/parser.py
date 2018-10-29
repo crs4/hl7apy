@@ -174,8 +174,8 @@ def parse_segments(text, version=None, encoding_chars=None, validation_level=Non
                                 else:
                                     current_parent.add(group)
                                 current_parent = group
-                        elif current_parent is not None and segment_name in [c.name for c in current_parent.children] and \
-                                current_parent.repetitions[segment_name][1] == 1:
+                        elif current_parent is not None and segment_name in [c.name for c in current_parent.children] \
+                                and current_parent.repetitions[segment_name][1] == 1:
                             # The number of instances allowed is reached so we create another instance of the same
                             group = Group(current_parent.name, version=version, reference=current_parent.reference,
                                           validation_level=validation_level)

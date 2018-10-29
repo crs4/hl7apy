@@ -1,0 +1,17 @@
+This example implements an IHE ITI-21 transaction, (aka PDQ).
+A simple MLLP server accepts QBP_Q21 messages only, returning a NAK message otherwise.
+
+server.py: The MLLPServer implementation with the PDQSupplier handler and the error handler.
+    It launches the server, bound by default to localhost:6789.
+client.py: TCP client that sends a PDQ query looking for patients with surname SMITH.
+
+=== HOW TO USE ===
+
+Run the TCP server by executing:
+
+python server.py
+
+then execute the client:
+
+python client.py
+
