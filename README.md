@@ -44,6 +44,14 @@ Alternatively you can use pip to install it from [PyPI](https://pypi.python.org/
 
 [![Coverage Status](https://coveralls.io/repos/crs4/hl7apy/badge.svg)](https://coveralls.io/r/crs4/hl7apy)
 
+External Links
+--------------
+
+Michael Sarfati wrote an interesting 2-parts article on his blog about HL7apy with useful examples and tutorials. 
+You can read it [here](https://msarfati.wordpress.com/2015/06/20/python-hl7-v2-x-and-hl7apy-introduction-and-parsing-part-1/). 
+Thanks a lot Michael for your contribution.
+
+
 License
 -------
 
