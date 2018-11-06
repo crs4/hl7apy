@@ -85,14 +85,16 @@ class PDQSupplier(AbstractHandler):
 
     def reply(self):
         print('Received a message')
-        query_params = dict((self.FIELD_NAMES[q.qip_1], q.qip_2)
+        print(repr(self.incoming_message.to_er7()))
+        query_params = dict((self.FIELD_NAMES[q.qip_1.value], q.qip_2.value)
                             for q in self.incoming_message.qpd.qpd_3
-                            if q.qip_1 in self.FIELD_NAMES)
-        if '' in query_params.values() or not check_date(query_params.get('DOB', '')):
+                            if q.qip_1.value in self.FIELD_NAMES)
+        print("Extracted query params: {}".format(query_params))
+        if '' in query_params.values():
             return self._create_error(1)
         else:
             patients = [('0001', 'John', 'Smith')]
-            return self._create_response('AA', 'NF', patients)
+            return self._create_response('AA', 'OK', patients)
 
 
 class HL7ErrorHandler(AbstractHandler):
