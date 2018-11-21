@@ -63,8 +63,8 @@ You can also populate your message without explicit creation of its children, as
   >>> from hl7apy.core import Message
 
   >>> m = Message("ADT_A01")
-  >>> m.pid.pid_5_1 = 'EVERYMAN'
-  >>> m.pid.pid_5_2 = 'ADAM'
+  >>> m.pid.pid_5.pid_5_1 = 'EVERYMAN'
+  >>> m.pid.pid_5.pid_5_2 = 'ADAM'
 
 The ``PID`` segment is created during child traversal, as well as their related fields and components.
 The previous snippet of code is equivalent to:
