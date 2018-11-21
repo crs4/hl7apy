@@ -1291,6 +1291,15 @@ class TestField(unittest.TestCase):
         f.value = field_str
         self.assertEqual(f.to_er7(), 'xxx\R\yyy')
 
+    def test_field_wgith_three_part_name_bug_39(self):
+        """
+        Tests that fields with three part name are handled correctly. See issue #39 on github
+        """
+        f = Field('MSH_9', version='2.3')
+        f.value = 'SIU^S12'
+        self.assertEqual(f.cm_msg_1.value, 'SIU')
+        self.assertEqual(f.cm_msg_2.value, 'S12')
+
 
 class TestComponent(unittest.TestCase):
 
