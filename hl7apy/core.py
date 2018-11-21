@@ -88,7 +88,7 @@ def _remove_trailing(children):
 
 def _valid_child_name(child_name, expected_parent):
     try:
-        parent, index = child_name.rsplit('_', maxsplit=1)
+        parent, index = child_name.rsplit('_', 1)
         int(index)
     except (ValueError, AttributeError):
         return False
