@@ -344,7 +344,7 @@ FIELDS = {
     'OBX_2': ('leaf', None, 'ID', 'VALUE_TYPE', 'HL70125', -1),
     'OBX_3': ('sequence', DATATYPES_STRUCTS['CE'], 'CE', 'OBSERVATION_IDENTIFIER', None, -1),
     'OBX_4': ('leaf', None, 'ST', 'OBSERVATION_SUB_ID', None, -1),
-    'OBX_5': ('sequence', None, 'varies', 'OBSERVATION_VALUE', None, -1),
+    'OBX_5': ('leaf', None, 'varies', 'OBSERVATION_VALUE', None, -1),
     'OBX_6': ('sequence', DATATYPES_STRUCTS['CE'], 'CE', 'UNITS', None, -1),
     'OBX_7': ('leaf', None, 'ST', 'REFERENCES_RANGE', None, -1),
     'OBX_8': ('leaf', None, 'ID', 'ABNORMAL_FLAGS', 'HL70078', -1),
