@@ -3,6 +3,10 @@
 Release Notes
 =============
 
+New in 1.3.2
+
+ * Fixed a bug with some fields structures
+
 New in 1.3.1
 
  * Fixed a bug with version 2.2 and 2.3
