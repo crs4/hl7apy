@@ -152,7 +152,7 @@ FIELDS = {
     'MRG_1': ('sequence', DATATYPES_STRUCTS['CK'], 'CK', 'PRIOR_PATIENT_ID_INTERNAL', None, -1),
     'MRG_2': ('sequence', DATATYPES_STRUCTS['CK'], 'CK', 'PRIOR_ALTERNATE_PATIENT_ID', None, -1),
     'MRG_3': ('sequence', DATATYPES_STRUCTS['CK'], 'CK', 'PRIOR_PATIENT_ACCOUNT_NUMBER', None, -1),
-    'MSA_1': ('leaf', None, 'ID', 'ACKNOWLEDGEMENT_CODE', None, -1),
+    'MSA_1': ('leaf', None, 'ID', 'ACKNOWLEDGMENT_CODE', None, -1),
     'MSA_2': ('leaf', None, 'ST', 'MESSAGE_CONTROL_ID', None, -1),
     'MSA_3': ('leaf', None, 'ST', 'TEXT_MESSAGE', None, -1),
     'MSA_4': ('leaf', None, 'NM', 'EXPECTED_SEQUENCE_NUMBER', None, -1),
