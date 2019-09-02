@@ -27,6 +27,10 @@ from __future__ import absolute_import
 import time
 import re
 import collections
+try:
+    from collections.abc import Sequence, MutableMapping, MutableSequence
+except ImportError:
+    from collections import Sequence, MutableMapping, MutableSequence
 import datetime
 from itertools import takewhile
 import importlib
@@ -114,7 +118,7 @@ def _valid_z_field_name(name):
     return re.match(regex, name, re.IGNORECASE) is not None
 
 
-class ElementProxy(collections.Sequence):
+class ElementProxy(Sequence):
     """
     It contains the results of a child traversal, and provides lazy child instantiation
     in order to support the following API:
@@ -191,7 +195,7 @@ class ElementProxy(collections.Sequence):
         return repr(self.list)
 
 
-class ElementList(collections.MutableSequence):
+class ElementList(MutableSequence):
     """
     Delegate for handling the children of a given Element.
 
@@ -546,7 +550,7 @@ class ElementFinder(object):
                 reference = load_reference(element.name, element.classname, element.version)
             except (ChildNotFound, KeyError):
                 raise InvalidName(element.classname, element.name)
-        if not isinstance(reference, collections.Sequence):
+        if not isinstance(reference, Sequence):
             raise Exception
         return ElementFinder._parse_structure(element, reference)
 
@@ -644,7 +648,7 @@ class Element(object):
 
     def find_child_reference(self, name):
         name = name.upper()
-        if isinstance(self.structure_by_name, collections.MutableMapping):
+        if isinstance(self.structure_by_name, MutableMapping):
             element = self.structure_by_name.get(name) or self.structure_by_longname.get(name)
         else:
             element = None
@@ -881,7 +885,7 @@ class SupportComplexDataType(Element):
 
     def find_child_reference(self, name):
         name = name.upper()
-        if isinstance(self.structure_by_name, collections.MutableMapping):
+        if isinstance(self.structure_by_name, MutableMapping):
             element = self.structure_by_name.get(name) or self.structure_by_longname.get(name)
         else:
             element = None
@@ -1820,7 +1824,7 @@ class Group(Element):
 
     def find_child_reference(self, name):
         name = name.upper()
-        if isinstance(self.structure_by_name, collections.MutableMapping):
+        if isinstance(self.structure_by_name, MutableMapping):
             element = self.structure_by_name.get(name) or self.structure_by_longname.get(name)
         else:
             element = None
@@ -1936,7 +1940,7 @@ class Message(Group):
 
     def find_child_reference(self, name):
         name = name.upper()
-        if isinstance(self.structure_by_name, collections.MutableMapping):
+        if isinstance(self.structure_by_name, MutableMapping):
             element = self.structure_by_name.get(name) or self.structure_by_longname.get(name)
         else:
             element = None
