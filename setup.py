@@ -22,8 +22,8 @@
 
 
 from __future__ import absolute_import
-from distutils.core import setup
-from distutils.errors import DistutilsSetupError
+
+from setuptools import setup
 
 import hl7apy
 
@@ -47,20 +47,17 @@ The main features includes:
 
 
 def _get_version():
-    try:
-        with open('VERSION') as f:
-            return f.read().strip()
-    except IOError:
-        raise DistutilsSetupError("failed to read version info")
+    with open('VERSION') as f:
+        return f.read().strip()
 
 
 setup(
     name='hl7apy',
     version=_get_version(),
-    description=desc,
-    long_description=long_desc,
     author=hl7apy.__author__,
     author_email=hl7apy.__author_email__,
+    description=desc,
+    long_description=long_desc,
     url=hl7apy.__url__,
     download_url='http://sourceforge.net/projects/hl7apy/files/',
     license='MIT License',

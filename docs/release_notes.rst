@@ -2,7 +2,11 @@
 
 Release Notes
 =============
+New in 1.3.3
 
+  * Added support to hl7 2.1
+  * Fixed some MSA.1 name in version 2.2
+  
 New in 1.3.2
 
  * Fixed a bug with some fields structures

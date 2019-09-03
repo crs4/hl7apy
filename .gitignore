@@ -1,6 +1,8 @@
 syntax: glob
 
-*.pyc
+*.egg
+*.egg-info
+*.py[cod]
 *.db
 *.pid
 *.log

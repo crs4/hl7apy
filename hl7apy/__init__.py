@@ -22,7 +22,10 @@
 from __future__ import absolute_import
 import os
 import sys
-import collections
+try:
+    from collections.abc import MutableMapping
+except ImportError:
+    from collections import MutableMapping
 import importlib
 try:
     import cPickle as pickle
@@ -51,7 +54,7 @@ def check_encoding_chars(encoding_chars):
     :param encoding_chars: the encoding chars (see :func:`hl7apy.set_default_encoding_chars`)
     :raises: :exc:`hl7apy.exceptions.InvalidEncodingChars` if the given encoding chars are not valid
     """
-    if not isinstance(encoding_chars, collections.MutableMapping):
+    if not isinstance(encoding_chars, MutableMapping):
         raise InvalidEncodingChars
     required = {'FIELD', 'COMPONENT', 'SUBCOMPONENT', 'REPETITION', 'ESCAPE'}
     missing = required - set(encoding_chars.keys())

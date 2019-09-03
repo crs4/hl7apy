@@ -568,7 +568,7 @@ FIELDS = {
     'MRG_5': ('sequence', DATATYPES_STRUCTS['CX'], 'CX', 'PRIOR_VISIT_NUMBER', None, -1),
     'MRG_6': ('sequence', DATATYPES_STRUCTS['CX'], 'CX', 'PRIOR_ALTERNATE_VISIT_ID', None, -1),
     'MRG_7': ('sequence', DATATYPES_STRUCTS['CX'], 'CX', 'PRIOR_PATIENT_NAME', None, -1),
-    'MSA_1': ('leaf', None, 'ID', 'ACKNOWLEDGEMENT_CODE', 'HL70008', -1),
+    'MSA_1': ('leaf', None, 'ID', 'ACKNOWLEDGMENT_CODE', 'HL70008', -1),
     'MSA_2': ('leaf', None, 'ST', 'MESSAGE_CONTROL_ID', None, -1),
     'MSA_3': ('leaf', None, 'ST', 'TEXT_MESSAGE', None, -1),
     'MSA_4': ('leaf', None, 'NM', 'EXPECTED_SEQUENCE_NUMBER', None, -1),
