@@ -44,7 +44,7 @@ DATATYPES = {
     'CK_ACCOUNT_NO_2': ['leaf', None, 'NM', 'CHECK_DIGIT', None, -1],
     'CK_ACCOUNT_NO_3': ['leaf', None, 'ID', 'CHECK_DIGIT_SCHEME', None, -1],
     'CK_ACCOUNT_NO_4': ['leaf', None, 'ID', 'FACILITY_ID', None, -1],
-    'CM_ABS_RANGE_1': ['sequence', None, 'CM_RANGE', 'RANGE', None, -1],
+    'CM_ABS_RANGE_1': ['sequence', None, 'CM_RANGE_SIMPLE', 'RANGE', None, -1],
     'CM_ABS_RANGE_2': ['leaf', None, 'NM', 'NUMERIC_CHANGE', None, -1],
     'CM_ABS_RANGE_3': ['leaf', None, 'NM', 'PERCENT_PER_CHANGE', None, -1],
     'CM_ABS_RANGE_4': ['leaf', None, 'NM', 'DAYS', None, -1],
@@ -62,7 +62,7 @@ DATATYPES = {
     'CM_DIN_2': ['sequence', None, 'CE', 'INSTITUTION_NAME', None, -1],
     'CM_DLD_1': ['leaf', None, 'ID', 'DISCHARGE_LOCATION', None, -1],
     'CM_DLD_2': ['sequence', None, 'TS', 'EFFECTIVE_DATE', None, -1],
-    'CM_DLT_1': ['sequence', None, 'CM_RANGE', 'RANGE', None, -1],
+    'CM_DLT_1': ['sequence', None, 'CM_RANGE_SIMPLE', 'RANGE', None, -1],
     'CM_DLT_2': ['leaf', None, 'NM', 'NUMERIC_THRESHOLD', None, -1],
     'CM_DLT_3': ['leaf', None, 'ST', 'CHANGE', None, -1],
     'CM_DLT_4': ['leaf', None, 'NM', 'LENGTH_OF_TIME_DAYS', None, -1],
@@ -144,6 +144,8 @@ DATATYPES = {
     'CM_PTA_3': ['leaf', None, 'NM', 'AMOUNT', None, -1],
     'CM_RANGE_1': ['sequence', None, 'CE', 'LOW_VALUE', None, -1],
     'CM_RANGE_2': ['sequence', None, 'CE', 'HIGH_VALUE', None, -1],
+    'CM_RANGE_SIMPLE_1': ['leaf', None, 'ST', 'LOW_VALUE', None, -1],
+    'CM_RANGE_SIMPLE_2': ['leaf', None, 'ST', 'HIGH_VALUE', None, -1],
     'CM_RFR_1': ['sequence', None, 'CE', 'REFERENCE_RANGE', None, -1],
     'CM_RFR_2': ['leaf', None, 'ID', 'SEX', None, -1],
     'CM_RFR_3': ['sequence', None, 'CE', 'AGE_RANGE', None, -1],
@@ -362,6 +364,9 @@ DATATYPES_STRUCTS = {
     'CM_RANGE': (
            ('CM_RANGE_1', DATATYPES['CM_RANGE_1'], (0, 1), 'CMP'),
            ('CM_RANGE_2', DATATYPES['CM_RANGE_2'], (0, 1), 'CMP'),),
+    'CM_RANGE_SIMPLE': (
+           ('CM_RANGE_SIMPLE_1', DATATYPES['CM_RANGE_SIMPLE_1'], (0, 1), 'CMP'),
+           ('CM_RANGE_SIMPLE_2', DATATYPES['CM_RANGE_SIMPLE_2'], (0, 1), 'CMP'),),
     'CM_RFR': (
            ('CM_RFR_1', DATATYPES['CM_RFR_1'], (0, 1), 'CMP'),
            ('CM_RFR_2', DATATYPES['CM_RFR_2'], (0, 1), 'CMP'),
