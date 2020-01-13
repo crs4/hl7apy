@@ -21,6 +21,8 @@
 
 
 from __future__ import absolute_import
+
+
 class HL7apyException(Exception):
     """
     Base exception class for hl7apy
@@ -307,8 +309,14 @@ class InvalidEncodingChars(HL7apyException):
     ...
     InvalidEncodingChars: Missing required encoding chars
     """
+    def __init__(self, message=None):
+        self.message = message
+
     def __str__(self):
-        return self.message if self.message else 'Invalid encoding chars'
+        if self.message:
+            return 'Invalid encoding chars: {}'.format(self.message)
+        else:
+            return 'Invalid encoding chars'
 
 
 class MessageProfileNotFound(HL7apyException):
