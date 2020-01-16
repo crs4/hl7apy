@@ -52,7 +52,7 @@ class InvalidHL7Message(HL7apyException):
         return 'The string received is not a valid HL7 message'
 
 
-class _MLLPRequestHandler(StreamRequestHandler):
+class MLLPRequestHandler(StreamRequestHandler):
     encoding = 'utf-8'
 
     def __init__(self, *args, **kwargs):
@@ -164,12 +164,12 @@ class MLLPServer(ThreadingMixIn, TCPServer):
     """
     allow_reuse_address = True
 
-    def __init__(self, host, port, handlers, timeout=10):
+    def __init__(self, host, port, handlers, timeout=10, request_handler_class=MLLPRequestHandler):
         self.host = host
         self.port = port
         self.handlers = handlers
         self.timeout = timeout
-        TCPServer.__init__(self, (host, port), _MLLPRequestHandler)
+        TCPServer.__init__(self, (host, port), request_handler_class)
 
 
 class AbstractHandler(object):
