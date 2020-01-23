@@ -122,6 +122,7 @@ class _MLLPRequestHandler(StreamRequestHandler):
                 raise UnsupportedMessageType(msg_type)
 
             h = handler(msg, *args)
+            h.server = self
             return h.reply()
         except Exception as e:
             try:
@@ -130,6 +131,7 @@ class _MLLPRequestHandler(StreamRequestHandler):
                 raise e
             else:
                 h = err_handler(e, msg, *args)
+                h.server = self
                 return h.reply()
 
 
@@ -174,6 +176,8 @@ class AbstractHandler(object):
 
         :param message: the ER7-formatted HL7 message to handle
     """
+    server = None
+
     def __init__(self, message):
         self.incoming_message = message
 
