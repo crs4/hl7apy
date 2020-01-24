@@ -121,7 +121,7 @@ class _MLLPRequestHandler(StreamRequestHandler):
             except KeyError:
                 raise UnsupportedMessageType(msg_type)
 
-            h = handler(msg, *args)
+            h = self._create_handler(handler, msg, args)
             return h.reply()
         except Exception as e:
             try:
@@ -129,8 +129,14 @@ class _MLLPRequestHandler(StreamRequestHandler):
             except KeyError:
                 raise e
             else:
-                h = err_handler(e, msg, *args)
+                h = self._create_error_handler(err_handler, e, msg, args)
                 return h.reply()
+
+    def _create_handler(self, handler_class, msg, args):
+        return handler_class(msg, *args)
+
+    def _create_error_handler(self, handler_class, exc, msg, args):
+        return handler_class(exc, msg, *args)
 
 
 class MLLPServer(ThreadingMixIn, TCPServer):
