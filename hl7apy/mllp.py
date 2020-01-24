@@ -25,9 +25,9 @@ from __future__ import unicode_literals
 import re
 import socket
 try:
-    from SocketServer import StreamRequestHandler, TCPServer, ThreadingMixIn
+    from SocketServer import StreamRequestHandler, ThreadingTCPServer
 except ImportError:
-    from socketserver import StreamRequestHandler, TCPServer, ThreadingMixIn
+    from socketserver import StreamRequestHandler, ThreadingTCPServer
 
 from hl7apy.parser import get_message_type
 from hl7apy.exceptions import HL7apyException, ParserError
@@ -139,7 +139,7 @@ class MLLPRequestHandler(StreamRequestHandler):
         return handler_class(exc, msg, *args)
 
 
-class MLLPServer(ThreadingMixIn, TCPServer):
+class MLLPServer(ThreadingTCPServer):
     """
         A :class:`TCPServer <SocketServer.TCPServer>` subclass that implements an MLLP server.
         It receives MLLP-encoded HL7 and redirects them to the correct handler, according to the
@@ -169,7 +169,7 @@ class MLLPServer(ThreadingMixIn, TCPServer):
         self.port = port
         self.handlers = handlers
         self.timeout = timeout
-        TCPServer.__init__(self, (host, port), request_handler_class)
+        ThreadingTCPServer.__init__(self, (host, port), request_handler_class)
 
 
 class AbstractHandler(object):
