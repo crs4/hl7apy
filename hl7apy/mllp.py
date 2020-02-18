@@ -96,7 +96,7 @@ class MLLPRequestHandler(StreamRequestHandler):
             try:
                 response = self._route_message(message)
             except Exception as exc:
-                self._handle_routing_error(exc)
+                self._handle_routing_error(exc, message)
                 self.request.close()
             else:
                 # encode the response
@@ -139,7 +139,7 @@ class MLLPRequestHandler(StreamRequestHandler):
     def _create_error_handler(self, handler_class, exc, msg, args):
         return handler_class(exc, msg, *args)
 
-    def _handle_routing_error(self, exc):
+    def _handle_routing_error(self, exc, msg):
         pass
 
 
