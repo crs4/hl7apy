@@ -266,6 +266,11 @@ class ToStringTestCase(unittest.TestCase):
         parsed_s = parse_segment(s, version='2.7')
         self.assertEqual(parsed_s.to_er7(), 'EVN||20080115153000||AAA|AAA|20080114003000')
 
+    def test_to_string_unicode_field(self):
+        pid = Segment('PID', validation_level=VALIDATION_LEVEL.STRICT)
+        pid.pid_5.pid_5_1 = u'€'
+        self.assertEqual(pid.to_er7(), u'PID|||||€')
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -35,6 +35,7 @@
 from __future__ import absolute_import
 import re
 import numbers
+import sys
 from datetime import datetime
 from decimal import Decimal
 from functools import cmp_to_key
@@ -44,6 +45,10 @@ from hl7apy.exceptions import MaxLengthReached, InvalidHighlightRange, InvalidDa
     InvalidDateOffset, InvalidMicrosecondsPrecision
 from hl7apy.validation import Validator
 
+if sys.version_info.major == 2:
+    bytes, unicode = str, unicode
+else:
+    bytes, unicode = bytes, str
 
 class BaseDataType(object):
     """
@@ -71,8 +76,13 @@ class BaseDataType(object):
         self.validation_level = validation_level
         self.max_length = max_length
         if Validator.is_strict(self.validation_level):
-            if self.max_length is not None and len('{0}'.format(value)) > self.max_length:
-                raise MaxLengthReached(value, self.max_length)
+            if self.max_length is not None:
+                if isinstance(value, (bytes, unicode)):
+                    if len(value) > self.max_length:
+                        raise MaxLengthReached(value, self.max_length)
+                elif len("{0}".format(value)) > self.max_length:
+                    raise MaxLengthReached(value, self.max_length)
+
         self.value = value
 
     def to_er7(self, encoding_chars=None):
