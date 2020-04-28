@@ -289,7 +289,7 @@ class TM(DateTimeDataType):
             raise InvalidDateOffset(offset)
         try:
             d = datetime.strptime(offset[1:], '%H%M')
-            if d.hour > 12:
+            if offset[0] == '+' and d.hour > 14 or offset[0] == '-' and d.hour > 12:
                 raise ValueError
         except ValueError:
             if offset:
