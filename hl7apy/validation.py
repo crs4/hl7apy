@@ -32,6 +32,7 @@ class Validator(object):
     Class that handles validation. It defines validation levels and validate
     an element using :attr:`VALIDATION.STRICT <hl7apy.consts.VALIDATION_LEVEL.STRICT>` validation level
     """
+
     def __init__(self, level):
         super(Validator, self).__init__()
         self.level = level
@@ -85,11 +86,9 @@ class Validator(object):
             min_repetitions, max_repetitions = cardinality
             if max_repetitions != -1:
                 if children_num < min_repetitions:
-                    errs.append(ValidationError("Missing required child {}.{}".format(el.name,
-                                                                                      child_name)))
+                    errs.append(ValidationError("Missing required child {}.{}".format(el.name, child_name)))
                 elif children_num > max_repetitions:
-                    errs.append(ValidationError("Child limit exceeded {}.{}".format(child_name,
-                                                                                    el.name)))
+                    errs.append(ValidationError("Child limit exceeded {}.{}".format(el.name, child_name)))
             else:
                 if children_num < min_repetitions:
                     errs.append(ValidationError("Missing required child {}.{}".format(el.name,
@@ -177,7 +176,7 @@ class Validator(object):
                 _check_datatype(el, ref, errs)
 
                 # For complex datatypes element, the reference is the one of the datatype
-                if not is_base_datatype(el.datatype, el.version):
+                if not is_base_datatype(el.datatype, el.version) and el.datatype is not None:
                     # Component just to search in the datatypes....
                     ref = load_reference(el.datatype, 'Datatypes_Structs', el.version)
                     _is_valid(el, ref, errs, warns)
