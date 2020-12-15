@@ -269,10 +269,10 @@ class InvalidDateOffset(HL7apyException):
     Raised when the offset for a :class:`TM` or :class:`hl7apy.base_datatypes.DTM` is not valid
 
     >>> from hl7apy.v2_5 import DTM
-    >>> DTM(value='20131010', out_format="%Y%m%d", offset='+1300')  # doctest: +IGNORE_EXCEPTION_DETAIL
+    >>> DTM(value='20131010', out_format="%Y%m%d", offset='+1500')  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
-    InvalidDateOffset: Invalid date offset: +1300
+    InvalidDateOffset: Invalid date offset: +1500
     """
     def __init__(self, offset):
         self.offset = offset
