@@ -395,6 +395,14 @@ class TestParser(unittest.TestCase):
         self.assertEqual(c.children[0].to_er7(), 'comp1')
         self.assertEqual(c.children[1].to_er7(), 'comp2')
 
+    def test_parse_component_with_datatype(self):
+        c = parse_component('555-55-5555&PRIMARY&PATRICIA&6&&MD', datatype='CE', version='2.5.1')
+        self.assertEqual(c.value, '555-55-5555&PRIMARY&PATRICIA&6&&MD')
+
+    def test_parse_component_with_datatype_and_unknown_subcomponent(self):
+        c = parse_component('555-55-5555&PRIMARY&PATRICIA P&6&&MD&UNKN', datatype='CE', version='2.5.1')
+        self.assertEqual(c.value, '555-55-5555&PRIMARY&PATRICIA P&6&&MD&UNKN')
+
     def test_parse_component_invalid_encoding_chars(self):
         component = 'comp'
         self.assertRaises(InvalidEncodingChars, parse_component, component,

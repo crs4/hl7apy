@@ -702,6 +702,8 @@ class Element(object):
             kwargs['version'] = self.version
             kwargs['validation_level'] = self.validation_level
             kwargs['encoding_chars'] = self.encoding_chars
+            if 'references' not in kwargs:
+                kwargs['references'] = self.structure_by_name
 
             module = importlib.import_module("hl7apy.parser")
             parser = getattr(module, self.child_parser[1])
@@ -1151,7 +1153,7 @@ class SubComponent(CanBeVaries):
         try:
             return self.value.to_er7(encoding_chars)
         except AttributeError:
-            return self.value
+            return ''
 
     def _set_value(self, value):
         if value is None:

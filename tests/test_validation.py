@@ -26,8 +26,8 @@ import unittest
 import hl7apy
 from hl7apy.core import Group, Field, Component, SubComponent
 from hl7apy.parser import parse_message, parse_segments, parse_segment, parse_field
-from hl7apy.validation import Validator, VALIDATION_LEVEL
-from hl7apy.exceptions import ValidationError, ValidationWarning
+from hl7apy.validation import VALIDATION_LEVEL
+from hl7apy.exceptions import ValidationError
 
 
 class TestValidation(unittest.TestCase):
