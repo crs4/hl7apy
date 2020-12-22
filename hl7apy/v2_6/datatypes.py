@@ -57,6 +57,8 @@ DATATYPES = {
     'CP_6': ['leaf', None, 'ID', 'RANGE_TYPE', None, -1],
     'CQ_1': ['leaf', None, 'NM', 'QUANTITY', None, -1],
     'CQ_2': ['sequence', None, 'CWE', 'UNITS', None, -1],
+    'CQ_SIMPLE_1': ['leaf', None, 'NM', 'QUANTITY', None, -1],
+    'CQ_SIMPLE_2': ['leaf', None, 'ST', 'UNITS', None, -1],
     'CSU_1': ['leaf', None, 'NM', 'CHANNEL_SENSITIVITY', None, -1],
     'CSU_2': ['leaf', None, 'ST', 'UNIT_OF_MEASURE_IDENTIFIER', None, -1],
     'CSU_3': ['leaf', None, 'ST', 'UNIT_OF_MEASURE_DESCRIPTION', None, -1],
@@ -322,7 +324,7 @@ DATATYPES = {
     'SPS_7': ['sequence', None, 'CWE', 'SPECIMEN_ROLE', None, -1],
     'SRT_1': ['leaf', None, 'ST', 'SORT_BY_FIELD', None, -1],
     'SRT_2': ['leaf', None, 'ID', 'SEQUENCING', None, -1],
-    'TQ_1': ['sequence', None, 'CQ', 'QUANTITY', None, -1],
+    'TQ_1': ['sequence', None, 'CQ_SIMPLE', 'QUANTITY', None, -1],
     'TQ_2': ['sequence', None, 'RI', 'INTERVAL', None, -1],
     'TQ_3': ['leaf', None, 'ST', 'DURATION', None, -1],
     'TQ_4': ['leaf', None, 'DTM', 'START_DATE_TIME', None, -1],
@@ -506,6 +508,9 @@ DATATYPES_STRUCTS = {
     'CQ': (
            ('CQ_1', DATATYPES['CQ_1'], (0, 1), 'CMP'),
            ('CQ_2', DATATYPES['CQ_2'], (0, 1), 'CMP'),),
+    'CQ_SIMPLE': (
+           ('CQ_SIMPLE_1', DATATYPES['CQ_SIMPLE_1'], (0, 1), 'CMP'),
+           ('CQ_SIMPLE_2', DATATYPES['CQ_SIMPLE_2'], (0, 1), 'CMP'),),
     'CSU': (
            ('CSU_1', DATATYPES['CSU_1'], (1, 1), 'CMP'),
            ('CSU_2', DATATYPES['CSU_2'], (0, 1), 'CMP'),

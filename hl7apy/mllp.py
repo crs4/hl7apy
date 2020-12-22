@@ -25,9 +25,9 @@ from __future__ import unicode_literals
 import re
 import socket
 try:
-    from SocketServer import StreamRequestHandler, TCPServer, ThreadingMixIn
+    from SocketServer import StreamRequestHandler, ThreadingTCPServer
 except ImportError:
-    from socketserver import StreamRequestHandler, TCPServer, ThreadingMixIn
+    from socketserver import StreamRequestHandler, ThreadingTCPServer
 
 from hl7apy.parser import get_message_type
 from hl7apy.exceptions import HL7apyException, ParserError
@@ -52,7 +52,7 @@ class InvalidHL7Message(HL7apyException):
         return 'The string received is not a valid HL7 message'
 
 
-class _MLLPRequestHandler(StreamRequestHandler):
+class MLLPRequestHandler(StreamRequestHandler):
     encoding = 'utf-8'
 
     def __init__(self, *args, **kwargs):
@@ -121,7 +121,7 @@ class _MLLPRequestHandler(StreamRequestHandler):
             except KeyError:
                 raise UnsupportedMessageType(msg_type)
 
-            h = handler(msg, *args)
+            h = self._create_handler(handler, msg, args)
             return h.reply()
         except Exception as e:
             try:
@@ -129,11 +129,17 @@ class _MLLPRequestHandler(StreamRequestHandler):
             except KeyError:
                 raise e
             else:
-                h = err_handler(e, msg, *args)
+                h = self._create_error_handler(err_handler, e, msg, args)
                 return h.reply()
 
+    def _create_handler(self, handler_class, msg, args):
+        return handler_class(msg, *args)
 
-class MLLPServer(ThreadingMixIn, TCPServer):
+    def _create_error_handler(self, handler_class, exc, msg, args):
+        return handler_class(exc, msg, *args)
+
+
+class MLLPServer(ThreadingTCPServer):
     """
         A :class:`TCPServer <SocketServer.TCPServer>` subclass that implements an MLLP server.
         It receives MLLP-encoded HL7 and redirects them to the correct handler, according to the
@@ -158,12 +164,12 @@ class MLLPServer(ThreadingMixIn, TCPServer):
     """
     allow_reuse_address = True
 
-    def __init__(self, host, port, handlers, timeout=10):
+    def __init__(self, host, port, handlers, timeout=10, request_handler_class=MLLPRequestHandler):
         self.host = host
         self.port = port
         self.handlers = handlers
         self.timeout = timeout
-        TCPServer.__init__(self, (host, port), _MLLPRequestHandler)
+        ThreadingTCPServer.__init__(self, (host, port), request_handler_class)
 
 
 class AbstractHandler(object):

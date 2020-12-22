@@ -20,6 +20,8 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import absolute_import
+
+import importlib
 import os
 import unittest
 
@@ -35,7 +37,7 @@ class TestParser(unittest.TestCase):
 
     def setUp(self):
         self.rsp_k21 = \
-            'MSH|^~\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|1234|D|2.5|||||ITA||EN\r' \
+            'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|1234|D|2.5|||||ITA||EN\r' \
             'MSA|AA|26775702551812240|\r' \
             'QAK|111069|OK||1|1|0\r' \
             'QPD|IHE PDQ Query|111069|@PID.3.1^1010110909194822~@PID.5.1^SMITH||||\r' \
@@ -43,21 +45,21 @@ class TestParser(unittest.TestCase):
 
         # it misses some PID.3 components
         self.invalid_rsp_k21 = \
-            'MSH|^~\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|1234|D|2.5|||||ITA||EN\r' \
+            'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|1234|D|2.5|||||ITA||EN\r' \
             'MSA|AA|26775702551812240|\r' \
             'QAK|111069|OK||1|1|0\r' \
             'QPD|IHE PDQ Query|111069|@PID.3.1^1010110909194822~@PID.5.1^SMITH||||\r' \
             'PID|1||10101^^^||JOHN^SMITH^^^^^A||19690113|M|||VIA DELLE VIE^^CAGLIARI^^^100^H^^092009|||||||||||||||||\r'
 
         self.rsp_k21_27 = \
-            'MSH|^~\&#|SEND APP|SEND FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|1234|D|2.7|||||ITA||EN\r' \
+            'MSH|^~\\&#|SEND APP|SEND FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|1234|D|2.7|||||ITA||EN\r' \
             'MSA|AA|26775702551812240\r' \
             'QAK|111069|OK||1|1|0\r' \
             'QPD|IHE PDQ Query|111069|@PID.3.1^1010110909194822~@PID.5.1^SMITH\r' \
             'PID|1||10101^^^GATEWAY&1.3.6.1.4.1.21367.2011.2.5.17&ISO||JOHN^SMITH^^^^^A||19690113|M|||VIA DELLE VIE^^CAGLIARI^^^100^H^^092009||||||||||||CAGLIARI'
 
         self.rsp_k21_27_no_truncation = \
-            'MSH|^~\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|1234|D|2.7|||||ITA||EN\r' \
+            'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|1234|D|2.7|||||ITA||EN\r' \
             'MSA|AA|26775702551812240\r' \
             'QAK|111069|OK||1|1|0\r' \
             'QPD|IHE PDQ Query|111069|@PID.3.1^1010110909194822~@PID.5.1^SMITH\r' \
@@ -70,7 +72,7 @@ class TestParser(unittest.TestCase):
     def _get_multiple_segments_groups_message(self):
 
         msg_o33 = \
-            'MSH|^~\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
+            'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
             'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009^^~^^^^^^L^^^|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100|||||||||||\r' \
             'PV1||O|||||||||||||||||1107080001^^^LIS\r' \
             'SPM|1|100187400201^||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
@@ -105,7 +107,7 @@ class TestParser(unittest.TestCase):
                 'ESCAPE': '\\'}
 
     def test_parse_message_ignoring_groups(self):
-        msh = 'MSH|^~\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.5||||AL\r'
+        msh = 'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.5||||AL\r'
         evn = 'EVN||20080115153000||AAA|AAA|20080114003000\r'
         pid = 'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE^^SOMEWHERE^^^USA||555~444|||M\r'
         nk1 = 'NK1|1|WOMAN^WIFE|SPO|1111 SOMEWHERE^^SOMEWHERE^^^USA\r'
@@ -173,7 +175,7 @@ class TestParser(unittest.TestCase):
         parse_message(msg)
 
     def test_parse_invalid_message(self):
-        msh = 'PID|^~\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.6||||AL\r'
+        msh = 'PID|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.6||||AL\r'
         pid = 'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE^^SOMEWHERE^^^USA||555~444|||M'
         msg = msh + pid
         self.assertRaises(ParserError, parse_message, msg)
@@ -195,18 +197,18 @@ class TestParser(unittest.TestCase):
         self.assertRaises(InvalidEncodingChars, parse_message, m, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_parse_message_too_many_encoding_chars(self):
-        m = 'MSH|@%\&$?!|||||||||'
+        m = 'MSH|@%\\&$?!|||||||||'
         self.assertRaises(InvalidEncodingChars, parse_message, m)
         self.assertRaises(InvalidEncodingChars, parse_message, m, validation_level=VALIDATION_LEVEL.STRICT)
-        m = 'MSH|^~\&#$||||||||||2.7'
+        m = 'MSH|^~\\&#$||||||||||2.7'
         self.assertRaises(InvalidEncodingChars, parse_message, m)
         self.assertRaises(InvalidEncodingChars, parse_message, m, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_parse_unknown_message_strict(self):
-        m = 'MSH|^~\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.6||||AL\r'
+        m = 'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.6||||AL\r'
         self.assertRaises(ValidationError, parse_message, m,
                           validation_level=VALIDATION_LEVEL.STRICT, force_validation=True)
-        m = 'MSH|^~\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000|||0123456789|P|2.6||||AL\r'
+        m = 'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000|||0123456789|P|2.6||||AL\r'
         self.assertRaises(OperationNotAllowed, parse_message, m, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_parse_message_duplicate_encoding_chars(self):
@@ -218,25 +220,25 @@ class TestParser(unittest.TestCase):
         self.assertRaises(InvalidEncodingChars, parse_message, m, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_parse_message_missing_structure(self):
-        msh = 'MSH|^~\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000|||0123456789|P|2.6||||AL\r'
+        msh = 'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000|||0123456789|P|2.6||||AL\r'
         pid = 'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE^^SOMEWHERE^^^USA||555~444|||M\r'
         msg = msh + pid
         parse_message(msg)
 
     def test_parse_message_missing_structure_strict(self):
-        msh = 'MSH|^~\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000|||0123456789|P|2.6||||AL\r'
+        msh = 'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000|||0123456789|P|2.6||||AL\r'
         pid = 'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE^^SOMEWHERE^^^USA||555~444|||M\r'
         msg = msh + pid
         self.assertRaises(OperationNotAllowed, parse_message, msg, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_parse_message_incomplete_structure(self):
-        m = parse_message('MSH|^~\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^|')
+        m = parse_message('MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^|')
 
     def test_parse_message_missing_version(self):
-        m = parse_message('MSH|^~\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01||')
+        m = parse_message('MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01||')
 
     def test_parse_segments(self):
-        msh = 'MSH|^~\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.5||||AL\r'
+        msh = 'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.5||||AL\r'
         pid = 'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE^^SOMEWHERE^^^USA||555~444|||M'
 
         segments_str = msh + pid
@@ -393,6 +395,14 @@ class TestParser(unittest.TestCase):
         self.assertEqual(c.children[0].to_er7(), 'comp1')
         self.assertEqual(c.children[1].to_er7(), 'comp2')
 
+    def test_parse_component_with_datatype(self):
+        c = parse_component('555-55-5555&PRIMARY&PATRICIA&6&&MD', datatype='CE', version='2.5.1')
+        self.assertEqual(c.value, '555-55-5555&PRIMARY&PATRICIA&6&&MD')
+
+    def test_parse_component_with_datatype_and_unknown_subcomponent(self):
+        c = parse_component('555-55-5555&PRIMARY&PATRICIA P&6&&MD&UNKN', datatype='CE', version='2.5.1')
+        self.assertEqual(c.value, '555-55-5555&PRIMARY&PATRICIA P&6&&MD&UNKN')
+
     def test_parse_component_invalid_encoding_chars(self):
         component = 'comp'
         self.assertRaises(InvalidEncodingChars, parse_component, component,
@@ -435,7 +445,7 @@ class TestParser(unittest.TestCase):
                           validation_level=VALIDATION_LEVEL.STRICT, force_validation=True)
 
     def test_get_message_type(self):
-        msh = 'MSH|^~\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||{}|0123456789|P|2.5||||AL\r'
+        msh = 'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||{}|0123456789|P|2.5||||AL\r'
 
         for mt in ('ADT^A01^ADT_A01', 'ADT^A01', '^^^', '^^ADT_A01'):
             self.assertEqual(get_message_type(msh.format(mt)), mt)
@@ -462,6 +472,22 @@ class TestParser(unittest.TestCase):
                           validation_level=VALIDATION_LEVEL.STRICT)
         parsed_s = parse_segment(s, version='2.7')
         self.assertEqual(parsed_s.to_er7(), s)
+
+    def test_complex_datatype_depth(self):
+        """
+        Related to issue 56 in github, checks that the complex datatype chain has at most a depth of two.
+        :return:
+        """
+
+        for version in hl7apy.SUPPORTED_LIBRARIES.values():
+            module = importlib.import_module(version)
+            for dts, strct in module.DATATYPES_STRUCTS.items():
+                for dts_cmp in strct:
+                    cmp_type, cmp_dts = dts_cmp[1][0], dts_cmp[1][1]
+                    if cmp_type == 'sequence':
+                        for sub_cmp in cmp_dts:
+                            sub_cmp_type = sub_cmp[1][0]
+                            self.assertEqual(sub_cmp_type, 'leaf')
 
 
 if __name__ == '__main__':

@@ -102,17 +102,21 @@ class TestDatatypeFactory(unittest.TestCase):
         self.assertEqual(dtm.classname, 'TM')
         self.assertEqual(dtm.to_er7(), '120252.059+0200')
 
-        dtm = datatype_factory('TM', '120252.05+0200')
+        dtm = datatype_factory('TM', '120252.05-0200')
         self.assertEqual(dtm.classname, 'TM')
-        self.assertEqual(dtm.to_er7(), '120252.05+0200')
+        self.assertEqual(dtm.to_er7(), '120252.05-0200')
+
+        dtm = datatype_factory('TM', '120252.05+1400')
+        self.assertEqual(dtm.classname, 'TM')
+        self.assertEqual(dtm.to_er7(), '120252.05+1400')
 
         dtm = datatype_factory('TM', '120252.5+0200')
         self.assertEqual(dtm.classname, 'TM')
         self.assertEqual(dtm.to_er7(), '120252.5+0200')
 
-        dtm = datatype_factory('TM', '120252+0200')
+        dtm = datatype_factory('TM', '120252-1200')
         self.assertEqual(dtm.classname, 'TM')
-        self.assertEqual(dtm.to_er7(), '120252+0200')
+        self.assertEqual(dtm.to_er7(), '120252-1200')
 
     def test_create_nm_by_factory(self):
         nm = datatype_factory('NM', 100000)
@@ -156,6 +160,7 @@ class TestDT(unittest.TestCase):
 class TestTM(unittest.TestCase):
 
     def test_TM(self):
+
         time = datetime.strptime('01', '%H')
         time1 = datetime.strptime('0101', '%H%M')
         time2 = datetime.strptime('010111', '%H%M%S')
@@ -199,7 +204,7 @@ class TestTM(unittest.TestCase):
         self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset='+00:00')
         self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset='&0100')
         self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset='+100')
-        self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset='+1300')
+        self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset='+1500')
         self.assertRaises(InvalidDateOffset, TM, datetime.strptime('0101', '%H%M'), offset='-1300')
 
     def test_TM_custom_microsec_precision(self):

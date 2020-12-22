@@ -1353,6 +1353,7 @@ class TestComponent(unittest.TestCase):
         m = Message('RSP_K21', reference=self.rsp_k21_mp, validation_level=VALIDATION_LEVEL.TOLERANT)
         c = m.add_segment('QPD').add_field('QPD_8').add_component('CX_4')
         c.add(SubComponent(datatype='ST'))
+        self.assertEquals(c.value, '&&&')
 
     def test_add_known_subcomponent_to_empty_component(self):
         c = Component()
@@ -1913,6 +1914,14 @@ class TestComponent(unittest.TestCase):
         c.cwe_1 = 'b'
 
         self.assertEqual(s.children, c.cwe_1.children)
+
+    def test_assign_value_with_unknown_subcomponent(self):
+        c = Component(datatype='CE')
+        c.value = '555-55-5555&PRIMARY&PATRICIA P&6&&MD&UNKN'
+        self.assertEqual(c.children[-1].name, 'ST')
+        self.assertEqual(c.children[-1].datatype, 'ST')
+        self.assertEqual(c.children[-1].to_er7(), 'UNKN')
+        self.assertEqual(c.value, '555-55-5555&PRIMARY&PATRICIA P&6&&MD&UNKN')
 
 
 class TestSubComponent(unittest.TestCase):

@@ -160,13 +160,13 @@ def parse_segments(text, version=None, encoding_chars=None, validation_level=Non
                             current_parent = current_parent.parent
                     else:
                         if current_parent is None and parents_refs[-1][0] is not None or \
-                           current_parent is not None and parents_refs[-1][0] != current_parent.name:
+                                current_parent is not None and parents_refs[-1][0] != current_parent.name:
                             # create the parents group of the segment
                             if current_parent is not None:
                                 cur_idx = parents_refs.index((current_parent.name, current_parent.reference))
                             else:
                                 cur_idx = parents_refs.index((None, references))
-                            for p_ref in parents_refs[cur_idx+1:]:
+                            for p_ref in parents_refs[cur_idx + 1:]:
                                 group = Group(p_ref[0], version=version, reference=p_ref[1],
                                               validation_level=validation_level)
                                 if current_parent is None:
@@ -299,7 +299,7 @@ def parse_fields(text, name_prefix=None, version=None, encoding_chars=None, vali
     splitted_fields = text.split(field_sep)
     fields = []
     for index, field in enumerate(splitted_fields):
-        name = "{0}_{1}".format(name_prefix, index+1) if name_prefix is not None else None
+        name = "{0}_{1}".format(name_prefix, index + 1) if name_prefix is not None else None
         try:
             reference = references[name]['ref'] if references is not None else None
         except KeyError:
@@ -446,9 +446,9 @@ def parse_components(text, field_datatype='ST', version=None, encoding_chars=Non
             component_name = None
         elif field_datatype is None or field_datatype == 'varies':
             component_datatype = None
-            component_name = 'VARIES_{0}'.format(index+1)
+            component_name = 'VARIES_{0}'.format(index + 1)
         else:
-            component_name = "{0}_{1}".format(field_datatype, index+1)
+            component_name = "{0}_{1}".format(field_datatype, index + 1)
             component_datatype = None
 
         try:
@@ -519,7 +519,8 @@ def parse_component(text, name=None, datatype='ST', version=None, encoding_chars
             raise e
         component = Component(datatype, version=version, validation_level=validation_level,
                               reference=reference)
-    children = parse_subcomponents(text, component.datatype, version, encoding_chars, validation_level)
+    children = parse_subcomponents(text, component.datatype, version, encoding_chars, validation_level,
+                                   component.structure_by_name)
     if Validator.is_tolerant(component.validation_level) and is_base_datatype(component.datatype, version) and \
             len(children) > 1:
         component.datatype = None
@@ -528,7 +529,7 @@ def parse_component(text, name=None, datatype='ST', version=None, encoding_chars
 
 
 def parse_subcomponents(text, component_datatype='ST', version=None, encoding_chars=None,
-                        validation_level=None):
+                        validation_level=None, references=None):
     """
     Parse the given ER7-encoded subcomponents and return a list of
     :class:`SubComponent <hl7apy.core.SubComponent>` instances.
@@ -552,9 +553,12 @@ def parse_subcomponents(text, component_datatype='ST', version=None, encoding_ch
         :class:`VALIDATION_LEVEL <hl7apy.consts.VALIDATION_LEVEL>` class or ``None`` to use the default
         validation level (see :func:`set_default_validation_level <hl7apy.set_default_validation_level>`)
 
+    :type references: ``list``
+    :param references: A list of the references of the :class:`SubComponent <hl7apy.core.SubComponent>`'s children
+
     :return: a list of :class:`SubComponent <hl7apy.core.SubComponent>` instances
 
-    >>> subcomponents= "ID&TEST&&AHAH"
+    >>> subcomponents = "ID&TEST&&AHAH"
     >>> cwe = parse_subcomponents(subcomponents, component_datatype="CWE")
     >>> print(cwe)
     [<SubComponent CWE_1>, <SubComponent CWE_2>, <SubComponent CWE_4>]
@@ -580,15 +584,24 @@ def parse_subcomponents(text, component_datatype='ST', version=None, encoding_ch
             subcomponent_name = None
             subcomponent_datatype = component_datatype if component_datatype is not None else 'ST'
         else:
-            subcomponent_name = "{0}_{1}".format(component_datatype, index+1)
+            subcomponent_name = "{0}_{1}".format(component_datatype, index + 1)
             subcomponent_datatype = None
+
+        try:
+            reference = references[subcomponent_name]['ref'] \
+                if None not in (references, subcomponent_name) else None
+        except KeyError:
+            reference = None
+            subcomponent_name = None
+            subcomponent_datatype = 'ST'
+
         if subcomponent.strip() or subcomponent_name is None:
             subcomponents.append(parse_subcomponent(subcomponent, subcomponent_name, subcomponent_datatype,
-                                                    version, validation_level))
+                                                    version, validation_level, reference))
     return subcomponents
 
 
-def parse_subcomponent(text, name=None, datatype='ST', version=None, validation_level=None):
+def parse_subcomponent(text, name=None, datatype='ST', version=None, validation_level=None, reference=None):
     """
     Parse the given ER7-encoded component and return an instance of
     :class:`SubComponent <hl7apy.core.SubComponent>`.
@@ -596,7 +609,7 @@ def parse_subcomponent(text, name=None, datatype='ST', version=None, validation_
     :type text: ``str``
     :param text: the ER7-encoded string containing the subcomponent data
 
-    :type name: ``str``
+    :type name: ``str``, None
     :param name: the subcomponent's name (e.g. XPN_2)
 
     :type datatype: ``str``
@@ -617,7 +630,7 @@ def parse_subcomponent(text, name=None, datatype='ST', version=None, validation_
     validation_level = _get_validation_level(validation_level)
 
     return SubComponent(name=name, datatype=datatype, value=text, version=version,
-                        validation_level=validation_level)
+                        validation_level=validation_level, reference=reference)
 
 
 def _split_msh(content):
@@ -747,6 +760,6 @@ def _get_validation_level(validation_level):
 
 
 if __name__ == '__main__':
-
     import doctest
+
     doctest.testmod()
