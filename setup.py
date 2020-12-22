@@ -75,6 +75,8 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
     packages=['hl7apy', 'hl7apy.v2_1', 'hl7apy.v2_2', 'hl7apy.v2_3', 'hl7apy.v2_3_1', 'hl7apy.v2_4', 'hl7apy.v2_5',
               'hl7apy.v2_5_1', 'hl7apy.v2_6', 'hl7apy.v2_7', 'hl7apy.v2_8', 'hl7apy.v2_8_1', 'hl7apy.v2_8_2'],
