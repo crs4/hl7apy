@@ -2,6 +2,11 @@
 
 Release Notes
 =============
+New in 1.3.4
+
+  * Bug fixes regarding dates
+  * Fixes for some message structures
+
 New in 1.3.3
 
   * Added support to hl7 2.1
