@@ -2215,6 +2215,7 @@ SEGMENTS = {
              ('PV1_37', FIELDS['PV1_37'], (0, 1), 'FIE'),
              ('PV1_38', FIELDS['PV1_38'], (0, 1), 'FIE'),
              ('PV1_39', FIELDS['PV1_39'], (0, 1), 'FIE'),
+             ('PV1_40', FIELDS['PV1_40'], (0, 0), 'FIE'),
              ('PV1_41', FIELDS['PV1_41'], (0, 1), 'FIE'),
              ('PV1_42', FIELDS['PV1_42'], (0, 1), 'FIE'),
              ('PV1_43', FIELDS['PV1_43'], (0, 1), 'FIE'),

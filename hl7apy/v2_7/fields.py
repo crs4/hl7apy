@@ -1838,6 +1838,7 @@ FIELDS = {
     'PV1_37': ('sequence', DATATYPES_STRUCTS['DLD'], 'DLD', 'DISCHARGED_TO_LOCATION', 'HL70113', -1),
     'PV1_38': ('sequence', DATATYPES_STRUCTS['CWE'], 'CWE', 'DIET_TYPE', 'HL70114', -1),
     'PV1_39': ('sequence', DATATYPES_STRUCTS['CWE'], 'CWE', 'SERVICING_FACILITY', 'HL70115', -1),
+    'PV1_40': ('leaf', None, 'IS', 'BED_STATUS', 'HL70116', -1),
     'PV1_41': ('sequence', DATATYPES_STRUCTS['CWE'], 'CWE', 'ACCOUNT_STATUS', 'HL70117', -1),
     'PV1_42': ('sequence', DATATYPES_STRUCTS['PL'], 'PL', 'PENDING_LOCATION', None, -1),
     'PV1_43': ('sequence', DATATYPES_STRUCTS['PL'], 'PL', 'PRIOR_TEMPORARY_LOCATION', None, -1),
