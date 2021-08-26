@@ -233,9 +233,7 @@ def load_library(version):
     """
     check_version(version)
     module_name = SUPPORTED_LIBRARIES[version]
-    lib = sys.modules.get(module_name)
-    if lib is None:
-        lib = importlib.import_module(module_name)
+    lib = importlib.import_module(module_name)
     return lib
 
 
