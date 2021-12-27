@@ -29,8 +29,56 @@ try:
 except ImportError:
     from socketserver import StreamRequestHandler, ThreadingTCPServer
 
+from hl7apy.core import Message
 from hl7apy.parser import get_message_type
 from hl7apy.exceptions import HL7apyException, ParserError
+
+
+class MLLPClient:
+    """
+        A very simple Client to send HL7 messages to an MLLP server.
+
+        :param host: the address of the server
+        :param port: the port of the server
+    """
+    RECEIVE_BUFFER_SIZE = 4096
+
+    def __init__(self, host, port, encoding="utf-8"):
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.unpacker = MLLPUnpacker()
+        self.encoding = encoding
+        self.host = host
+        self.port = int(port)
+
+    def send(self, message, unpack=True):
+        """
+            :param message: An hl7apy.core.Message object, or an already encoded HL7 MLLP string
+        """
+        if isinstance(message, Message):
+            mllp_message = message.to_mllp()
+        else:
+            mllp_message = message
+
+        self.socket.send(mllp_message.encode(self.encoding))
+        result = self.socket.recv(self.RECEIVE_BUFFER_SIZE)
+
+        if unpack:
+            return self.unpacker.unpack_mllp_message(result.decode(self.encoding))
+        else:
+            return result.decode(self.encoding)
+
+    def __enter__(self):
+        self.connect()
+        return self
+
+    def __exit__(self, exc_type, exc_val, trace):
+        self.close()
+
+    def connect(self):
+        self.socket.connect((self.host, self.port))
+
+    def close(self):
+        self.socket.close()
 
 
 class UnsupportedMessageType(HL7apyException):
@@ -52,6 +100,22 @@ class InvalidHL7Message(HL7apyException):
         return 'The string received is not a valid HL7 message'
 
 
+class MLLPUnpacker(object):
+    def __init__(self, sb=None, eb=None, cr=None, encoding="utf-8"):
+        self.sb = sb or b"\x0b"
+        self.eb = eb or b"\x1c"
+        self.cr = cr or b"\x0d"
+        self.validator = re.compile(
+            ''.join([self.sb.decode(encoding), r"(([^\r]+\r)*([^\r]+\r?))", self.eb.decode(encoding), self.cr.decode(encoding)]))
+
+    def unpack_mllp_message(self, incoming_message):
+        message = None
+        matched = self.validator.match(incoming_message)
+        if matched is not None:
+            message = matched.groups()[0]
+        return message
+
+
 class MLLPRequestHandler(StreamRequestHandler):
     encoding = 'utf-8'
 
@@ -62,8 +126,10 @@ class MLLPRequestHandler(StreamRequestHandler):
         self.sb = b"\x0b"
         self.eb = b"\x1c"
         self.cr = b"\x0d"
-        self.validator = re.compile(
-            ''.join([self.sb.decode('ascii'), r"(([^\r]+\r)*([^\r]+\r?))", self.eb.decode('ascii'), self.cr.decode('ascii')]))
+        self.unpacker= MLLPUnpacker(
+            sb=self.sb, eb=self.eb, cr=self.cr,
+            encoding=self.encoding
+        )
         self.handlers = self.server.handlers
         self.timeout = self.server.timeout
 
@@ -91,7 +157,7 @@ class MLLPRequestHandler(StreamRequestHandler):
                 self.request.close()
                 return
 
-        message = self._extract_hl7_message(line.decode(self.encoding))
+        message = self.unpacker.unpack_mllp_message(line.decode(self.encoding))
         if message is not None:
             try:
                 response = self._route_message(message)
@@ -101,13 +167,6 @@ class MLLPRequestHandler(StreamRequestHandler):
                 # encode the response
                 self.wfile.write(response.encode(self.encoding))
         self.request.close()
-
-    def _extract_hl7_message(self, msg):
-        message = None
-        matched = self.validator.match(msg)
-        if matched is not None:
-            message = matched.groups()[0]
-        return message
 
     def _route_message(self, msg):
         try:
