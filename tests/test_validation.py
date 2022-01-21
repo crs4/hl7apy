@@ -102,13 +102,9 @@ class TestValidation(unittest.TestCase):
             msg = self._create_message(msg_str)
             self.assertTrue(msg.validate())
 
-    # def test_oml_o33_2_message(self):
-    #     # This test is failing because the oml_o33_2 parsing creates a
-    #     # OML_O33_ORDER_PRIOR which expect a OBR segment, but the parser's
-    #     # implementation puts the OBR segment in the group OML_O33_OBSERVATION_REQUEST
-    #     # This behaviour HL7 fault
-    #     msg = self._create_message(self.oml_o33_2)
-    #     self.assertTrue(msg.validate())
+    def test_oml_o33_2_message(self):
+        msg = self._create_message(self.oml_o33_2)
+        self.assertTrue(msg.validate())
 
     def test_unknown_message(self):
         msg = self._create_message(self.adt_a01)
@@ -423,14 +419,6 @@ class TestMessageProfile(unittest.TestCase):
         """
         m = self._create_message(self.rsp_k21)
         self.assertTrue(m.validate())
-
-    # def test_oml_o33_2_message(self):
-    #     # This test is failing because the oml_o33_2 parsing creates a
-    #     # OML_O33_ORDER_PRIOR which expect a OBR segment, but the parser's
-    #     # implementation puts the OBR segment in the group OML_O33_OBSERVATION_REQUEST
-    #     # This behaviour HL7 fault
-    #     msg = self._create_message(self.oml_o33_2)
-    #     self.assertTrue(msg.validate())
 
     # def test_missing_required_group(self):
     #     """

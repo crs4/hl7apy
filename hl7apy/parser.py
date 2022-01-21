@@ -52,7 +52,7 @@ def parse_message(message, validation_level=None, find_groups=True, message_prof
     :param find_groups: if ``True``, automatically assign the segments found to the appropriate
         :class:`Groups <hl7apy.core.Group>` instances. If ``False``, the segments found are assigned as
         children of the :class:`Message <hl7apy.core.Message>` instance
-        
+
     :type force_validation: ``bool``
     :type force_validation: if ``True``, automatically forces the message validation after the end of the parsing
 
@@ -152,6 +152,8 @@ def parse_segments(text, version=None, encoding_chars=None, validation_level=Non
                     segment = parse_segment(s.strip(), version, encoding_chars, validation_level)
                     segments.append(segment)
                 else:
+                    current_parent = __go_to_previous_level_if_new_order_ORC_inside_an_OBSERVATION_REQUEST(
+                        current_parent, parents_refs, s, segment_name)
                     ref, parents_refs = _get_segment_reference(segment_name, parents_refs)
                     if ref is None:
                         # group not found at the current level, go back to the previous level
@@ -193,6 +195,16 @@ def parse_segments(text, version=None, encoding_chars=None, validation_level=Non
                             current_parent.add(segment)
                         break
     return segments
+
+
+def __go_to_previous_level_if_new_order_ORC_inside_an_OBSERVATION_REQUEST(current_parent, parents_refs, segment,
+                                                                          segment_name):
+    orc_1 = segment[4:6]
+    last_parent_reference = parents_refs[-1][0]
+    if segment_name == "ORC" and orc_1 == "NW" and '_OBSERVATION_REQUEST' in last_parent_reference:
+        parents_refs.pop()
+        current_parent = current_parent.parent
+    return current_parent
 
 
 def parse_segment(text, version=None, encoding_chars=None, validation_level=None, reference=None):
