@@ -27,10 +27,6 @@ try:
 except ImportError:
     from collections import MutableMapping
 import importlib
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
 
 from hl7apy.exceptions import UnsupportedVersion, InvalidEncodingChars, UnknownValidationLevel
 from hl7apy.consts import DEFAULT_ENCODING_CHARS, DEFAULT_ENCODING_CHARS_27, DEFAULT_VERSION, VALIDATION_LEVEL
@@ -312,13 +308,6 @@ def find_reference(name, element_types, version):
     lib = load_library(version)
     ref = lib.find(name, element_types)
     return ref
-
-
-def load_message_profile(path):
-    with open(path, 'rb') as f:
-        mp = pickle.load(f)
-
-    return mp
 
 
 def _discover_libraries():
