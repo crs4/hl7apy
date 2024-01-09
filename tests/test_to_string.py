@@ -111,7 +111,7 @@ class ToStringTestCase(unittest.TestCase):
         It tests the to_er7 message for an empty message
         """
         msg = Message('RSP_K11')
-        self.assertRegexpMatches(msg.to_er7(), 'MSH|^~\\&|||||d+|||||2.5')
+        self.assertRegex(msg.to_er7(), 'MSH|^~\\&|||||d+|||||2.5')
 
     def test_highlights(self):
         """

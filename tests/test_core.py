@@ -1353,7 +1353,7 @@ class TestComponent(unittest.TestCase):
         m = Message('RSP_K21', reference=self.rsp_k21_mp, validation_level=VALIDATION_LEVEL.TOLERANT)
         c = m.add_segment('QPD').add_field('QPD_8').add_component('CX_4')
         c.add(SubComponent(datatype='ST'))
-        self.assertEquals(c.value, '&&&')
+        self.assertEqual(c.value, '&&&')
 
     def test_add_known_subcomponent_to_empty_component(self):
         c = Component()
