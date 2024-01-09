@@ -21,6 +21,8 @@
 
 from __future__ import absolute_import
 import os
+import platform
+import sys
 import unittest
 
 import hl7apy
@@ -98,7 +100,10 @@ class TestMessage(unittest.TestCase):
         base_path = os.path.abspath(os.path.dirname(__file__))
         mp_path = os.path.join(base_path, 'profiles/iti_21')
         self.rsp_k21_mp = hl7apy.load_message_profile(mp_path)
-        legacy_mp = os.path.join(base_path, 'profiles/old_pharm_h4')
+        if platform.system() == 'Windows':
+            legacy_mp = os.path.join(base_path, 'profiles/old_pharm_h4_win')
+        else:
+            legacy_mp = os.path.join(base_path, 'profiles/old_pharm_h4')
         self.legacy_mp = hl7apy.load_message_profile(legacy_mp)
 
     # Message test cases
