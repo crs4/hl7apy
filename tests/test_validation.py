@@ -21,6 +21,8 @@
 
 from __future__ import absolute_import
 import os
+import platform
+import tempfile
 import unittest
 
 import hl7apy
@@ -78,7 +80,8 @@ class TestValidation(unittest.TestCase):
             'TQ1|||||||||R\r' \
             'OBR||83427|83427|LDL^LDL CHOLESTEROL^^LDL||||||||||||ND^UNKNOWN^UNKNOWN\r'
 
-        self.report_file = '/tmp/hl7apy_test_rf'
+        report_file = tempfile.NamedTemporaryFile()
+        self.report_file = report_file.name
 
     def _create_message(self, msg_str):
         return parse_message(msg_str)
