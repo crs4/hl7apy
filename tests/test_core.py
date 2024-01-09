@@ -1589,7 +1589,7 @@ class TestComponent(unittest.TestCase):
             c.value = 65537*'a'
         for dt in ('NM', 'SI'):
             c = Component(datatype=dt, validation_level=VALIDATION_LEVEL.TOLERANT)
-            c.value = 65537*'1'
+            c.value = 5*'1'
 
         # strict
         c = Component(datatype='ID', validation_level=VALIDATION_LEVEL.STRICT) # ID works because its length depends on HL7 table
@@ -1599,10 +1599,12 @@ class TestComponent(unittest.TestCase):
             with self.assertRaises(MaxLengthReached):
                 c = Component(datatype=dt, validation_level=VALIDATION_LEVEL.STRICT) # max length reached string type
                 c.value = 65537*'a'
-        for dt in ('NM', 'SI'):
-            with self.assertRaises(MaxLengthReached):
-                c = Component(datatype=dt, validation_level=VALIDATION_LEVEL.STRICT)
-                c.value = 65537*'1'
+        with self.assertRaises(MaxLengthReached):
+            c = Component(datatype='NM', validation_level=VALIDATION_LEVEL.STRICT)
+            c.value = 17*'1'
+        with self.assertRaises(MaxLengthReached):
+            c = Component(datatype='SI', validation_level=VALIDATION_LEVEL.STRICT)
+            c.value = 5*'1'
 
         # complex datatypes
         # tolerant
@@ -2110,10 +2112,14 @@ class TestSubComponent(unittest.TestCase):
             s = SubComponent(datatype=dt, validation_level=VALIDATION_LEVEL.STRICT)
             with self.assertRaises(MaxLengthReached):
                 s.value = 65537*'a'
-        for dt in ('SI',):
-            s = SubComponent(datatype=dt, validation_level=VALIDATION_LEVEL.STRICT)
-            with self.assertRaises(MaxLengthReached):
-                s.value = 65537*'1'
+
+        s = SubComponent(datatype='NM', validation_level=VALIDATION_LEVEL.STRICT)
+        with self.assertRaises(MaxLengthReached):
+            s.value = 17 * '1'
+
+        s = SubComponent(datatype='SI', validation_level=VALIDATION_LEVEL.STRICT)
+        with self.assertRaises(MaxLengthReached):
+            s.value = 5*'1'
 
     def test_add_child_to_subcomponent(self):
         a = SubComponent('HD_1')

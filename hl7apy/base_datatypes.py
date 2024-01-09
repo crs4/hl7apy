@@ -33,8 +33,9 @@
 """
 
 from __future__ import absolute_import
-import re
+
 import numbers
+import re
 from datetime import datetime
 from decimal import Decimal
 from functools import cmp_to_key
@@ -65,6 +66,7 @@ class BaseDataType(object):
         greater than the :attr:`max_length`. Only if :attr:`validation_level` is
         :attr:`STRICT <VALIDATION_LEVEL.STRICT>`
     """
+
     def __init__(self, value, max_length=None, validation_level=None):
         if validation_level is None:
             validation_level = get_default_validation_level()
@@ -113,6 +115,7 @@ class TextualDataType(BaseDataType):
     :raise: :exc:`MaxLengthReached <hl7apy.exceptions.MaxLengthReached>` When the :attr:`value`'s length is
         greater than :attr:`max_length`
     """
+
     def __init__(self, value, max_length=32, highlights=None,
                  validation_level=None):
         self.highlights = highlights
@@ -132,7 +135,7 @@ class TextualDataType(BaseDataType):
                 (encoding_chars['REPETITION'], '{esc}R{esc}'.format(esc=escape_char)),)
 
     def _get_escape_char_regex(self, escape_char):
-        return r'(?<!%s[HNFSTRE])%s(?![HNFSTRE]%s)' % tuple(3*[re.escape(escape_char)])
+        return r'(?<!%s[HNFSTRE])%s(?![HNFSTRE]%s)' % tuple(3 * [re.escape(escape_char)])
 
     def _escape_value(self, value, encoding_chars=None):
         escape_char = encoding_chars['ESCAPE']
@@ -196,6 +199,7 @@ class NumericDataType(BaseDataType):
     :raise: :exc:`hl7apy.exceptions.MaxLengthReached` When the `value`'s length is greater than `max_length`
 
     """
+
     def __init__(self, value=None, max_length=16,
                  validation_level=None):
         super(NumericDataType, self).__init__(value, max_length,
@@ -238,6 +242,7 @@ class WD(TextualDataType):
 
     :attr:`max_length` is 0
     """
+
     def __init__(self, value, highlights=None,
                  validation_level=None):
         super(WD, self).__init__(value, 199, highlights, validation_level)
@@ -332,6 +337,7 @@ class ST(TextualDataType):
 
     :attr:`max_length` is 199
     """
+
     def __init__(self, value, highlights=None,
                  validation_level=None):
         super(ST, self).__init__(value, 199, highlights, validation_level)
@@ -344,6 +350,7 @@ class FT(TextualDataType):
 
     :attr:`max_length` is 65536
     """
+
     def __init__(self, value, highlights=None,
                  validation_level=None):
         super(FT, self).__init__(value, 65536, highlights, validation_level)
@@ -356,6 +363,7 @@ class ID(TextualDataType):
 
     :attr:`max_length` None
     """
+
     def __init__(self, value, highlights=None,
                  validation_level=None):
         # max_length is None bacause it depends from the HL7 table
@@ -370,6 +378,7 @@ class IS(TextualDataType):
 
     :attr:`max_length` is 20
     """
+
     def __init__(self, value, highlights=None,
                  validation_level=None):
         super(IS, self).__init__(value, 20, highlights, validation_level)
@@ -383,6 +392,7 @@ class TX(TextualDataType):
 
     :attr:`max_length` is 65536
     """
+
     def __init__(self, value, highlights=None,
                  validation_level=None):
         super(TX, self).__init__(value, 65536, highlights, validation_level)
@@ -395,6 +405,7 @@ class GTS(TextualDataType):
 
     :attr:`max_length` is 199
     """
+
     def __init__(self, value, highlights=None,
                  validation_level=None):
         super(GTS, self).__init__(value, 199, highlights, validation_level)
@@ -423,7 +434,7 @@ class NM(NumericDataType):
 
 class SI(NumericDataType):
     """
-    Class for NM datatype. It extends NumericDatatype and the parameters are the same of the superclass
+    Class for SI datatype. It extends NumericDatatype and the parameters are the same of the superclass
 
     :attr:`max_length` is 4.
 
@@ -431,6 +442,7 @@ class SI(NumericDataType):
 
     :raise: :exc:`ValueError` raised when the value is not of one of the correct type
     """
+
     def __init__(self, value=None,
                  validation_level=None):
         if value is not None and not isinstance(value, numbers.Integral):
@@ -450,8 +462,8 @@ class TN(TextualDataType):
 
     :raise: :exc:`ValueError` raised when the value does not match the expected format
     """
-    def __init__(self, value, validation_level=None):
 
+    def __init__(self, value, validation_level=None):
         regexp = r'(\d\d\s)?(\(\d+\))?(\d+-?\d+)(X\d+)?(B\d+)?(C.+)?'
         if not re.match(regexp, value):
             raise ValueError('Invalid value for TN data')
