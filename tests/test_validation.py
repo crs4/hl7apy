@@ -20,16 +20,18 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import absolute_import
+
 import os
-import platform
+import re
+import sys
 import tempfile
 import unittest
 
 import hl7apy
 from hl7apy.core import Group, Field, Component, SubComponent
+from hl7apy.exceptions import ValidationError
 from hl7apy.parser import parse_message, parse_segments, parse_segment, parse_field
 from hl7apy.validation import VALIDATION_LEVEL
-from hl7apy.exceptions import ValidationError
 
 
 class TestValidation(unittest.TestCase):
@@ -94,7 +96,9 @@ class TestValidation(unittest.TestCase):
             regex = 'Error:.*'
         elif error_type == 'WARNING':
             regex = 'Warning:.*'
-        self.assertRegexpMatches(s, regex)
+
+        self.assertTrue(re.search(regex, s))
+
         os.remove(self.report_file)
 
     def test_well_structured_message(self):
@@ -177,7 +181,8 @@ class TestValidation(unittest.TestCase):
         """
         msg = self._create_message(self.oml_o33)
         oml_o33_patient = Group('OML_O33_PATIENT')
-        segments = parse_segments('PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009~^^^^^^L|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100\rPV1||O|||||||||||||||||1107080001^^^LIS')
+        segments = parse_segments(
+            'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009~^^^^^^L|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100\rPV1||O|||||||||||||||||1107080001^^^LIS')
         oml_o33_patient.children = segments
         msg.add(oml_o33_patient)
         self.assertRaises(ValidationError, msg.validate, report_file=self.report_file)
@@ -384,7 +389,6 @@ class TestValidation(unittest.TestCase):
         self.assertRaises(ValidationError, parsed_s.validate)
 
 
-
 class TestMessageProfile(unittest.TestCase):
 
     def setUp(self):
@@ -414,10 +418,13 @@ class TestMessageProfile(unittest.TestCase):
             regex = 'Warning:.*'
         else:
             return
-        if present:
-            self.assertRegex(s, regex)
-        else:
-            self.assertNotRegex(s, regex)
+
+        if sys.version_info == '2':
+            if present:
+                self.assertTrue(re.search(regex, s))
+            else:
+                self.assertFalse(re.search(regex, s))
+
         os.remove(self.report_file)
 
     def test_well_structured_message(self):
@@ -561,7 +568,8 @@ class TestMessageProfile(unittest.TestCase):
         The message used has an unexpected SPM
         """
         msg = self._create_message(self.rsp_k21)
-        spm = parse_segment('SPM|1|100187400201^||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r')
+        spm = parse_segment(
+            'SPM|1|100187400201^||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r')
         msg.add(spm)
         self.assertRaises(ValidationError, msg.validate, report_file=self.report_file)
         self._test_report_file('ERROR')
@@ -573,7 +581,8 @@ class TestMessageProfile(unittest.TestCase):
         """
         msg = self._create_message(self.rsp_k21)
         oml_o33_patient = Group('OML_O33_PATIENT')
-        segments = parse_segments('PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009~^^^^^^L|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100\rPV1||O|||||||||||||||||1107080001^^^LIS')
+        segments = parse_segments(
+            'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009~^^^^^^L|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100\rPV1||O|||||||||||||||||1107080001^^^LIS')
         oml_o33_patient.children = segments
         msg.add(oml_o33_patient)
         self.assertRaises(ValidationError, msg.validate, report_file=self.report_file)
