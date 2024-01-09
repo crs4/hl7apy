@@ -415,9 +415,9 @@ class TestMessageProfile(unittest.TestCase):
         else:
             return
         if present:
-            self.assertRegexpMatches(s, regex)
+            self.assertRegex(s, regex)
         else:
-            self.assertNotRegexpMatches(s, regex)
+            self.assertNotRegex(s, regex)
         os.remove(self.report_file)
 
     def test_well_structured_message(self):
