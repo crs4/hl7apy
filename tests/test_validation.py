@@ -403,7 +403,8 @@ class TestMessageProfile(unittest.TestCase):
         path = os.path.join(base_path, 'profiles/iti_21')
         self.rsp_k21_mp = hl7apy.load_message_profile(path)
 
-        self.report_file = '/tmp/hl7apy_test_rf'
+        report_file = tempfile.NamedTemporaryFile()
+        self.report_file = report_file.name
 
     def _create_message(self, msg_str):
         return parse_message(msg_str, message_profile=self.rsp_k21_mp)
