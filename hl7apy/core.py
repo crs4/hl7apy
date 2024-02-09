@@ -105,7 +105,7 @@ def _valid_child_name(child_name, expected_parent):
 def _valid_z_message_name(name):
     if name is None:
         return False
-    regex = '^z[a-z0-9]{2}_z[a-z0-9]{2}$'
+    regex = r'^z[a-z0-9]{2}_z[a-z0-9]{2}$'
     return re.match(regex, name, re.IGNORECASE) is not None
 
 
@@ -114,7 +114,7 @@ def _valid_z_segment_name(name):
 
 
 def _valid_z_field_name(name):
-    regex = '^z[a-z1-9]{2}_\d+$'
+    regex = r'^z[a-z1-9]{2}_\d+$'
     return re.match(regex, name, re.IGNORECASE) is not None
 
 

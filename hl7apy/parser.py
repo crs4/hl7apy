@@ -634,7 +634,7 @@ def parse_subcomponent(text, name=None, datatype='ST', version=None, validation_
 
 
 def _split_msh(content):
-    m = re.match("^MSH(?P<field_sep>\S)", content)
+    m = re.match(r"^MSH(?P<field_sep>\S)", content)
     if m is not None:  # if the regular expression matches, it is an HL7 message
         field_sep = m.group('field_sep')  # get the field separator (first char after MSH)
         msh = content.split("\r", 1)[0]  # get the first segment

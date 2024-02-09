@@ -93,9 +93,9 @@ class TestValidation(unittest.TestCase):
         with open(self.report_file, 'r') as f:
             s = f.read()
         if error_type == 'ERROR':
-            regex = 'Error:.*'
+            regex = r'Error:.*'
         elif error_type == 'WARNING':
-            regex = 'Warning:.*'
+            regex = r'Warning:.*'
 
         self.assertTrue(re.search(regex, s))
 
@@ -414,9 +414,9 @@ class TestMessageProfile(unittest.TestCase):
         with open(self.report_file, 'r') as f:
             s = f.read()
         if error_type == 'ERROR':
-            regex = 'Error:.*'
+            regex = r'Error:.*'
         elif error_type == 'WARNING':
-            regex = 'Warning:.*'
+            regex = r'Warning:.*'
         else:
             return
 
