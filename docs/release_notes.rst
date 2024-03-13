@@ -2,6 +2,12 @@
 
 Release Notes
 =============
+New in 1.3.5
+
+  * Fix multithreading issue (#95)
+  * Fix SIU structures (#104)
+  * Removes print statement (#106)
+
 New in 1.3.4
 
   * Bug fixes regarding dates

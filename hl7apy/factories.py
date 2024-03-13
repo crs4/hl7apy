@@ -99,7 +99,6 @@ def datatype_factory(datatype, value, version=None, validation_level=None):
     except KeyError:
         raise InvalidDataType(datatype)
     except ValueError as e:
-        print(e)
         if Validator.is_strict(validation_level):
             raise e
         # TODO: Do we really want this? In that case the parent's datatype must be changed accordingly

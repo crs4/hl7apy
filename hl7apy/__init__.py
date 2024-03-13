@@ -20,17 +20,21 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import absolute_import
+
 import os
-import sys
+
 try:
     from collections.abc import MutableMapping
 except ImportError:
     from collections import MutableMapping
+
 import importlib
+
 try:
     import cPickle as pickle
 except ImportError:
     import pickle
+
 
 from hl7apy.exceptions import UnsupportedVersion, InvalidEncodingChars, UnknownValidationLevel
 from hl7apy.consts import DEFAULT_ENCODING_CHARS, DEFAULT_ENCODING_CHARS_27, DEFAULT_VERSION, VALIDATION_LEVEL
@@ -233,9 +237,7 @@ def load_library(version):
     """
     check_version(version)
     module_name = SUPPORTED_LIBRARIES[version]
-    lib = sys.modules.get(module_name)
-    if lib is None:
-        lib = importlib.import_module(module_name)
+    lib = importlib.import_module(module_name)
     return lib
 
 

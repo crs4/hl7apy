@@ -184,15 +184,15 @@ class TestParser(unittest.TestCase):
         m = 'MSH|||||||||||||||||||'
         self.assertRaises(InvalidEncodingChars, parse_message, m)
         self.assertRaises(InvalidEncodingChars, parse_message, m, validation_level=VALIDATION_LEVEL.STRICT)
-        m = 'MSH|^~\||||||||||2.7'
+        m = 'MSH|^~\\||||||||||2.7'
         self.assertRaises(InvalidEncodingChars, parse_message, m)
         self.assertRaises(InvalidEncodingChars, parse_message, m, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_parse_message_missing_encoding_chars(self):
-        m = 'MSH|@%\|||||||||'
+        m = 'MSH|@%\\|||||||||'
         self.assertRaises(InvalidEncodingChars, parse_message, m)
         self.assertRaises(InvalidEncodingChars, parse_message, m, validation_level=VALIDATION_LEVEL.STRICT)
-        m = 'MSH|^~\||||||||||2.7'
+        m = 'MSH|^~\\||||||||||2.7'
         self.assertRaises(InvalidEncodingChars, parse_message, m)
         self.assertRaises(InvalidEncodingChars, parse_message, m, validation_level=VALIDATION_LEVEL.STRICT)
 

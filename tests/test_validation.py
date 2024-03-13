@@ -20,14 +20,18 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import absolute_import
+
 import os
+import re
+import sys
+import tempfile
 import unittest
 
 import hl7apy
 from hl7apy.core import Group, Field, Component, SubComponent
+from hl7apy.exceptions import ValidationError
 from hl7apy.parser import parse_message, parse_segments, parse_segment, parse_field
 from hl7apy.validation import VALIDATION_LEVEL
-from hl7apy.exceptions import ValidationError
 
 
 class TestValidation(unittest.TestCase):
@@ -51,7 +55,7 @@ class TestValidation(unittest.TestCase):
             'IN1|1|INSURANCE PLAN ID^PLAN DESC|COMPANY ID|INSURANCE COMPANY, INC.|5555 INSURERS STREET^^SOMEWHERE^^^USA||||||||||||||||||||||||||||||||||||||||||||555-44-3333\r'
 
         self.oml_o33 = \
-            'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
+            'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
             'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009^^~^^^^^^L^^^|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100|||||||||||\r' \
             'PV1||O|||||||||||||||||1107080001^^^LIS\r' \
             'SPM|1|100187400201^||BLDV|||||||B||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
@@ -60,7 +64,7 @@ class TestValidation(unittest.TestCase):
             'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN\r'
 
         self.oml_o33_2 = \
-            'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
+            'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
             'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009^^~^^^^^^L^^^|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100|||||||||||\r' \
             'PV1||O|||||||||||||||||1107080001^^^LIS\r' \
             'SPM|1|100187400201^||BLDV|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
@@ -78,7 +82,8 @@ class TestValidation(unittest.TestCase):
             'TQ1|||||||||R\r' \
             'OBR||83427|83427|LDL^LDL CHOLESTEROL^^LDL||||||||||||ND^UNKNOWN^UNKNOWN\r'
 
-        self.report_file = '/tmp/hl7apy_test_rf'
+        report_file = tempfile.NamedTemporaryFile()
+        self.report_file = report_file.name
 
     def _create_message(self, msg_str):
         return parse_message(msg_str)
@@ -88,10 +93,12 @@ class TestValidation(unittest.TestCase):
         with open(self.report_file, 'r') as f:
             s = f.read()
         if error_type == 'ERROR':
-            regex = 'Error:.*'
+            regex = r'Error:.*'
         elif error_type == 'WARNING':
-            regex = 'Warning:.*'
-        self.assertRegexpMatches(s, regex)
+            regex = r'Warning:.*'
+
+        self.assertTrue(re.search(regex, s))
+
         os.remove(self.report_file)
 
     def test_well_structured_message(self):
@@ -174,7 +181,8 @@ class TestValidation(unittest.TestCase):
         """
         msg = self._create_message(self.oml_o33)
         oml_o33_patient = Group('OML_O33_PATIENT')
-        segments = parse_segments('PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009~^^^^^^L|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100\rPV1||O|||||||||||||||||1107080001^^^LIS')
+        segments = parse_segments(
+            'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009~^^^^^^L|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100\rPV1||O|||||||||||||||||1107080001^^^LIS')
         oml_o33_patient.children = segments
         msg.add(oml_o33_patient)
         self.assertRaises(ValidationError, msg.validate, report_file=self.report_file)
@@ -381,12 +389,11 @@ class TestValidation(unittest.TestCase):
         self.assertRaises(ValidationError, parsed_s.validate)
 
 
-
 class TestMessageProfile(unittest.TestCase):
 
     def setUp(self):
         self.rsp_k21 = \
-            'MSH|^~\&|SENDING APP|SENDING FAC|RECEIVING APP|RECEIVING FAC|20140410170011||RSP^K22^RSP_K21|11111111|P|2.5\r' \
+            'MSH|^~\\&|SENDING APP|SENDING FAC|RECEIVING APP|RECEIVING FAC|20140410170011||RSP^K22^RSP_K21|11111111|P|2.5\r' \
             'MSA|AA|20140410170015\r' \
             'QAK|222222222|OK\r' \
             'QPD|IHE PDQ Query|222222222|@PID.3.1.1^3333333|||||^^^IHEFACILITY&1.3.6.1.4.1.21367.3000.1.6&ISO^|\r' \
@@ -396,7 +403,8 @@ class TestMessageProfile(unittest.TestCase):
         path = os.path.join(base_path, 'profiles/iti_21')
         self.rsp_k21_mp = hl7apy.load_message_profile(path)
 
-        self.report_file = '/tmp/hl7apy_test_rf'
+        report_file = tempfile.NamedTemporaryFile()
+        self.report_file = report_file.name
 
     def _create_message(self, msg_str):
         return parse_message(msg_str, message_profile=self.rsp_k21_mp)
@@ -406,15 +414,18 @@ class TestMessageProfile(unittest.TestCase):
         with open(self.report_file, 'r') as f:
             s = f.read()
         if error_type == 'ERROR':
-            regex = 'Error:.*'
+            regex = r'Error:.*'
         elif error_type == 'WARNING':
-            regex = 'Warning:.*'
+            regex = r'Warning:.*'
         else:
             return
-        if present:
-            self.assertRegexpMatches(s, regex)
-        else:
-            self.assertNotRegexpMatches(s, regex)
+
+        if sys.version_info == '2':
+            if present:
+                self.assertTrue(re.search(regex, s))
+            else:
+                self.assertFalse(re.search(regex, s))
+
         os.remove(self.report_file)
 
     def test_well_structured_message(self):
@@ -558,7 +569,8 @@ class TestMessageProfile(unittest.TestCase):
         The message used has an unexpected SPM
         """
         msg = self._create_message(self.rsp_k21)
-        spm = parse_segment('SPM|1|100187400201^||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r')
+        spm = parse_segment(
+            'SPM|1|100187400201^||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r')
         msg.add(spm)
         self.assertRaises(ValidationError, msg.validate, report_file=self.report_file)
         self._test_report_file('ERROR')
@@ -570,7 +582,8 @@ class TestMessageProfile(unittest.TestCase):
         """
         msg = self._create_message(self.rsp_k21)
         oml_o33_patient = Group('OML_O33_PATIENT')
-        segments = parse_segments('PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009~^^^^^^L|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100\rPV1||O|||||||||||||||||1107080001^^^LIS')
+        segments = parse_segments(
+            'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009~^^^^^^L|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100\rPV1||O|||||||||||||||||1107080001^^^LIS')
         oml_o33_patient.children = segments
         msg.add(oml_o33_patient)
         self.assertRaises(ValidationError, msg.validate, report_file=self.report_file)
