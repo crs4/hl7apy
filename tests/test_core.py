@@ -44,7 +44,7 @@ def _get_invalid_encoding_chars():
 
 
 def _get_test_msg():
-    return 'MSH|^~\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
+    return 'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
            'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009^^~^^^^^^L^^^|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100|||||||||||\r' \
            'PV1||O|||||||||||||||||1107080001^^^LIS\r' \
            'SPM|1|100187400201^||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
@@ -87,7 +87,7 @@ def _get_fail_test_msg():
 
 
 def _get_rsp_k21_mp_msg():
-    return 'MSH|^~\&|SENDING APP|SENDING FAC|RECEIVING APP|RECEIVING FAC|20140410170011||RSP^K22^RSP_K21|11111111|P|2.5\r' \
+    return 'MSH|^~\\&|SENDING APP|SENDING FAC|RECEIVING APP|RECEIVING FAC|20140410170011||RSP^K22^RSP_K21|11111111|P|2.5\r' \
            'MSA|AA|20140410170015\r' \
            'QAK|222222222|OK\r' \
            'QPD|IHE PDQ Query|222222222|@PID.3.1.1^3333333|||||^^^IHEFACILITY&1.3.6.1.4.1.21367.3000.1.6&ISO|\r' \
@@ -1269,7 +1269,7 @@ class TestField(unittest.TestCase):
     def test_assign_value_with_encoding_chars(self):
         # using field separator
         field_str = 'xxx|yyy'
-        escaped_str = 'xxx\F\yyy'
+        escaped_str = 'xxx\\F\\yyy'
         f = Field('PID_3')
         f.value = field_str
         self.assertEqual(f.to_er7(), escaped_str)
@@ -1280,21 +1280,21 @@ class TestField(unittest.TestCase):
 
         f = Field()
         f.value = field_str
-        self.assertEqual(f.to_er7(), 'xxx\F\yyy')
+        self.assertEqual(f.to_er7(), 'xxx\\F\\yyy')
 
         # using repetition
         field_str = 'xxx~yyy'
         f = Field()
         f.value = field_str
-        self.assertEqual(f.to_er7(), 'xxx\R\yyy')
+        self.assertEqual(f.to_er7(), 'xxx\\R\\yyy')
 
         f = Field('PID_2')
         f.value = field_str
-        self.assertEqual(f.to_er7(), 'xxx\R\yyy')
+        self.assertEqual(f.to_er7(), 'xxx\\R\\yyy')
 
         f = Field('PID_2', validation_level=VALIDATION_LEVEL.STRICT)
         f.value = field_str
-        self.assertEqual(f.to_er7(), 'xxx\R\yyy')
+        self.assertEqual(f.to_er7(), 'xxx\\R\\yyy')
 
     def test_field_wgith_three_part_name_bug_39(self):
         """
@@ -1903,15 +1903,15 @@ class TestComponent(unittest.TestCase):
         cmp_str = 'xxx^yyy'
         c = Component()
         c.value = cmp_str
-        self.assertEqual(c.to_er7(), 'xxx\S\yyy')
+        self.assertEqual(c.to_er7(), 'xxx\\S\\yyy')
 
         c = Component('CWE_1')
         c.value = cmp_str
-        self.assertEqual(c.to_er7(), 'xxx\S\yyy')
+        self.assertEqual(c.to_er7(), 'xxx\\S\\yyy')
 
         c = Component('CWE_1', validation_level=VALIDATION_LEVEL.STRICT)
         c.value = cmp_str
-        self.assertEqual(c.to_er7(), 'xxx\S\yyy')
+        self.assertEqual(c.to_er7(), 'xxx\\S\\yyy')
 
     def test_bug_13(self):
         c = Component('CX_10')

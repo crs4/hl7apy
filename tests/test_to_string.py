@@ -41,7 +41,7 @@ class ToStringTestCase(unittest.TestCase):
                                       'SUBCOMPONENT': '@',
                                       'REPETITION': 'r',
                                       'ESCAPE': '?'}
-        self.msh_values_standard = ['|', '^~\&', 'LIP', 'LIP', 'LB', 'LB', '20111207121030', '', 'RSP^SLI^RSP_K11',
+        self.msh_values_standard = ['|', '^~\\&', 'LIP', 'LIP', 'LB', 'LB', '20111207121030', '', 'RSP^SLI^RSP_K11',
                                     '430102', 'D', '2.5', '', '', '', '', 'IT', '', 'EN', '', '']
         self.msh_standard = 'MSH|^~\\&|LIP|LIP|LB|LB|20111207121030||RSP^SLI^RSP_K11|430102|D|2.5|||||IT||EN'
         self.msh_values_custom = ['!', '$r?@', 'LIP', 'LIP', 'LB', 'LB', '20111207121030', '', 'RSP^SLI^RSP_K11',
