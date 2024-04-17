@@ -1850,6 +1850,7 @@ FIELDS = {
     'PV1_49': ('leaf', None, 'NM', 'TOTAL_PAYMENTS', None, -1),
     'PV1_50': ('sequence', DATATYPES_STRUCTS['CX'], 'CX', 'ALTERNATE_VISIT_ID', 'HL70203', -1),
     'PV1_51': ('sequence', DATATYPES_STRUCTS['CWE'], 'CWE', 'VISIT_INDICATOR', 'HL70326', -1),
+    'PV1_52': ('leaf', None, 'XCN', 'OTHER_HEALTHCARE_PROVIDER', None, -1),
     'PV1_53': ('leaf', None, 'ST', 'SERVICE_EPISODE_DESCRIPTION', None, -1),
     'PV1_54': ('sequence', DATATYPES_STRUCTS['CX'], 'CX', 'SERVICE_EPISODE_IDENTIFIER', None, -1),
     'PV2_1': ('sequence', DATATYPES_STRUCTS['PL'], 'PL', 'PRIOR_PENDING_LOCATION', None, -1),
