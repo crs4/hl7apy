@@ -22,9 +22,16 @@
 from __future__ import absolute_import
 import traceback
 
+from collections import namedtuple
+
 from hl7apy import load_reference
 from hl7apy.consts import VALIDATION_LEVEL
 from hl7apy.exceptions import ChildNotFound, ValidationError, ValidationWarning
+
+
+ErrorsAndWarnings = namedtuple(
+    "ErrorsAndWarnings",
+    ("is_valid", "errors", "warnings"))
 
 
 class Validator(object):
@@ -38,7 +45,7 @@ class Validator(object):
         self.level = level
 
     @staticmethod
-    def validate(element, reference=None, report_file=None):
+    def validate(element, reference=None, report_file=None, return_errors=False):
         """
         Checks if the :class:`Element <hl7apy.core.Element>` is a valid HL7 message according to the reference
         specified. If the reference is not specified, it will be used the official HL7 structures for the
@@ -50,13 +57,18 @@ class Validator(object):
         * the datatype of fields, components and subcomponents
         * the values, in particular the length and the adherence with the HL7 table, if one is specified
 
-        It raises the first exception that it finds.
+        All errors that occur will be written to a file, if any of the two following conditions are met:
+        1. either the :attr:`report_file` is an instance (file-like object) with a .write() method, then report_file.write() is called;
+        2. or the :attr:`report_file` is a serializable (string-like object)
+        value that will be used to as the path to create a new_file, then new_file.write() is called; if the file already exists, it will be overwritten.
 
-        If :attr:`report_file` is specified, it will create a file with all the errors that occur.
+        If :attr:`return_errors` is False, the functions raises the first exception that it finds.
+        If :attr:`return_errors` is True, errors and warnings are returned using a namedtuple with "errors" and "warnings" list fields.
+        Else the funtion returns True.
 
         :param element: :class:`Element <hl7apy.core.Element>`: The element to validate
         :param reference: the reference to use. Usually is None or a message profile object
-        :param report_file: the name of the report file to create
+        :param report_file: the name of the report file to create, or an instance having a write() method
 
         :return: The True if everything is ok
         :raises: :exc:`ValidationError <hl7apy.exceptions.ValidationError>`: when errors occur
@@ -197,11 +209,25 @@ class Validator(object):
         _is_valid(element, reference, errors, warnings)
 
         if report_file is not None:
-            with open(report_file, "w") as f:
+            try:
+                write = report_file.write
+            except AttributeError:
+                with open(report_file, "w") as f:
+                    for e in errors:
+                        f.write("Error: {}\n".format(e))
+                    for w in warnings:
+                        f.write("Warning: {}\n".format(w))
+            else:
                 for e in errors:
-                    f.write("Error: {}\n".format(e))
+                    write("Error: {}\n".format(e))
                 for w in warnings:
-                    f.write("Warning: {}\n".format(w))
+                    write("Warning: {}\n".format(w))
+
+        if return_errors:
+            return ErrorsAndWarnings(
+                is_valid=not errors,
+                errors=errors,
+                warnings=warnings)
 
         if errors:
             raise errors[0]
