@@ -771,7 +771,7 @@ SEGMENTS = {
              ('NK1_11', FIELDS['NK1_11'], (0, 1), 'FIE'),
              ('NK1_12', FIELDS['NK1_12'], (0, 1), 'FIE'),
              ('NK1_13', FIELDS['NK1_13'], (0, -1), 'FIE'),
-             ('NK1_14', FIELDS['NK1_14'], (0, -1), 'FIE'),
+             ('NK1_14', FIELDS['NK1_14'], (0, 1), 'FIE'),
              ('NK1_15', FIELDS['NK1_15'], (0, 1), 'FIE'),
              ('NK1_16', FIELDS['NK1_16'], (0, 1), 'FIE'),
              ('NK1_17', FIELDS['NK1_17'], (0, 1), 'FIE'),
