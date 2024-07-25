@@ -36,12 +36,23 @@ except ImportError:
     import pickle
 
 
-from hl7apy.exceptions import UnsupportedVersion, InvalidEncodingChars, UnknownValidationLevel
-from hl7apy.consts import DEFAULT_ENCODING_CHARS, DEFAULT_ENCODING_CHARS_27, DEFAULT_VERSION, VALIDATION_LEVEL
+from hl7apy.exceptions import (
+    UnsupportedVersion,
+    InvalidEncodingChars,
+    UnknownValidationLevel,
+)
+from hl7apy.consts import (
+    DEFAULT_ENCODING_CHARS,
+    DEFAULT_ENCODING_CHARS_27,
+    DEFAULT_VERSION,
+    VALIDATION_LEVEL,
+)
 
 __author__ = 'Daniela Ghironi, Vittorio Meloni, Alessandro Sulis, Federico Caboni'
-__author_email__ = '<ghiron@gmail.com>, <vittorio.meloni@crs4.it>, <alessandro.sulis@crs4.it>, ' \
-                   '<federico.caboni@me.com>'
+__author_email__ = (
+    '<ghiron@gmail.com>, <vittorio.meloni@crs4.it>, <alessandro.sulis@crs4.it>, '
+    '<federico.caboni@me.com>'
+)
 __url__ = 'http://crs4.github.io/hl7apy/'
 
 _DEFAULT_ENCODING_CHARS = DEFAULT_ENCODING_CHARS
@@ -78,7 +89,11 @@ def check_validation_level(validation_level):
     :param validation_level: validation level (see :class:`hl7apy.consts.VALIDATION_LEVEL`)
     :raises: :exc:`hl7apy.exceptions.UnknownValidationLevel` if the given validation level is unsupported
     """
-    if validation_level not in (VALIDATION_LEVEL.QUIET, VALIDATION_LEVEL.STRICT, VALIDATION_LEVEL.TOLERANT):
+    if validation_level not in (
+        VALIDATION_LEVEL.QUIET,
+        VALIDATION_LEVEL.STRICT,
+        VALIDATION_LEVEL.TOLERANT,
+    ):
         raise UnknownValidationLevel
 
 
@@ -327,8 +342,11 @@ def load_message_profile(path):
 
 def _discover_libraries():
     current_dir = os.path.dirname(__file__)
-    return {o[1:].replace("_", "."): "hl7apy.{}".format(o)
-            for o in os.listdir(current_dir) if o.startswith("v2_")}
+    return {
+        o[1:].replace("_", "."): "hl7apy.{}".format(o)
+        for o in os.listdir(current_dir)
+        if o.startswith("v2_")
+    }
 
 
 SUPPORTED_LIBRARIES = _discover_libraries()
@@ -337,4 +355,5 @@ SUPPORTED_LIBRARIES = _discover_libraries()
 if __name__ == '__main__':
 
     import doctest
+
     doctest.testmod()

@@ -113,7 +113,9 @@ def get_datetime_info(value):
 
 
 def _split_offset(value):
-    offset = re.search(r'\d*((\+(1[0-4]|0[0-9])|(-(1[0-2]|0[0-9])))([0-5][0-9]))$', value)
+    offset = re.search(
+        r'\d*((\+(1[0-4]|0[0-9])|(-(1[0-2]|0[0-9])))([0-5][0-9]))$', value
+    )
     if offset:
         offset = offset.groups()[0]
         return value.replace(offset, ''), offset

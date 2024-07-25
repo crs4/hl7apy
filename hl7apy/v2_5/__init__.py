@@ -31,9 +31,16 @@ from .tables import TABLES
 
 from hl7apy.exceptions import ChildNotFound
 
-ELEMENTS = {'Message': MESSAGES, 'Group': GROUPS, 'Segment': SEGMENTS,
-            'Field': FIELDS, 'Component': DATATYPES, 'SubComponent': DATATYPES,
-            'Datatypes_Structs': DATATYPES_STRUCTS, 'Table': TABLES}
+ELEMENTS = {
+    'Message': MESSAGES,
+    'Group': GROUPS,
+    'Segment': SEGMENTS,
+    'Field': FIELDS,
+    'Component': DATATYPES,
+    'SubComponent': DATATYPES,
+    'Datatypes_Structs': DATATYPES_STRUCTS,
+    'Table': TABLES,
+}
 
 
 def get(name, element_type):
@@ -69,7 +76,20 @@ def get_base_datatypes():
 
 
 def _load_base_datatypes():
-    base_datatypes = ('ST', 'ID', 'DT', 'DTM', 'FT', 'GTS', 'IS', 'NM', 'SI', 'TM', 'TX', 'WD')
+    base_datatypes = (
+        'ST',
+        'ID',
+        'DT',
+        'DTM',
+        'FT',
+        'GTS',
+        'IS',
+        'NM',
+        'SI',
+        'TM',
+        'TX',
+        'WD',
+    )
     module = importlib.import_module("hl7apy.base_datatypes")
     dts = {}
     for cls in base_datatypes:

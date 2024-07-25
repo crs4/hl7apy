@@ -32,9 +32,16 @@ from .tables import TABLES
 from hl7apy.v2_6.base_datatypes import ST as _ST26
 from hl7apy.exceptions import ChildNotFound
 
-ELEMENTS = {'Message': MESSAGES, 'Group': GROUPS, 'Segment': SEGMENTS,
-            'Field': FIELDS, 'Component': DATATYPES, 'SubComponent': DATATYPES,
-            'Datatypes_Structs': DATATYPES_STRUCTS, 'Table': TABLES}
+ELEMENTS = {
+    'Message': MESSAGES,
+    'Group': GROUPS,
+    'Segment': SEGMENTS,
+    'Field': FIELDS,
+    'Component': DATATYPES,
+    'SubComponent': DATATYPES,
+    'Datatypes_Structs': DATATYPES_STRUCTS,
+    'Table': TABLES,
+}
 
 
 def get(name, element_type):

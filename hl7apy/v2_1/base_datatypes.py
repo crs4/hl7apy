@@ -27,6 +27,7 @@ class CM(TextualDataType):
     """
     :attr:`max_length` is 999
     """
+
     def __init__(self, value, highlights=None, validation_level=None):
         super(CM, self).__init__(value, 999, highlights, validation_level)
 
@@ -35,5 +36,6 @@ class ID(TextualDataType):
     """
     :attr:`max_length` is 199
     """
+
     def __init__(self, value, highlights=None, validation_level=None):
         super(ID, self).__init__(value, 999, highlights, validation_level)

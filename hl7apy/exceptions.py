@@ -76,6 +76,7 @@ class UnsupportedVersion(HL7apyException):
     ...
     UnsupportedVersion: The version 2.0 is not supported
     """
+
     def __init__(self, version):
         self.version = version
 
@@ -94,6 +95,7 @@ class ChildNotFound(HL7apyException):
     ...
     ChildNotFound: No child named UNKNOWN
     """
+
     def __init__(self, name):
         self.name = name
 
@@ -112,6 +114,7 @@ class ChildNotValid(HL7apyException):
     ...
     ChildNotValid: <Field PID_34 (LAST_UPDATE_FACILITY) of type HD> is not a valid child for PID_1
     """
+
     def __init__(self, child, parent):
         self.child = child
         self.parent = parent
@@ -160,13 +163,16 @@ class MaxChildLimitReached(HL7apyException):
     ...
     MaxChildLimitReached: Cannot add <Segment MSH>: max limit (1) reached for <Message OML_O33>
     """
+
     def __init__(self, parent, child, limit):
         self.parent = parent
         self.child = child
         self.limit = limit
 
     def __str__(self):
-        return 'Cannot add {0}: max limit ({1}) reached for {2}'.format(self.child, self.limit, self.parent)
+        return 'Cannot add {0}: max limit ({1}) reached for {2}'.format(
+            self.child, self.limit, self.parent
+        )
 
 
 class MaxLengthReached(HL7apyException):
@@ -181,6 +187,7 @@ class MaxLengthReached(HL7apyException):
     ...
     MaxLengthReached: The value 11111 exceed the max length: 4
     """
+
     def __init__(self, value, limit):
         self.value = value
         self.limit = limit
@@ -199,6 +206,7 @@ class InvalidName(HL7apyException):
     ...
     InvalidName: Invalid name for Message: UNKNOWN
     """
+
     def __init__(self, cls, name):
         self.cls = cls
         self.name = name
@@ -219,11 +227,14 @@ class InvalidDataType(HL7apyException):
     ...
     InvalidDataType: The datatype GTS is not available for the given HL7 version
     """
+
     def __init__(self, datatype):
         self.datatype = datatype
 
     def __str__(self):
-        return "The datatype {0} is not available for the given HL7 version".format(self.datatype)
+        return "The datatype {0} is not available for the given HL7 version".format(
+            self.datatype
+        )
 
 
 class InvalidHighlightRange(HL7apyException):
@@ -239,12 +250,15 @@ class InvalidHighlightRange(HL7apyException):
     ...
     InvalidHighlightRange: Invalid highlight range: 5 - 3
     """
+
     def __init__(self, lower_bound, upper_bound):
         self.lower_bound = lower_bound
         self.upper_bound = upper_bound
 
     def __str__(self):
-        return 'Invalid highlight range: {0} - {1}'.format(self.lower_bound, self.upper_bound)
+        return 'Invalid highlight range: {0} - {1}'.format(
+            self.lower_bound, self.upper_bound
+        )
 
 
 class InvalidDateFormat(HL7apyException):
@@ -257,6 +271,7 @@ class InvalidDateFormat(HL7apyException):
     ...
     InvalidDateFormat: Invalid date format: %d%m%Y
     """
+
     def __init__(self, out_format):
         self.format = out_format
 
@@ -274,6 +289,7 @@ class InvalidDateOffset(HL7apyException):
     ...
     InvalidDateOffset: Invalid date offset: +1500
     """
+
     def __init__(self, offset):
         self.offset = offset
 
@@ -309,6 +325,7 @@ class InvalidEncodingChars(HL7apyException):
     ...
     InvalidEncodingChars: Missing required encoding chars
     """
+
     def __init__(self, message=None):
         self.message = message
 
@@ -323,6 +340,7 @@ class MessageProfileNotFound(HL7apyException):
     """
     Raised when the structure for a message is not found in the message profile specified
     """
+
     def __str__(self):
         return 'Message profile not found for the specified message'
 
@@ -331,6 +349,7 @@ class LegacyMessageProfile(HL7apyException):
     """
     Raised when the message profile file does not correspond to a valid message profile
     """
+
     def __str__(self):
         return 'The message profile provided is not supported anymore'
 
@@ -338,4 +357,5 @@ class LegacyMessageProfile(HL7apyException):
 if __name__ == '__main__':
 
     import doctest
+
     doctest.testmod()

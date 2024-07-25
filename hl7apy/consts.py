@@ -32,23 +32,23 @@ N_SEPS_27 = 5
 DEFAULT_ENCODING_CHARS = {
     'GROUP': '\r',
     'SEGMENT': '\r',
-    'FIELD':  '|',
+    'FIELD': '|',
     'COMPONENT': '^',
     'SUBCOMPONENT': '&',
     'REPETITION': '~',
-    'ESCAPE': '\\'
+    'ESCAPE': '\\',
 }
 
 #: Dictionary with default encoding characters for version superior to 2.7
 DEFAULT_ENCODING_CHARS_27 = {
     'GROUP': '\r',
     'SEGMENT': '\r',
-    'FIELD':  '|',
+    'FIELD': '|',
     'COMPONENT': '^',
     'SUBCOMPONENT': '&',
     'REPETITION': '~',
     'ESCAPE': '\\',
-    'TRUNCATION': '#'
+    'TRUNCATION': '#',
 }
 
 #: default hl7 version
@@ -59,6 +59,7 @@ class MLLP_ENCODING_CHARS(object):
     """
     MLLP encoding chars
     """
+
     #: Start Block
     SB = '\x0b'
     #: End Block
@@ -71,6 +72,7 @@ class VALIDATION_LEVEL(object):
     """
     Allowed validation levels
     """
+
     #: Strict validation
     STRICT = 1
     #: Tolerant validation

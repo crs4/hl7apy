@@ -33,9 +33,16 @@ from .tables import TABLES
 from .base_datatypes import ST, FT, ID, IS, TX, GTS, SNM
 from hl7apy.exceptions import ChildNotFound
 
-ELEMENTS = {'Message': MESSAGES, 'Group': GROUPS, 'Segment': SEGMENTS,
-            'Field': FIELDS, 'Component': DATATYPES, 'SubComponent': DATATYPES,
-            'Datatypes_Structs': DATATYPES_STRUCTS, 'Table': TABLES}
+ELEMENTS = {
+    'Message': MESSAGES,
+    'Group': GROUPS,
+    'Segment': SEGMENTS,
+    'Field': FIELDS,
+    'Component': DATATYPES,
+    'SubComponent': DATATYPES,
+    'Datatypes_Structs': DATATYPES_STRUCTS,
+    'Table': TABLES,
+}
 
 
 def get(name, element_type):
@@ -71,7 +78,13 @@ def get_base_datatypes():
 
 
 def _load_base_datatypes():
-    base_dts = ('DT', 'DTM', 'NM', 'SI', 'TM',)
+    base_dts = (
+        'DT',
+        'DTM',
+        'NM',
+        'SI',
+        'TM',
+    )
     module = importlib.import_module("hl7apy.base_datatypes")
     dts = {}
     for cls in base_dts:
@@ -81,16 +94,18 @@ def _load_base_datatypes():
 
 
 BASE_DATATYPES = _load_base_datatypes()
-BASE_DATATYPES.update({
-    'ST': ST,
-    'FT': FT,
-    'ID': ID,
-    'IS': IS,
-    'TX': TX,
-    'GTS': GTS,
-    'SNM': SNM,
-    'WD': WD,
-})
+BASE_DATATYPES.update(
+    {
+        'ST': ST,
+        'FT': FT,
+        'ID': ID,
+        'IS': IS,
+        'TX': TX,
+        'GTS': GTS,
+        'SNM': SNM,
+        'WD': WD,
+    }
+)
 
 DT = BASE_DATATYPES['DT']
 DTM = BASE_DATATYPES['DTM']

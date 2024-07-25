@@ -30,9 +30,16 @@ from .groups import GROUPS
 
 from hl7apy.exceptions import ChildNotFound
 
-ELEMENTS = {'Message': MESSAGES, 'Group': GROUPS, 'Segment': SEGMENTS,
-            'Field': FIELDS, 'Component': DATATYPES, 'SubComponent': DATATYPES,
-            'Datatypes_Structs': DATATYPES_STRUCTS, 'Table': {}}
+ELEMENTS = {
+    'Message': MESSAGES,
+    'Group': GROUPS,
+    'Segment': SEGMENTS,
+    'Field': FIELDS,
+    'Component': DATATYPES,
+    'SubComponent': DATATYPES,
+    'Datatypes_Structs': DATATYPES_STRUCTS,
+    'Table': {},
+}
 
 
 def get(name, element_type):

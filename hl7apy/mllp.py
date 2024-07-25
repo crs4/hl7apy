@@ -24,6 +24,7 @@ from __future__ import unicode_literals
 
 import re
 import socket
+
 try:
     from SocketServer import StreamRequestHandler, ThreadingTCPServer
 except ImportError:
@@ -37,6 +38,7 @@ class UnsupportedMessageType(HL7apyException):
     """
     Error that occurs when the :class:`MLLPServer` receives a message without an associated handler
     """
+
     def __init__(self, msg_type):
         self.msg_type = msg_type
 
@@ -48,6 +50,7 @@ class InvalidHL7Message(HL7apyException):
     """
     Error that occurs when the :class:`MLLPServer` receives a string which doesn't represent an ER7-encoded HL7 message
     """
+
     def __str__(self):
         return 'The string received is not a valid HL7 message'
 
@@ -63,7 +66,15 @@ class MLLPRequestHandler(StreamRequestHandler):
         self.eb = b"\x1c"
         self.cr = b"\x0d"
         self.validator = re.compile(
-            ''.join([self.sb.decode('ascii'), r"(([^\r]+\r)*([^\r]+\r?))", self.eb.decode('ascii'), self.cr.decode('ascii')]))
+            ''.join(
+                [
+                    self.sb.decode('ascii'),
+                    r"(([^\r]+\r)*([^\r]+\r?))",
+                    self.eb.decode('ascii'),
+                    self.cr.decode('ascii'),
+                ]
+            )
+        )
         self.handlers = self.server.handlers
         self.timeout = self.server.timeout
 
@@ -141,30 +152,33 @@ class MLLPRequestHandler(StreamRequestHandler):
 
 class MLLPServer(ThreadingTCPServer):
     """
-        A :class:`TCPServer <SocketServer.TCPServer>` subclass that implements an MLLP server.
-        It receives MLLP-encoded HL7 and redirects them to the correct handler, according to the
-        :attr:`handlers` dictionary passed in.
+    A :class:`TCPServer <SocketServer.TCPServer>` subclass that implements an MLLP server.
+    It receives MLLP-encoded HL7 and redirects them to the correct handler, according to the
+    :attr:`handlers` dictionary passed in.
 
-        The :attr:`handlers` dictionary is structured as follows. Every key represents a message type (i.e.,
-        the MSH.9) to handle, and the associated value is a tuple containing a subclass of
-        :class:`AbstractHandler` for that message type and additional arguments to pass to its
-        constructor.
+    The :attr:`handlers` dictionary is structured as follows. Every key represents a message type (i.e.,
+    the MSH.9) to handle, and the associated value is a tuple containing a subclass of
+    :class:`AbstractHandler` for that message type and additional arguments to pass to its
+    constructor.
 
-        It is possible to specify a special handler for errors using the ``ERR`` key.
-        In this case the handler should subclass :class:`AbstractErrorHandler`,
-        which receives, in addition to other parameters, the raised exception as the first argument.
-        If the special handler is not specified the server will just close the connection.
+    It is possible to specify a special handler for errors using the ``ERR`` key.
+    In this case the handler should subclass :class:`AbstractErrorHandler`,
+    which receives, in addition to other parameters, the raised exception as the first argument.
+    If the special handler is not specified the server will just close the connection.
 
-        The class allows to specify the timeout to wait before closing the connection.
+    The class allows to specify the timeout to wait before closing the connection.
 
-        :param host: the address of the listener
-        :param port: the port of the listener
-        :param handlers: the dictionary that specifies the handler classes for every kind of supported message.
-        :param timeout: the timeout for the requests
+    :param host: the address of the listener
+    :param port: the port of the listener
+    :param handlers: the dictionary that specifies the handler classes for every kind of supported message.
+    :param timeout: the timeout for the requests
     """
+
     allow_reuse_address = True
 
-    def __init__(self, host, port, handlers, timeout=10, request_handler_class=MLLPRequestHandler):
+    def __init__(
+        self, host, port, handlers, timeout=10, request_handler_class=MLLPRequestHandler
+    ):
         self.host = host
         self.port = port
         self.handlers = handlers
@@ -174,20 +188,23 @@ class MLLPServer(ThreadingTCPServer):
 
 class AbstractHandler(object):
     """
-        Abstract transaction handler. Handlers should implement the
-        :func:`reply() <AbstractHandler.reply>` method which handle the incoming message.
-        The incoming message is accessible using the attribute :attr:`incoming_message`
+    Abstract transaction handler. Handlers should implement the
+    :func:`reply() <AbstractHandler.reply>` method which handle the incoming message.
+    The incoming message is accessible using the attribute :attr:`incoming_message`
 
-        :param message: the ER7-formatted HL7 message to handle
+    :param message: the ER7-formatted HL7 message to handle
     """
+
     def __init__(self, message):
         self.incoming_message = message
 
     def reply(self):
         """
-            Abstract method. It should implement the handling of the request message and return the response.
+        Abstract method. It should implement the handling of the request message and return the response.
         """
-        raise NotImplementedError("The method reply() must be implemented in subclasses")
+        raise NotImplementedError(
+            "The method reply() must be implemented in subclasses"
+        )
 
 
 class AbstractErrorHandler(AbstractHandler):
@@ -198,6 +215,7 @@ class AbstractErrorHandler(AbstractHandler):
 
     :param exc: the :exc:`Exception` occurred
     """
+
     def __init__(self, exc, message):
         super(AbstractErrorHandler, self).__init__(message)
         self.exc = exc

@@ -94,7 +94,9 @@ def datatype_factory(datatype, value, version=None, validation_level=None):
     try:
         factory = factories[datatype]
         if isinstance(factory, FunctionType):
-            return factory(value, base_datatypes[datatype], validation_level=validation_level)
+            return factory(
+                value, base_datatypes[datatype], validation_level=validation_level
+            )
         return factory(value, validation_level=validation_level)
     except KeyError:
         raise InvalidDataType(datatype)
@@ -333,4 +335,5 @@ def sequence_id_factory(value, datatype_cls, validation_level=None):
 
 if __name__ == '__main__':
     import doctest
+
     doctest.testmod()

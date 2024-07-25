@@ -31,19 +31,25 @@ class TextualDataType(BaseTextualDataType):
     def _get_translations(self, encoding_chars):
         escape_char = encoding_chars['ESCAPE']
         try:
-            return ((encoding_chars['FIELD'], '{esc}F{esc}'.format(esc=escape_char)),
-                    (encoding_chars['COMPONENT'], '{esc}S{esc}'.format(esc=escape_char)),
-                    (encoding_chars['SUBCOMPONENT'], '{esc}T{esc}'.format(esc=escape_char)),
-                    (encoding_chars['REPETITION'], '{esc}R{esc}'.format(esc=escape_char)),
-                    (encoding_chars['TRUNCATION'], '{esc}L{esc}'.format(esc=escape_char)),)
+            return (
+                (encoding_chars['FIELD'], '{esc}F{esc}'.format(esc=escape_char)),
+                (encoding_chars['COMPONENT'], '{esc}S{esc}'.format(esc=escape_char)),
+                (encoding_chars['SUBCOMPONENT'], '{esc}T{esc}'.format(esc=escape_char)),
+                (encoding_chars['REPETITION'], '{esc}R{esc}'.format(esc=escape_char)),
+                (encoding_chars['TRUNCATION'], '{esc}L{esc}'.format(esc=escape_char)),
+            )
         except KeyError:
-            return ((encoding_chars['FIELD'], '{esc}F{esc}'.format(esc=escape_char)),
-                    (encoding_chars['COMPONENT'], '{esc}S{esc}'.format(esc=escape_char)),
-                    (encoding_chars['SUBCOMPONENT'], '{esc}T{esc}'.format(esc=escape_char)),
-                    (encoding_chars['REPETITION'], '{esc}R{esc}'.format(esc=escape_char)),)
+            return (
+                (encoding_chars['FIELD'], '{esc}F{esc}'.format(esc=escape_char)),
+                (encoding_chars['COMPONENT'], '{esc}S{esc}'.format(esc=escape_char)),
+                (encoding_chars['SUBCOMPONENT'], '{esc}T{esc}'.format(esc=escape_char)),
+                (encoding_chars['REPETITION'], '{esc}R{esc}'.format(esc=escape_char)),
+            )
 
     def _get_escape_char_regex(self, escape_char):
-        return r'(?<!%s[HNFSTREL])%s(?![HNFSTREL]%s)' % tuple(3 * [re.escape(escape_char)])
+        return r'(?<!%s[HNFSTREL])%s(?![HNFSTREL]%s)' % tuple(
+            3 * [re.escape(escape_char)]
+        )
 
     def to_er7(self, encoding_chars=None):
         if encoding_chars is None:
@@ -58,8 +64,8 @@ class ST(TextualDataType):
 
     :attr:`max_length` is 199
     """
-    def __init__(self, value, highlights=None,
-                 validation_level=None):
+
+    def __init__(self, value, highlights=None, validation_level=None):
         super(ST, self).__init__(value, 199, highlights, validation_level)
 
 
@@ -70,8 +76,8 @@ class FT(TextualDataType):
 
     :attr:`max_length` is 65536
     """
-    def __init__(self, value, highlights=None,
-                 validation_level=None):
+
+    def __init__(self, value, highlights=None, validation_level=None):
         super(FT, self).__init__(value, 65536, highlights, validation_level)
 
 
@@ -82,8 +88,8 @@ class ID(TextualDataType):
 
     :attr:`max_length` None
     """
-    def __init__(self, value, highlights=None,
-                 validation_level=None):
+
+    def __init__(self, value, highlights=None, validation_level=None):
         # max_length is None bacause it depends from the HL7 table
         super(ID, self).__init__(value, None, highlights, validation_level)
         # TODO: check for tables of allowed values: are we strict or not?
@@ -96,8 +102,8 @@ class IS(TextualDataType):
 
     :attr:`max_length` is 20
     """
-    def __init__(self, value, highlights=None,
-                 validation_level=None):
+
+    def __init__(self, value, highlights=None, validation_level=None):
         super(IS, self).__init__(value, 20, highlights, validation_level)
         # TODO: check for tables of allowed values (also defined on site): are we strict or not?
 
@@ -109,8 +115,8 @@ class TX(TextualDataType):
 
     :attr:`max_length` is 65536
     """
-    def __init__(self, value, highlights=None,
-                 validation_level=None):
+
+    def __init__(self, value, highlights=None, validation_level=None):
         super(TX, self).__init__(value, 65536, highlights, validation_level)
 
 
@@ -121,8 +127,8 @@ class GTS(TextualDataType):
 
     :attr:`max_length` is 199
     """
-    def __init__(self, value, highlights=None,
-                 validation_level=None):
+
+    def __init__(self, value, highlights=None, validation_level=None):
         super(GTS, self).__init__(value, 199, highlights, validation_level)
 
 
@@ -130,5 +136,6 @@ class SNM(TextualDataType):
     """
     :attr:`max_length` is 199
     """
+
     def __init__(self, value, highlights=None, validation_level=None):
         super(SNM, self).__init__(value, None, highlights, validation_level)
