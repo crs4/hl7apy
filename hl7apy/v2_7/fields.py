@@ -2280,7 +2280,7 @@ FIELDS = {
     'SCH_6': ('sequence', DATATYPES_STRUCTS['CWE'], 'CWE', 'EVENT_REASON', None, -1),
     'SCH_7': ('sequence', DATATYPES_STRUCTS['CWE'], 'CWE', 'APPOINTMENT_REASON', 'HL70276', -1),
     'SCH_8': ('sequence', DATATYPES_STRUCTS['CWE'], 'CWE', 'APPOINTMENT_TYPE', 'HL70277', -1),
-    'SCH_9': ('leaf', None, 'WD', 'APPOINTMENT_DURATION', None, -1),
+    'SCH_9': ('leaf', None, 'NM', 'APPOINTMENT_DURATION', None, -1),
     'SCH_10': ('sequence', DATATYPES_STRUCTS['CNE'], 'CNE', 'APPOINTMENT_DURATION_UNITS', None, -1),
     'SCH_11': ('leaf', None, 'ST', 'APPOINTMENT_TIMING_QUANTITY', None, -1),
     'SCH_12': ('sequence', DATATYPES_STRUCTS['XCN'], 'XCN', 'PLACER_CONTACT_PERSON', None, -1),
