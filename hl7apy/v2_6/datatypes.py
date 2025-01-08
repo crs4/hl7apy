@@ -940,7 +940,7 @@ DATATYPES_STRUCTS = {
            ('XPN_13', DATATYPES['XPN_13'], (0, 1), 'CMP'),
            ('XPN_14', DATATYPES['XPN_14'], (0, 1), 'CMP'),),
     'XTN': (
-           ('XTN_1', DATATYPES['XTN_1'], (0, 1), 'CMP'),
+           ('XTN_1', DATATYPES['XTN_1'], (0, 0), 'CMP'),
            ('XTN_2', DATATYPES['XTN_2'], (0, 1), 'CMP'),
            ('XTN_3', DATATYPES['XTN_3'], (0, 1), 'CMP'),
            ('XTN_4', DATATYPES['XTN_4'], (0, 1), 'CMP'),
