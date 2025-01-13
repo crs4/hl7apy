@@ -130,7 +130,7 @@ class Validator(object):
             ref_datatype = ref[2]
             if el.datatype != ref_datatype:
                 errs.append(ValidationError("Datatype {} is not correct for {}.{} (it must be {})".
-                                            format(el.datatype, el.parent.name, el.name, ref[1])))
+                                            format(el.datatype, el.parent.name, el.name, ref_datatype)))
 
         def _get_valid_children_info(ref):
             valid_children = {c[0] for c in ref[1]}
