@@ -76,3 +76,10 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+Acknowledgments
+---------------
+
+This work has been partially funded by the following sources:
+
+  * the “Processing, Analysis, Exploration, and Sharing of Big and/or Complex Data” (XDATA) project (grant by the Sardinian Regional Authority);
+  * the “Data intensive Computing Forward Research Activities” (DIFRA) project (grant by the Sardinian Regional Authority).
