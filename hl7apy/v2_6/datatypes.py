@@ -421,6 +421,7 @@ DATATYPES = {
     'XPN_12': ['leaf', None, 'DTM', 'EFFECTIVE_DATE', None, -1],
     'XPN_13': ['leaf', None, 'DTM', 'EXPIRATION_DATE', None, -1],
     'XPN_14': ['leaf', None, 'ST', 'PROFESSIONAL_SUFFIX', None, -1],
+    'XTN_1': ['leaf', None, 'WD', 'TELEPHONE_NUMBER', None, -1],
     'XTN_2': ['leaf', None, 'ID', 'TELECOMMUNICATION_USE_CODE', None, -1],
     'XTN_3': ['leaf', None, 'ID', 'TELECOMMUNICATION_EQUIPMENT_TYPE', None, -1],
     'XTN_4': ['leaf', None, 'ST', 'COMMUNICATION_ADDRESS', None, -1],
@@ -939,6 +940,7 @@ DATATYPES_STRUCTS = {
            ('XPN_13', DATATYPES['XPN_13'], (0, 1), 'CMP'),
            ('XPN_14', DATATYPES['XPN_14'], (0, 1), 'CMP'),),
     'XTN': (
+           ('XTN_1', DATATYPES['XTN_1'], (0, 0), 'CMP'),
            ('XTN_2', DATATYPES['XTN_2'], (0, 1), 'CMP'),
            ('XTN_3', DATATYPES['XTN_3'], (0, 1), 'CMP'),
            ('XTN_4', DATATYPES['XTN_4'], (0, 1), 'CMP'),

@@ -21,6 +21,7 @@
 
 from __future__ import absolute_import
 
+from io import StringIO
 import os
 import re
 import sys
@@ -388,6 +389,33 @@ class TestValidation(unittest.TestCase):
         parsed_s = parse_segment(s, version='2.7')
         self.assertRaises(ValidationError, parsed_s.validate)
 
+    def test_validate_with_param_report_file_as_string_io(self):
+        """
+        Tests that, if you use stringIO to validate, warning and errors are written there
+        """
+        string_io = StringIO()
+        msg = self._create_message(self.oml_o33)
+        self.assertTrue(msg.validate(report_file=string_io))
+        self.assertGreater(string_io.tell(), 0)
+
+    def test_validate_with_param_return_errors(self):
+        """
+        Tests message is valid with warnings using return_errors=True
+        """
+        msg = self._create_message(self.oml_o33)
+        errors_and_warnings = msg.validate(return_errors=True)
+        self.assertTrue(errors_and_warnings.is_valid)
+        self.assertEqual(len(errors_and_warnings.warnings), 2)
+
+    def test_well_structured_message_using_return_error(self):
+        """
+        Tests that a valid message is validated using return_error
+        """
+        msg = self._create_message(self.adt_a01)
+        errors_and_warnings = msg.validate(return_errors=True)
+        self.assertTrue(errors_and_warnings.is_valid)
+        self.assertEqual(len(errors_and_warnings.errors), 0)
+        self.assertEqual(len(errors_and_warnings.warnings), 0)
 
 class TestMessageProfile(unittest.TestCase):
 

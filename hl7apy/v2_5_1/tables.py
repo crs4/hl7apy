@@ -2922,6 +2922,7 @@ TABLES = {
                  'ADT_A05',
                  'ADT_A06',
                  'ADT_A09',
+                 'ADT_A12',
                  'ADT_A15',
                  'ADT_A16',
                  'ADT_A17',

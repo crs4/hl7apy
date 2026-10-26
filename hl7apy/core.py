@@ -740,15 +740,16 @@ class Element(object):
 
         return separator.join(s)
 
-    def validate(self, report_file=None):
+    def validate(self, report_file=None, return_errors=False):
         """
         Validate the HL7 element using the :attr:`STRICT <hl7apy.consts.VALIDATION_LEVEL.STRICT>` validation
         level. It calls the :func:`Validator.validate <hl7apy.validation.Validator.validate>` method passing
         the reference used in the instantiation of the element.
 
         :param: report_file: the report file to pass to the validator
+        :param: return_errors: return errors and warnings instead of raising
         """
-        return Validator.validate(self, reference=self.reference, report_file=report_file)
+        return Validator.validate(self, reference=self.reference, report_file=report_file, return_errors=return_errors)
 
     def is_z_element(self):
         return False
@@ -918,6 +919,7 @@ class SupportComplexDataType(Element):
                 datatype not in ('varies', None, self.datatype) and self.datatype is not None:
             reference = load_reference(datatype, 'Datatypes_Structs', self.version)
             new_ref = [ref_item for ref_item in self.reference]
+            new_ref[0] = 'sequence'
             new_ref[1] = reference
             new_ref[2] = datatype
             structure = ElementFinder.get_structure(self, new_ref)

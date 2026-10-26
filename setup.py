@@ -59,7 +59,7 @@ setup(
     description=desc,
     long_description=long_desc,
     url=hl7apy.__url__,
-    download_url='http://sourceforge.net/projects/hl7apy/files/',
+    download_url='https://github.com/crs4/hl7apy',
     license='MIT License',
     keywords=['HL7', 'Health Level 7', 'healthcare', 'python'],
     classifiers=[

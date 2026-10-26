@@ -42,7 +42,7 @@ from hl7apy.consts import DEFAULT_ENCODING_CHARS, DEFAULT_ENCODING_CHARS_27, DEF
 __author__ = 'Daniela Ghironi, Vittorio Meloni, Alessandro Sulis, Federico Caboni'
 __author_email__ = '<ghiron@gmail.com>, <vittorio.meloni@crs4.it>, <alessandro.sulis@crs4.it>, ' \
                    '<federico.caboni@me.com>'
-__url__ = 'http://crs4.github.io/hl7apy/'
+__url__ = 'https://crs4.github.io/hl7apy/'
 
 _DEFAULT_ENCODING_CHARS = DEFAULT_ENCODING_CHARS
 _DEFAULT_ENCODING_CHARS_27 = DEFAULT_ENCODING_CHARS_27
