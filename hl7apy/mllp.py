@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2018, CRS4
 #
@@ -19,15 +18,9 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import, unicode_literals
-
 import re
 import socket
-
-try:
-    from SocketServer import StreamRequestHandler, ThreadingTCPServer
-except ImportError:
-    from socketserver import StreamRequestHandler, ThreadingTCPServer
+from socketserver import StreamRequestHandler, ThreadingTCPServer
 
 from hl7apy.exceptions import HL7apyException, ParserError
 from hl7apy.parser import get_message_type
@@ -140,7 +133,7 @@ class MLLPRequestHandler(StreamRequestHandler):
 
 class MLLPServer(ThreadingTCPServer):
     """
-        A :class:`TCPServer <SocketServer.TCPServer>` subclass that implements an MLLP server.
+        A :class:`TCPServer <socketserver.TCPServer>` subclass that implements an MLLP server.
         It receives MLLP-encoded HL7 and redirects them to the correct handler, according to the
         :attr:`handlers` dictionary passed in.
 
@@ -172,7 +165,7 @@ class MLLPServer(ThreadingTCPServer):
         ThreadingTCPServer.__init__(self, (host, port), request_handler_class)
 
 
-class AbstractHandler(object):
+class AbstractHandler:
     """
         Abstract transaction handler. Handlers should implement the
         :func:`reply() <AbstractHandler.reply>` method which handle the incoming message.
@@ -199,8 +192,8 @@ class AbstractErrorHandler(AbstractHandler):
     :param exc: the :exc:`Exception` occurred
     """
     def __init__(self, exc, message):
-        super(AbstractErrorHandler, self).__init__(message)
+        super().__init__(message)
         self.exc = exc
 
     def reply(self):
-        super(AbstractErrorHandler, self).reply()
+        super().reply()

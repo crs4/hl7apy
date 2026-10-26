@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2018, CRS4
 #
@@ -18,8 +17,6 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-from __future__ import absolute_import, print_function
 
 import os
 import re
@@ -190,7 +187,7 @@ def _get_files(directory):
     try:
         files = os.listdir(directory)
         return [os.path.abspath('{0}/{1}'.format(directory, f)) for f in files if f.endswith('.hl7')]
-    except IOError:
+    except OSError:
         print("Invalid directory")
 
 

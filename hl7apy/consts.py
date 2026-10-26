@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2018, CRS4
 #
@@ -55,7 +54,7 @@ DEFAULT_ENCODING_CHARS_27 = {
 DEFAULT_VERSION = "2.5"
 
 
-class MLLP_ENCODING_CHARS(object):
+class MLLP_ENCODING_CHARS:
     """
     MLLP encoding chars
     """
@@ -67,7 +66,7 @@ class MLLP_ENCODING_CHARS(object):
     CR = '\x0d'
 
 
-class VALIDATION_LEVEL(object):
+class VALIDATION_LEVEL:
     """
     Allowed validation levels
     """

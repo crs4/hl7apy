@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # HL7apy documentation build configuration file, created by
 # sphinx-quickstart on Thu May  2 14:54:43 2013.
@@ -18,7 +17,6 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 # sys.path.insert(0, os.path.abspath('.'))
 
-from __future__ import absolute_import
 
 import sys
 
@@ -52,8 +50,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'HL7apy'
-copyright = u'%s-%s, CRS4 - Center for Advanced Studies, Research and Development in Sardinia' % \
+project = 'HL7apy'
+copyright = '%s-%s, CRS4 - Center for Advanced Studies, Research and Development in Sardinia' % \
             (FIRST_RELEASE_YEAR, CURRENT_YEAR)
 
 # The version info for the project you're documenting, acts as replacement for
@@ -203,8 +201,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ('index', 'HL7apy.tex', u'HL7apy Documentation',
-     u'CRS4 - Center for Advanced Studies, Research and Development in Sardinia', 'manual'),
+    ('index', 'HL7apy.tex', 'HL7apy Documentation',
+     'CRS4 - Center for Advanced Studies, Research and Development in Sardinia', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -233,8 +231,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'hl7apy', u'HL7apy Documentation',
-     [u'CRS4 - Center for Advanced Studies, Research and Development in Sardinia'], 1)
+    ('index', 'hl7apy', 'HL7apy Documentation',
+     ['CRS4 - Center for Advanced Studies, Research and Development in Sardinia'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -247,8 +245,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'HL7apy', u'HL7apy Documentation',
-     u'CRS4 - Center for Advanced Studies, Research and Development in Sardinia', 'HL7apy',
+    ('index', 'HL7apy', 'HL7apy Documentation',
+     'CRS4 - Center for Advanced Studies, Research and Development in Sardinia', 'HL7apy',
      'One line description of project.',
      'Miscellaneous'),
 ]

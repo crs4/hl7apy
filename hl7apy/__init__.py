@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2018, CRS4
 #
@@ -19,22 +18,10 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import
-
-import os
-
-try:
-    from collections.abc import MutableMapping
-except ImportError:
-    from collections import MutableMapping
-
 import importlib
-
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
-
+import os
+import pickle
+from collections.abc import MutableMapping
 
 from hl7apy.consts import DEFAULT_ENCODING_CHARS, DEFAULT_ENCODING_CHARS_27, DEFAULT_VERSION, VALIDATION_LEVEL
 from hl7apy.exceptions import InvalidEncodingChars, UnknownValidationLevel, UnsupportedVersion

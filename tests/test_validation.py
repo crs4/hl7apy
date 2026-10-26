@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2018, CRS4
 #
@@ -19,11 +18,8 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import
-
 import os
 import re
-import sys
 import tempfile
 import unittest
 from io import StringIO
@@ -552,11 +548,10 @@ class TestMessageProfile(unittest.TestCase):
         else:
             return
 
-        if sys.version_info == '2':
-            if present:
-                self.assertTrue(re.search(regex, s))
-            else:
-                self.assertFalse(re.search(regex, s))
+        if present:
+            self.assertTrue(re.search(regex, s))
+        else:
+            self.assertFalse(re.search(regex, s))
 
         os.remove(self.report_file)
 

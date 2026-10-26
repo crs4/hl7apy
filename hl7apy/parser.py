@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2018, CRS4
 #
@@ -19,8 +18,6 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import
-
 import re
 
 from hl7apy import (
@@ -35,11 +32,6 @@ from hl7apy.consts import N_SEPS, N_SEPS_27
 from hl7apy.core import Component, Field, Group, Message, Segment, SubComponent, is_base_datatype
 from hl7apy.exceptions import InvalidEncodingChars, InvalidName, MessageProfileNotFound, ParserError
 from hl7apy.validation import Validator
-
-try:
-    xrange = xrange
-except NameError:
-    xrange = range
 
 
 def parse_message(message, validation_level=None, find_groups=True, message_profile=None, report_file=None,
@@ -154,7 +146,7 @@ def parse_segments(text, version=None, encoding_chars=None, validation_level=Non
     for s in text.split(segment_sep):
         if len(s) > 0:
             segment_name = s[:3]
-            for x in xrange(len(parents_refs)):
+            for x in range(len(parents_refs)):
                 if not find_groups:
                     segment = parse_segment(s.strip(), version, encoding_chars, validation_level)
                     segments.append(segment)

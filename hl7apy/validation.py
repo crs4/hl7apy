@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2018, CRS4
 #
@@ -19,8 +18,6 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import
-
 from collections import namedtuple
 
 from hl7apy import load_reference
@@ -32,14 +29,14 @@ ErrorsAndWarnings = namedtuple(
     ("is_valid", "errors", "warnings"))
 
 
-class Validator(object):
+class Validator:
     """
     Class that handles validation. It defines validation levels and validate
     an element using :attr:`VALIDATION.STRICT <hl7apy.consts.VALIDATION_LEVEL.STRICT>` validation level
     """
 
     def __init__(self, level):
-        super(Validator, self).__init__()
+        super().__init__()
         self.level = level
 
     @staticmethod

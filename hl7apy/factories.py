@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2018, CRS4
 #
@@ -23,8 +22,6 @@
 This module contains factory functions for hl7apy base data types.
 The functions get the value of the data type as string and return the correct object
 """
-
-from __future__ import absolute_import
 
 from decimal import Decimal, InvalidOperation
 from types import FunctionType
