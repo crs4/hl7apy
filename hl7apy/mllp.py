@@ -66,6 +66,7 @@ class MLLPRequestHandler(StreamRequestHandler):
             ''.join([self.sb.decode('ascii'), r"(([^\r]+\r)*([^\r]+\r?))", self.eb.decode('ascii'), self.cr.decode('ascii')]))
         self.handlers = self.server.handlers
         self.timeout = self.server.timeout
+        self.encoding = self.server.char_encoding
 
         StreamRequestHandler.setup(self)
 
@@ -164,11 +165,12 @@ class MLLPServer(ThreadingTCPServer):
     """
     allow_reuse_address = True
 
-    def __init__(self, host, port, handlers, timeout=10, request_handler_class=MLLPRequestHandler):
+    def __init__(self, host, port, handlers, timeout=10, char_encoding='utf-8', request_handler_class=MLLPRequestHandler):
         self.host = host
         self.port = port
         self.handlers = handlers
         self.timeout = timeout
+        self.char_encoding = char_encoding
         ThreadingTCPServer.__init__(self, (host, port), request_handler_class)
 
 
