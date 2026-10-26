@@ -5,8 +5,7 @@ on:
     types: [published]
 
 jobs:
-  deploy:
-
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,14 +16,32 @@ jobs:
       uses: actions/setup-python@v7
       with:
         python-version: '3.x'
-    - name: Install dependencies
+    - name: Build the sdist and the wheel
       run: |
         python -m pip install --upgrade pip
-        pip install build twine
-    - name: Build and publish
-      env:
-        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-      run: |
+        pip install build
         python -m build
-        twine upload dist/*
+    - name: Store the packages
+      uses: actions/upload-artifact@v7
+      with:
+        name: python-package-distributions
+        path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    # must match the environment configured in the PyPI trusted publisher
+    environment:
+      name: pypi
+      url: https://pypi.org/p/hl7apy
+    permissions:
+      id-token: write  # needed by PyPI trusted publishing
+
+    steps:
+    - name: Download the packages
+      uses: actions/download-artifact@v8
+      with:
+        name: python-package-distributions
+        path: dist/
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
