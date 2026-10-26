@@ -141,6 +141,38 @@ class Validator(object):
             child_name, cardinality = ref[0], ref[2]
             return child_name, cardinality
 
+        def _check_choice_group(el, valid_children_refs, errs, warns):
+            # A choice group is valid only if exactly one of its alternatives
+            # is present. The occurrences of the chosen alternative are checked
+            # against its own cardinality.
+            chosen = []
+            for child_ref in valid_children_refs:
+                child_name, cardinality = _get_child_reference_info(child_ref)
+                try:
+                    # it gets all the occurrences of the children of a type
+                    children = el.children.get(child_name)
+                except Exception:
+                    # TODO: it is due to the lack of element in the official reference files...  should
+                    # we raise an exception here?
+                    pass
+                else:
+                    if len(children) > 0:
+                        chosen.append((child_name, cardinality, children, child_ref))
+
+            if len(chosen) == 0:
+                errs.append(ValidationError("Missing required child for choice group {} (exactly one of {} is required)".
+                                            format(el.name,
+                                                   [c[0] for c in valid_children_refs])))
+            elif len(chosen) > 1:
+                errs.append(ValidationError("Only one child allowed for choice group {}: found {}".
+                                            format(el.name, [c[0] for c in chosen])))
+            else:
+                child_name, cardinality, children, child_ref = chosen[0]
+                _check_repetitions(el, children, cardinality, child_name, errs)
+                # calls validation for every occurrence of the chosen child
+                for c in children:
+                    _is_valid(c, child_ref[1], errs, warns)
+
         def _check_known_element(el, ref, errs, warns):
             if ref is None:
                 try:
@@ -157,22 +189,27 @@ class Validator(object):
                     errs.append(ValidationError("Invalid children detected for {}: {}".
                                                 format(el, list(element_children - valid_children))))
 
-                # iterates the valid children
-                for child_ref in valid_children_refs:
-                    # it gets the structure of the children to check
-                    child_name, cardinality = _get_child_reference_info(child_ref)
-                    try:
-                        # it gets all the occurrences of the children of a type
-                        children = el.children.get(child_name)
-                    except Exception:
-                        # TODO: it is due to the lack of element in the official reference files...  should
-                        # we raise an exception here?
-                        pass
-                    else:
-                        _check_repetitions(el, children, cardinality, child_name, errs)
-                        # calls validation for every children
-                        for c in children:
-                            _is_valid(c, child_ref[1], errs, warns)
+                if ref[0] == 'choice':
+                    # a choice group requires exactly one of its alternatives,
+                    # not all of them
+                    _check_choice_group(el, valid_children_refs, errs, warns)
+                else:
+                    # iterates the valid children
+                    for child_ref in valid_children_refs:
+                        # it gets the structure of the children to check
+                        child_name, cardinality = _get_child_reference_info(child_ref)
+                        try:
+                            # it gets all the occurrences of the children of a type
+                            children = el.children.get(child_name)
+                        except Exception:
+                            # TODO: it is due to the lack of element in the official reference files...  should
+                            # we raise an exception here?
+                            pass
+                        else:
+                            _check_repetitions(el, children, cardinality, child_name, errs)
+                            # calls validation for every children
+                            for c in children:
+                                _is_valid(c, child_ref[1], errs, warns)
 
                 # finally calls validation for z_elements
                 z_children = [c for c in el.children if c.is_z_element()]
