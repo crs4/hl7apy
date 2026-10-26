@@ -318,6 +318,22 @@ class ToStringTestCase(unittest.TestCase):
         parsed_s = parse_segment(s, version='2.7')
         self.assertEqual(parsed_s.to_er7(), 'EVN||20080115153000||AAA|AAA|20080114003000')
 
+    def test_to_string_unicode_field(self):
+        """
+        Tests that non-ASCII values can be assigned in strict mode (PR #72)
+        """
+        pid = Segment('PID', validation_level=VALIDATION_LEVEL.STRICT)
+        pid.pid_5.pid_5_1 = '€'
+        self.assertEqual(pid.to_er7(), 'PID|||||€')
+
+    def test_to_string_non_ascii_field(self):
+        """
+        Tests that non-ASCII values can be assigned in strict mode (issue #7)
+        """
+        pid = Segment('PID', validation_level=VALIDATION_LEVEL.STRICT)
+        pid.pid_5.pid_5_1 = 'mandà'
+        self.assertEqual(pid.to_er7(), 'PID|||||mandà')
+
 
 if __name__ == '__main__':
     unittest.main()
