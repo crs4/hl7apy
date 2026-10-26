@@ -19,6 +19,7 @@ docs/_build
 .pytest_cache
 .tox
 .coverage
+coverage.lcov
 MANIFEST
 .idea
 __pycache__

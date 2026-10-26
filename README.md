@@ -38,11 +38,9 @@ Alternatively you can use pip to install it from [PyPI](https://pypi.python.org/
   pip install hl7apy
 ```
 
-[![Build Status](https://travis-ci.org/crs4/hl7apy.png)](https://travis-ci.org/crs4/hl7apy)
+[![Python Tests](https://github.com/crs4/hl7apy/actions/workflows/run_tests.yml/badge.svg)](https://github.com/crs4/hl7apy/actions/workflows/run_tests.yml)
 
-[![Code Health](https://landscape.io/github/crs4/hl7apy/develop/landscape.svg?style=flat)](https://landscape.io/github/crs4/hl7apy/develop)
-
-[![Coverage Status](https://coveralls.io/repos/crs4/hl7apy/badge.svg)](https://coveralls.io/r/crs4/hl7apy)
+[![Coverage Status](https://coveralls.io/repos/github/crs4/hl7apy/badge.svg?branch=master)](https://coveralls.io/github/crs4/hl7apy?branch=master)
 
 External Links
 --------------

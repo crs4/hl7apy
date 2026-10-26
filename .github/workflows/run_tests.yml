@@ -27,4 +27,10 @@ jobs:
 
     - name: Test with pytest
       run: |
-        pytest --cov        
+        pytest --cov --cov-report=term --cov-report=lcov
+
+    - name: Upload coverage to Coveralls
+      if: matrix.python-version == '3.14'
+      uses: coverallsapp/github-action@v2
+      with:
+        file: coverage.lcov
