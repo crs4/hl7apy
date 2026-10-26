@@ -24,12 +24,12 @@ Documentation can be found [here](http://crs4.github.io/hl7apy/).
 Installation
 ------------
 
-HL7apy is platform independent and supports Python 2.7 and Python 3.[4-12]
+HL7apy is platform independent and supports Python 3.9 and later
 
-To install it get the latest release from [GitHub](https://github.com/crs4/hl7apy/releases) and launch the following command:
+To install it get the latest release from [GitHub](https://github.com/crs4/hl7apy/releases) and, from its root directory, launch the following command:
 
 ```bash
-  python setup.py install
+  pip install .
 ```
 
 Alternatively you can use pip to install it from [PyPI](https://pypi.python.org/pypi/hl7apy/)

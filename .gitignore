@@ -20,4 +20,6 @@ docs/_build
 .coverage
 MANIFEST
 .idea
+__pycache__
+
 .vscode

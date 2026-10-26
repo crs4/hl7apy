@@ -1,7 +1,3 @@
-include AUTHORS LICENSE VERSION
-
-recursive-include examples *.py
-recursive-include tests *.py
-
-include examples/lab62/README
-include tests/README
+prune docs
+prune .github
+exclude .gitignore .landscape.yaml tox.ini nose2.cfg utils/test_parsing_message.py

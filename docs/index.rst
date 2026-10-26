@@ -28,14 +28,14 @@ This project is not affiliated with the HL7 organization: the library is just co
 Installation
 ============
 
-HL7apy is platform independent and supports Python 2.7 and Python 3.[4-12]
+HL7apy is platform independent and supports Python 3.9 and later
 
-To install it get the latest release from `GitHub <https://github.com/crs4/hl7apy/releases>`_ and launch the following
-command:
+To install it get the latest release from `GitHub <https://github.com/crs4/hl7apy/releases>`_ and, from its root
+directory, launch the following command:
 
 .. code-block:: bash
 
-  python setup.py install
+  pip install .
 
 Alternatively you can use pip to install it from `PyPI <https://pypi.python.org/pypi/hl7apy/>`_
 
