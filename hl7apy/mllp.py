@@ -53,8 +53,6 @@ class InvalidHL7Message(HL7apyException):
 
 
 class MLLPRequestHandler(StreamRequestHandler):
-    encoding = 'utf-8'
-
     def __init__(self, *args, **kwargs):
         StreamRequestHandler.__init__(self, *args, **kwargs)
 
