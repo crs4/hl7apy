@@ -44,7 +44,7 @@ except NameError:
 
 def parse_message(message, validation_level=None, find_groups=True, message_profile=None, report_file=None,
                   force_validation=False):
-    """
+    r"""
     Parse the given ER7-encoded message and return an instance of :class:`Message <hl7apy.core.Message>`.
 
     :type message: ``str``
@@ -65,8 +65,8 @@ def parse_message(message, validation_level=None, find_groups=True, message_prof
 
     :return: an instance of :class:`Message <hl7apy.core.Message>`
 
-    >>> message = "MSH|^~\\&|GHH_ADT||||20080115153000||OML^O33^OML_O33|0123456789|P|2.5||||AL\\rPID|1||" \
-    "566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004|||M\\r"
+    >>> message = "MSH|^~\\&|GHH_ADT||||20080115153000||OML^O33^OML_O33|0123456789|P|2.5||||AL\rPID|1||" \
+    ... "566-554-3423^^^GHH^MR||EVERYMAN^ADAM^A|||M|||2222 HOME STREET^^ANN ARBOR^MI^^USA||555-555-2004|||M\r"
     >>> m = parse_message(message)
     >>> print(m)
     <Message OML_O33>

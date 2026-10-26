@@ -247,10 +247,10 @@ class TestParser(unittest.TestCase):
         self.assertRaises(OperationNotAllowed, parse_message, msg, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_parse_message_incomplete_structure(self):
-        m = parse_message('MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^|')
+        parse_message('MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^|')
 
     def test_parse_message_missing_version(self):
-        m = parse_message('MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01||')
+        parse_message('MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01||')
 
     def test_parse_segments(self):
         msh = 'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.5||||AL\r'
@@ -350,7 +350,7 @@ class TestParser(unittest.TestCase):
 
     def test_parse_field(self):
         field = 'xxx^yyy^zzz'
-        f = parse_field(field)  # exception thrown here
+        parse_field(field)  # exception thrown here
 
     def test_parse_field_invalid_encoding_chars(self):
         field = 'xxx^yyy^zzz'

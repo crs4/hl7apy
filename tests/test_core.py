@@ -392,7 +392,7 @@ class TestMessage(unittest.TestCase):
         self.assertEqual(pid1.children, m.rsp_k21_query_response.pid.children)
         self.assertNotIn("RSP_K21_QUERY_RESPONSE", m.children.traversal_indexes)
 
-        sub = m.rsp_k21_query_response.pid.pid_3.cx_10.cwe_1
+        m.rsp_k21_query_response.pid.pid_3.cx_10.cwe_1
 
     def test_create_v27_message(self):
         m = Message('RSP_K21', version='2.7')
@@ -626,7 +626,6 @@ class TestSegment(unittest.TestCase):
         self.assertRaises(OperationNotAllowed, Segment)
 
     def test_create_unsupported_version_segment(self):
-        s = Segment('PID', version='2.5')
         self.assertRaises(UnsupportedVersion, Segment, 'PID', version='2.0')
 
     def test_create_z_segment(self):

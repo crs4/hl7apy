@@ -42,16 +42,16 @@ class ParserError(HL7apyException):
 
 
 class ValidationError(HL7apyException):
-    """
+    r"""
     Error during validation
 
     >>> from hl7apy.parser import parse_message
     >>> from hl7apy.validation import VALIDATION_LEVEL
     >>> msh = 'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|' \
-    '0123456789|P|2.5||||AL\\r'
-    >>> evn = 'EVN||20080115153000||AAA|AAA|20080114003000\\r'
+    ... '0123456789|P|2.5||||AL\r'
+    >>> evn = 'EVN||20080115153000||AAA|AAA|20080114003000\r'
     >>> pid = 'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||' \
-    '555-555-2004~444-333-222|||M\\r'
+    ... '555-555-2004~444-333-222|||M\r'
     >>> message = msh + evn + pid
     >>> parse_message(message, validation_level=VALIDATION_LEVEL.STRICT, force_validation=True)  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
