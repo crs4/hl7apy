@@ -24,6 +24,7 @@ import os
 import platform
 import sys
 import unittest
+import warnings
 
 import hl7apy
 from hl7apy import DEFAULT_ENCODING_CHARS
@@ -551,6 +552,54 @@ class TestGroup(unittest.TestCase):
     def test_assign_value_unknown_group(self):
         g = Group()
         g.value = self.oml_o33_specimen
+
+    def _assert_deprecation_warning(self, w):
+        self.assertEqual(len(w), 1)
+        self.assertTrue(issubclass(w[0].category, DeprecationWarning))
+        self.assertIn('MDM_T02_OBSERVATION', str(w[0].message))
+
+    def test_deprecated_group_name_parsed_message(self):
+        msg = 'MSH|^~\\&|SND|FAC|RCV|FAC|20240101||MDM^T02^MDM_T02|1|P|2.5.1\r' \
+              'EVN|T02|20240101\r' \
+              'PID|1||123^^^HOSP^MR||DOE^JOHN\r' \
+              'PV1|1|O\r' \
+              'TXA|1|CN||20240101|||||||||DOC1||||||AU\r' \
+              'OBX|1|TX|DOC^Document||some text\r'
+        m = parse_message(msg)
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always')
+            g = m.mdm_t02_obxnte_suppgrp
+        self._assert_deprecation_warning(w)
+        self.assertIs(g[0], m.mdm_t02_observation[0])
+        self.assertEqual(g.obx.obx_5.value, 'some text')
+
+    def test_deprecated_group_name_new_message(self):
+        m = Message('MDM_T02', version='2.5.1', validation_level=VALIDATION_LEVEL.STRICT)
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always')
+            m.mdm_t02_obxnte_suppgrp.obx.obx_5 = 'some text'
+        self._assert_deprecation_warning(w)
+        self.assertEqual(m.mdm_t02_observation.obx.obx_5.value, 'some text')
+
+        g = Group('MDM_T02_OBSERVATION', version='2.5.1', validation_level=VALIDATION_LEVEL.STRICT)
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always')
+            m.mdm_t02_obxnte_suppgrp = g
+        self._assert_deprecation_warning(w)
+        self.assertIs(m.mdm_t02_observation[0], g)
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always')
+            del m.mdm_t02_obxnte_suppgrp
+        self._assert_deprecation_warning(w)
+        self.assertNotIn('MDM_T02_OBSERVATION', [c.name for c in m.children])
+
+    def test_new_group_name_does_not_warn(self):
+        m = Message('MDM_T02', version='2.5.1')
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always')
+            m.mdm_t02_observation.obx.obx_5 = 'some text'
+        self.assertEqual(w, [])
 
 
 class TestSegment(unittest.TestCase):

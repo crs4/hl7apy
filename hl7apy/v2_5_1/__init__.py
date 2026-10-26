@@ -35,6 +35,9 @@ ELEMENTS = {'Message': MESSAGES, 'Group': GROUPS, 'Segment': SEGMENTS,
             'Field': FIELDS, 'Component': DATATYPES, 'SubComponent': DATATYPES,
             'Datatypes_Structs': DATATYPES_STRUCTS, 'Table': TABLES}
 
+# deprecated names of renamed elements, kept for backward compatibility: {old name: new name}
+ALIASES = {'MDM_T02_OBXNTE_SUPPGRP': 'MDM_T02_OBSERVATION'}
+
 
 def get(name, element_type):
     try:

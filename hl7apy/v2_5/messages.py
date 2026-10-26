@@ -1724,7 +1724,7 @@ MESSAGES = {
                  ('PID', SEGMENTS['PID'], (1, 1), 'SEG'),
                  ('PV1', SEGMENTS['PV1'], (1, 1), 'SEG'),
                  ('MDM_T04_COMMON_ORDER', GROUPS['MDM_T04_COMMON_ORDER'], (0, -1), 'GRP'),
-                 ('TXA', SEGMENTS['TXA'], (0, 1), 'SEG'),
+                 ('TXA', SEGMENTS['TXA'], (1, 1), 'SEG'),
                  ('MDM_T04_OBSERVATION', GROUPS['MDM_T04_OBSERVATION'], (1, -1), 'GRP'),)),
     'MDM_T05': ('sequence',
                 (('MSH', SEGMENTS['MSH'], (1, 1), 'SEG'),

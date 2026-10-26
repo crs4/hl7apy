@@ -4550,7 +4550,7 @@ GROUPS = {
                        ['PV2', SEGMENTS['PV2'], (0, 1), 'SEG'],
                        ['PRT', SEGMENTS['PRT'], (0, -1), 'SEG'],)),
     'ORU_R40_COMMON_ORDER': ('sequence',
-                             (['ORC', SEGMENTS['ORC'], (0, 1), 'SEG'],
+                             (['ORC', SEGMENTS['ORC'], (1, 1), 'SEG'],
                               ['PRT', SEGMENTS['PRT'], (0, -1), 'SEG'],
                               ['ORU_R40_ORDER_DOCUMENT', None, (0, 1), 'GRP'],)),
     'ORU_R40_OBSERVATION': ('sequence',

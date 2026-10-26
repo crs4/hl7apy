@@ -34,7 +34,9 @@ except ImportError:
 import datetime
 from itertools import takewhile
 import importlib
+import sys
 import traceback
+import warnings
 
 from hl7apy import get_default_version, get_default_encoding_chars, \
     get_default_validation_level, check_validation_level, \
@@ -116,6 +118,22 @@ def _valid_z_segment_name(name):
 def _valid_z_field_name(name):
     regex = r'^z[a-z1-9]{2}_\d+$'
     return re.match(regex, name, re.IGNORECASE) is not None
+
+
+def _get_new_name(name, version):
+    """
+    Return the new name of an element that has been renamed in the given version, or ``None``.
+    A :exc:`DeprecationWarning` is emitted when the old name is used.
+    """
+    new_name = getattr(load_library(version), 'ALIASES', {}).get(name)
+    if new_name is not None:
+        # point the warning to the first caller outside hl7apy, so that it is shown to the user
+        frame, stacklevel = sys._getframe(1), 2
+        while frame is not None and frame.f_globals.get('__name__', '').split('.')[0] == 'hl7apy':
+            frame, stacklevel = frame.f_back, stacklevel + 1
+        warnings.warn('{0} is deprecated in version {1}, use {2} instead'.format(name, version, new_name),
+                      DeprecationWarning, stacklevel=stacklevel)
+    return new_name
 
 
 class ElementProxy(Sequence):
@@ -1830,6 +1848,8 @@ class Group(Element):
         name = name.upper()
         if isinstance(self.structure_by_name, MutableMapping):
             element = self.structure_by_name.get(name) or self.structure_by_longname.get(name)
+            if element is None:  # it may be the deprecated name of a renamed child
+                element = self.structure_by_name.get(_get_new_name(name, self.version))
         else:
             element = None
         if element is None:  # not found in self.structure
@@ -1946,6 +1966,8 @@ class Message(Group):
         name = name.upper()
         if isinstance(self.structure_by_name, MutableMapping):
             element = self.structure_by_name.get(name) or self.structure_by_longname.get(name)
+            if element is None:  # it may be the deprecated name of a renamed child
+                element = self.structure_by_name.get(_get_new_name(name, self.version))
         else:
             element = None
         if element is None:  # not found in self.structure
