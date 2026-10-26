@@ -16,6 +16,7 @@ build/
 docs/_build
 
 .cache
+.pytest_cache
 .tox
 .coverage
 MANIFEST

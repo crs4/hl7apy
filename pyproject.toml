@@ -38,6 +38,16 @@ Documentation = "https://crs4.github.io/hl7apy/"
 Source = "https://github.com/crs4/hl7apy"
 Issues = "https://github.com/crs4/hl7apy/issues"
 
+[dependency-groups]
+test = ["pytest", "pytest-cov"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "hl7apy"]
+addopts = ["--doctest-modules"]
+
+[tool.coverage.run]
+source = ["hl7apy"]
+
 [tool.setuptools]
 script-files = ["utils/hl7apy_profile_parser"]
 
