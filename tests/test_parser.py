@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2018, CRS4
 #
@@ -19,51 +18,67 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import
-
 import importlib
 import os
 import unittest
 
 import hl7apy
-from hl7apy.parser import parse_message, parse_segments, parse_segment, parse_fields, parse_field, \
-    parse_components, parse_component, parse_subcomponents, get_message_type
+from hl7apy.exceptions import (
+    InvalidEncodingChars,
+    InvalidName,
+    MaxChildLimitReached,
+    OperationNotAllowed,
+    ParserError,
+    ValidationError,
+)
+from hl7apy.parser import (
+    get_message_type,
+    parse_component,
+    parse_components,
+    parse_field,
+    parse_fields,
+    parse_message,
+    parse_segment,
+    parse_segments,
+    parse_subcomponents,
+)
 from hl7apy.validation import VALIDATION_LEVEL
-from hl7apy.exceptions import ParserError, OperationNotAllowed, InvalidEncodingChars, InvalidName, \
-    ValidationError, MaxChildLimitReached
 
 
 class TestParser(unittest.TestCase):
-
     def setUp(self):
-        self.rsp_k21 = \
-            'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|1234|D|2.5|||||ITA||EN\r' \
-            'MSA|AA|26775702551812240|\r' \
-            'QAK|111069|OK||1|1|0\r' \
-            'QPD|IHE PDQ Query|111069|@PID.3.1^1010110909194822~@PID.5.1^SMITH||||\r' \
+        self.rsp_k21 = (
+            'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|1234|D|2.5|||||ITA||EN\r'
+            'MSA|AA|26775702551812240|\r'
+            'QAK|111069|OK||1|1|0\r'
+            'QPD|IHE PDQ Query|111069|@PID.3.1^1010110909194822~@PID.5.1^SMITH||||\r'
             'PID|1||10101^^^GATEWAY&1.3.6.1.4.1.21367.2011.2.5.17&ISO||JOHN^SMITH^^^^^A||19690113|M|||VIA DELLE VIE^^CAGLIARI^^^100^H^^092009||||||||||||CAGLIARI|||||\r'
+        )
 
         # it misses some PID.3 components
-        self.invalid_rsp_k21 = \
-            'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|1234|D|2.5|||||ITA||EN\r' \
-            'MSA|AA|26775702551812240|\r' \
-            'QAK|111069|OK||1|1|0\r' \
-            'QPD|IHE PDQ Query|111069|@PID.3.1^1010110909194822~@PID.5.1^SMITH||||\r' \
+        self.invalid_rsp_k21 = (
+            'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|1234|D|2.5|||||ITA||EN\r'
+            'MSA|AA|26775702551812240|\r'
+            'QAK|111069|OK||1|1|0\r'
+            'QPD|IHE PDQ Query|111069|@PID.3.1^1010110909194822~@PID.5.1^SMITH||||\r'
             'PID|1||10101^^^||JOHN^SMITH^^^^^A||19690113|M|||VIA DELLE VIE^^CAGLIARI^^^100^H^^092009|||||||||||||||||\r'
+        )
 
-        self.rsp_k21_27 = \
-            'MSH|^~\\&#|SEND APP|SEND FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|1234|D|2.7|||||ITA||EN\r' \
-            'MSA|AA|26775702551812240\r' \
-            'QAK|111069|OK||1|1|0\r' \
-            'QPD|IHE PDQ Query|111069|@PID.3.1^1010110909194822~@PID.5.1^SMITH\r' \
+        self.rsp_k21_27 = (
+            'MSH|^~\\&#|SEND APP|SEND FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|1234|D|2.7|||||ITA||EN\r'
+            'MSA|AA|26775702551812240\r'
+            'QAK|111069|OK||1|1|0\r'
+            'QPD|IHE PDQ Query|111069|@PID.3.1^1010110909194822~@PID.5.1^SMITH\r'
             'PID|1||10101^^^GATEWAY&1.3.6.1.4.1.21367.2011.2.5.17&ISO||JOHN^SMITH^^^^^A||19690113|M|||VIA DELLE VIE^^CAGLIARI^^^100^H^^092009||||||||||||CAGLIARI'
+        )
 
-        self.rsp_k21_27_no_truncation = \
-            'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|1234|D|2.7|||||ITA||EN\r' \
-            'MSA|AA|26775702551812240\r' \
-            'QAK|111069|OK||1|1|0\r' \
-            'QPD|IHE PDQ Query|111069|@PID.3.1^1010110909194822~@PID.5.1^SMITH\r' \
+        self.rsp_k21_27_no_truncation = (
+            'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708163514||RSP^K22^RSP_K21|1234|D|2.7|||||ITA||EN\r'
+            'MSA|AA|26775702551812240\r'
+            'QAK|111069|OK||1|1|0\r'
+            'QPD|IHE PDQ Query|111069|@PID.3.1^1010110909194822~@PID.5.1^SMITH\r'
             'PID|1||10101^^^GATEWAY&1.3.6.1.4.1.21367.2011.2.5.17&ISO||JOHN^SMITH^^^^^A||19690113|M|||VIA DELLE VIE^^CAGLIARI^^^100^H^^092009||||||||||||CAGLIARI'
+        )
 
         base_path = os.path.abspath(os.path.dirname(__file__))
         path = os.path.join(base_path, 'profiles/iti_21')
@@ -71,40 +86,33 @@ class TestParser(unittest.TestCase):
 
     def _get_multiple_segments_groups_message(self):
 
-        msg_o33 = \
-            'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
-            'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009^^~^^^^^^L^^^|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100|||||||||||\r' \
-            'PV1||O|||||||||||||||||1107080001^^^LIS\r' \
-            'SPM|1|100187400201^||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
-            'ORC|NW|83428|83428|18740|SC||||20110708162817||||||||^\r' \
-            'TQ1|||||||||R\r' \
-            'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN\r' \
-            'SPM|2|100187400101^||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
-            'ORC|NW|83425|83425|18740|SC||||20110708162817||||||||^\r' \
-            'TQ1|||||||||R\r' \
-            'OBR||83425|83425|CA^S-CALCIUM^^CA||||||||||||ND^UNKNOWN^UNKNOWN\r' \
-            'ORC|NW|83426|83426|18740|SC||||20110708162817||||||||^\r' \
-            'TQ1|||||||||R\r' \
-            'OBR||83426|83426|HDL^HDL CHOLESTEROL^^HDL||||||||||||ND^UNKNOWN^UNKNOWN\r' \
-            'ORC|NW|83427|83427|18740|SC||||20110708162817||||||||^\r' \
-            'TQ1|||||||||R\r' \
+        msg_o33 = (
+            'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r'
+            'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009^^~^^^^^^L^^^|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100|||||||||||\r'
+            'PV1||O|||||||||||||||||1107080001^^^LIS\r'
+            'SPM|1|100187400201^||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r'
+            'ORC|NW|83428|83428|18740|SC||||20110708162817||||||||^\r'
+            'TQ1|||||||||R\r'
+            'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN\r'
+            'SPM|2|100187400101^||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r'
+            'ORC|NW|83425|83425|18740|SC||||20110708162817||||||||^\r'
+            'TQ1|||||||||R\r'
+            'OBR||83425|83425|CA^S-CALCIUM^^CA||||||||||||ND^UNKNOWN^UNKNOWN\r'
+            'ORC|NW|83426|83426|18740|SC||||20110708162817||||||||^\r'
+            'TQ1|||||||||R\r'
+            'OBR||83426|83426|HDL^HDL CHOLESTEROL^^HDL||||||||||||ND^UNKNOWN^UNKNOWN\r'
+            'ORC|NW|83427|83427|18740|SC||||20110708162817||||||||^\r'
+            'TQ1|||||||||R\r'
             'OBR||83427|83427|LDL^LDL CHOLESTEROL^^LDL||||||||||||ND^UNKNOWN^UNKNOWN\r'
+        )
 
         return msg_o33
 
     def _get_invalid_encoding_chars(self):
-        return {'COMPONENT': '$',
-                'SUBCOMPONENT': '@',
-                'REPETITION': 'r',
-                'ESCAPE': '@'}
+        return {'COMPONENT': '$', 'SUBCOMPONENT': '@', 'REPETITION': 'r', 'ESCAPE': '@'}
 
     def _get_custom_encoding_chars(self):
-        return {'SEGMENT': '\r',
-                'FIELD': '@',
-                'COMPONENT': '$',
-                'SUBCOMPONENT': '%',
-                'REPETITION': '*',
-                'ESCAPE': '\\'}
+        return {'SEGMENT': '\r', 'FIELD': '@', 'COMPONENT': '$', 'SUBCOMPONENT': '%', 'REPETITION': '*', 'ESCAPE': '\\'}
 
     def test_parse_message_ignoring_groups(self):
         msh = 'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.5||||AL\r'
@@ -157,12 +165,18 @@ class TestParser(unittest.TestCase):
         # by datatype name instead that by position it is the same than previous one
         self.assertEqual(message.oml_o33_specimen[0].spm.spm_27.cwe_1.to_er7(), 'CONTAINER')
         # access to the second order test belonging to the second specimen
-        self.assertEqual(message.oml_o33_specimen[1].oml_o33_order.
-                         oml_o33_observation_request.oml_o33_prior_result.
-                         oml_o33_order_prior.obr.obr_4.obr_4_1.to_er7(), 'HDL')
-        self.assertEqual(message.oml_o33_specimen[1].oml_o33_order.
-                         oml_o33_observation_request.oml_o33_prior_result.
-                         oml_o33_order_prior[1].obr.obr_4.obr_4_1.to_er7(), 'LDL')
+        self.assertEqual(
+            message.oml_o33_specimen[
+                1
+            ].oml_o33_order.oml_o33_observation_request.oml_o33_prior_result.oml_o33_order_prior.obr.obr_4.obr_4_1.to_er7(),
+            'HDL',
+        )
+        self.assertEqual(
+            message.oml_o33_specimen[1]
+            .oml_o33_order.oml_o33_observation_request.oml_o33_prior_result.oml_o33_order_prior[1]
+            .obr.obr_4.obr_4_1.to_er7(),
+            'LDL',
+        )
         # try to access to non-existent field
         # IndexError cannot be raised here to maintain lazy instantiation of children during traversal
         # with self.assertRaises(IndexError):
@@ -206,8 +220,9 @@ class TestParser(unittest.TestCase):
 
     def test_parse_unknown_message_strict(self):
         m = 'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.6||||AL\r'
-        self.assertRaises(ValidationError, parse_message, m,
-                          validation_level=VALIDATION_LEVEL.STRICT, force_validation=True)
+        self.assertRaises(
+            ValidationError, parse_message, m, validation_level=VALIDATION_LEVEL.STRICT, force_validation=True
+        )
         m = 'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000|||0123456789|P|2.6||||AL\r'
         self.assertRaises(OperationNotAllowed, parse_message, m, validation_level=VALIDATION_LEVEL.STRICT)
 
@@ -232,10 +247,10 @@ class TestParser(unittest.TestCase):
         self.assertRaises(OperationNotAllowed, parse_message, msg, validation_level=VALIDATION_LEVEL.STRICT)
 
     def test_parse_message_incomplete_structure(self):
-        m = parse_message('MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^|')
+        parse_message('MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^|')
 
     def test_parse_message_missing_version(self):
-        m = parse_message('MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01||')
+        parse_message('MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01||')
 
     def test_parse_segments(self):
         msh = 'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||ADT^A01^ADT_A01|0123456789|P|2.5||||AL\r'
@@ -254,11 +269,16 @@ class TestParser(unittest.TestCase):
 
     def test_parse_segment_invalid_encoding_chars(self):
         segment = 'EVN@@20080115153000@@@@20080114003000\r'
-        self.assertRaises(InvalidEncodingChars, parse_segment, segment,
-                          encoding_chars=self._get_invalid_encoding_chars())
-        self.assertRaises(InvalidEncodingChars, parse_segment, segment,
-                          encoding_chars=self._get_invalid_encoding_chars(),
-                          validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(
+            InvalidEncodingChars, parse_segment, segment, encoding_chars=self._get_invalid_encoding_chars()
+        )
+        self.assertRaises(
+            InvalidEncodingChars,
+            parse_segment,
+            segment,
+            encoding_chars=self._get_invalid_encoding_chars(),
+            validation_level=VALIDATION_LEVEL.STRICT,
+        )
 
     def test_parse_segment_custom_encoding_chars(self):
         segment = 'PV1@1@I@PATIENT WARD@U@@@@$REFERRING$DOCTOR$$MD@$CONSULTING$DOCTOR$P@CAR@@@@2@A0@@@@@@@@'
@@ -324,8 +344,13 @@ class TestParser(unittest.TestCase):
     def test_parse_fields_invalid_encoding_chars(self):
         fields = 'PID|xxx|yyy^zz'
         self.assertRaises(InvalidEncodingChars, parse_fields, fields, encoding_chars=self._get_invalid_encoding_chars())
-        self.assertRaises(InvalidEncodingChars, parse_fields, fields, encoding_chars=self._get_invalid_encoding_chars(),
-                          validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(
+            InvalidEncodingChars,
+            parse_fields,
+            fields,
+            encoding_chars=self._get_invalid_encoding_chars(),
+            validation_level=VALIDATION_LEVEL.STRICT,
+        )
 
     def test_parse_fields_custom_encoding_chars(self):
         fields = 'xxx@yyy$zz'
@@ -335,13 +360,18 @@ class TestParser(unittest.TestCase):
 
     def test_parse_field(self):
         field = 'xxx^yyy^zzz'
-        f = parse_field(field)  # exception thrown here
+        parse_field(field)  # exception thrown here
 
     def test_parse_field_invalid_encoding_chars(self):
         field = 'xxx^yyy^zzz'
         self.assertRaises(InvalidEncodingChars, parse_field, field, encoding_chars=self._get_invalid_encoding_chars())
-        self.assertRaises(InvalidEncodingChars, parse_field, field, encoding_chars=self._get_invalid_encoding_chars(),
-                          validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(
+            InvalidEncodingChars,
+            parse_field,
+            field,
+            encoding_chars=self._get_invalid_encoding_chars(),
+            validation_level=VALIDATION_LEVEL.STRICT,
+        )
 
     def test_parse_field_custom_encoding_chars(self):
         field = 'aaa$bbb$ccc'
@@ -376,11 +406,16 @@ class TestParser(unittest.TestCase):
 
     def test_parse_components_invalid_encoding_chars(self):
         components = 'aaa^bbb'
-        self.assertRaises(InvalidEncodingChars, parse_components, components,
-                          encoding_chars=self._get_invalid_encoding_chars())
-        self.assertRaises(InvalidEncodingChars, parse_components, components,
-                          encoding_chars=self._get_invalid_encoding_chars(),
-                          validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(
+            InvalidEncodingChars, parse_components, components, encoding_chars=self._get_invalid_encoding_chars()
+        )
+        self.assertRaises(
+            InvalidEncodingChars,
+            parse_components,
+            components,
+            encoding_chars=self._get_invalid_encoding_chars(),
+            validation_level=VALIDATION_LEVEL.STRICT,
+        )
 
     def test_parse_component(self):
         component = 'comp'
@@ -405,11 +440,16 @@ class TestParser(unittest.TestCase):
 
     def test_parse_component_invalid_encoding_chars(self):
         component = 'comp'
-        self.assertRaises(InvalidEncodingChars, parse_component, component,
-                          encoding_chars=self._get_invalid_encoding_chars())
-        self.assertRaises(InvalidEncodingChars, parse_component, component,
-                          encoding_chars=self._get_invalid_encoding_chars(),
-                          validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(
+            InvalidEncodingChars, parse_component, component, encoding_chars=self._get_invalid_encoding_chars()
+        )
+        self.assertRaises(
+            InvalidEncodingChars,
+            parse_component,
+            component,
+            encoding_chars=self._get_invalid_encoding_chars(),
+            validation_level=VALIDATION_LEVEL.STRICT,
+        )
 
     def test_parse_invalid_name_component_strict(self):
         self.assertRaises(InvalidName, parse_component, 'xxx', 'XXX', validation_level=VALIDATION_LEVEL.STRICT)
@@ -426,10 +466,16 @@ class TestParser(unittest.TestCase):
 
     def test_parse_subcomponents_invalid_encoding_chars(self):
         subcomponents = 'sub1&subcomp&sub2'
-        self.assertRaises(InvalidEncodingChars, parse_subcomponents, subcomponents,
-                          encoding_chars=self._get_invalid_encoding_chars())
-        self.assertRaises(InvalidEncodingChars, parse_subcomponents, subcomponents,
-                          encoding_chars=self._get_invalid_encoding_chars(), validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(
+            InvalidEncodingChars, parse_subcomponents, subcomponents, encoding_chars=self._get_invalid_encoding_chars()
+        )
+        self.assertRaises(
+            InvalidEncodingChars,
+            parse_subcomponents,
+            subcomponents,
+            encoding_chars=self._get_invalid_encoding_chars(),
+            validation_level=VALIDATION_LEVEL.STRICT,
+        )
 
     def test_message_profile(self):
         m = parse_message(self.rsp_k21, message_profile=self.rsp_k21_mp, validation_level=VALIDATION_LEVEL.TOLERANT)
@@ -441,8 +487,14 @@ class TestParser(unittest.TestCase):
         self.assertFalse(m.qpd.allow_infinite_children)
 
     def test_message_profile_invalid_message(self):
-        self.assertRaises(ValidationError, parse_message, self.invalid_rsp_k21, message_profile=self.rsp_k21_mp,
-                          validation_level=VALIDATION_LEVEL.STRICT, force_validation=True)
+        self.assertRaises(
+            ValidationError,
+            parse_message,
+            self.invalid_rsp_k21,
+            message_profile=self.rsp_k21_mp,
+            validation_level=VALIDATION_LEVEL.STRICT,
+            force_validation=True,
+        )
 
     def test_get_message_type(self):
         msh = 'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20080115153000||{}|0123456789|P|2.5||||AL\r'
@@ -468,8 +520,9 @@ class TestParser(unittest.TestCase):
         """
         # The EV1 message is of type WD
         s = 'EVN|EV1|20080115153000||AAA|AAA|20080114003000'
-        self.assertRaises(MaxChildLimitReached, parse_segment, s, version='2.7',
-                          validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(
+            MaxChildLimitReached, parse_segment, s, version='2.7', validation_level=VALIDATION_LEVEL.STRICT
+        )
         parsed_s = parse_segment(s, version='2.7')
         self.assertEqual(parsed_s.to_er7(), s)
 

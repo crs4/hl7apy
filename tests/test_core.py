@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2018, CRS4
 #
@@ -19,84 +18,95 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import
 import os
 import platform
-import sys
 import unittest
 import warnings
 
 import hl7apy
 from hl7apy import DEFAULT_ENCODING_CHARS
-from hl7apy.core import Message, Segment, Field, Group, Component, SubComponent, ElementProxy
-from hl7apy.exceptions import ChildNotValid, ChildNotFound, OperationNotAllowed, InvalidName, \
-    MaxChildLimitReached, UnsupportedVersion, InvalidEncodingChars, \
-    MaxLengthReached, MessageProfileNotFound, LegacyMessageProfile
-from hl7apy.v2_5 import ST, SI
-from hl7apy.validation import VALIDATION_LEVEL
+from hl7apy.core import Component, ElementProxy, Field, Group, Message, Segment, SubComponent
+from hl7apy.exceptions import (
+    ChildNotFound,
+    ChildNotValid,
+    InvalidEncodingChars,
+    InvalidName,
+    LegacyMessageProfile,
+    MaxChildLimitReached,
+    MaxLengthReached,
+    MessageProfileNotFound,
+    OperationNotAllowed,
+    UnsupportedVersion,
+)
 from hl7apy.parser import parse_message, parse_segment
+from hl7apy.v2_5 import SI, ST
+from hl7apy.validation import VALIDATION_LEVEL
 
 
 def _get_invalid_encoding_chars():
-    return {'COMPONENT': '$',
-            'SUBCOMPONENT': '@',
-            'REPETITION': 'r',
-            'ESCAPE': '@'}
+    return {'COMPONENT': '$', 'SUBCOMPONENT': '@', 'REPETITION': 'r', 'ESCAPE': '@'}
 
 
 def _get_test_msg():
-    return 'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
-           'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009^^~^^^^^^L^^^|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100|||||||||||\r' \
-           'PV1||O|||||||||||||||||1107080001^^^LIS\r' \
-           'SPM|1|100187400201^||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
-           'ORC|NW|83428|83428|18740|SC||||20110708162817||||||||^\r' \
-           'TQ1|||||||||R\r' \
-           'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN\r'
+    return (
+        'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r'
+        'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009^^~^^^^^^L^^^|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100|||||||||||\r'
+        'PV1||O|||||||||||||||||1107080001^^^LIS\r'
+        'SPM|1|100187400201^||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r'
+        'ORC|NW|83428|83428|18740|SC||||20110708162817||||||||^\r'
+        'TQ1|||||||||R\r'
+        'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN\r'
+    )
 
 
 def _get_test_msg_2():
-    return 'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33|978226056138290600|D|2.5|||||USA||EN\r' \
-           'PID|1||566-554-3423^^^GHH^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r' \
-           'PV1||O|||||||||||||||||1107080001^^^LIS\r' \
-           'SPM|1|100187400201||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
-           'ORC|NW|83428|83428|18740|SC||||20110708162817||||||||\r' \
-           'TQ1|||||||||R\r' \
-           'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN\r' \
-           'SPM|2|100187400101||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
-           'ORC|NW|83425|83425|18740|SC||||20110708162817||||||||\rTQ1|||||||||R\r' \
-           'OBR||83425|83425|CA^S-CALCIUM^^CA||||||||||||ND^Sconosciuto^Sconosciuto\rORC|NW|83426|83426|18740|SC||||20110708162817||||||||\r' \
-           'TQ1|||||||||R\rOBR||83426|83426|HDL^HDL CHOLESTEROL^^HDL||||||||||||ND^UNKNOWN^UNKNOWN\r' \
-           'ORC|NW|83427|83427|18740|SC||||20110708162817||||||||\r' \
-           'TQ1|||||||||R\rOBR||83427|83427|LDL^LDL CHOLESTEROL^^LDL||||||||||||ND^UNKNOWN^UNKNOWN'
+    return (
+        'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33|978226056138290600|D|2.5|||||USA||EN\r'
+        'PID|1||566-554-3423^^^GHH^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r'
+        'PV1||O|||||||||||||||||1107080001^^^LIS\r'
+        'SPM|1|100187400201||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r'
+        'ORC|NW|83428|83428|18740|SC||||20110708162817||||||||\r'
+        'TQ1|||||||||R\r'
+        'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN\r'
+        'SPM|2|100187400101||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r'
+        'ORC|NW|83425|83425|18740|SC||||20110708162817||||||||\rTQ1|||||||||R\r'
+        'OBR||83425|83425|CA^S-CALCIUM^^CA||||||||||||ND^Sconosciuto^Sconosciuto\rORC|NW|83426|83426|18740|SC||||20110708162817||||||||\r'
+        'TQ1|||||||||R\rOBR||83426|83426|HDL^HDL CHOLESTEROL^^HDL||||||||||||ND^UNKNOWN^UNKNOWN\r'
+        'ORC|NW|83427|83427|18740|SC||||20110708162817||||||||\r'
+        'TQ1|||||||||R\rOBR||83427|83427|LDL^LDL CHOLESTEROL^^LDL||||||||||||ND^UNKNOWN^UNKNOWN'
+    )
 
 
 def _get_fail_test_msg():
     # This message will fail validation because of the OML_O33 message structure
-    return 'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
-           'PID|1||566-554-3423^^^GHH^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r' \
-           'PV1||O|||||||||||||||||1107080001^^^LIS\r' \
-           'SPM|1|100187400201||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
-           'ORC|NW|83428|83428|18740|SC||||20110708162817||||||||\r' \
-           'TQ1|||||||||R\r' \
-           'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN\r' \
-           'SPM|2|100187400101||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
-           'ORC|NW|83425|83425|18740|SC||||20110708162817||||||||\rTQ1|||||||||R\r' \
-           'OBR||83425|83425|CA^S-CALCIUM^^CA||||||||||||ND^Sconosciuto^Sconosciuto\rORC|NW|83426|83426|18740|SC||||20110708162817||||||||\r' \
-           'TQ1|||||||||R\rOBR||83426|83426|HDL^HDL CHOLESTEROL^^HDL||||||||||||ND^UNKNOWN^UNKNOWN\r' \
-           'ORC|NW|83427|83427|18740|SC||||20110708162817||||||||\r' \
-           'TQ1|||||||||R\rOBR||83427|83427|LDL^LDL CHOLESTEROL^^LDL||||||||||||ND^UNKNOWN^UNKNOWN'
+    return (
+        'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r'
+        'PID|1||566-554-3423^^^GHH^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r'
+        'PV1||O|||||||||||||||||1107080001^^^LIS\r'
+        'SPM|1|100187400201||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r'
+        'ORC|NW|83428|83428|18740|SC||||20110708162817||||||||\r'
+        'TQ1|||||||||R\r'
+        'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN\r'
+        'SPM|2|100187400101||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r'
+        'ORC|NW|83425|83425|18740|SC||||20110708162817||||||||\rTQ1|||||||||R\r'
+        'OBR||83425|83425|CA^S-CALCIUM^^CA||||||||||||ND^Sconosciuto^Sconosciuto\rORC|NW|83426|83426|18740|SC||||20110708162817||||||||\r'
+        'TQ1|||||||||R\rOBR||83426|83426|HDL^HDL CHOLESTEROL^^HDL||||||||||||ND^UNKNOWN^UNKNOWN\r'
+        'ORC|NW|83427|83427|18740|SC||||20110708162817||||||||\r'
+        'TQ1|||||||||R\rOBR||83427|83427|LDL^LDL CHOLESTEROL^^LDL||||||||||||ND^UNKNOWN^UNKNOWN'
+    )
 
 
 def _get_rsp_k21_mp_msg():
-    return 'MSH|^~\\&|SENDING APP|SENDING FAC|RECEIVING APP|RECEIVING FAC|20140410170011||RSP^K22^RSP_K21|11111111|P|2.5\r' \
-           'MSA|AA|20140410170015\r' \
-           'QAK|222222222|OK\r' \
-           'QPD|IHE PDQ Query|222222222|@PID.3.1.1^3333333|||||^^^IHEFACILITY&1.3.6.1.4.1.21367.3000.1.6&ISO|\r' \
-           'PID|1||10101109091948^^^GATEWAY&1.3.6.1.4.1.21367.2011.2.5.17&ISO||JOHN^SMITH^^^^^A||19690113|M|||VIA DELLE VIE^^CAGLIARI^^^ITA^H^^092009||||||||||||CAGLIARI|||\r'
+    return (
+        'MSH|^~\\&|SENDING APP|SENDING FAC|RECEIVING APP|RECEIVING FAC|20140410170011||RSP^K22^RSP_K21|11111111|P|2.5\r'
+        'MSA|AA|20140410170015\r'
+        'QAK|222222222|OK\r'
+        'QPD|IHE PDQ Query|222222222|@PID.3.1.1^3333333|||||^^^IHEFACILITY&1.3.6.1.4.1.21367.3000.1.6&ISO|\r'
+        'PID|1||10101109091948^^^GATEWAY&1.3.6.1.4.1.21367.2011.2.5.17&ISO||JOHN^SMITH^^^^^A||19690113|M|||VIA DELLE VIE^^CAGLIARI^^^ITA^H^^092009||||||||||||CAGLIARI|||\r'
+    )
 
 
 class TestMessage(unittest.TestCase):
-
     def setUp(self):
         base_path = os.path.abspath(os.path.dirname(__file__))
         mp_path = os.path.join(base_path, 'profiles/iti_21')
@@ -130,9 +140,13 @@ class TestMessage(unittest.TestCase):
 
     def test_create_invalid_encoding_chars_message(self):
         self.assertRaises(InvalidEncodingChars, Message, encoding_chars=_get_invalid_encoding_chars())
-        self.assertRaises(InvalidEncodingChars, Message, 'ADT_A01',
-                          encoding_chars=_get_invalid_encoding_chars(),
-                          validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(
+            InvalidEncodingChars,
+            Message,
+            'ADT_A01',
+            encoding_chars=_get_invalid_encoding_chars(),
+            validation_level=VALIDATION_LEVEL.STRICT,
+        )
 
     def test_create_insensitive(self):
         e = Message('oml_o35')
@@ -286,7 +300,7 @@ class TestMessage(unittest.TestCase):
             b.pid = 'PAP||abc||'
 
     def test_add_segment_to_message_mix(self):
-        a = Message('OML_O33',  validation_level=VALIDATION_LEVEL.TOLERANT)
+        a = Message('OML_O33', validation_level=VALIDATION_LEVEL.TOLERANT)
         msh = Segment('MSH', validation_level=VALIDATION_LEVEL.TOLERANT)
         pid = Segment('PID', validation_level=VALIDATION_LEVEL.TOLERANT)
         g = Group('OML_O33_PATIENT')
@@ -321,15 +335,13 @@ class TestMessage(unittest.TestCase):
 
         msg = _get_rsp_k21_mp_msg()
         a = Message('RSP_K21', validation_level=VALIDATION_LEVEL.TOLERANT, reference=self.rsp_k21_mp)
-        parsed_a = parse_message(msg, message_profile=self.rsp_k21_mp,
-                                 validation_level=VALIDATION_LEVEL.TOLERANT)
+        parsed_a = parse_message(msg, message_profile=self.rsp_k21_mp, validation_level=VALIDATION_LEVEL.TOLERANT)
         a.value = msg
         self.assertEqual(a.to_er7(), parsed_a.to_er7())
 
         msg = _get_rsp_k21_mp_msg()
         a = Message('RSP_K21', validation_level=VALIDATION_LEVEL.STRICT, reference=self.rsp_k21_mp)
-        parsed_a = parse_message(msg, message_profile=self.rsp_k21_mp,
-                                 validation_level=VALIDATION_LEVEL.STRICT)
+        parsed_a = parse_message(msg, message_profile=self.rsp_k21_mp, validation_level=VALIDATION_LEVEL.STRICT)
         a.value = msg
         self.assertEqual(a.to_er7(), parsed_a.to_er7())
 
@@ -349,6 +361,7 @@ class TestMessage(unittest.TestCase):
 
     def test_message_profile_not_found(self):
         self.assertRaises(MessageProfileNotFound, Message, 'ADT_A01', reference=self.rsp_k21_mp)
+
     # def test_message_ordered_children(self):
     #    m = Message('OML_O33')
     #    m.add(Group('OML_O33_PATIENT'))
@@ -383,7 +396,7 @@ class TestMessage(unittest.TestCase):
         self.assertEqual(pid1.children, m.rsp_k21_query_response.pid.children)
         self.assertNotIn("RSP_K21_QUERY_RESPONSE", m.children.traversal_indexes)
 
-        sub = m.rsp_k21_query_response.pid.pid_3.cx_10.cwe_1
+        m.rsp_k21_query_response.pid.pid_3.cx_10.cwe_1
 
     def test_create_v27_message(self):
         m = Message('RSP_K21', version='2.7')
@@ -400,13 +413,14 @@ class TestMessage(unittest.TestCase):
 
 
 class TestGroup(unittest.TestCase):
-
     # Group test cases
     def setUp(self):
-        self.oml_o33_specimen = 'SPM|1|100187400201||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
-           'ORC|NW|83428|83428|18740|SC||||20110708162817\r' \
-           'TQ1|||||||||R\r' \
-           'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN'
+        self.oml_o33_specimen = (
+            'SPM|1|100187400201||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r'
+            'ORC|NW|83428|83428|18740|SC||||20110708162817\r'
+            'TQ1|||||||||R\r'
+            'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN'
+        )
 
         self.rsp_k21_query_response = 'PID|1||10101109091948^^^GATEWAY&1.3.6.1.4.1.21367.2011.2.5.17&ISO||JOHN^SMITH^^^^^A||19690113|M|||VIA DELLE VIE^^CAGLIARI^^^ITA^H^^092009||||||||||||CAGLIARI'
 
@@ -559,12 +573,14 @@ class TestGroup(unittest.TestCase):
         self.assertIn('MDM_T02_OBSERVATION', str(w[0].message))
 
     def test_deprecated_group_name_parsed_message(self):
-        msg = 'MSH|^~\\&|SND|FAC|RCV|FAC|20240101||MDM^T02^MDM_T02|1|P|2.5.1\r' \
-              'EVN|T02|20240101\r' \
-              'PID|1||123^^^HOSP^MR||DOE^JOHN\r' \
-              'PV1|1|O\r' \
-              'TXA|1|CN||20240101|||||||||DOC1||||||AU\r' \
-              'OBX|1|TX|DOC^Document||some text\r'
+        msg = (
+            'MSH|^~\\&|SND|FAC|RCV|FAC|20240101||MDM^T02^MDM_T02|1|P|2.5.1\r'
+            'EVN|T02|20240101\r'
+            'PID|1||123^^^HOSP^MR||DOE^JOHN\r'
+            'PV1|1|O\r'
+            'TXA|1|CN||20240101|||||||||DOC1||||||AU\r'
+            'OBX|1|TX|DOC^Document||some text\r'
+        )
         m = parse_message(msg)
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter('always')
@@ -603,7 +619,6 @@ class TestGroup(unittest.TestCase):
 
 
 class TestSegment(unittest.TestCase):
-
     def setUp(self):
         base_path = os.path.abspath(os.path.dirname(__file__))
         path = os.path.join(base_path, 'profiles/iti_21')
@@ -617,7 +632,6 @@ class TestSegment(unittest.TestCase):
         self.assertRaises(OperationNotAllowed, Segment)
 
     def test_create_unsupported_version_segment(self):
-        s = Segment('PID', version='2.5')
         self.assertRaises(UnsupportedVersion, Segment, 'PID', version='2.0')
 
     def test_create_z_segment(self):
@@ -877,7 +891,6 @@ class TestSegment(unittest.TestCase):
 
 
 class TestField(unittest.TestCase):
-
     def setUp(self):
         base_path = os.path.abspath(os.path.dirname(__file__))
         path = os.path.join(base_path, 'profiles/iti_21')
@@ -1075,11 +1088,10 @@ class TestField(unittest.TestCase):
         self.assertRaises(MaxChildLimitReached, f.add_component, 'CX_1')
 
     def test_override_field_datatype_strict(self):
-        f = Field('pid_3',  validation_level=VALIDATION_LEVEL.STRICT)
+        f = Field('pid_3', validation_level=VALIDATION_LEVEL.STRICT)
         with self.assertRaises(OperationNotAllowed):
             f.datatype = 'HD'
-        self.assertRaises(OperationNotAllowed, Field, 'pid_3', datatype='HD',
-                          validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(OperationNotAllowed, Field, 'pid_3', datatype='HD', validation_level=VALIDATION_LEVEL.STRICT)
         # in this case we are assigning the official datatype to the Field, thus no exception should be raised
         b = Field('pid_3', 'CX', validation_level=VALIDATION_LEVEL.STRICT)
         self.assertEqual(b.datatype, 'CX')
@@ -1144,7 +1156,7 @@ class TestField(unittest.TestCase):
         with self.assertRaises(ChildNotValid):
             f.value = ST('aaa')
 
-        f = Field('PID_3', validation_level=VALIDATION_LEVEL.TOLERANT) # It is a complex datatype field
+        f = Field('PID_3', validation_level=VALIDATION_LEVEL.TOLERANT)  # It is a complex datatype field
         with self.assertRaises(ChildNotValid):
             f.value = ST('aaa')
 
@@ -1156,7 +1168,7 @@ class TestField(unittest.TestCase):
         with self.assertRaises(ChildNotValid):
             f.value = ST('aaa')
 
-        f = Field('PID_3', validation_level=VALIDATION_LEVEL.STRICT) # It is a complex datatype field
+        f = Field('PID_3', validation_level=VALIDATION_LEVEL.STRICT)  # It is a complex datatype field
         with self.assertRaises(ChildNotValid):
             f.value = ST('aaa')
 
@@ -1366,7 +1378,6 @@ class TestField(unittest.TestCase):
 
 
 class TestComponent(unittest.TestCase):
-
     def setUp(self):
         base_path = os.path.abspath(os.path.dirname(__file__))
         path = os.path.join(base_path, 'profiles/iti_21')
@@ -1384,7 +1395,7 @@ class TestComponent(unittest.TestCase):
     def test_create_unknown_component(self):
         self.assertRaises(InvalidName, Component, 'xxx_1')
         self.assertRaises(InvalidName, Component, 'xxx_1', validation_level=VALIDATION_LEVEL.STRICT)
-        self.assertRaises(InvalidName, Component, 'AD') # AD is a datatype but not a correct component name
+        self.assertRaises(InvalidName, Component, 'AD')  # AD is a datatype but not a correct component name
 
     def test_create_unsupported_version_component(self):
         self.assertRaises(UnsupportedVersion, Component, version='2.0')
@@ -1526,8 +1537,9 @@ class TestComponent(unittest.TestCase):
         with self.assertRaises(OperationNotAllowed):
             c1.datatype = 'TX'
 
-        self.assertRaises(OperationNotAllowed, Component, 'CX_1', datatype='TX',
-                          validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(
+            OperationNotAllowed, Component, 'CX_1', datatype='TX', validation_level=VALIDATION_LEVEL.STRICT
+        )
 
         m = Message('RSP_K21', reference=self.rsp_k21_mp, validation_level=VALIDATION_LEVEL.TOLERANT)
         c = m.add_segment('QPD').add_field('QPD_8').add_component('CX_1')
@@ -1630,7 +1642,7 @@ class TestComponent(unittest.TestCase):
         cmp_str = '1&2'
 
         # tolerant
-        c = Component('CWE_1', validation_level=VALIDATION_LEVEL.TOLERANT) # more child than allowed
+        c = Component('CWE_1', validation_level=VALIDATION_LEVEL.TOLERANT)  # more child than allowed
         c.value = cmp_str
         self.assertEqual(c.to_er7(), cmp_str)
         self.assertEqual(len(c.children), 2)
@@ -1641,7 +1653,7 @@ class TestComponent(unittest.TestCase):
             c.value = cmp_str
 
         # unknown
-        c = Component('CWE_1', validation_level=VALIDATION_LEVEL.TOLERANT) # more child than allowed
+        c = Component('CWE_1', validation_level=VALIDATION_LEVEL.TOLERANT)  # more child than allowed
         c.value = cmp_str
         self.assertEqual(c.to_er7(), cmp_str)
         self.assertEqual(len(c.children), 2)
@@ -1649,26 +1661,28 @@ class TestComponent(unittest.TestCase):
         # max length
         # tolerant
         for dt in ('ST', 'ID', 'FT', 'GTS', 'IS', 'TX'):
-            c = Component(datatype=dt, validation_level=VALIDATION_LEVEL.TOLERANT) # max length reached string type
-            c.value = 65537*'a'
+            c = Component(datatype=dt, validation_level=VALIDATION_LEVEL.TOLERANT)  # max length reached string type
+            c.value = 65537 * 'a'
         for dt in ('NM', 'SI'):
             c = Component(datatype=dt, validation_level=VALIDATION_LEVEL.TOLERANT)
-            c.value = 5*'1'
+            c.value = 5 * '1'
 
         # strict
-        c = Component(datatype='ID', validation_level=VALIDATION_LEVEL.STRICT) # ID works because its length depends on HL7 table
-        c.value = 65537*'a'
-        self.assertEqual(c.to_er7(), 65537*'a')
+        c = Component(
+            datatype='ID', validation_level=VALIDATION_LEVEL.STRICT
+        )  # ID works because its length depends on HL7 table
+        c.value = 65537 * 'a'
+        self.assertEqual(c.to_er7(), 65537 * 'a')
         for dt in ('ST', 'FT', 'GTS', 'IS', 'TX'):
             with self.assertRaises(MaxLengthReached):
-                c = Component(datatype=dt, validation_level=VALIDATION_LEVEL.STRICT) # max length reached string type
-                c.value = 65537*'a'
+                c = Component(datatype=dt, validation_level=VALIDATION_LEVEL.STRICT)  # max length reached string type
+                c.value = 65537 * 'a'
         with self.assertRaises(MaxLengthReached):
             c = Component(datatype='NM', validation_level=VALIDATION_LEVEL.STRICT)
-            c.value = 17*'1'
+            c.value = 17 * '1'
         with self.assertRaises(MaxLengthReached):
             c = Component(datatype='SI', validation_level=VALIDATION_LEVEL.STRICT)
-            c.value = 5*'1'
+            c.value = 5 * '1'
 
         # complex datatypes
         # tolerant
@@ -1724,7 +1738,6 @@ class TestComponent(unittest.TestCase):
         c = m.add_segment('qpd').add_field('qpd_8').add_component('cx_2')
         with self.assertRaises(MaxChildLimitReached):
             c.value = cmp_str
-
 
         complex_cmp_str = 'xxx&yyy&zzz'
 
@@ -1991,7 +2004,6 @@ class TestComponent(unittest.TestCase):
 
 
 class TestSubComponent(unittest.TestCase):
-
     def setUp(self):
         base_path = os.path.abspath(os.path.dirname(__file__))
         path = os.path.join(base_path, 'profiles/iti_21')
@@ -2021,8 +2033,9 @@ class TestSubComponent(unittest.TestCase):
         s = SubComponent('HD_1', datatype='TX', validation_level=VALIDATION_LEVEL.TOLERANT)
         self.assertEqual(s.datatype, 'TX')
 
-        self.assertRaises(OperationNotAllowed, SubComponent, 'HD_1', datatype='TX',
-                          validation_level=VALIDATION_LEVEL.STRICT)
+        self.assertRaises(
+            OperationNotAllowed, SubComponent, 'HD_1', datatype='TX', validation_level=VALIDATION_LEVEL.STRICT
+        )
 
         s = SubComponent('HD_1', validation_level=VALIDATION_LEVEL.TOLERANT)
         s.datatype = 'TX'
@@ -2160,10 +2173,10 @@ class TestSubComponent(unittest.TestCase):
 
         for dt in ('ST', 'ID', 'FT', 'GTS', 'IS', 'TX'):
             s = SubComponent(datatype=dt)  # max length reached string type
-            s.value = 65537*'a'
+            s.value = 65537 * 'a'
         for dt in ('NM', 'SI'):
             s = SubComponent(datatype=dt)
-            s.value = 65537*'1'
+            s.value = 65537 * '1'
 
         # strict
         s = SubComponent('CWE_1', validation_level=VALIDATION_LEVEL.STRICT)
@@ -2175,7 +2188,7 @@ class TestSubComponent(unittest.TestCase):
             # max length reached string type
             s = SubComponent(datatype=dt, validation_level=VALIDATION_LEVEL.STRICT)
             with self.assertRaises(MaxLengthReached):
-                s.value = 65537*'a'
+                s.value = 65537 * 'a'
 
         s = SubComponent(datatype='NM', validation_level=VALIDATION_LEVEL.STRICT)
         with self.assertRaises(MaxLengthReached):
@@ -2183,7 +2196,7 @@ class TestSubComponent(unittest.TestCase):
 
         s = SubComponent(datatype='SI', validation_level=VALIDATION_LEVEL.STRICT)
         with self.assertRaises(MaxLengthReached):
-            s.value = 5*'1'
+            s.value = 5 * '1'
 
     def test_add_child_to_subcomponent(self):
         a = SubComponent('HD_1')

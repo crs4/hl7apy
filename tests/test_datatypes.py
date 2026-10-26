@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2018, CRS4
 #
@@ -19,21 +18,31 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import
 import unittest
-
 from datetime import datetime
-from hl7apy.base_datatypes import DT, TM, DTM, ST, FT, ID, IS, TX, GTS, NM, SI, TN
-from hl7apy.v2_7 import ST as ST27, FT as FT27, ID as ID27, IS as IS27, TX as TX27, GTS as GTS27, SNM
-from hl7apy.factories import datatype_factory
-from hl7apy.exceptions import InvalidDateFormat, InvalidDateOffset, MaxLengthReached, \
-    InvalidHighlightRange, InvalidDataType, InvalidMicrosecondsPrecision
-from hl7apy.validation import VALIDATION_LEVEL
 from decimal import Decimal
+
+from hl7apy.base_datatypes import DT, DTM, FT, GTS, ID, IS, NM, SI, ST, TM, TN, TX
+from hl7apy.exceptions import (
+    InvalidDataType,
+    InvalidDateFormat,
+    InvalidDateOffset,
+    InvalidHighlightRange,
+    InvalidMicrosecondsPrecision,
+    MaxLengthReached,
+)
+from hl7apy.factories import datatype_factory
+from hl7apy.v2_7 import FT as FT27
+from hl7apy.v2_7 import GTS as GTS27
+from hl7apy.v2_7 import ID as ID27
+from hl7apy.v2_7 import IS as IS27
+from hl7apy.v2_7 import SNM
+from hl7apy.v2_7 import ST as ST27
+from hl7apy.v2_7 import TX as TX27
+from hl7apy.validation import VALIDATION_LEVEL
 
 
 class TestDatatypeFactory(unittest.TestCase):
-
     def test_datatype_creation(self):
         st = datatype_factory('ST', 'string')
         self.assertEqual(st.classname, 'ST')
@@ -128,7 +137,6 @@ class TestDatatypeFactory(unittest.TestCase):
 
 
 class TestDT(unittest.TestCase):
-
     def test_DT(self):
         date = datetime.strptime('2013', '%Y')
         date1 = datetime.strptime('201307', '%Y%m')
@@ -154,11 +162,15 @@ class TestDT(unittest.TestCase):
 
     def test_DT_wrong_default_format_strict(self):
         date = datetime.strptime('20', '%H')
-        self.assertRaises(InvalidDateFormat, DT, date, out_format='%H', )
+        self.assertRaises(
+            InvalidDateFormat,
+            DT,
+            date,
+            out_format='%H',
+        )
 
 
 class TestTM(unittest.TestCase):
-
     def test_TM(self):
 
         time = datetime.strptime('01', '%H')
@@ -224,7 +236,6 @@ class TestTM(unittest.TestCase):
 
 
 class TestDTM(unittest.TestCase):
-
     def test_DTM(self):
         dtime = datetime.strptime('2013', '%Y')
         dtime1 = datetime.strptime('201307', '%Y%m')
@@ -290,7 +301,6 @@ class TestDTM(unittest.TestCase):
 
 
 class TestST(unittest.TestCase):
-
     # Test ST datatype
 
     def test_ST(self):
@@ -342,7 +352,6 @@ class TestST(unittest.TestCase):
 
 
 class TestFT(unittest.TestCase):
-
     # Test FT datatype
 
     def test_FT(self):
@@ -395,7 +404,6 @@ class TestFT(unittest.TestCase):
 
 
 class TestID(unittest.TestCase):
-
     # Test ID datatype
 
     def test_ID(self):
@@ -440,7 +448,6 @@ class TestID(unittest.TestCase):
 
 
 class TestIS(unittest.TestCase):
-
     # Test IS datatype
 
     def test_IS(self):
@@ -489,7 +496,6 @@ class TestIS(unittest.TestCase):
 
 
 class TestTX(unittest.TestCase):
-
     # Test TX datatype
 
     def test_TX(self):
@@ -542,7 +548,6 @@ class TestTX(unittest.TestCase):
 
 
 class TestGTS(unittest.TestCase):
-
     # Test GTS Datatype
 
     def test_GTS(self):
@@ -595,7 +600,6 @@ class TestGTS(unittest.TestCase):
 
 
 class TestNM(unittest.TestCase):
-
     # Test NM datatype
 
     def test_NM(self):
@@ -621,7 +625,6 @@ class TestNM(unittest.TestCase):
 
 
 class TestSI(unittest.TestCase):
-
     # Test SI datatype
 
     def test_SI(self):
@@ -641,7 +644,6 @@ class TestSI(unittest.TestCase):
 
 
 class TestSNM(unittest.TestCase):
-
     # Test SNM Datatype
 
     def test_SNM(self):
@@ -686,7 +688,6 @@ class TestSNM(unittest.TestCase):
 
 
 class TestTN(unittest.TestCase):
-
     # Test TN Datatype
 
     def test_TN(self):

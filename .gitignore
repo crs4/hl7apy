@@ -16,8 +16,12 @@ build/
 docs/_build
 
 .cache
+.pytest_cache
 .tox
 .coverage
+coverage.lcov
 MANIFEST
 .idea
+__pycache__
+
 .vscode

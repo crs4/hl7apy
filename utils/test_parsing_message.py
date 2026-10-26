@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2018, CRS4
 #
@@ -19,8 +18,6 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import
-from __future__ import print_function
 import os
 import re
 import sys
@@ -28,10 +25,9 @@ import time
 from collections import defaultdict
 from optparse import OptionParser
 
-from hl7apy import load_message_profile
-from hl7apy import SUPPORTED_LIBRARIES
+from hl7apy import SUPPORTED_LIBRARIES, load_message_profile
+from hl7apy.exceptions import InvalidEncodingChars, MessageProfileNotFound
 from hl7apy.parser import parse_message
-from hl7apy.exceptions import MessageProfileNotFound, InvalidEncodingChars
 from hl7apy.validation import VALIDATION_LEVEL as VL
 
 
@@ -156,7 +152,7 @@ def parse_messages(directory, validation_level=VL.STRICT, find_groups=True, limi
                                              msg.msh.msh_9.to_er7(), msg_end - msg_start))
                 except MessageProfileNotFound:
                     continue
-                except InvalidEncodingChars:
+                except InvalidEncodingChars as e:
                     if mp is None:
                         exceptions[vl].append({'type': 'parsing', 'ex': e, 'file_name': f, 'msg': msg_str})
                         if vl == VL.STRICT:
@@ -191,7 +187,7 @@ def _get_files(directory):
     try:
         files = os.listdir(directory)
         return [os.path.abspath('{0}/{1}'.format(directory, f)) for f in files if f.endswith('.hl7')]
-    except IOError:
+    except OSError:
         print("Invalid directory")
 
 

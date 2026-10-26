@@ -1,0 +1,71 @@
+[build-system]
+requires = ["setuptools>=77", "setuptools-scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hl7apy"
+dynamic = ["version"]
+description = "HL7apy: a lightweight Python library to parse, create and handle HL7 v2.x messages"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Daniela Ghironi", email = "ghiron@gmail.com" },
+    { name = "Vittorio Meloni", email = "vittorio.meloni@crs4.it" },
+    { name = "Alessandro Sulis", email = "alessandro.sulis@crs4.it" },
+    { name = "Federico Caboni", email = "federico.caboni@me.com" },
+]
+keywords = ["HL7", "Health Level 7", "healthcare", "python"]
+classifiers = [
+    "Operating System :: OS Independent",
+    "Intended Audience :: Healthcare Industry",
+    "Topic :: Scientific/Engineering",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+
+[project.urls]
+Homepage = "https://crs4.github.io/hl7apy/"
+Documentation = "https://crs4.github.io/hl7apy/"
+Source = "https://github.com/crs4/hl7apy"
+Issues = "https://github.com/crs4/hl7apy/issues"
+
+[dependency-groups]
+test = ["pytest", "pytest-cov"]
+lint = ["ruff"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "hl7apy"]
+addopts = ["--doctest-modules"]
+
+[tool.coverage.run]
+source = ["hl7apy"]
+
+[tool.ruff]
+target-version = "py39"
+line-length = 120
+extend-exclude = ["hl7apy/v2_*"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I"]
+ignore = ["E501", "W292", "W293"]
+
+[tool.ruff.format]
+quote-style = "preserve"
+
+[tool.setuptools]
+script-files = ["utils/hl7apy_profile_parser"]
+
+[tool.setuptools.packages.find]
+include = ["hl7apy", "hl7apy.*"]
+
+[tool.setuptools.dynamic]
+version = { file = "VERSION" }

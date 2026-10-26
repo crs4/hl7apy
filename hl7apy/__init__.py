@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2018, CRS4
 #
@@ -19,29 +18,16 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import
-
-import os
-
-try:
-    from collections.abc import MutableMapping
-except ImportError:
-    from collections import MutableMapping
-
 import importlib
+import os
+import pickle
+from collections.abc import MutableMapping
 
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
-
-
-from hl7apy.exceptions import UnsupportedVersion, InvalidEncodingChars, UnknownValidationLevel
 from hl7apy.consts import DEFAULT_ENCODING_CHARS, DEFAULT_ENCODING_CHARS_27, DEFAULT_VERSION, VALIDATION_LEVEL
+from hl7apy.exceptions import InvalidEncodingChars, UnknownValidationLevel, UnsupportedVersion
 
 __author__ = 'Daniela Ghironi, Vittorio Meloni, Alessandro Sulis, Federico Caboni'
-__author_email__ = '<ghiron@gmail.com>, <vittorio.meloni@crs4.it>, <alessandro.sulis@crs4.it>, ' \
-                   '<federico.caboni@me.com>'
+__author_email__ = '<ghiron@gmail.com>, <vittorio.meloni@crs4.it>, <alessandro.sulis@crs4.it>, <federico.caboni@me.com>'
 __url__ = 'https://crs4.github.io/hl7apy/'
 
 _DEFAULT_ENCODING_CHARS = DEFAULT_ENCODING_CHARS
@@ -327,14 +313,13 @@ def load_message_profile(path):
 
 def _discover_libraries():
     current_dir = os.path.dirname(__file__)
-    return {o[1:].replace("_", "."): "hl7apy.{}".format(o)
-            for o in os.listdir(current_dir) if o.startswith("v2_")}
+    return {o[1:].replace("_", "."): "hl7apy.{}".format(o) for o in os.listdir(current_dir) if o.startswith("v2_")}
 
 
 SUPPORTED_LIBRARIES = _discover_libraries()
 
 
 if __name__ == '__main__':
-
     import doctest
+
     doctest.testmod()

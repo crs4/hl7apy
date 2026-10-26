@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2018, CRS4
 #
@@ -32,33 +31,34 @@ N_SEPS_27 = 5
 DEFAULT_ENCODING_CHARS = {
     'GROUP': '\r',
     'SEGMENT': '\r',
-    'FIELD':  '|',
+    'FIELD': '|',
     'COMPONENT': '^',
     'SUBCOMPONENT': '&',
     'REPETITION': '~',
-    'ESCAPE': '\\'
+    'ESCAPE': '\\',
 }
 
 #: Dictionary with default encoding characters for version superior to 2.7
 DEFAULT_ENCODING_CHARS_27 = {
     'GROUP': '\r',
     'SEGMENT': '\r',
-    'FIELD':  '|',
+    'FIELD': '|',
     'COMPONENT': '^',
     'SUBCOMPONENT': '&',
     'REPETITION': '~',
     'ESCAPE': '\\',
-    'TRUNCATION': '#'
+    'TRUNCATION': '#',
 }
 
 #: default hl7 version
 DEFAULT_VERSION = "2.5"
 
 
-class MLLP_ENCODING_CHARS(object):
+class MLLP_ENCODING_CHARS:
     """
     MLLP encoding chars
     """
+
     #: Start Block
     SB = '\x0b'
     #: End Block
@@ -67,10 +67,11 @@ class MLLP_ENCODING_CHARS(object):
     CR = '\x0d'
 
 
-class VALIDATION_LEVEL(object):
+class VALIDATION_LEVEL:
     """
     Allowed validation levels
     """
+
     #: Strict validation
     STRICT = 1
     #: Tolerant validation

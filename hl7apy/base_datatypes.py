@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2018, CRS4
 #
@@ -32,8 +31,6 @@
 
 """
 
-from __future__ import absolute_import
-
 import numbers
 import re
 from datetime import datetime
@@ -41,12 +38,17 @@ from decimal import Decimal
 from functools import cmp_to_key
 
 from hl7apy import get_default_encoding_chars, get_default_validation_level
-from hl7apy.exceptions import MaxLengthReached, InvalidHighlightRange, InvalidDateFormat, \
-    InvalidDateOffset, InvalidMicrosecondsPrecision
+from hl7apy.exceptions import (
+    InvalidDateFormat,
+    InvalidDateOffset,
+    InvalidHighlightRange,
+    InvalidMicrosecondsPrecision,
+    MaxLengthReached,
+)
 from hl7apy.validation import Validator
 
 
-class BaseDataType(object):
+class BaseDataType:
     """
     Generic datatype base class. It handles the value of the data type and its
     maximum length. It is meant to be extended and it should not be used directly
@@ -116,11 +118,9 @@ class TextualDataType(BaseDataType):
         greater than :attr:`max_length`
     """
 
-    def __init__(self, value, max_length=32, highlights=None,
-                 validation_level=None):
+    def __init__(self, value, max_length=32, highlights=None, validation_level=None):
         self.highlights = highlights
-        super(TextualDataType, self).__init__(value, max_length,
-                                              validation_level)
+        super().__init__(value, max_length, validation_level)
 
     def to_er7(self, encoding_chars=None):
         if encoding_chars is None:
@@ -129,10 +129,12 @@ class TextualDataType(BaseDataType):
 
     def _get_translations(self, encoding_chars):
         escape_char = encoding_chars['ESCAPE']
-        return ((encoding_chars['FIELD'], '{esc}F{esc}'.format(esc=escape_char)),
-                (encoding_chars['COMPONENT'], '{esc}S{esc}'.format(esc=escape_char)),
-                (encoding_chars['SUBCOMPONENT'], '{esc}T{esc}'.format(esc=escape_char)),
-                (encoding_chars['REPETITION'], '{esc}R{esc}'.format(esc=escape_char)),)
+        return (
+            (encoding_chars['FIELD'], '{esc}F{esc}'.format(esc=escape_char)),
+            (encoding_chars['COMPONENT'], '{esc}S{esc}'.format(esc=escape_char)),
+            (encoding_chars['SUBCOMPONENT'], '{esc}T{esc}'.format(esc=escape_char)),
+            (encoding_chars['REPETITION'], '{esc}R{esc}'.format(esc=escape_char)),
+        )
 
     def _get_escape_char_regex(self, escape_char):
         return r'(?<!%s[HNFSTRE])%s(?![HNFSTRE]%s)' % tuple(3 * [re.escape(escape_char)])
@@ -143,6 +145,7 @@ class TextualDataType(BaseDataType):
 
         # Inserts the highlights escape sequences
         if self.highlights is not None:
+
             def _sort_highlights(x, y):
                 if x[0] < y[0]:
                     if y[0] < x[1]:  # overlapping ranges
@@ -177,8 +180,7 @@ class TextualDataType(BaseDataType):
         # Thus the regex search for escape chars not followed and not preceeded by one of the litteral
         # composing an escape sequence. We use lambda because otherwise the backslash sequence in the string
         # is processed (look for re.sub in python doc) and we don't want this
-        value = re.sub(self._get_escape_char_regex(escape_char),
-                       lambda x: '{esc}E{esc}'.format(esc=escape_char), value)
+        value = re.sub(self._get_escape_char_regex(escape_char), lambda x: '{esc}E{esc}'.format(esc=escape_char), value)
 
         return value
 
@@ -200,10 +202,8 @@ class NumericDataType(BaseDataType):
 
     """
 
-    def __init__(self, value=None, max_length=16,
-                 validation_level=None):
-        super(NumericDataType, self).__init__(value, max_length,
-                                              validation_level)
+    def __init__(self, value=None, max_length=16, validation_level=None):
+        super().__init__(value, max_length, validation_level)
 
 
 class DateTimeDataType(BaseDataType):
@@ -243,9 +243,8 @@ class WD(TextualDataType):
     :attr:`max_length` is 0
     """
 
-    def __init__(self, value, highlights=None,
-                 validation_level=None):
-        super(WD, self).__init__(value, 199, highlights, validation_level)
+    def __init__(self, value, highlights=None, validation_level=None):
+        super().__init__(value, 199, highlights, validation_level)
 
 
 class DT(DateTimeDataType):
@@ -259,7 +258,7 @@ class DT(DateTimeDataType):
     allowed_formats = ('%Y', '%Y%m', '%Y%m%d')
 
     def __init__(self, value=None, out_format='%Y%m%d'):
-        super(DT, self).__init__(value, out_format)
+        super().__init__(value, out_format)
 
 
 class TM(DateTimeDataType):
@@ -283,7 +282,7 @@ class TM(DateTimeDataType):
     allowed_formats = ('%H', '%H%M', '%H%M%S', '%H%M%S.%f')
 
     def __init__(self, value=None, out_format='%H%M%S.%f', offset='', microsec_precision=4):
-        super(TM, self).__init__(value, out_format)
+        super().__init__(value, out_format)
 
         if not (1 <= microsec_precision <= 4):
             raise InvalidMicrosecondsPrecision()
@@ -306,7 +305,7 @@ class TM(DateTimeDataType):
         self.offset = offset
 
     def to_er7(self, encoding_chars=None):
-        date_value = super(TM, self).to_er7()
+        date_value = super().to_er7()
         if self.format.find('%f') != -1:
             index = 6 - self.microsec_precision
             date_value = date_value[:-index]
@@ -323,11 +322,10 @@ class DTM(TM):
     ``('%Y', '%Y%m', '%Y%m%d', '%Y%m%d%H', '%Y%m%d%H%M', '%Y%m%d%H%M%S', '%Y%m%d%H%M%S.%f')``
     """
 
-    allowed_formats = ('%Y', '%Y%m', '%Y%m%d', '%Y%m%d%H', '%Y%m%d%H%M',
-                       '%Y%m%d%H%M%S', '%Y%m%d%H%M%S.%f')
+    allowed_formats = ('%Y', '%Y%m', '%Y%m%d', '%Y%m%d%H', '%Y%m%d%H%M', '%Y%m%d%H%M%S', '%Y%m%d%H%M%S.%f')
 
     def __init__(self, value=None, out_format='%Y%m%d%H%M%S.%f', offset='', microsec_precision=4):
-        super(DTM, self).__init__(value, out_format, offset, microsec_precision)
+        super().__init__(value, out_format, offset, microsec_precision)
 
 
 class ST(TextualDataType):
@@ -338,9 +336,8 @@ class ST(TextualDataType):
     :attr:`max_length` is 199
     """
 
-    def __init__(self, value, highlights=None,
-                 validation_level=None):
-        super(ST, self).__init__(value, 199, highlights, validation_level)
+    def __init__(self, value, highlights=None, validation_level=None):
+        super().__init__(value, 199, highlights, validation_level)
 
 
 class FT(TextualDataType):
@@ -351,9 +348,8 @@ class FT(TextualDataType):
     :attr:`max_length` is 65536
     """
 
-    def __init__(self, value, highlights=None,
-                 validation_level=None):
-        super(FT, self).__init__(value, 65536, highlights, validation_level)
+    def __init__(self, value, highlights=None, validation_level=None):
+        super().__init__(value, 65536, highlights, validation_level)
 
 
 class ID(TextualDataType):
@@ -364,10 +360,9 @@ class ID(TextualDataType):
     :attr:`max_length` None
     """
 
-    def __init__(self, value, highlights=None,
-                 validation_level=None):
+    def __init__(self, value, highlights=None, validation_level=None):
         # max_length is None bacause it depends from the HL7 table
-        super(ID, self).__init__(value, None, highlights, validation_level)
+        super().__init__(value, None, highlights, validation_level)
         # TODO: check for tables of allowed values: are we strict or not?
 
 
@@ -379,9 +374,8 @@ class IS(TextualDataType):
     :attr:`max_length` is 20
     """
 
-    def __init__(self, value, highlights=None,
-                 validation_level=None):
-        super(IS, self).__init__(value, 20, highlights, validation_level)
+    def __init__(self, value, highlights=None, validation_level=None):
+        super().__init__(value, 20, highlights, validation_level)
         # TODO: check for tables of allowed values (also defined on site): are we strict or not?
 
 
@@ -393,9 +387,8 @@ class TX(TextualDataType):
     :attr:`max_length` is 65536
     """
 
-    def __init__(self, value, highlights=None,
-                 validation_level=None):
-        super(TX, self).__init__(value, 65536, highlights, validation_level)
+    def __init__(self, value, highlights=None, validation_level=None):
+        super().__init__(value, 65536, highlights, validation_level)
 
 
 class GTS(TextualDataType):
@@ -406,9 +399,8 @@ class GTS(TextualDataType):
     :attr:`max_length` is 199
     """
 
-    def __init__(self, value, highlights=None,
-                 validation_level=None):
-        super(GTS, self).__init__(value, 199, highlights, validation_level)
+    def __init__(self, value, highlights=None, validation_level=None):
+        super().__init__(value, 199, highlights, validation_level)
 
 
 class NM(NumericDataType):
@@ -423,13 +415,12 @@ class NM(NumericDataType):
     :raise: :exc:`ValueError` raised when the value is not of one of the correct type
     """
 
-    def __init__(self, value=None,
-                 validation_level=None):
+    def __init__(self, value=None, validation_level=None):
         if value is not None and isinstance(value, numbers.Real):
             value = Decimal(value)
         elif value is not None and not isinstance(value, Decimal):
             raise ValueError('Invalid value for a NM data')
-        super(NM, self).__init__(value, 16, validation_level)
+        super().__init__(value, 16, validation_level)
 
 
 class SI(NumericDataType):
@@ -443,12 +434,11 @@ class SI(NumericDataType):
     :raise: :exc:`ValueError` raised when the value is not of one of the correct type
     """
 
-    def __init__(self, value=None,
-                 validation_level=None):
+    def __init__(self, value=None, validation_level=None):
         if value is not None and not isinstance(value, numbers.Integral):
             raise ValueError('Invalid value for a SI data')
 
-        super(SI, self).__init__(value, 4, validation_level)
+        super().__init__(value, 4, validation_level)
 
 
 class TN(TextualDataType):
@@ -468,4 +458,4 @@ class TN(TextualDataType):
         if not re.match(regexp, value):
             raise ValueError('Invalid value for TN data')
 
-        super(TN, self).__init__(value, 199, None, validation_level)
+        super().__init__(value, 199, None, validation_level)

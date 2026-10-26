@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2018, CRS4
 #
@@ -26,7 +25,7 @@ from hl7apy.parser import parse_message
 
 def query(host, port):
     msg = \
-        'MSH|^~\&|REC APP|REC FAC|SEND APP|SEND FAC|20110708163513||QBP^Q22^QBP_Q21|111069|D|2.5|||||ITA||EN\r' \
+        'MSH|^~\\&|REC APP|REC FAC|SEND APP|SEND FAC|20110708163513||QBP^Q22^QBP_Q21|111069|D|2.5|||||ITA||EN\r' \
         'QPD|IHE PDQ Query|111069|@PID.5.2^SMITH||||\r' \
         'RCP|I|'
     # establish the connection

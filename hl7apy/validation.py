@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2018, CRS4
 #
@@ -19,29 +18,23 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import
-import traceback
-
 from collections import namedtuple
 
 from hl7apy import load_reference
 from hl7apy.consts import VALIDATION_LEVEL
 from hl7apy.exceptions import ChildNotFound, ValidationError, ValidationWarning
 
-
-ErrorsAndWarnings = namedtuple(
-    "ErrorsAndWarnings",
-    ("is_valid", "errors", "warnings"))
+ErrorsAndWarnings = namedtuple("ErrorsAndWarnings", ("is_valid", "errors", "warnings"))
 
 
-class Validator(object):
+class Validator:
     """
     Class that handles validation. It defines validation levels and validate
     an element using :attr:`VALIDATION.STRICT <hl7apy.consts.VALIDATION_LEVEL.STRICT>` validation level
     """
 
     def __init__(self, level):
-        super(Validator, self).__init__()
+        super().__init__()
         self.level = level
 
     @staticmethod
@@ -79,8 +72,7 @@ class Validator(object):
 
         def _check_z_element(el, errs, warns):
             if el.classname == 'Field':
-                if is_base_datatype(el.datatype, el.version) or \
-                        el.datatype == 'varies':
+                if is_base_datatype(el.datatype, el.version) or el.datatype == 'varies':
                     return True
                 elif el.datatype is not None:
                     # if the datatype the is a complex datatype, the z element must follow the correct
@@ -103,8 +95,7 @@ class Validator(object):
                     errs.append(ValidationError("Child limit exceeded {}.{}".format(el.name, child_name)))
             else:
                 if children_num < min_repetitions:
-                    errs.append(ValidationError("Missing required child {}.{}".format(el.name,
-                                                                                      child_name)))
+                    errs.append(ValidationError("Missing required child {}.{}".format(el.name, child_name)))
 
         def _check_table_compliance(el, ref, warns):
             table = ref[4]
@@ -116,21 +107,31 @@ class Validator(object):
                 else:
                     table_children = table_ref[1]
                     if el.to_er7() not in table_children:
-                        warns.append(ValidationWarning("Value {} not in table {} in element {}.{}".
-                                                       format(el.to_er7(), table, el.parent.name,
-                                                              el.name)))
+                        warns.append(
+                            ValidationWarning(
+                                "Value {} not in table {} in element {}.{}".format(
+                                    el.to_er7(), table, el.parent.name, el.name
+                                )
+                            )
+                        )
 
         def _check_length(el, ref, warns):
             max_length = ref[5]
             if -1 < max_length < len(el.to_er7()):
-                warns.append(ValidationWarning("Exceeded max length ({}) of {}.{}".
-                                               format(max_length, el.parent.name, el.name)))
+                warns.append(
+                    ValidationWarning("Exceeded max length ({}) of {}.{}".format(max_length, el.parent.name, el.name))
+                )
 
         def _check_datatype(el, ref, errs):
             ref_datatype = ref[2]
             if el.datatype != ref_datatype:
-                errs.append(ValidationError("Datatype {} is not correct for {}.{} (it must be {})".
-                                            format(el.datatype, el.parent.name, el.name, ref_datatype)))
+                errs.append(
+                    ValidationError(
+                        "Datatype {} is not correct for {}.{} (it must be {})".format(
+                            el.datatype, el.parent.name, el.name, ref_datatype
+                        )
+                    )
+                )
 
         def _get_valid_children_info(ref):
             valid_children = {c[0] for c in ref[1]}
@@ -160,12 +161,19 @@ class Validator(object):
                         chosen.append((child_name, cardinality, children, child_ref))
 
             if len(chosen) == 0:
-                errs.append(ValidationError("Missing required child for choice group {} (exactly one of {} is required)".
-                                            format(el.name,
-                                                   [c[0] for c in valid_children_refs])))
+                errs.append(
+                    ValidationError(
+                        "Missing required child for choice group {} (exactly one of {} is required)".format(
+                            el.name, [c[0] for c in valid_children_refs]
+                        )
+                    )
+                )
             elif len(chosen) > 1:
-                errs.append(ValidationError("Only one child allowed for choice group {}: found {}".
-                                            format(el.name, [c[0] for c in chosen])))
+                errs.append(
+                    ValidationError(
+                        "Only one child allowed for choice group {}: found {}".format(el.name, [c[0] for c in chosen])
+                    )
+                )
             else:
                 child_name, cardinality, children, child_ref = chosen[0]
                 _check_repetitions(el, children, cardinality, child_name, errs)
@@ -186,8 +194,11 @@ class Validator(object):
 
                 # check that the children are all allowed children
                 if not element_children <= valid_children:
-                    errs.append(ValidationError("Invalid children detected for {}: {}".
-                                                format(el, list(element_children - valid_children))))
+                    errs.append(
+                        ValidationError(
+                            "Invalid children detected for {}: {}".format(el, list(element_children - valid_children))
+                        )
+                    )
 
                 if ref[0] == 'choice':
                     # a choice group requires exactly one of its alternatives,
@@ -261,10 +272,7 @@ class Validator(object):
                     write("Warning: {}\n".format(w))
 
         if return_errors:
-            return ErrorsAndWarnings(
-                is_valid=not errors,
-                errors=errors,
-                warnings=warnings)
+            return ErrorsAndWarnings(is_valid=not errors, errors=errors, warnings=warnings)
 
         if errors:
             raise errors[0]

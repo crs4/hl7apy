@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2018, CRS4
 #
@@ -19,13 +18,13 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import
 import unittest
-from hl7apy.core import Message, Group, Segment, Field, Component, SubComponent
-from hl7apy.parser import parse_segment, parse_message
-from hl7apy.base_datatypes import *
+
+from hl7apy.base_datatypes import ST
+from hl7apy.consts import DEFAULT_ENCODING_CHARS, MLLP_ENCODING_CHARS, VALIDATION_LEVEL
+from hl7apy.core import Component, Field, Group, Message, Segment, SubComponent
 from hl7apy.exceptions import InvalidHighlightRange
-from hl7apy.consts import MLLP_ENCODING_CHARS, VALIDATION_LEVEL, DEFAULT_ENCODING_CHARS
+from hl7apy.parser import parse_message, parse_segment
 
 
 class ToStringTestCase(unittest.TestCase):
@@ -35,52 +34,102 @@ class ToStringTestCase(unittest.TestCase):
     """
 
     def setUp(self):
-        self.custom_encoding_chars = {'SEGMENT': '\r',
-                                      'FIELD': '!',
-                                      'COMPONENT': '$',
-                                      'SUBCOMPONENT': '@',
-                                      'REPETITION': 'r',
-                                      'ESCAPE': '?'}
-        self.msh_values_standard = ['|', '^~\\&', 'LIP', 'LIP', 'LB', 'LB', '20111207121030', '', 'RSP^SLI^RSP_K11',
-                                    '430102', 'D', '2.5', '', '', '', '', 'IT', '', 'EN', '', '']
+        self.custom_encoding_chars = {
+            'SEGMENT': '\r',
+            'FIELD': '!',
+            'COMPONENT': '$',
+            'SUBCOMPONENT': '@',
+            'REPETITION': 'r',
+            'ESCAPE': '?',
+        }
+        self.msh_values_standard = [
+            '|',
+            '^~\\&',
+            'LIP',
+            'LIP',
+            'LB',
+            'LB',
+            '20111207121030',
+            '',
+            'RSP^SLI^RSP_K11',
+            '430102',
+            'D',
+            '2.5',
+            '',
+            '',
+            '',
+            '',
+            'IT',
+            '',
+            'EN',
+            '',
+            '',
+        ]
         self.msh_standard = 'MSH|^~\\&|LIP|LIP|LB|LB|20111207121030||RSP^SLI^RSP_K11|430102|D|2.5|||||IT||EN'
-        self.msh_values_custom = ['!', '$r?@', 'LIP', 'LIP', 'LB', 'LB', '20111207121030', '', 'RSP^SLI^RSP_K11',
-                                  '430102', 'D', '2.5', '', '', '', '', 'IT', '', 'EN', '', '']
+        self.msh_values_custom = [
+            '!',
+            '$r?@',
+            'LIP',
+            'LIP',
+            'LB',
+            'LB',
+            '20111207121030',
+            '',
+            'RSP^SLI^RSP_K11',
+            '430102',
+            'D',
+            '2.5',
+            '',
+            '',
+            '',
+            '',
+            'IT',
+            '',
+            'EN',
+            '',
+            '',
+        ]
         self.msh_custom = 'MSH!$r?@!LIP!LIP!LB!LB!20111207121030!!RSP^SLI^RSP_K11!430102!D!2.5!!!!!IT!!EN'
-        self.msh_highlighted = \
-            'MSH|^~\\&|LIP|LIP|LB|LB|20111207121030|\\H\\HIGHLIGHTED\\N\\TEXT\\H\\IMPORTANT\\N\\|RSP^SLI^RSP_K11|430102|D|2.5|||||IT||EN'
+        self.msh_highlighted = 'MSH|^~\\&|LIP|LIP|LB|LB|20111207121030|\\H\\HIGHLIGHTED\\N\\TEXT\\H\\IMPORTANT\\N\\|RSP^SLI^RSP_K11|430102|D|2.5|||||IT||EN'
 
     @staticmethod
     def _get_msh(values):
-        encoding_chars = {'SEGMENT': '\r',
-                          'FIELD': values[0],
-                          'COMPONENT': values[1][0],
-                          'SUBCOMPONENT': values[1][1],
-                          'REPETITION': values[1][2],
-                          'ESCAPE': values[1][3]}
-        msh = parse_segment('MSH{0}{1}'.format(encoding_chars['FIELD'], encoding_chars['FIELD'].join(values[1:])),
-                            encoding_chars=encoding_chars)
+        encoding_chars = {
+            'SEGMENT': '\r',
+            'FIELD': values[0],
+            'COMPONENT': values[1][0],
+            'SUBCOMPONENT': values[1][1],
+            'REPETITION': values[1][2],
+            'ESCAPE': values[1][3],
+        }
+        msh = parse_segment(
+            'MSH{0}{1}'.format(encoding_chars['FIELD'], encoding_chars['FIELD'].join(values[1:])),
+            encoding_chars=encoding_chars,
+        )
         return msh
 
     @staticmethod
     def _get_test_msg(trailing_children=False):
         if trailing_children is False:
-            return \
-                'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
-                'PID|1||566-554-3423^^^GHH^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r' \
-                'PV1||O|||||||||||||||||1107080001^^^LIS\r' \
-                'SPM|1|100187400201||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
-                'ORC|NW|83428|83428|18740|SC||||20110708162817\r' \
-                'TQ1|||||||||R\r' \
+            return (
+                'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r'
+                'PID|1||566-554-3423^^^GHH^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r'
+                'PV1||O|||||||||||||||||1107080001^^^LIS\r'
+                'SPM|1|100187400201||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r'
+                'ORC|NW|83428|83428|18740|SC||||20110708162817\r'
+                'TQ1|||||||||R\r'
                 'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN'
+            )
         else:
-            return 'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN||\r' \
-                   'PID|1||566-554-3423^^^GHH^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M|||||||||||||||||||||||\r' \
-                   'PV1||O|||||||||||||||||1107080001^^^LIS|||||||||||||||||||||||||||||||||\r' \
-                   'SPM|1|100187400201||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC||\r' \
-                   'ORC|NW|83428|83428|18740|SC||||20110708162817|||||||||||||||||||||\r' \
-                   'TQ1|||||||||R|||||\r' \
-                   'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN|||||||||||||||||||||||||||||||||'
+            return (
+                'MSH|^~\\&|SEND APP|SEND FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN||\r'
+                'PID|1||566-554-3423^^^GHH^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M|||||||||||||||||||||||\r'
+                'PV1||O|||||||||||||||||1107080001^^^LIS|||||||||||||||||||||||||||||||||\r'
+                'SPM|1|100187400201||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC||\r'
+                'ORC|NW|83428|83428|18740|SC||||20110708162817|||||||||||||||||||||\r'
+                'TQ1|||||||||R|||||\r'
+                'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN|||||||||||||||||||||||||||||||||'
+            )
 
     def _create_test_message(self, msh_values):
         """
@@ -187,16 +236,18 @@ class ToStringTestCase(unittest.TestCase):
 
     def test_to_mllp(self):
         test_msg = self._get_test_msg()
-        mllp_msg = '{0}{1}{2}{3}{2}'.format(MLLP_ENCODING_CHARS.SB, test_msg,
-                                            MLLP_ENCODING_CHARS.CR, MLLP_ENCODING_CHARS.EB)
+        mllp_msg = '{0}{1}{2}{3}{2}'.format(
+            MLLP_ENCODING_CHARS.SB, test_msg, MLLP_ENCODING_CHARS.CR, MLLP_ENCODING_CHARS.EB
+        )
 
         msg = parse_message(test_msg)
         self.assertEqual(msg.to_mllp(), mllp_msg)
 
     def test_to_mllp_with_trailing(self):
         test_msg = self._get_test_msg(trailing_children=True)
-        mllp_msg = '{0}{1}{2}{3}{2}'.format(MLLP_ENCODING_CHARS.SB, test_msg,
-                                            MLLP_ENCODING_CHARS.CR, MLLP_ENCODING_CHARS.EB)
+        mllp_msg = '{0}{1}{2}{3}{2}'.format(
+            MLLP_ENCODING_CHARS.SB, test_msg, MLLP_ENCODING_CHARS.CR, MLLP_ENCODING_CHARS.EB
+        )
 
         msg = parse_message(test_msg)
         self.assertEqual(msg.to_mllp(trailing_children=True), mllp_msg)
@@ -254,8 +305,9 @@ class ToStringTestCase(unittest.TestCase):
         g.zbe = 'ZBE||ab|ab'
 
         msg.add(g)
-        self.assertEqual(msg.to_er7(), self.msh_standard +
-                         '\rZIN||abc||cba^www~abc^yyy\rZBE|yyy|ww||||||yyy\rPID|1\rZBE||ab|ab')
+        self.assertEqual(
+            msg.to_er7(), self.msh_standard + '\rZIN||abc||cba^www~abc^yyy\rZBE|yyy|ww||||||yyy\rPID|1\rZBE||ab|ab'
+        )
 
     def test_to_string_wd_field(self):
         """
@@ -265,6 +317,22 @@ class ToStringTestCase(unittest.TestCase):
         s = 'EVN||20080115153000||AAA|AAA|20080114003000'
         parsed_s = parse_segment(s, version='2.7')
         self.assertEqual(parsed_s.to_er7(), 'EVN||20080115153000||AAA|AAA|20080114003000')
+
+    def test_to_string_unicode_field(self):
+        """
+        Tests that non-ASCII values can be assigned in strict mode (PR #72)
+        """
+        pid = Segment('PID', validation_level=VALIDATION_LEVEL.STRICT)
+        pid.pid_5.pid_5_1 = '€'
+        self.assertEqual(pid.to_er7(), 'PID|||||€')
+
+    def test_to_string_non_ascii_field(self):
+        """
+        Tests that non-ASCII values can be assigned in strict mode (issue #7)
+        """
+        pid = Segment('PID', validation_level=VALIDATION_LEVEL.STRICT)
+        pid.pid_5.pid_5_1 = 'mandà'
+        self.assertEqual(pid.to_er7(), 'PID|||||mandà')
 
 
 if __name__ == '__main__':

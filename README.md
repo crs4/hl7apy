@@ -15,7 +15,7 @@ The main features includes:
 
 Currently supported HL7 versions are: 2.1, 2.2, 2.3, 2.3.1, 2.4, 2.5, 2.5.1, 2.6, 2.7, 2.8, 2.8.1, 2.8.2
 
-Current version is __1.3.4__
+Current version is __1.3.5__
 
 This project is not affiliated with the HL7 organization: the library is just consistent with their specification.
 
@@ -24,12 +24,12 @@ Documentation can be found [here](http://crs4.github.io/hl7apy/).
 Installation
 ------------
 
-HL7apy is platform independent and supports Python 2.7 and Python 3.[4-12]
+HL7apy is platform independent and supports Python 3.9 and later
 
-To install it get the latest release from [GitHub](https://github.com/crs4/hl7apy/releases) and launch the following command:
+To install it get the latest release from [GitHub](https://github.com/crs4/hl7apy/releases) and, from its root directory, launch the following command:
 
 ```bash
-  python setup.py install
+  pip install .
 ```
 
 Alternatively you can use pip to install it from [PyPI](https://pypi.python.org/pypi/hl7apy/)
@@ -38,11 +38,9 @@ Alternatively you can use pip to install it from [PyPI](https://pypi.python.org/
   pip install hl7apy
 ```
 
-[![Build Status](https://travis-ci.org/crs4/hl7apy.png)](https://travis-ci.org/crs4/hl7apy)
+[![Python Tests](https://github.com/crs4/hl7apy/actions/workflows/run_tests.yml/badge.svg)](https://github.com/crs4/hl7apy/actions/workflows/run_tests.yml)
 
-[![Code Health](https://landscape.io/github/crs4/hl7apy/develop/landscape.svg?style=flat)](https://landscape.io/github/crs4/hl7apy/develop)
-
-[![Coverage Status](https://coveralls.io/repos/crs4/hl7apy/badge.svg)](https://coveralls.io/r/crs4/hl7apy)
+[![Coverage Status](https://coveralls.io/repos/github/crs4/hl7apy/badge.svg?branch=master)](https://coveralls.io/github/crs4/hl7apy?branch=master)
 
 External Links
 --------------

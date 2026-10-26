@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012-2018, CRS4
 #
@@ -19,16 +18,15 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import datetime
 import os
 import uuid
-import datetime
 
 from hl7apy import load_message_profile
 from hl7apy.core import Message
+from hl7apy.mllp import AbstractHandler, InvalidHL7Message, MLLPServer, UnsupportedMessageType
 from hl7apy.parser import parse_message
-from hl7apy.utils import check_date
 from hl7apy.v2_5 import DTM
-from hl7apy.mllp import MLLPServer, AbstractHandler, UnsupportedMessageType, InvalidHL7Message
 
 _ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -47,7 +45,7 @@ class PDQSupplier(AbstractHandler):
 
     def __init__(self, message):
         msg = parse_message(message, message_profile=self.REQ_MP)
-        super(PDQSupplier, self).__init__(msg)
+        super().__init__(msg)
 
     def _create_response(self, ack_code, query_ack_code, patients):
         res = Message('RSP_K21', reference=self.RES_MP)
@@ -99,7 +97,7 @@ class PDQSupplier(AbstractHandler):
 
 class HL7ErrorHandler(AbstractHandler):
     def __init__(self, exc, incoming_message):
-        super(HL7ErrorHandler, self).__init__(incoming_message)
+        super().__init__(incoming_message)
         self.exc = exc
 
     def reply(self):
