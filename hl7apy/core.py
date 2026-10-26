@@ -919,6 +919,7 @@ class SupportComplexDataType(Element):
                 datatype not in ('varies', None, self.datatype) and self.datatype is not None:
             reference = load_reference(datatype, 'Datatypes_Structs', self.version)
             new_ref = [ref_item for ref_item in self.reference]
+            new_ref[0] = 'sequence'
             new_ref[1] = reference
             new_ref[2] = datatype
             structure = ElementFinder.get_structure(self, new_ref)

@@ -1305,6 +1305,16 @@ class TestField(unittest.TestCase):
         self.assertEqual(f.cm_msg_1.value, 'SIU')
         self.assertEqual(f.cm_msg_2.value, 'S12')
 
+    def test_field_datatype_to_complex_serialization(self):
+        f = Field('OBX_5')
+        f.datatype = 'ED'
+        f.ed_1 = ''
+        f.ed_2 = 'IM'
+        f.ed_3 = 'JPEG'
+        f.ed_4 = 'Base64'
+        f.ed_5 = 'SomeData'
+        self.assertEqual(f.to_er7(), '^IM^JPEG^Base64^SomeData')
+
 
 class TestComponent(unittest.TestCase):
 
