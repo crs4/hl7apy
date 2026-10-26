@@ -26,10 +26,10 @@ import collections
 import datetime
 import importlib
 import re
-from collections.abc import MutableMapping, MutableSequence, Sequence
 import sys
-from itertools import takewhile
 import warnings
+from collections.abc import MutableMapping, MutableSequence, Sequence
+from itertools import takewhile
 
 from hl7apy import (
     check_encoding_chars,
@@ -83,7 +83,7 @@ def is_base_datatype(datatype, version=None):
 def _remove_trailing(children):
     trailing = list(takewhile(lambda x: not x, reversed(children)))
     if len(trailing) > 0:
-        children = children[:-len(trailing)]
+        children = children[: -len(trailing)]
     return children
 
 
@@ -126,8 +126,11 @@ def _get_new_name(name, version):
         frame, stacklevel = sys._getframe(1), 2
         while frame is not None and frame.f_globals.get('__name__', '').split('.')[0] == 'hl7apy':
             frame, stacklevel = frame.f_back, stacklevel + 1
-        warnings.warn('{0} is deprecated in version {1}, use {2} instead'.format(name, version, new_name),
-                      DeprecationWarning, stacklevel=stacklevel)
+        warnings.warn(
+            '{0} is deprecated in version {1}, use {2} instead'.format(name, version, new_name),
+            DeprecationWarning,
+            stacklevel=stacklevel,
+        )
     return new_name
 
 
@@ -144,6 +147,7 @@ class ElementProxy(Sequence):
     >>> print(isinstance(m.msh.msh_7, ElementProxy))
     True
     """
+
     cls_attrs = ('element_list', 'list', 'element_name')
 
     def __init__(self, element_list, element_name):
@@ -438,9 +442,11 @@ class ElementList(MutableSequence):
         if reference is not None:
             cls = reference['cls']
             element_name = reference['name']
-            kwargs = {'reference': reference['ref'],
-                      'validation_level': self.element.validation_level,
-                      'version': self.element.version}
+            kwargs = {
+                'reference': reference['ref'],
+                'validation_level': self.element.validation_level,
+                'version': self.element.version,
+            }
             if not traversal_parent:
                 kwargs['parent'] = self.element
             else:
@@ -544,7 +550,6 @@ class ElementList(MutableSequence):
 
 
 class ElementFinder:
-
     @staticmethod
     def get_structure(element, reference=None):
         """
@@ -580,9 +585,7 @@ class ElementFinder:
 
         :return: a dictionary containing the structure data
         """
-        data = {
-            'reference': reference
-        }
+        data = {'reference': reference}
 
         content_type = reference[0]  # content type can be sequence, choice or leaf
         if content_type in ('sequence', 'choice'):
@@ -594,8 +597,7 @@ class ElementFinder:
             counters = collections.defaultdict(int)
             for c in children:
                 child_name, child_ref, cardinality, cls = c
-                k = child_name if child_name not in structure \
-                    else '{0}_{1}'.format(child_name, counters[child_name])
+                k = child_name if child_name not in structure else '{0}_{1}'.format(child_name, counters[child_name])
                 structure[k] = {"ref": child_ref, "name": k, "cls": element.child_classes[cls]}
                 try:
                     structure_by_longname[child_ref[3]] = structure[k]
@@ -622,13 +624,32 @@ class Element:
     Base class for all HL7 elements. It is not meant to be directly instantiated.
     """
 
-    cls_attrs = ['name', 'validation_level', 'version', 'children', 'ordered_children',
-                 'table', 'long_name', 'value', '_value', 'parent', '_parent', '_traversal_parent',
-                 'traversal_parent', 'child_classes', 'encoding_chars', 'structure_by_name',
-                 'structure_by_longname', 'repetitions', 'reference', '_truncation_char']
+    cls_attrs = [
+        'name',
+        'validation_level',
+        'version',
+        'children',
+        'ordered_children',
+        'table',
+        'long_name',
+        'value',
+        '_value',
+        'parent',
+        '_parent',
+        '_traversal_parent',
+        'traversal_parent',
+        'child_classes',
+        'encoding_chars',
+        'structure_by_name',
+        'structure_by_longname',
+        'repetitions',
+        'reference',
+        '_truncation_char',
+    ]
 
-    def __init__(self, name=None, parent=None, reference=None, version=None,
-                 validation_level=None, traversal_parent=None):
+    def __init__(
+        self, name=None, parent=None, reference=None, version=None, validation_level=None, traversal_parent=None
+    ):
 
         if self.__class__ == Element:
             raise OperationNotAllowed("Cannot instantiate an Element")
@@ -776,8 +797,7 @@ class Element:
             self.traversal_parent = None
             self.parent.add(self)
 
-    parent = property(_get_parent, _set_parent,
-                      doc="The parent :class:`Element <hl7apy.core.Element>` of this one")
+    parent = property(_get_parent, _set_parent, doc="The parent :class:`Element <hl7apy.core.Element>` of this one")
 
     def _get_traversal_parent(self):
         return self._traversal_parent
@@ -890,6 +910,7 @@ class SupportComplexDataType(Element):
     """
     Mixin for classes that support complex datatypes
     """
+
     cls_attrs = Element.cls_attrs + ['_datatype', 'datatype', 'table', 'long_name', 'max_length']
 
     def __init__(self):
@@ -922,14 +943,16 @@ class SupportComplexDataType(Element):
         return self._datatype
 
     def _set_datatype(self, datatype):
-        if Validator.is_strict(self.validation_level) and self.datatype and \
-                datatype != self.datatype:
+        if Validator.is_strict(self.validation_level) and self.datatype and datatype != self.datatype:
             raise OperationNotAllowed("Cannot change datatype using STRICT validation")
 
         # This will change the structure of the Field/Component so it is done only if the structure
         # is really changed. That's because the first time the datatype is set by the Element._find_structure method
-        if not is_base_datatype(datatype, self.version) and \
-                datatype not in ('varies', None, self.datatype) and self.datatype is not None:
+        if (
+            not is_base_datatype(datatype, self.version)
+            and datatype not in ('varies', None, self.datatype)
+            and self.datatype is not None
+        ):
             reference = load_reference(datatype, 'Datatypes_Structs', self.version)
             new_ref = [ref_item for ref_item in self.reference]
             new_ref[0] = 'sequence'
@@ -957,8 +980,7 @@ class SupportComplexDataType(Element):
             if not is_base_datatype(self.datatype, self.version):
                 raise ChildNotValid(value, self)
             cls = list(self.child_classes.values())[0]
-            child = cls(datatype=value.classname, version=self.version,
-                        validation_level=self.validation_level)
+            child = cls(datatype=value.classname, version=self.version, validation_level=self.validation_level)
             child.value = value
             try:
                 old_child = self.children[0]
@@ -968,8 +990,11 @@ class SupportComplexDataType(Element):
                 self.children.replace_child(old_child, child)
         else:
             children = self.parse_children(value)
-            if Validator.is_tolerant(self.validation_level) and \
-                    is_base_datatype(self.datatype, self.version) and len(children) > 1:
+            if (
+                Validator.is_tolerant(self.validation_level)
+                and is_base_datatype(self.datatype, self.version)
+                and len(children) > 1
+            ):
                 self.datatype = None
             self.children = children
 
@@ -1021,8 +1046,7 @@ class SupportComplexDataType(Element):
 
     def __repr__(self):
         if self.name:
-            return '<{0} {1} ({2}) of type {3}>'.format(self.classname, self.name, self.long_name,
-                                                        self.datatype)
+            return '<{0} {1} ({2}) of type {3}>'.format(self.classname, self.name, self.long_name, self.datatype)
         else:
             return '<{0} of type {1}>'.format(self.classname, self.datatype)
 
@@ -1032,8 +1056,16 @@ class CanBeVaries(Element):
     Mixin for Elements that can be of VARIES datatype
     """
 
-    def __init__(self, name=None, datatype=None, parent=None, reference=None,
-                 version=None, validation_level=None, traversal_parent=None):
+    def __init__(
+        self,
+        name=None,
+        datatype=None,
+        parent=None,
+        reference=None,
+        version=None,
+        validation_level=None,
+        traversal_parent=None,
+    ):
 
         if self.__class__ == CanBeVaries:
             raise OperationNotAllowed("Cannot instantiate a CanBeVaries")
@@ -1041,8 +1073,11 @@ class CanBeVaries(Element):
         if datatype == 'varies' and reference is None:
             reference = ('leaf', None, 'varies', None, None, -1)
 
-        if not Validator.is_strict(validation_level) and datatype not in (None, 'varies') \
-                and not is_base_datatype(datatype, version):
+        if (
+            not Validator.is_strict(validation_level)
+            and datatype not in (None, 'varies')
+            and not is_base_datatype(datatype, version)
+        ):
             version = version or get_default_version()
             children_refs = load_reference(datatype, 'Datatypes_Structs', version)
             if name is not None:
@@ -1054,13 +1089,11 @@ class CanBeVaries(Element):
 
         if name is not None and _valid_child_name(name, 'VARIES'):
             # Set name to None because with a VARIES name the Element would raise an Exception
-            Element.__init__(self, None, parent, reference, version,
-                             validation_level, traversal_parent)
+            Element.__init__(self, None, parent, reference, version, validation_level, traversal_parent)
             self.name = name.upper()
         else:
             try:
-                Element.__init__(self, name, parent, reference, version,
-                                 validation_level, traversal_parent)
+                Element.__init__(self, name, parent, reference, version, validation_level, traversal_parent)
             except ChildNotFound:
                 raise InvalidName(self.classname, self.name)
 
@@ -1071,8 +1104,11 @@ class CanBeVaries(Element):
         if self.name:  # the datatype has been valued by the finder
             # if it is STRICT we don't allow to change the official datatype
             # TODO: should check if it is VARIES
-            if Validator.is_strict(self.validation_level) and None not in (datatype, self.datatype) and \
-                    datatype != self.datatype:
+            if (
+                Validator.is_strict(self.validation_level)
+                and None not in (datatype, self.datatype)
+                and datatype != self.datatype
+            ):
                 raise OperationNotAllowed("Cannot override datatype in strict mode")
             # in TOLERANT we overwrite it only if the given one is not None
             elif datatype is not None:
@@ -1121,20 +1157,28 @@ class SubComponent(CanBeVaries):
     :type traversal_parent: an instance of :class:`Component <hl7apy.core.Component>` or None
     :param traversal_parent: the temporary parent used during traversal
     """
+
     child_classes = {"CMP": None}
     cls_attrs = Element.cls_attrs + ['datatype', '_datatype', 'table', 'long_name', 'max_length']
 
-    def __init__(self, name=None, datatype=None, value=None, parent=None,
-                 reference=None, version=None, validation_level=None,
-                 traversal_parent=None):
+    def __init__(
+        self,
+        name=None,
+        datatype=None,
+        value=None,
+        parent=None,
+        reference=None,
+        version=None,
+        validation_level=None,
+        traversal_parent=None,
+    ):
 
         self._parent = None  # we need to initialize it
         self._datatype = None  # we need to initialize it
         if not name and datatype is None:
             raise OperationNotAllowed("Cannot instantiate a SubComponent with name and datatype both empty")
 
-        CanBeVaries.__init__(self, name, datatype, parent, reference,
-                             version, validation_level, traversal_parent)
+        CanBeVaries.__init__(self, name, datatype, parent, reference, version, validation_level, traversal_parent)
 
         if _valid_child_name(name, 'VARIES') and self.datatype is None:
             self.datatype = 'ST'
@@ -1175,8 +1219,7 @@ class SubComponent(CanBeVaries):
             self._value = None
         else:
             if value and isinstance(value, (str, bytes)):
-                self._value = datatype_factory(self.datatype, value, self.version,
-                                               self.validation_level)
+                self._value = datatype_factory(self.datatype, value, self.version, self.validation_level)
             elif not value or isinstance(value, BaseDataType):
                 self._value = value
             else:
@@ -1196,16 +1239,18 @@ class SubComponent(CanBeVaries):
         if datatype and not is_base_datatype(datatype, self.version):  # only base datatypes allowed
             raise OperationNotAllowed("Cannot set a complex datatype to a SubComponent")
 
-        if Validator.is_strict(self.validation_level) and \
-                self.datatype is not None and datatype != self.datatype:
+        if Validator.is_strict(self.validation_level) and self.datatype is not None and datatype != self.datatype:
             raise OperationNotAllowed("Cannot change datatype using STRICT validation")
         # if the SC is already valued it is impossible to change the datatype
         if hasattr(self, 'value') and self.value:
             raise OperationNotAllowed("Cannot change datatype: the Subcomponent is valued")
         else:
             # change also the parent datatype if it is a base datatype
-            if self.parent is not None and is_base_datatype(self.parent.datatype, self.parent.version) and \
-                    self.parent.datatype != datatype:  # avoid infinite recursion
+            if (
+                self.parent is not None
+                and is_base_datatype(self.parent.datatype, self.parent.version)
+                and self.parent.datatype != datatype
+            ):  # avoid infinite recursion
                 self.parent.datatype = datatype
             self._datatype = datatype
 
@@ -1242,22 +1287,34 @@ class Component(SupportComplexDataType, CanBeVaries):
     :type traversal_parent: an instance of :class:`Field hl7apy.core.Field` or None
     :param traversal_parent: the temporary parent used during traversal
     """
+
     child_classes = {"CMP": SubComponent}
     child_parser = ('parse_subcomponent', 'parse_subcomponents')
 
-    def __init__(self, name=None, datatype=None, parent=None, reference=None,
-                 version=None, validation_level=None, traversal_parent=None):
+    def __init__(
+        self,
+        name=None,
+        datatype=None,
+        parent=None,
+        reference=None,
+        version=None,
+        validation_level=None,
+        traversal_parent=None,
+    ):
 
         SupportComplexDataType.__init__(self)
 
         # if datatype == 'varies' and reference is None:
         #     reference = ('leaf', None, 'varies', None, None, -1)
 
-        CanBeVaries.__init__(self, name, datatype, parent, reference,
-                             version, validation_level, traversal_parent)
+        CanBeVaries.__init__(self, name, datatype, parent, reference, version, validation_level, traversal_parent)
 
-        if self.is_unknown() and Validator.is_strict(validation_level) and \
-                not is_base_datatype(self.datatype, self.version) and self.datatype != 'varies':
+        if (
+            self.is_unknown()
+            and Validator.is_strict(validation_level)
+            and not is_base_datatype(self.datatype, self.version)
+            and self.datatype != 'varies'
+        ):
             raise OperationNotAllowed("Cannot instantiate an unknown Element with strict validation")
 
     def add_subcomponent(self, name):
@@ -1294,8 +1351,7 @@ class Component(SupportComplexDataType, CanBeVaries):
         EXAMPLE_ID&&&ALT_ID
         """
         # base datatype components can't have more than one child
-        if self.name and is_base_datatype(self.datatype, self.version) and \
-                len(self.children) >= 1:
+        if self.name and is_base_datatype(self.datatype, self.version) and len(self.children) >= 1:
             raise MaxChildLimitReached(self, obj, 1)
 
         # the name is different from the datatype (i.e. the name has been forced to be equal to the datatype)
@@ -1348,11 +1404,20 @@ class Field(SupportComplexDataType):
     :type traversal_parent: an instance of :class:`Segment <hl7apy.core.Segment>` or None
     :param traversal_parent: the temporary parent used during traversal
     """
+
     child_classes = {"CMP": Component}
     child_parser = ('parse_component', 'parse_components')
 
-    def __init__(self, name=None, datatype=None, parent=None, reference=None,
-                 version=None, validation_level=None, traversal_parent=None):
+    def __init__(
+        self,
+        name=None,
+        datatype=None,
+        parent=None,
+        reference=None,
+        version=None,
+        validation_level=None,
+        traversal_parent=None,
+    ):
 
         SupportComplexDataType.__init__(self)
 
@@ -1363,8 +1428,7 @@ class Field(SupportComplexDataType):
             reference = ('leaf', None, 'varies', None, None, -1)
 
         try:
-            Element.__init__(self, name, parent, reference, version,
-                             validation_level, traversal_parent)
+            Element.__init__(self, name, parent, reference, version, validation_level, traversal_parent)
         except InvalidName:
             if _valid_z_field_name(name):
                 datatype = datatype or 'ST'
@@ -1375,13 +1439,16 @@ class Field(SupportComplexDataType):
                         version = get_default_version()
                     dt_struct = load_reference(datatype, "Datatypes_Structs", version)
                     reference = ('sequence', dt_struct, datatype, None, None, -1)
-                Element.__init__(self, name, parent, reference, version,
-                                 validation_level, traversal_parent)
+                Element.__init__(self, name, parent, reference, version, validation_level, traversal_parent)
             else:
                 raise
 
-        if datatype is not None and Validator.is_strict(validation_level) and \
-                datatype != 'varies' and datatype != self.datatype:
+        if (
+            datatype is not None
+            and Validator.is_strict(validation_level)
+            and datatype != 'varies'
+            and datatype != self.datatype
+        ):
             raise OperationNotAllowed("Cannot assign a different datatype with strict validation")
 
         if datatype is not None:  # force the datatype to be the one chosen by the user
@@ -1406,16 +1473,16 @@ class Field(SupportComplexDataType):
         if is_base_datatype(self.datatype, self.version):
             # create reference in case of base datatypes
             if name == self.datatype:
-                element = {'cls': Component,
-                           'name': self.datatype,
-                           'ref': ('leaf', None, self.datatype, None, None, -1)}
+                element = {
+                    'cls': Component,
+                    'name': self.datatype,
+                    'ref': ('leaf', None, self.datatype, None, None, -1),
+                }
                 return element
             raise ChildNotFound(name)
         elif self.datatype == 'varies' and _valid_child_name(name, self.datatype):
             # create reference for children in case of datatype VARIES
-            element = {'cls': Component,
-                       'name': name,
-                       'ref': ('leaf', None, 'varies', None, None, -1)}
+            element = {'cls': Component, 'name': name, 'ref': ('leaf', None, 'varies', None, None, -1)}
             return element
 
         return super().find_child_reference(name)
@@ -1435,8 +1502,7 @@ class Field(SupportComplexDataType):
         EVERYMAN^ADAM
         """
         # base datatype components can't have more than one child
-        if self.name and is_base_datatype(self.datatype, self.version) and \
-                len(self.children) >= 1:
+        if self.name and is_base_datatype(self.datatype, self.version) and len(self.children) >= 1:
             raise MaxChildLimitReached(self, obj, 1)
 
         return super().add(obj)
@@ -1488,8 +1554,7 @@ class Field(SupportComplexDataType):
 
     def _set_value(self, value):
         if self.name in ('MSH_1', 'MSH_2'):
-            c = Component(datatype='ST', version=self.version,
-                          validation_level=self.validation_level)
+            c = Component(datatype='ST', version=self.version, validation_level=self.validation_level)
             c.value = value
             self.add(c)
         else:
@@ -1603,13 +1668,14 @@ class Segment(Element):
     :type traversal_parent: an instance of :class:`hl7apy.core.Message`, :class:`hl7apy.core.Group` or None
     :param traversal_parent: the temporary parent used during traversal
     """
+
     child_classes = {"FIE": Field}
     child_parser = ('parse_field', 'parse_fields')
-    cls_attrs = Element.cls_attrs + ['allow_infinite_children', '_last_allowed_child_index',
-                                     '_last_child_index']
+    cls_attrs = Element.cls_attrs + ['allow_infinite_children', '_last_allowed_child_index', '_last_child_index']
 
-    def __init__(self, name=None, parent=None, reference=None, version=None,
-                 validation_level=None, traversal_parent=None):
+    def __init__(
+        self, name=None, parent=None, reference=None, version=None, validation_level=None, traversal_parent=None
+    ):
 
         if name is None:
             raise OperationNotAllowed("Cannot instantiate an unknown Segment")
@@ -1618,14 +1684,12 @@ class Segment(Element):
             if reference is None:
                 reference = ('sequence', ())
 
-            super().__init__(name, parent, reference, version,
-                                          validation_level, traversal_parent)
+            super().__init__(name, parent, reference, version, validation_level, traversal_parent)
             self.allow_infinite_children = True
             self._last_allowed_child_index = 0
             self._last_child_index = 0
         else:
-            super().__init__(name, parent, reference, version,
-                                          validation_level, traversal_parent)
+            super().__init__(name, parent, reference, version, validation_level, traversal_parent)
 
             last_field = self.ordered_children[-1]
             last_field_structure = self.structure_by_name[last_field]
@@ -1688,9 +1752,12 @@ class Segment(Element):
         return element
 
     def parse_child(self, text, child_name=None, reference=None):
-        kwargs = {'encoding_chars': self.encoding_chars,
-                  'reference': reference, 'name': child_name,
-                  'force_varies': self.allow_infinite_children}
+        kwargs = {
+            'encoding_chars': self.encoding_chars,
+            'reference': reference,
+            'name': child_name,
+            'force_varies': self.allow_infinite_children,
+        }
         return super().parse_child(text, **kwargs)
 
     def parse_children(self, text, **kwargs):
@@ -1698,9 +1765,11 @@ class Segment(Element):
         if segment_name != self.name:
             raise OperationNotAllowed('Cannot assign a segment with a different name')
         text = text[4:] if segment_name != 'MSH' else text[3:]
-        kwargs = {'name_prefix': self.name,
-                  'references': self.structure_by_name,
-                  'force_varies': self.allow_infinite_children}
+        kwargs = {
+            'name_prefix': self.name,
+            'references': self.structure_by_name,
+            'force_varies': self.allow_infinite_children,
+        }
         return super().parse_children(text, **kwargs)
 
     def to_er7(self, encoding_chars=None, trailing_children=False):
@@ -1795,10 +1864,12 @@ class Group(Element):
         :class:`VALIDATION_LEVEL <hl7apy.consts.VALIDATION_LEVEL>` or ``None`` to use the default validation
         level (see :func:`get_default_validation_level <hl7apy.get_default_validation_level>`)
     """
+
     child_parser = ('parse_segment', 'parse_segments')
 
-    def __init__(self, name=None, parent=None, reference=None, version=None,
-                 validation_level=None, traversal_parent=None):
+    def __init__(
+        self, name=None, parent=None, reference=None, version=None, validation_level=None, traversal_parent=None
+    ):
 
         # self.child_classes = (Segment, Group)
         self.child_classes = {"SEG": Segment, "GRP": Group}
@@ -1859,8 +1930,7 @@ class Group(Element):
     def parse_child(self, text, child_name=None, reference=None):
         ref = self.find_child_reference(child_name)
         if ref['cls'] == Group:
-            g = Group(child_name, validation_level=self.validation_level, version=self.version,
-                      reference=ref['ref'])
+            g = Group(child_name, validation_level=self.validation_level, version=self.version, reference=ref['ref'])
             g.value = text
             return g
         else:
@@ -1920,8 +1990,7 @@ class Message(Group):
         (see :func:`get_default_encoding_chars <hl7apy.get_default_encoding_chars>`)
     """
 
-    def __init__(self, name=None, reference=None, version=None, validation_level=None,
-                 encoding_chars=None):
+    def __init__(self, name=None, reference=None, version=None, validation_level=None, encoding_chars=None):
 
         if reference is not None:
             try:
@@ -1933,13 +2002,11 @@ class Message(Group):
             except TypeError:
                 pass
         try:
-            super().__init__(name, None, reference, version,
-                                          validation_level)
+            super().__init__(name, None, reference, version, validation_level)
         except InvalidName:
             if _valid_z_message_name(name):
                 reference = ('sequence', ())
-                super().__init__(name, None, reference, version,
-                                              validation_level)
+                super().__init__(name, None, reference, version, validation_level)
             else:
                 raise
 
@@ -1951,8 +2018,7 @@ class Message(Group):
         except (KeyError, TypeError):
             msh_reference = None
 
-        self.msh = Segment('MSH', version=self.version, validation_level=self.validation_level,
-                           reference=msh_reference)
+        self.msh = Segment('MSH', version=self.version, validation_level=self.validation_level, reference=msh_reference)
         self.encoding_chars = encoding_chars
         self.msh.msh_7 = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         self.msh.msh_12 = self.version
@@ -2007,10 +2073,12 @@ class Message(Group):
         if encoding_chars is None:
             encoding_chars = self.encoding_chars
 
-        return "{0}{1}{2}{3}{2}".format(MLLP_ENCODING_CHARS.SB,
-                                        self.to_er7(encoding_chars, trailing_children),
-                                        MLLP_ENCODING_CHARS.CR,
-                                        MLLP_ENCODING_CHARS.EB)
+        return "{0}{1}{2}{3}{2}".format(
+            MLLP_ENCODING_CHARS.SB,
+            self.to_er7(encoding_chars, trailing_children),
+            MLLP_ENCODING_CHARS.CR,
+            MLLP_ENCODING_CHARS.EB,
+        )
 
     def is_z_element(self):
         return _valid_z_message_name(self.name)
@@ -2034,28 +2102,30 @@ class Message(Group):
         check_encoding_chars(encoding_chars)
         msh_1 = Field('MSH_1', validation_level=self.validation_level, version=self.version)
         msh_2 = Field('MSH_2', validation_level=self.validation_level, version=self.version)
-        s = SubComponent(datatype='ST', value=encoding_chars['FIELD'],
-                         validation_level=self.validation_level, version=self.version)
-        c = Component(datatype='ST', validation_level=self.validation_level,
-                      version=self.version)
+        s = SubComponent(
+            datatype='ST', value=encoding_chars['FIELD'], validation_level=self.validation_level, version=self.version
+        )
+        c = Component(datatype='ST', validation_level=self.validation_level, version=self.version)
         c.add(s)
         msh_1.st = c
         if self.version >= '2.7' and 'TRUNCATION' in encoding_chars:
-            value = '{0}{1}{2}{3}{4}'.format(encoding_chars['COMPONENT'],
-                                             encoding_chars['REPETITION'],
-                                             encoding_chars['ESCAPE'],
-                                             encoding_chars['SUBCOMPONENT'],
-                                             encoding_chars['TRUNCATION'])
+            value = '{0}{1}{2}{3}{4}'.format(
+                encoding_chars['COMPONENT'],
+                encoding_chars['REPETITION'],
+                encoding_chars['ESCAPE'],
+                encoding_chars['SUBCOMPONENT'],
+                encoding_chars['TRUNCATION'],
+            )
         else:
-            value = '{0}{1}{2}{3}'.format(encoding_chars['COMPONENT'],
-                                          encoding_chars['REPETITION'],
-                                          encoding_chars['ESCAPE'],
-                                          encoding_chars['SUBCOMPONENT'])
+            value = '{0}{1}{2}{3}'.format(
+                encoding_chars['COMPONENT'],
+                encoding_chars['REPETITION'],
+                encoding_chars['ESCAPE'],
+                encoding_chars['SUBCOMPONENT'],
+            )
 
-        s = SubComponent(datatype='ST', value=value,
-                         validation_level=self.validation_level, version=self.version)
-        c = Component(datatype='ST', validation_level=self.validation_level,
-                      version=self.version)
+        s = SubComponent(datatype='ST', value=value, validation_level=self.validation_level, version=self.version)
+        c = Component(datatype='ST', validation_level=self.validation_level, version=self.version)
         c.add(s)
         msh_2.st = c
         self.msh.msh_1 = msh_1

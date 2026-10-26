@@ -331,4 +331,5 @@ def sequence_id_factory(value, datatype_cls, validation_level=None):
 
 if __name__ == '__main__':
     import doctest
+
     doctest.testmod()

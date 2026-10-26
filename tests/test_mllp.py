@@ -29,21 +29,23 @@ PORT = 2576
 INVALID_MESSAGE = 'INVALID MESSAGE'
 UNSUPPORTED_MESSAGE = 'INVALID MESSAGE'
 
-PDQ_REQ_TPL = \
-    'MSH|^~\\&|REC APP|REC FAC|SENDING APP|SENTING FAC|20110708163513||{}|1|D|2.5|||||ITA||EN\r' \
-    'QPD|IHE PDQ Query|111069|@PID.3.1^1||||\r' \
+PDQ_REQ_TPL = (
+    'MSH|^~\\&|REC APP|REC FAC|SENDING APP|SENTING FAC|20110708163513||{}|1|D|2.5|||||ITA||EN\r'
+    'QPD|IHE PDQ Query|111069|@PID.3.1^1||||\r'
     'RCP|I|'
+)
 
 PDQ_REQ = PDQ_REQ_TPL.format('QBP^Q22^QBP_Q21')
 
 PDQV_REQ = PDQ_REQ_TPL.format('QBP^ZV1^QBP_Q21')
 
-PDQ_RES_TPL = \
-    'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708163514||{}|2|D|2.5|||||ITA||EN\r' \
-    'MSA|AA|26775702551812240|\r' \
-    'QAK|1|OK||1|1|0\r' \
-    'QPD|IHE PDQ Query|111069|@PID.3.1^1010110909194822~@PID.5.1^SMITH||||\r' \
+PDQ_RES_TPL = (
+    'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708163514||{}|2|D|2.5|||||ITA||EN\r'
+    'MSA|AA|26775702551812240|\r'
+    'QAK|1|OK||1|1|0\r'
+    'QPD|IHE PDQ Query|111069|@PID.3.1^1010110909194822~@PID.5.1^SMITH||||\r'
     'PID|1||1^^^lis||MOUSE^MICKEY^^^^^A||19690113|M|||VIA VIA^^CAGLIARI^^^100^H^^|||||||MOSMCK|||||CAGLIARI|||||\r'
+)
 
 PDQ_RES = PDQ_RES_TPL.format('RSP^K22^RSP_K21')
 
@@ -51,7 +53,6 @@ PDQV_RES = PDQ_RES_TPL.format('RSP^ZV2^RSP_ZV2')
 
 
 class PDQHandler(AbstractHandler):
-
     def reply(self):
         return PDQ_RES
 
@@ -69,7 +70,6 @@ class ErrorHandler(AbstractHandler):
 
 
 class CustomArgsPDQHandler(AbstractHandler):
-
     def __init__(self, msg, is_pdqv):
         super().__init__(msg)
         self.is_pdqv = is_pdqv
@@ -92,16 +92,16 @@ def launch_server(host, port, handlers):
 def stop_server(server, thread):
     server.shutdown()
     thread.join()
+    server.server_close()
 
 
 class TestMLLPWithErrorHandler(unittest.TestCase):
-
     @classmethod
     def setUpClass(cls):
         handlers = {
             'QBP^Q22^QBP_Q21': (PDQHandler,),
             'QBP^ZV1^QBP_Q21': (CustomArgsPDQHandler, True),
-            'ERR': (ErrorHandler,)
+            'ERR': (ErrorHandler,),
         }
         cls.server, cls.thread = launch_server(HOST, PORT, handlers)
 
@@ -153,12 +153,9 @@ class TestMLLPWithErrorHandler(unittest.TestCase):
 
 
 class TestMLLPWithoutErrorHandler(unittest.TestCase):
-
     @classmethod
     def setUpClass(cls):
-        handlers = {
-            'QBP^Q22^QBP_Q21': (PDQHandler,)
-        }
+        handlers = {'QBP^Q22^QBP_Q21': (PDQHandler,)}
         cls.server, cls.thread = launch_server(HOST, PORT + 1, handlers)
 
     @classmethod

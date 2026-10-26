@@ -25,68 +25,72 @@ import unittest
 from io import StringIO
 
 import hl7apy
-from hl7apy.core import Component, Field, Group, SubComponent, Segment
-from hl7apy.exceptions import ValidationError, ChildNotFound
+from hl7apy.core import Component, Field, Group, Segment, SubComponent
+from hl7apy.exceptions import ChildNotFound, ValidationError
 from hl7apy.parser import parse_field, parse_message, parse_segment, parse_segments
 from hl7apy.validation import VALIDATION_LEVEL
 
 
 class TestValidation(unittest.TestCase):
-
     def setUp(self):
         hl7apy.set_default_validation_level(VALIDATION_LEVEL.TOLERANT)
-        self.adt_a01 = \
-            'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20130101101500||ADT^A01^ADT_A01|0123456789|P|2.6||||AL\r' \
-            'EVN||20130101101500||01|AAA|20130101082500\r' \
-            'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA|||||M\r' \
-            'NK1|1|WOMAN^WIFE|SPO|1111 SOMEWHERE STREET^^SOMEWHERE^^^USA\r' \
-            'PV1|1|I|PATIENT WARD|U||||^REFERRING^DOCTOR^^MD|^CONSULTING^DOCTOR|CAR||||2|A0|||||||||||||||||||||||||||||2013\r' \
+        self.adt_a01 = (
+            'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20130101101500||ADT^A01^ADT_A01|0123456789|P|2.6||||AL\r'
+            'EVN||20130101101500||01|AAA|20130101082500\r'
+            'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA|||||M\r'
+            'NK1|1|WOMAN^WIFE|SPO|1111 SOMEWHERE STREET^^SOMEWHERE^^^USA\r'
+            'PV1|1|I|PATIENT WARD|U||||^REFERRING^DOCTOR^^MD|^CONSULTING^DOCTOR|CAR||||2|A0|||||||||||||||||||||||||||||2013\r'
             'IN1|1|INSURANCE PLAN ID^PLAN DESC|COMPANY ID|INSURANCE COMPANY, INC.|5555 INSURERS STREET^^SOMEWHERE^^^USA||||||||||||||||||||||||||||||||||||||||||||555-44-3333\r'
+        )
 
-        self.zdt_z01 = \
-            'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20130101101500||ZDT^Z01^ZDT_Z01|0123456789|P|2.5||||AL\r' \
-            'EVN||20130101101500||AAA|AAA|20130101082500\r' \
-            'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r' \
-            'NK1|1|WOMAN^WIFE|SPO|1111 SOMEWHERE STREET^^SOMEWHERE^^^USA\r' \
-            'PV1|1|I|PATIENT WARD|U||||^REFERRING^DOCTOR^^MD|^CONSULTING^DOCTOR|CAR||||2|A0|||||||||||||||||||||||||||||2013\r' \
+        self.zdt_z01 = (
+            'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20130101101500||ZDT^Z01^ZDT_Z01|0123456789|P|2.5||||AL\r'
+            'EVN||20130101101500||AAA|AAA|20130101082500\r'
+            'PID|1||123-456-789^^^HOSPITAL^MR||SURNAME^NAME^A|||M|||1111 SOMEWHERE STREET^^SOMEWHERE^^^USA||555-555-2004~444-333-222|||M\r'
+            'NK1|1|WOMAN^WIFE|SPO|1111 SOMEWHERE STREET^^SOMEWHERE^^^USA\r'
+            'PV1|1|I|PATIENT WARD|U||||^REFERRING^DOCTOR^^MD|^CONSULTING^DOCTOR|CAR||||2|A0|||||||||||||||||||||||||||||2013\r'
             'IN1|1|INSURANCE PLAN ID^PLAN DESC|COMPANY ID|INSURANCE COMPANY, INC.|5555 INSURERS STREET^^SOMEWHERE^^^USA||||||||||||||||||||||||||||||||||||||||||||555-44-3333\r'
+        )
 
-        self.oml_o33 = \
-            'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
-            'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009^^~^^^^^^L^^^|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100|||||||||||\r' \
-            'PV1||O|||||||||||||||||1107080001^^^LIS\r' \
-            'SPM|1|100187400201^||BLDV|||||||B||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
-            'ORC|NW|83428|83428|18740|SC||||20110708162817||||||||^\r' \
-            'TQ1|||||||||R\r' \
+        self.oml_o33 = (
+            'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r'
+            'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009^^~^^^^^^L^^^|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100|||||||||||\r'
+            'PV1||O|||||||||||||||||1107080001^^^LIS\r'
+            'SPM|1|100187400201^||BLDV|||||||B||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r'
+            'ORC|NW|83428|83428|18740|SC||||20110708162817||||||||^\r'
+            'TQ1|||||||||R\r'
             'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN\r'
+        )
 
-        self.oml_o33_2 = \
-            'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r' \
-            'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009^^~^^^^^^L^^^|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100|||||||||||\r' \
-            'PV1||O|||||||||||||||||1107080001^^^LIS\r' \
-            'SPM|1|100187400201^||BLDV|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
-            'ORC|NW|83428|83428|18740|SC||||20110708162817||||||||^\r' \
-            'TQ1|||||||||R\r' \
-            'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN\r' \
-            'SPM|2|100187400101^||BLDV|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r' \
-            'ORC|NW|83425|83425|18740|SC||||20110708162817||||||||^\r' \
-            'TQ1|||||||||R\r' \
-            'OBR||83425|83425|CA^S-CALCIUM^^CA||||||||||||ND^UNKNOWN^UNKNOWN\r' \
-            'ORC|NW|83426|83426|18740|SC||||20110708162817||||||||^\r' \
-            'TQ1|||||||||R\r' \
-            'OBR||83426|83426|HDL^HDL CHOLESTEROL^^HDL||||||||||||ND^UNKNOWN^UNKNOWN\r' \
-            'ORC|NW|83427|83427|18740|SC||||20110708162817||||||||^\r' \
-            'TQ1|||||||||R\r' \
+        self.oml_o33_2 = (
+            'MSH|^~\\&|SENDING APP|SENDING FAC|REC APP|REC FAC|20110708162817||OML^O33^OML_O33|978226056138290600|D|2.5|||||USA||EN\r'
+            'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009^^~^^^^^^L^^^|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100|||||||||||\r'
+            'PV1||O|||||||||||||||||1107080001^^^LIS\r'
+            'SPM|1|100187400201^||BLDV|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r'
+            'ORC|NW|83428|83428|18740|SC||||20110708162817||||||||^\r'
+            'TQ1|||||||||R\r'
+            'OBR||83428|83428|TPO^ANTI THYROPEROXIDASE ANTIBODIES(TPO)^^TPO||||||||||||ND^UNKNOWN^UNKNOWN\r'
+            'SPM|2|100187400101^||BLDV|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r'
+            'ORC|NW|83425|83425|18740|SC||||20110708162817||||||||^\r'
+            'TQ1|||||||||R\r'
+            'OBR||83425|83425|CA^S-CALCIUM^^CA||||||||||||ND^UNKNOWN^UNKNOWN\r'
+            'ORC|NW|83426|83426|18740|SC||||20110708162817||||||||^\r'
+            'TQ1|||||||||R\r'
+            'OBR||83426|83426|HDL^HDL CHOLESTEROL^^HDL||||||||||||ND^UNKNOWN^UNKNOWN\r'
+            'ORC|NW|83427|83427|18740|SC||||20110708162817||||||||^\r'
+            'TQ1|||||||||R\r'
             'OBR||83427|83427|LDL^LDL CHOLESTEROL^^LDL||||||||||||ND^UNKNOWN^UNKNOWN\r'
+        )
 
         report_file = tempfile.NamedTemporaryFile()
         self.report_file = report_file.name
 
-        self.orm_o01 = \
-            'MSH|^~\\&|SND|SND|RCV|RCV|20260101120000||ORM^O01|MSG001|P|2.3\r' \
-            'PID|1||12345||DOE^JOHN|||19800101|M\r' \
-            'ORC|NW||||||1^^^20260101120000|20260101120000\r' \
+        self.orm_o01 = (
+            'MSH|^~\\&|SND|SND|RCV|RCV|20260101120000||ORM^O01|MSG001|P|2.3\r'
+            'PID|1||12345||DOE^JOHN|||19800101|M\r'
+            'ORC|NW||||||1^^^20260101120000|20260101120000\r'
             'OBR|1|||SPEC-001|PANEL|||20260101090000|||||||CSF||||||||||||1^^^20260101120000\r'
+        )
 
     def _create_message(self, msg_str):
         return parse_message(msg_str)
@@ -154,14 +158,24 @@ class TestValidation(unittest.TestCase):
         reject valid messages carrying several of their children.
         Regression test for https://github.com/crs4/hl7apy/pull/152#issuecomment (wshallwshall)
         """
-        groups = ('EHC_E01_INVOICE_INFORMATION', 'EHC_E01_INVOICE_INFORMATION_SUBMIT',
-                  'EHC_E02_INVOICE_INFORMATION', 'EHC_E02_INVOICE_INFORMATION_CANCEL',
-                  'EHC_E04_REASSESSMENT_REQUEST_INFO', 'EHC_E15_PAYMENT_REMITTANCE_HEADER_INFO',
-                  'EHC_E20_AUTHORIZATION_REQUEST', 'EHC_E21_AUTHORIZATION_REQUEST',
-                  'EHC_E24_AUTHORIZATION_RESPONSE_INFO', 'QBP_E03_QUERY_INFORMATION',
-                  'QBP_E22_QUERY', 'RSP_E03_QUERY_ACK', 'RSP_E03_QUERY_ACK_IPR',
-                  'RSP_E22_QUERY_ACK', 'SDR_S31_ANTI_MICROBIAL_DEVICE_DATA',
-                  'SDR_S32_ANTI_MICROBIAL_DEVICE_CYCLE_DATA')
+        groups = (
+            'EHC_E01_INVOICE_INFORMATION',
+            'EHC_E01_INVOICE_INFORMATION_SUBMIT',
+            'EHC_E02_INVOICE_INFORMATION',
+            'EHC_E02_INVOICE_INFORMATION_CANCEL',
+            'EHC_E04_REASSESSMENT_REQUEST_INFO',
+            'EHC_E15_PAYMENT_REMITTANCE_HEADER_INFO',
+            'EHC_E20_AUTHORIZATION_REQUEST',
+            'EHC_E21_AUTHORIZATION_REQUEST',
+            'EHC_E24_AUTHORIZATION_RESPONSE_INFO',
+            'QBP_E03_QUERY_INFORMATION',
+            'QBP_E22_QUERY',
+            'RSP_E03_QUERY_ACK',
+            'RSP_E03_QUERY_ACK_IPR',
+            'RSP_E22_QUERY_ACK',
+            'SDR_S31_ANTI_MICROBIAL_DEVICE_DATA',
+            'SDR_S32_ANTI_MICROBIAL_DEVICE_CYCLE_DATA',
+        )
         checked = 0
         for version in ('2.6', '2.7', '2.8', '2.8.1', '2.8.2'):
             for name in groups:
@@ -169,8 +183,7 @@ class TestValidation(unittest.TestCase):
                     ref = hl7apy.load_reference(name, 'Group', version)
                 except ChildNotFound:
                     continue
-                self.assertEqual(ref[0], 'sequence',
-                                 '{} should be a sequence in v{}'.format(name, version))
+                self.assertEqual(ref[0], 'sequence', '{} should be a sequence in v{}'.format(name, version))
                 checked += 1
         self.assertGreater(checked, 0)
 
@@ -179,10 +192,12 @@ class TestValidation(unittest.TestCase):
         A valid RSP^E22 carrying QAK then QPD must validate: RSP_E22_QUERY_ACK
         is an ordered sequence, not a choice group.
         """
-        msg_str = 'MSH|^~\\&|SND|SND|RCV|RCV|20260101120000||RSP^E22^RSP_E22|MSG001|P|2.6\r' \
-                  'MSA|AA|123\r' \
-                  'QAK|QRY001|OK\r' \
-                  'QPD|QRY001|QueryName\r'
+        msg_str = (
+            'MSH|^~\\&|SND|SND|RCV|RCV|20260101120000||RSP^E22^RSP_E22|MSG001|P|2.6\r'
+            'MSA|AA|123\r'
+            'QAK|QRY001|OK\r'
+            'QPD|QRY001|QueryName\r'
+        )
         msg = parse_message(msg_str, find_groups=True)
         self.assertTrue(msg.validate())
 
@@ -190,9 +205,9 @@ class TestValidation(unittest.TestCase):
         """
         Sequence semantics still apply: QPD without the required QAK must fail.
         """
-        msg_str = 'MSH|^~\\&|SND|SND|RCV|RCV|20260101120000||RSP^E22^RSP_E22|MSG001|P|2.6\r' \
-                  'MSA|AA|123\r' \
-                  'QPD|QRY001|QueryName\r'
+        msg_str = (
+            'MSH|^~\\&|SND|SND|RCV|RCV|20260101120000||RSP^E22^RSP_E22|MSG001|P|2.6\rMSA|AA|123\rQPD|QRY001|QueryName\r'
+        )
         msg = parse_message(msg_str, find_groups=True)
         self.assertRaises(ValidationError, msg.validate, report_file=self.report_file)
         self._test_report_file('ERROR')
@@ -283,7 +298,8 @@ class TestValidation(unittest.TestCase):
         msg = self._create_message(self.oml_o33)
         oml_o33_patient = Group('OML_O33_PATIENT')
         segments = parse_segments(
-            'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009~^^^^^^L|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100\rPV1||O|||||||||||||||||1107080001^^^LIS')
+            'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009~^^^^^^L|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100\rPV1||O|||||||||||||||||1107080001^^^LIS'
+        )
         oml_o33_patient.children = segments
         msg.add(oml_o33_patient)
         self.assertRaises(ValidationError, msg.validate, report_file=self.report_file)
@@ -352,8 +368,11 @@ class TestValidation(unittest.TestCase):
         The message used has an unexpected SPM
         """
         msg = self._create_message(self.adt_a01)
-        spm = parse_segment('SPM|1|100187400201^||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||'
-                            '20110708162817|||||||1|CONTAINER^CONTAINER DESC\r', version='2.6')
+        spm = parse_segment(
+            'SPM|1|100187400201^||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||'
+            '20110708162817|||||||1|CONTAINER^CONTAINER DESC\r',
+            version='2.6',
+        )
         msg.add(spm)
         self.assertRaises(ValidationError, msg.validate, report_file=self.report_file)
         self._test_report_file('ERROR')
@@ -365,10 +384,13 @@ class TestValidation(unittest.TestCase):
         """
         msg = self._create_message(self.adt_a01)
         oml_o33_patient = Group('OML_O33_PATIENT', version='2.6')
-        segments = parse_segments('PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||'
-                                  'PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^'
-                                  'H^^092009~^^^^^^L|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100\rPV1||O|||||||||'
-                                  '||||||||1107080001^^^LIS', version='2.6')
+        segments = parse_segments(
+            'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||'
+            'PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^'
+            'H^^092009~^^^^^^L|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100\rPV1||O|||||||||'
+            '||||||||1107080001^^^LIS',
+            version='2.6',
+        )
         oml_o33_patient.children = segments
         msg.add(oml_o33_patient)
         self.assertRaises(ValidationError, msg.validate, report_file=self.report_file)
@@ -517,15 +539,16 @@ class TestValidation(unittest.TestCase):
         self.assertEqual(len(errors_and_warnings.errors), 0)
         self.assertEqual(len(errors_and_warnings.warnings), 0)
 
-class TestMessageProfile(unittest.TestCase):
 
+class TestMessageProfile(unittest.TestCase):
     def setUp(self):
-        self.rsp_k21 = \
-            'MSH|^~\\&|SENDING APP|SENDING FAC|RECEIVING APP|RECEIVING FAC|20140410170011||RSP^K22^RSP_K21|11111111|P|2.5\r' \
-            'MSA|AA|20140410170015\r' \
-            'QAK|222222222|OK\r' \
-            'QPD|IHE PDQ Query|222222222|@PID.3.1.1^3333333|||||^^^IHEFACILITY&1.3.6.1.4.1.21367.3000.1.6&ISO^|\r' \
+        self.rsp_k21 = (
+            'MSH|^~\\&|SENDING APP|SENDING FAC|RECEIVING APP|RECEIVING FAC|20140410170011||RSP^K22^RSP_K21|11111111|P|2.5\r'
+            'MSA|AA|20140410170015\r'
+            'QAK|222222222|OK\r'
+            'QPD|IHE PDQ Query|222222222|@PID.3.1.1^3333333|||||^^^IHEFACILITY&1.3.6.1.4.1.21367.3000.1.6&ISO^|\r'
             'PID|1||10101109091948^^^GATEWAY&1.3.6.1.4.1.21367.2011.2.5.17&ISO||JOHN^SMITH^^^^^A||19690113|M|||VIA DELLE VIE^^CAGLIARI^^^ITA^H^^092009||||||||||||CAGLIARI|||\r'
+        )
 
         base_path = os.path.abspath(os.path.dirname(__file__))
         path = os.path.join(base_path, 'profiles/iti_21')
@@ -697,7 +720,8 @@ class TestMessageProfile(unittest.TestCase):
         """
         msg = self._create_message(self.rsp_k21)
         spm = parse_segment(
-            'SPM|1|100187400201^||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r')
+            'SPM|1|100187400201^||SPECIMEN^Blood|||||||PSN^Human Patient||||||20110708162817||20110708162817|||||||1|CONTAINER^CONTAINER DESC\r'
+        )
         msg.add(spm)
         self.assertRaises(ValidationError, msg.validate, report_file=self.report_file)
         self._test_report_file('ERROR')
@@ -710,7 +734,8 @@ class TestMessageProfile(unittest.TestCase):
         msg = self._create_message(self.rsp_k21)
         oml_o33_patient = Group('OML_O33_PATIENT')
         segments = parse_segments(
-            'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009~^^^^^^L|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100\rPV1||O|||||||||||||||||1107080001^^^LIS')
+            'PID|||1010110909194822^^^GATEWAY_IL&1.3.6.1.4.1.21367.2011.2.5.17&ISO^PK||PIPPO^PLUTO^^^^^L||19790515|M|||VIA DI TOPOLINO^CAGLIARI^CAGLIARI^^09100^100^H^^092009~^^^^^^L|||||||PPPPPP79E15B354I^^^CF|||||CAGLIARI|||100\rPV1||O|||||||||||||||||1107080001^^^LIS'
+        )
         oml_o33_patient.children = segments
         msg.add(oml_o33_patient)
         self.assertRaises(ValidationError, msg.validate, report_file=self.report_file)
