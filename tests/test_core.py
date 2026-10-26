@@ -889,6 +889,13 @@ class TestSegment(unittest.TestCase):
         with self.assertRaises(OperationNotAllowed):
             s.value = wrong_segment_str
 
+    def test_withdrawn_fields_long_names(self):
+        # withdrawn fields must not hide active fields sharing the same long name
+        for version in ('2.6', '2.7', '2.8', '2.8.1', '2.8.2'):
+            dg1 = parse_segment('DG1|1|I10|K35', version=version)
+            self.assertEqual(dg1.diagnosis_coding_method.name, 'DG1_2', version)
+            self.assertEqual(dg1.diagnosis_coding_method.value, 'I10', version)
+
 
 class TestField(unittest.TestCase):
     def setUp(self):
