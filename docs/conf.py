@@ -19,10 +19,13 @@
 # sys.path.insert(0, os.path.abspath('.'))
 
 from __future__ import absolute_import
+
 import sys
+
 sys.path.append('..')
 
 import datetime
+
 FIRST_RELEASE_YEAR = 2012
 CURRENT_YEAR = datetime.datetime.now().year
 

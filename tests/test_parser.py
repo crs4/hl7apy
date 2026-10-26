@@ -26,11 +26,26 @@ import os
 import unittest
 
 import hl7apy
-from hl7apy.parser import parse_message, parse_segments, parse_segment, parse_fields, parse_field, \
-    parse_components, parse_component, parse_subcomponents, get_message_type
+from hl7apy.exceptions import (
+    InvalidEncodingChars,
+    InvalidName,
+    MaxChildLimitReached,
+    OperationNotAllowed,
+    ParserError,
+    ValidationError,
+)
+from hl7apy.parser import (
+    get_message_type,
+    parse_component,
+    parse_components,
+    parse_field,
+    parse_fields,
+    parse_message,
+    parse_segment,
+    parse_segments,
+    parse_subcomponents,
+)
 from hl7apy.validation import VALIDATION_LEVEL
-from hl7apy.exceptions import ParserError, OperationNotAllowed, InvalidEncodingChars, InvalidName, \
-    ValidationError, MaxChildLimitReached
 
 
 class TestParser(unittest.TestCase):

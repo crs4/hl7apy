@@ -24,32 +24,45 @@ HL7apy - core classes
 """
 
 from __future__ import absolute_import
-import time
-import re
+
 import collections
+import re
+
 try:
-    from collections.abc import Sequence, MutableMapping, MutableSequence
+    from collections.abc import MutableMapping, MutableSequence, Sequence
 except ImportError:
-    from collections import Sequence, MutableMapping, MutableSequence
+    from collections import MutableMapping, MutableSequence, Sequence
 import datetime
-from itertools import takewhile
 import importlib
 import sys
-import traceback
+from itertools import takewhile
 import warnings
 
-from hl7apy import get_default_version, get_default_encoding_chars, \
-    get_default_validation_level, check_validation_level, \
-    check_encoding_chars, check_version, load_library, \
-    find_reference, load_reference
-from hl7apy.validation import Validator
-from hl7apy.exceptions import ChildNotFound, ChildNotValid, \
-    MaxChildLimitReached, OperationNotAllowed, \
-    InvalidName, MessageProfileNotFound, LegacyMessageProfile
-from hl7apy.factories import datatype_factory
+from hl7apy import (
+    check_encoding_chars,
+    check_validation_level,
+    check_version,
+    find_reference,
+    get_default_encoding_chars,
+    get_default_validation_level,
+    get_default_version,
+    load_library,
+    load_reference,
+)
 from hl7apy.base_datatypes import BaseDataType
 from hl7apy.consts import MLLP_ENCODING_CHARS
+from hl7apy.exceptions import (
+    ChildNotFound,
+    ChildNotValid,
+    InvalidName,
+    LegacyMessageProfile,
+    MaxChildLimitReached,
+    MessageProfileNotFound,
+    OperationNotAllowed,
+)
+from hl7apy.factories import datatype_factory
 from hl7apy.utils import iteritems
+from hl7apy.validation import Validator
 
 try:
     basestring = basestring
@@ -1541,7 +1554,7 @@ class Field(SupportComplexDataType):
                 super(Field, self).__setattr__(name, value)
             else:
                 super(Field, self).__delattr__(name)
-        except ChildNotFound as e:
+        except ChildNotFound:
             component, subcomponent = self._get_traversal_children(name)
             if component is None:
                 raise ChildNotFound(name)

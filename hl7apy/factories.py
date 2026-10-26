@@ -25,10 +25,11 @@ The functions get the value of the data type as string and return the correct ob
 """
 
 from __future__ import absolute_import
+
 from decimal import Decimal, InvalidOperation
 from types import FunctionType
 
-from hl7apy import load_library, get_default_validation_level, get_default_version
+from hl7apy import get_default_validation_level, get_default_version, load_library
 from hl7apy.exceptions import InvalidDataType
 from hl7apy.utils import get_date_info, get_datetime_info, get_timestamp_info
 

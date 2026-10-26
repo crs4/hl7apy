@@ -36,8 +36,8 @@ except ImportError:
     import pickle
 
 
-from hl7apy.exceptions import UnsupportedVersion, InvalidEncodingChars, UnknownValidationLevel
 from hl7apy.consts import DEFAULT_ENCODING_CHARS, DEFAULT_ENCODING_CHARS_27, DEFAULT_VERSION, VALIDATION_LEVEL
+from hl7apy.exceptions import InvalidEncodingChars, UnknownValidationLevel, UnsupportedVersion
 
 __author__ = 'Daniela Ghironi, Vittorio Meloni, Alessandro Sulis, Federico Caboni'
 __author_email__ = '<ghiron@gmail.com>, <vittorio.meloni@crs4.it>, <alessandro.sulis@crs4.it>, ' \

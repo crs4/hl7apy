@@ -21,17 +21,17 @@
 
 from __future__ import absolute_import
 
-from io import StringIO
 import os
 import re
 import sys
 import tempfile
 import unittest
+from io import StringIO
 
 import hl7apy
-from hl7apy.core import Group, Field, Component, SubComponent, Segment
+from hl7apy.core import Component, Field, Group, SubComponent, Segment
 from hl7apy.exceptions import ValidationError, ChildNotFound
-from hl7apy.parser import parse_message, parse_segments, parse_segment, parse_field
+from hl7apy.parser import parse_field, parse_message, parse_segment, parse_segments
 from hl7apy.validation import VALIDATION_LEVEL
 
 

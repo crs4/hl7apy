@@ -20,21 +20,30 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import absolute_import
+
 import os
 import platform
-import sys
 import unittest
 import warnings
 
 import hl7apy
 from hl7apy import DEFAULT_ENCODING_CHARS
-from hl7apy.core import Message, Segment, Field, Group, Component, SubComponent, ElementProxy
-from hl7apy.exceptions import ChildNotValid, ChildNotFound, OperationNotAllowed, InvalidName, \
-    MaxChildLimitReached, UnsupportedVersion, InvalidEncodingChars, \
-    MaxLengthReached, MessageProfileNotFound, LegacyMessageProfile
-from hl7apy.v2_5 import ST, SI
-from hl7apy.validation import VALIDATION_LEVEL
+from hl7apy.core import Component, ElementProxy, Field, Group, Message, Segment, SubComponent
+from hl7apy.exceptions import (
+    ChildNotFound,
+    ChildNotValid,
+    InvalidEncodingChars,
+    InvalidName,
+    LegacyMessageProfile,
+    MaxChildLimitReached,
+    MaxLengthReached,
+    MessageProfileNotFound,
+    OperationNotAllowed,
+    UnsupportedVersion,
+)
 from hl7apy.parser import parse_message, parse_segment
+from hl7apy.v2_5 import SI, ST
+from hl7apy.validation import VALIDATION_LEVEL
 
 
 def _get_invalid_encoding_chars():

@@ -20,13 +20,20 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import absolute_import
+
 import re
 
-from hl7apy import get_default_encoding_chars, get_default_version, \
-    get_default_validation_level, check_version, check_encoding_chars, check_validation_level
+from hl7apy import (
+    check_encoding_chars,
+    check_validation_level,
+    check_version,
+    get_default_encoding_chars,
+    get_default_validation_level,
+    get_default_version,
+)
 from hl7apy.consts import N_SEPS, N_SEPS_27
-from hl7apy.core import is_base_datatype, Message, Group, Segment, Field, Component, SubComponent, ElementFinder
-from hl7apy.exceptions import InvalidName, ParserError, InvalidEncodingChars, MessageProfileNotFound
+from hl7apy.core import Component, Field, Group, Message, Segment, SubComponent, is_base_datatype
+from hl7apy.exceptions import InvalidEncodingChars, InvalidName, MessageProfileNotFound, ParserError
 from hl7apy.validation import Validator
 
 try:

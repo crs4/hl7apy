@@ -20,12 +20,14 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import absolute_import
+
 import unittest
-from hl7apy.core import Message, Group, Segment, Field, Component, SubComponent
-from hl7apy.parser import parse_segment, parse_message
-from hl7apy.base_datatypes import *
+
+from hl7apy.base_datatypes import ST
+from hl7apy.consts import DEFAULT_ENCODING_CHARS, MLLP_ENCODING_CHARS, VALIDATION_LEVEL
+from hl7apy.core import Component, Field, Group, Message, Segment, SubComponent
 from hl7apy.exceptions import InvalidHighlightRange
-from hl7apy.consts import MLLP_ENCODING_CHARS, VALIDATION_LEVEL, DEFAULT_ENCODING_CHARS
+from hl7apy.parser import parse_message, parse_segment
 
 
 class ToStringTestCase(unittest.TestCase):

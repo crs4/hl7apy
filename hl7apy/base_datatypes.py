@@ -41,8 +41,13 @@ from decimal import Decimal
 from functools import cmp_to_key
 
 from hl7apy import get_default_encoding_chars, get_default_validation_level
-from hl7apy.exceptions import MaxLengthReached, InvalidHighlightRange, InvalidDateFormat, \
-    InvalidDateOffset, InvalidMicrosecondsPrecision
+from hl7apy.exceptions import (
+    InvalidDateFormat,
+    InvalidDateOffset,
+    InvalidHighlightRange,
+    InvalidMicrosecondsPrecision,
+    MaxLengthReached,
+)
 from hl7apy.validation import Validator
 
 

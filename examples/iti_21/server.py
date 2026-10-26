@@ -19,16 +19,15 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import datetime
 import os
 import uuid
-import datetime
 
 from hl7apy import load_message_profile
 from hl7apy.core import Message
+from hl7apy.mllp import AbstractHandler, InvalidHL7Message, MLLPServer, UnsupportedMessageType
 from hl7apy.parser import parse_message
-from hl7apy.utils import check_date
 from hl7apy.v2_5 import DTM
-from hl7apy.mllp import MLLPServer, AbstractHandler, UnsupportedMessageType, InvalidHL7Message
 
 _ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 

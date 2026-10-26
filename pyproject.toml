@@ -40,6 +40,7 @@ Issues = "https://github.com/crs4/hl7apy/issues"
 
 [dependency-groups]
 test = ["pytest", "pytest-cov"]
+lint = ["ruff"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests", "hl7apy"]
@@ -47,6 +48,18 @@ addopts = ["--doctest-modules"]
 
 [tool.coverage.run]
 source = ["hl7apy"]
+
+[tool.ruff]
+target-version = "py39"
+line-length = 120
+extend-exclude = ["hl7apy/v2_*"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I"]
+ignore = ["E501", "W292", "W293"]
+
+[tool.ruff.format]
+quote-style = "preserve"
 
 [tool.setuptools]
 script-files = ["utils/hl7apy_profile_parser"]

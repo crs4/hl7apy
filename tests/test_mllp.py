@@ -20,13 +20,12 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import absolute_import
+
 import socket
 import unittest
 from threading import Thread
 
-from hl7apy.mllp import MLLPServer, AbstractHandler
-from hl7apy.mllp import InvalidHL7Message, UnsupportedMessageType
-
+from hl7apy.mllp import AbstractHandler, InvalidHL7Message, MLLPServer, UnsupportedMessageType
 
 HOST = 'localhost'
 PORT = 2576

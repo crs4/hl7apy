@@ -19,18 +19,18 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
+from __future__ import absolute_import, unicode_literals
 
 import re
 import socket
+
 try:
     from SocketServer import StreamRequestHandler, ThreadingTCPServer
 except ImportError:
     from socketserver import StreamRequestHandler, ThreadingTCPServer
 
-from hl7apy.parser import get_message_type
 from hl7apy.exceptions import HL7apyException, ParserError
+from hl7apy.parser import get_message_type
 
 
 class UnsupportedMessageType(HL7apyException):

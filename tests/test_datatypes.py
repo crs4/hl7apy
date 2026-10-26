@@ -20,16 +20,29 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import absolute_import
-import unittest
 
+import unittest
 from datetime import datetime
-from hl7apy.base_datatypes import DT, TM, DTM, ST, FT, ID, IS, TX, GTS, NM, SI, TN
-from hl7apy.v2_7 import ST as ST27, FT as FT27, ID as ID27, IS as IS27, TX as TX27, GTS as GTS27, SNM
-from hl7apy.factories import datatype_factory
-from hl7apy.exceptions import InvalidDateFormat, InvalidDateOffset, MaxLengthReached, \
-    InvalidHighlightRange, InvalidDataType, InvalidMicrosecondsPrecision
-from hl7apy.validation import VALIDATION_LEVEL
 from decimal import Decimal
+
+from hl7apy.base_datatypes import DT, DTM, FT, GTS, ID, IS, NM, SI, ST, TM, TN, TX
+from hl7apy.exceptions import (
+    InvalidDataType,
+    InvalidDateFormat,
+    InvalidDateOffset,
+    InvalidHighlightRange,
+    InvalidMicrosecondsPrecision,
+    MaxLengthReached,
+)
+from hl7apy.factories import datatype_factory
+from hl7apy.v2_7 import FT as FT27
+from hl7apy.v2_7 import GTS as GTS27
+from hl7apy.v2_7 import ID as ID27
+from hl7apy.v2_7 import IS as IS27
+from hl7apy.v2_7 import SNM
+from hl7apy.v2_7 import ST as ST27
+from hl7apy.v2_7 import TX as TX27
+from hl7apy.validation import VALIDATION_LEVEL
 
 
 class TestDatatypeFactory(unittest.TestCase):
