@@ -60,8 +60,9 @@ copyright = '%s-%s, CRS4 - Center for Advanced Studies, Research and Development
 #
 # The short X.Y version.
 
-with open("../VERSION") as f:
-    version_string = f.read().strip()
+from importlib.metadata import version as get_version
+
+version_string = get_version("hl7apy")
 version = ".".join(version_string.split(".", 2)[:2])
 
 # The full version, including alpha/beta/rc tags.

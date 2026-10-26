@@ -1,0 +1,2 @@
+# let `git archive` (and the GitHub "Source code" downloads) fill in the version info used by setuptools-scm
+.git_archival.txt  export-subst

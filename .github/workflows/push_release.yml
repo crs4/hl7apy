@@ -2,7 +2,7 @@ name: Upload Python Package
 
 on:
   release:
-    types: [created]
+    types: [published]
 
 jobs:
   deploy:
@@ -11,6 +11,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v7
+      with:
+        fetch-depth: 0  # setuptools-scm needs the tags to compute the version
     - name: Set up Python
       uses: actions/setup-python@v7
       with:

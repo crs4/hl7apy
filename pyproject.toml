@@ -67,5 +67,5 @@ script-files = ["utils/hl7apy_profile_parser"]
 [tool.setuptools.packages.find]
 include = ["hl7apy", "hl7apy.*"]
 
-[tool.setuptools.dynamic]
-version = { file = "VERSION" }
+# the version is taken from the git tag of the release (e.g. v1.4.0)
+[tool.setuptools_scm]
