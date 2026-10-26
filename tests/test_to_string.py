@@ -318,6 +318,30 @@ class ToStringTestCase(unittest.TestCase):
         parsed_s = parse_segment(s, version='2.7')
         self.assertEqual(parsed_s.to_er7(), 'EVN||20080115153000||AAA|AAA|20080114003000')
 
+    def test_to_string_valued_wd_fields(self):
+        """
+        Tests that values in withdrawn fields keep their position when the segment is encoded again
+        """
+        segments = {
+            '2.6': [
+                'DG1|1|I10|K35^Appendicitis|||A|MDC|DRG|Y|RC|OT|3|100|GV',
+                'FT1|1|||20240101|20240101|CG|CODE^Code|DESC|ALT|1',
+            ],
+            '2.7': ['EVN|A01|20240101120000', 'AL1|1|DA|PEN^Penicillin|SV|Hives|20240101'],
+            '2.8': [
+                'EVN|A01|20240101120000',
+                'PID|1||123^^^H^MR||DOE^JOHN' + '|' * 23 + 'ITA',
+                'AL1|1|DA|PEN^Penicillin|SV|Hives|20240101',
+            ],
+            '2.8.1': ['ERR|ERRLOC|MSH^1|101^Required field missing^HL70357|E'],
+            '2.8.2': ['AL1|1|DA|PEN^Penicillin|SV|Hives|20240101'],
+        }
+        for version, segs in segments.items():
+            for s in segs:
+                parsed_s = parse_segment(s, version=version)
+                self.assertNotIn(None, [c.name for c in parsed_s.children], (version, s))
+                self.assertEqual(parsed_s.to_er7(), s, version)
+
     def test_to_string_unicode_field(self):
         """
         Tests that non-ASCII values can be assigned in strict mode (PR #72)
