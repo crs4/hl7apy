@@ -873,7 +873,7 @@ SEGMENTS = {
              ('OBR_43', FIELDS['OBR_43'], (0, -1), 'FIE'),)),
     'OBX': ('sequence',
             (('OBX_1', FIELDS['OBX_1'], (0, 1), 'FIE'),
-             ('OBX_2', FIELDS['OBX_2'], (1, 1), 'FIE'),
+             ('OBX_2', FIELDS['OBX_2'], (0, 1), 'FIE'),
              ('OBX_3', FIELDS['OBX_3'], (1, 1), 'FIE'),
              ('OBX_4', FIELDS['OBX_4'], (0, 1), 'FIE'),
              ('OBX_5', FIELDS['OBX_5'], (0, -1), 'FIE'),
